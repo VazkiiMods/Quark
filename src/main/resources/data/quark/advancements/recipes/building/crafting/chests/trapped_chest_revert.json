@@ -1,0 +1,32 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_item0": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "tag": "quark:revertable_trapped_chests"
+          }
+        ]
+      }
+    },
+    "has_the_recipe": {
+      "trigger": "minecraft:recipe_unlocked",
+      "conditions": {
+        "recipe": "quark:building/crafting/chests/trapped_chest_revert"
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_item0",
+      "has_the_recipe"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "quark:building/crafting/chests/trapped_chest_revert"
+    ]
+  }
+}

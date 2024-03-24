@@ -1,0 +1,34 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_item0": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "minecraft:polished_deepslate"
+            ]
+          }
+        ]
+      }
+    },
+    "has_the_recipe": {
+      "trigger": "minecraft:recipe_unlocked",
+      "conditions": {
+        "recipe": "quark:building/stonecutter/vertslabs/polished_deepslate_vertical_slab_from_polished_deepslate"
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_item0",
+      "has_the_recipe"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "quark:building/stonecutter/vertslabs/polished_deepslate_vertical_slab_from_polished_deepslate"
+    ]
+  }
+}
