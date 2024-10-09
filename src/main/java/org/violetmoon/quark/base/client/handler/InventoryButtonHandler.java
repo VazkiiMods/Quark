@@ -222,7 +222,7 @@ public final class InventoryButtonHandler {
 		}
 
 		public MiniInventoryButton getButton(AbstractContainerScreen<?> parent, int x, int y) {
-			MiniInventoryButton b = (module.enabled && (enableCond == null || enableCond.getAsBoolean()))
+			MiniInventoryButton b = (module.isEnabled() && (enableCond == null || enableCond.getAsBoolean()))
 					? provider.provide(parent, x, y) : null;
 			
 			if(b != null)

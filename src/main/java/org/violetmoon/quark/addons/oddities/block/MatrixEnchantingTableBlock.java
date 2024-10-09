@@ -47,7 +47,7 @@ public class MatrixEnchantingTableBlock extends EnchantmentTableBlock implements
 		super(Block.Properties.copy(Blocks.ENCHANTING_TABLE));
 
 		this.module = module;
-		module.zeta.registry.registerBlock(this, "matrix_enchanter", true);
+		module.zeta().registry.registerBlock(this, "matrix_enchanter", true);
 
 		if(!MatrixEnchantingModule.automaticallyConvert)
 			setCreativeTab(CreativeModeTabs.FUNCTIONAL_BLOCKS, Blocks.ENCHANTING_TABLE, false);
