@@ -20,7 +20,7 @@ import org.violetmoon.zeta.config.Config;
 import org.violetmoon.zeta.event.bus.LoadEvent;
 import org.violetmoon.zeta.event.bus.PlayEvent;
 import org.violetmoon.zeta.event.play.entity.player.ZPlayerTick;
-import org.violetmoon.zeta.event.play.loading.ZGatherHints;
+import org.violetmoon.zeta.event.load.ZGatherHints;
 import org.violetmoon.zeta.module.ZetaLoadModule;
 import org.violetmoon.zeta.module.ZetaModule;
 import org.violetmoon.zeta.util.Hint;
@@ -42,7 +42,7 @@ public class CompassesWorkEverywhereModule extends ZetaModule {
 	@Hint("clock_nerf")
 	Item clock = Items.CLOCK;
 
-	@PlayEvent
+	@LoadEvent
 	public void addAdditionalHints(ZGatherHints event) {
 		if(!enableNether && !enableEnd && !enableCompassNerf)
 			return;

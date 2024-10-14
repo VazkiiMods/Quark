@@ -64,7 +64,7 @@ public class BackpackItem extends DyeableArmorItem implements IZetaItem, IZetaIt
 
 		if (module == null)return;
 
-		module.zeta.registry.registerItem(this, "backpack");
+		module.zeta().registry.registerItem(this, "backpack");
 
 		CreativeTabManager.addToCreativeTabNextTo(CreativeModeTabs.TOOLS_AND_UTILITIES, this, Items.SADDLE, true);
 	}

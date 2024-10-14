@@ -34,7 +34,7 @@ import org.violetmoon.zeta.event.bus.PlayEvent;
 import org.violetmoon.zeta.event.load.ZCommonSetup;
 import org.violetmoon.zeta.event.load.ZRegister;
 import org.violetmoon.zeta.event.play.entity.ZEntityTeleport;
-import org.violetmoon.zeta.event.play.loading.ZGatherHints;
+import org.violetmoon.zeta.event.load.ZGatherHints;
 import org.violetmoon.zeta.module.ZetaLoadModule;
 import org.violetmoon.zeta.module.ZetaModule;
 import org.violetmoon.zeta.util.Hint;
@@ -93,7 +93,7 @@ public class SpiralSpiresModule extends ZetaModule {
 		WorldGenHandler.addGenerator(this, new SpiralSpireGenerator(dimensions), Decoration.SURFACE_STRUCTURES, QuarkWorldGenWeights.SPIRAL_SPIRES);
 	}
 
-	@PlayEvent
+	@LoadEvent
 	public void addAdditionalHints(ZGatherHints event) {
 		MutableComponent comp = Component.translatable("quark.jei.hint.myalite_crystal_get");
 
