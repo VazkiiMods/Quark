@@ -47,7 +47,7 @@ public class ShearVinesModule extends ZetaModule {
 	@PlayEvent
 	public void onRightClick(ZRightClickBlock event) {
 		ItemStack stack = event.getItemStack();
-		if(zeta.itemExtensions.get(stack).canShearZeta(stack)) {
+		if(zeta().itemExtensions.get(stack).canShearZeta(stack)) {
 			BlockPos pos = event.getPos();
 			Level world = event.getLevel();
 			BlockState state = world.getBlockState(pos);
@@ -88,12 +88,12 @@ public class ShearVinesModule extends ZetaModule {
 
 		@LoadEvent
 		public void blockColors(ZAddBlockColorHandlers event) {
-			event.registerNamed(zeta, b -> LIKE_VINE, "vine");
+			event.registerNamed(zeta(), b -> LIKE_VINE, "vine");
 		}
 
 		@LoadEvent
 		public void itemColors(ZAddItemColorHandlers event) {
-			event.registerNamed(zeta, i -> LIKE_VINE, "vine");
+			event.registerNamed(zeta(), i -> LIKE_VINE, "vine");
 		}
 	}
 }

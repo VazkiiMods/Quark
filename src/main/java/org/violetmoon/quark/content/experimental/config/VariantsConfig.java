@@ -74,7 +74,7 @@ public class VariantsConfig implements IConfigType {
 		manualVariantMap.clear();
 		sortedSuffixes.clear();
 
-		if(module != null && !module.enabled)
+		if(module != null && !module.isEnabled())
 			return;
 
 		for(String s : variantTypes)
