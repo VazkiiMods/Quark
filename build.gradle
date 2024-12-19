@@ -82,9 +82,13 @@ repositories {
     mavenLocal()
 
     maven {
-        // for Zeta
+        // for Zeta and JEI
         name "blamejared"
         url "https://maven.blamejared.com"
+        content {
+            includeGroup("org.violetmoon.zeta")
+            includeGroup("mezz.jei")
+        }
     }
     maven {
         name "TerraformersMC"
@@ -102,11 +106,23 @@ repositories {
     }
     maven { // Curios api
         url = "https://maven.theillusivec4.top/"
+        content {
+            includeGroup("top.theillusivec4.curios")
+        }
     }
 
     maven {
         name "jitpack"
         url "https://jitpack.io"
+    }
+    maven {
+        // mirrors many mavens, useful as a backup in case one goes down for a bit
+        name = "ModMaven"
+        url = "https://modmaven.dev"
+        content {
+            includeGroup("org.violetmoon.zeta")
+            includeGroup("mezz.jei")
+        }
     }
 }
 
@@ -124,13 +140,11 @@ dependencies {
     //runtimeOnly fg.deobf("dev.emi:emi-forge:${deps.emi}")
     runtimeOnly fg.deobf("curse.maven:spark-361579:${deps.spark}")
 
-    //implementation fg.deobf("org.violetmoon.zeta:Zeta:1.0-25a")
-    implementation fg.deobf("curse.maven:zeta-968868:5597406")
+    implementation fg.deobf("org.violetmoon.zeta:Zeta:${deps.zeta}")
     implementation fg.deobf("com.github.glitchfiend:TerraBlender-forge:${deps.terrablender}")
-    implementation fg.deobf("curse.maven:jei-238222:${deps.jei}")
     implementation fg.deobf("curse.maven:flan-forge-493246:${deps.flan}")
     implementation fg.deobf("curse.maven:lootr-361276:${deps.lootr}")
-    implementation fg.deobf("curse.maven:just-enough-resources-jer-240630:4689010")
+    runtimeOnly fg.deobf("curse.maven:just-enough-resources-jer-240630:4689010")
 
     runtimeOnly fg.deobf("curse.maven:nofog-296468:4601446")
     runtimeOnly fg.deobf("curse.maven:woodworks-543610:5292418")
@@ -139,6 +153,12 @@ dependencies {
 
     runtimeOnly fg.deobf("top.theillusivec4.curios:curios-forge:${deps.curios}")
     compileOnly fg.deobf("top.theillusivec4.curios:curios-forge:${deps.curios}:api")
+
+    // compile against the JEI API but do not include it at runtime
+    compileOnly fg.deobf("mezz.jei:jei-${config.mc_version}-common-api:${deps.jei}")
+    compileOnly fg.deobf("mezz.jei:jei-${config.mc_version}-forge-api:${deps.jei}")
+    // at runtime, use the full JEI jar for Forge
+    runtimeOnly fg.deobf("mezz.jei:jei-${config.mc_version}-forge:${deps.jei}")
 }
 
 spotless {

@@ -188,12 +188,12 @@ public class NewStoneTypesModule extends ZetaModule {
 
 		@LoadEvent
 		public void blockColorProviders(ZAddBlockColorHandlers event) {
-			event.registerNamed(zeta, block -> MyaliteColorHandler.INSTANCE, "myalite");
+			event.registerNamed(zeta(), block -> MyaliteColorHandler.INSTANCE, "myalite");
 		}
 
 		@LoadEvent
 		public void itemColorProviders(ZAddItemColorHandlers event) {
-			event.registerNamed(zeta, item -> MyaliteColorHandler.INSTANCE, "myalite");
+			event.registerNamed(zeta(), item -> MyaliteColorHandler.INSTANCE, "myalite");
 		}
 
 		private static class MyaliteColorHandler implements BlockColor, ItemColor {
