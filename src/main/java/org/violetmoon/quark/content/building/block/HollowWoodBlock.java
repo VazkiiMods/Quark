@@ -54,7 +54,7 @@ public class HollowWoodBlock extends HollowFrameBlock {
 
 		if(module == null) //auto registration below this line
 			return;
-		module.zeta.renderLayerRegistry.put(this, RenderLayerRegistry.Layer.CUTOUT_MIPPED);
+		module.zeta().renderLayerRegistry.put(this, RenderLayerRegistry.Layer.CUTOUT_MIPPED);
 	}
 
 	@Override

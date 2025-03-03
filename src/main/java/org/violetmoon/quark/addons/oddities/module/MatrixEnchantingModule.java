@@ -38,7 +38,7 @@ import org.violetmoon.zeta.event.load.ZRegister;
 import org.violetmoon.zeta.event.play.ZBlock;
 import org.violetmoon.zeta.event.play.ZItemTooltip;
 import org.violetmoon.zeta.event.play.entity.player.ZPlayerInteract;
-import org.violetmoon.zeta.event.play.loading.ZGatherHints;
+import org.violetmoon.zeta.event.load.ZGatherHints;
 import org.violetmoon.zeta.module.ZetaLoadModule;
 import org.violetmoon.zeta.module.ZetaModule;
 import org.violetmoon.zeta.util.ItemNBTHelper;
@@ -184,7 +184,7 @@ public class MatrixEnchantingModule extends ZetaModule {
 		influenceTrigger = event.getAdvancementModifierRegistry().registerManualTrigger("influence");
 	}
 
-	@PlayEvent
+	@LoadEvent
 	public void addAdditionalHints(ZGatherHints event) {
 		MutableComponent comp = Component.translatable("quark.jei.hint.matrix_enchanting");
 		if(allowInfluencing)
