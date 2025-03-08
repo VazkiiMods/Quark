@@ -252,9 +252,19 @@ public class AttributeTooltips {
 		}
 
 		Multimap<Attribute, AttributeModifier> out = stack.getAttributeModifiers(slot);
-		if(out.isEmpty())
+		if(out.isEmpty()) {
 			out = HashMultimap.create();
-		else out = HashMultimap.create(out); // convert to our own map
+		} else {
+			// convert to our own map
+			Multimap<Attribute, AttributeModifier> filtered = HashMultimap.create();
+			for (Map.Entry<Attribute, AttributeModifier> entry : out.entries()) {
+				AttributeModifier modifier = entry.getValue();
+				if (modifier.getId() != null) {
+					filtered.put(entry.getKey(), modifier);
+				}
+			}
+			out = filtered;
+		}
 
 		if (slot == EquipmentSlot.MAINHAND) {
 			if (EnchantmentHelper.getDamageBonus(stack, MobType.UNDEFINED) > 0)
