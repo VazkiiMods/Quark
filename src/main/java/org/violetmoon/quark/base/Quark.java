@@ -55,8 +55,10 @@ public class Quark {
 		proxy = Env.unsafeRunForDist(() -> ClientProxy::new, () -> CommonProxy::new);
 		proxy.start();
 
-		if (!ZETA.isProduction) // force all mixins to load in dev
+		if (Boolean.parseBoolean(System.getProperty("quark.auditMixins", "false")))
 			MixinEnvironment.getCurrentEnvironment().audit();
+		else if(!ZETA.isProduction)
+			LOG.warn("Skipping dev-env mixin audit check. Pass -Dquark.auditMixins=true to enable");
 	}
 
 	public static ResourceLocation asResource(String name) {

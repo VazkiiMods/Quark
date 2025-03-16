@@ -54,6 +54,7 @@ minecraft {
     runs {
         configureEach {
             property "mixin.debug.export", "true"
+            property "quark.auditMixins", "true"
             mods {
                 quark {
                     source sourceSets.main
