@@ -19,7 +19,6 @@ import org.violetmoon.quark.content.client.resources.AttributeIconEntry;
 import org.violetmoon.quark.content.client.resources.AttributeIconEntry.CompareType;
 import org.violetmoon.quark.content.client.resources.AttributeSlot;
 import org.violetmoon.zeta.client.event.play.ZGatherTooltipComponents;
-import org.violetmoon.zeta.event.play.loading.ZGatherHints;
 import org.violetmoon.zeta.util.ItemNBTHelper;
 
 import com.google.common.collect.ImmutableMultimap;
@@ -166,6 +165,12 @@ public class AttributeTooltips {
 	}
 
 	private static Multimap<Attribute, AttributeModifier> getModifiers(ItemStack stack, AttributeSlot slot) {
+		//TODO(quat) I was having freak mixin errors in the Zeta dev environment
+		// Let it crash at runtime though because this should seriously never happen
+		//noinspection ConstantValue
+		if(!Quark.ZETA.isProduction && !((Object) stack instanceof PseudoAccessorItemStack))
+			return ImmutableMultimap.of();
+
 		var capturedModifiers = ((PseudoAccessorItemStack) (Object) stack).quark$getCapturedAttributes();
 
 		if(capturedModifiers.containsKey(slot)) {
