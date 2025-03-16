@@ -20,7 +20,7 @@ description='''Small things, improving Minecraft bit by bit.'''
 [[dependencies.quark]]
     modId="zeta"
     mandatory=true
-    versionRange="[1.0-25.120,2.0)"
+    versionRange="[1.0-28,2.0)"
     ordering="AFTER"
     side="BOTH"
 
