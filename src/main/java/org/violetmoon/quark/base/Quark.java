@@ -3,12 +3,10 @@ package org.violetmoon.quark.base;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.item.crafting.RecipeManager;
 import net.minecraftforge.fml.common.Mod;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.spongepowered.asm.mixin.MixinEnvironment;
-import org.violetmoon.quark.base.proxy.ClientProxy;
 import org.violetmoon.quark.base.proxy.CommonProxy;
 import org.violetmoon.quark.integration.claim.FlanIntegration;
 import org.violetmoon.quark.integration.claim.IClaimIntegration;
@@ -18,8 +16,7 @@ import org.violetmoon.quark.integration.terrablender.AbstractUndergroundBiomeHan
 import org.violetmoon.quark.integration.terrablender.TerrablenderUndergroundBiomeHandler;
 import org.violetmoon.quark.integration.terrablender.VanillaUndergroundBiomeHandler;
 import org.violetmoon.zeta.Zeta;
-import org.violetmoon.zeta.multiloader.Env;
-import org.violetmoon.zeta.util.Utils;
+import org.violetmoon.zeta.util.ZetaSide;
 import org.violetmoon.zetaimplforge.ForgeZeta;
 
 @Mod(Quark.MOD_ID)
@@ -52,13 +49,24 @@ public class Quark {
 
 		ZETA.start();
 
-		proxy = Env.unsafeRunForDist(() -> ClientProxy::new, () -> CommonProxy::new);
+		proxy = makeProxy();
 		proxy.start();
 
 		if (Boolean.parseBoolean(System.getProperty("quark.auditMixins", "false")))
 			MixinEnvironment.getCurrentEnvironment().audit();
 		else if(!ZETA.isProduction)
 			LOG.warn("Skipping dev-env mixin audit check. Pass -Dquark.auditMixins=true to enable");
+	}
+
+	private CommonProxy makeProxy() {
+		try {
+			if(ZETA.side == ZetaSide.CLIENT)
+				return (CommonProxy) Class.forName("org.violetmoon.quark.base.proxy.ClientProxy").getConstructor().newInstance();
+			else
+				return new CommonProxy();
+		} catch (Exception e) {
+			throw new RuntimeException("Failed to construct Quark proxy", e);
+		}
 	}
 
 	public static ResourceLocation asResource(String name) {
