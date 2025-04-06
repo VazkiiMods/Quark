@@ -264,7 +264,7 @@ public class VariantSelectorModule extends ZetaModule {
 				// swap to base instead of variant if above failed
 				baseBlock = variants.getOriginalBlock(pickedBlock);
 				ItemStack baseItem = new ItemStack(baseBlock);
-				if (!baseItem.isEmpty() && player.getInventory().hasAnyMatching(i -> i.is(baseItem.getItem()))) {
+				if (!baseItem.isEmpty() && player.isCreative() || player.getInventory().hasAnyMatching(i -> i.is(baseItem.getItem()))) {
 					if (baseBlock != pickedBlock) {
 						String variantKey = variants.getVariantOfBlock(baseBlock, pickedBlock);
 						if (variantKey != null) {
