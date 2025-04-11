@@ -1,5 +1,9 @@
 package org.violetmoon.quark.addons.oddities.item;
 
+import net.minecraft.core.Holder.Reference;
+import net.minecraft.core.HolderLookup.RegistryLookup;
+import net.minecraft.core.component.DataComponents;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.Containers;
@@ -11,11 +15,18 @@ import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
-import net.minecraft.world.item.*;
+import net.minecraft.world.item.ArmorItem;
+import net.minecraft.world.item.ArmorMaterials;
+import net.minecraft.world.item.CreativeModeTabs;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.item.Rarity;
 import net.minecraft.world.item.component.ItemAttributeModifiers;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.item.enchantment.Enchantments;
+import net.minecraft.world.item.enchantment.ItemEnchantments;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.neoforged.neoforge.capabilities.Capabilities;
@@ -112,7 +123,7 @@ public class BackpackItem extends ArmorItem implements IZetaItem, IZetaItemExten
 	}
 
 	@Override
-	public <T extends LivingEntity> int damageItemZeta(ItemStack stack, int amount, T entity, Consumer<T> onBroken) {
+	public <T extends LivingEntity> int damageItemZeta(ItemStack stack, int amount, T entity, Consumer<Item> onBroken) {
 		return 0;
 	}
 
@@ -120,16 +131,20 @@ public class BackpackItem extends ArmorItem implements IZetaItem, IZetaItemExten
 	public void inventoryTick(@NotNull ItemStack stack, Level worldIn, @NotNull Entity entityIn, int itemSlot, boolean isSelected) {
 		if(worldIn.isClientSide) return;
 
+		RegistryLookup<Enchantment> enchantmentLookup = worldIn.registryAccess().lookupOrThrow(Registries.ENCHANTMENT);
+
+		Reference<Enchantment> bindingCurse = enchantmentLookup.getOrThrow(Enchantments.BINDING_CURSE);
+		
 		boolean hasItems = !BackpackModule.superOpMode && doesBackpackHaveItems(stack);
-		Map<Enchantment, Integer> enchants = EnchantmentHelper.getEnchantments(stack);
-		boolean isCursed = enchants.containsKey(Enchantments.BINDING_CURSE);
+		ItemEnchantments.Mutable enchants = new ItemEnchantments.Mutable(stack.getOrDefault(DataComponents.ENCHANTMENTS, ItemEnchantments.EMPTY));
+		boolean isCursed = enchants.getLevel(bindingCurse) == 1;
 
 		boolean changedEnchants = false;
 
 		if(hasItems) {
 			if(BackpackModule.isEntityWearingBackpack(entityIn, stack)) {
 				if(!isCursed) {
-					enchants.put(Enchantments.BINDING_CURSE, 1);
+					enchants.set(bindingCurse, 1);
 					changedEnchants = true;
 				}
 
@@ -148,12 +163,12 @@ public class BackpackItem extends ArmorItem implements IZetaItem, IZetaItemExten
 				entityIn.spawnAtLocation(copy, 0);
 			}
 		} else if(isCursed) {
-			enchants.remove(Enchantments.BINDING_CURSE);
+			enchants.removeIf(e -> e.is(bindingCurse.key()));
 			changedEnchants = true;
 		}
 
 		if(changedEnchants)
-			EnchantmentHelper.setEnchantments(enchants, stack);
+			stack.set(DataComponents.ENCHANTMENTS, enchants.toImmutable());
 	}
 
 	@Override
