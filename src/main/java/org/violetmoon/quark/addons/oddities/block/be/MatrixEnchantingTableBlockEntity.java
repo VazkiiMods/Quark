@@ -275,8 +275,7 @@ public class MatrixEnchantingTableBlockEntity extends AbstractEnchantingTableBlo
 
 	public static boolean isShortBlock(Level level, BlockPos pos) {
 		BlockState state = level.getBlockState(pos);
-		Block block = state.getBlock();
-		VoxelShape shape = block.getShape(state, level, pos, CollisionContext.empty());
+		VoxelShape shape = state.getShape(level, pos, CollisionContext.empty());
 		if (shape.isEmpty())
 			return true;
 		AABB bounds = shape.bounds();

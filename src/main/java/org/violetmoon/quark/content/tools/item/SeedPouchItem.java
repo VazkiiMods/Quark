@@ -24,9 +24,9 @@ import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.ChestBlockEntity;
 import net.minecraft.world.phys.BlockHitResult;
-import net.minecraftforge.common.capabilities.ForgeCapabilities;
-import net.minecraftforge.items.IItemHandler;
-import net.minecraftforge.items.ItemHandlerHelper;
+import net.neoforged.neoforge.capabilities.Capabilities;
+import net.neoforged.neoforge.items.IItemHandler;
+import net.neoforged.neoforge.items.ItemHandlerHelper;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.violetmoon.quark.api.ITrowelable;
@@ -212,7 +212,7 @@ public class SeedPouchItem extends ZetaItem implements IUsageTickerOverride, ITr
 			if (player != null && player.isShiftKeyDown() && !context.getLevel().isClientSide()) {
 				BlockEntity targetedBE = context.getLevel().getBlockEntity(BlockPos.containing(context.getClickLocation()));
 				if (targetedBE instanceof ChestBlockEntity chest) {
-					Optional<IItemHandler> optionalItemHandler = chest.getCapability(ForgeCapabilities.ITEM_HANDLER, Direction.NORTH).resolve();
+					Optional<IItemHandler> optionalItemHandler = Optional.ofNullable(context.getLevel().getCapability(Capabilities.ItemHandler.BLOCK, chest.getBlockPos(), Direction.NORTH));
 					if (optionalItemHandler.isPresent()) {
 						// Copy stack and set it to the amount in the pouch
 						ItemStack toInsert = seed.copy();
@@ -478,7 +478,7 @@ public class SeedPouchItem extends ZetaItem implements IUsageTickerOverride, ITr
 			if(isEmpty())
 				return other.is(SeedPouchModule.seedPouchHoldableTag) || (SeedPouchModule.allowFertilizer && other.is(SeedPouchModule.seedPouchFertilizersTag));
 			else
-				return this.count < SeedPouchModule.maxItems && ItemStack.isSameItemSameTags(contents, other);
+				return this.count < SeedPouchModule.maxItems && ItemStack.isSameItemSameComponents(contents, other);
 		}
 
 	}

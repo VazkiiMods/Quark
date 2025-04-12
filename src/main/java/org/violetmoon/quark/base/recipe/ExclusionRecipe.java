@@ -4,9 +4,8 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonSyntaxException;
-
+import net.minecraft.core.HolderLookup;
 import net.minecraft.core.NonNullList;
-import net.minecraft.core.RegistryAccess;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
@@ -15,8 +14,6 @@ import net.minecraft.world.inventory.CraftingContainer;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.*;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.common.crafting.IShapedRecipe;
-
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
@@ -40,25 +37,22 @@ public class ExclusionRecipe implements CraftingRecipe {
 	}
 
 	@Override
-	public boolean matches(@NotNull CraftingContainer inv, @NotNull Level worldIn) {
+	public boolean matches(CraftingInput input, Level level) {
 		for(ResourceLocation recipeLoc : excluded) {
-			Optional<? extends Recipe<?>> recipeHolder = worldIn.getRecipeManager().byKey(recipeLoc);
+			Optional<RecipeHolder<?>> recipeHolder = level.getRecipeManager().byKey(recipeLoc);
 			if(recipeHolder.isPresent()) {
-				Recipe<?> recipe = recipeHolder.get();
-				if(recipe instanceof CraftingRecipe craftingRecipe &&
-						craftingRecipe.matches(inv, worldIn)) {
+				Recipe<?> recipe = recipeHolder.get().value();
+				if (recipe instanceof CraftingRecipe craftingRecipe && craftingRecipe.matches(input, level)) {
 					return false;
 				}
 			}
 		}
-
-		return parent.matches(inv, worldIn);
+		return parent.matches(input, level);
 	}
 
-	@NotNull
 	@Override
-	public ItemStack assemble(@NotNull CraftingContainer inv, RegistryAccess gaming) {
-		return parent.assemble(inv, gaming);
+	public ItemStack assemble(CraftingInput input, HolderLookup.Provider provider) {
+		return parent.assemble(input, provider);
 	}
 
 	@Override
@@ -66,16 +60,9 @@ public class ExclusionRecipe implements CraftingRecipe {
 		return parent.canCraftInDimensions(width, height);
 	}
 
-	@NotNull
 	@Override
-	public ItemStack getResultItem(RegistryAccess acc) {
-		return parent.getResultItem(acc);
-	}
-
-	@NotNull
-	@Override
-	public ResourceLocation getId() {
-		return parent.getId();
+	public ItemStack getResultItem(HolderLookup.Provider provider) {
+		return parent.getResultItem(provider);
 	}
 
 	@NotNull
@@ -90,10 +77,9 @@ public class ExclusionRecipe implements CraftingRecipe {
 		return parent.getType();
 	}
 
-	@NotNull
 	@Override
-	public NonNullList<ItemStack> getRemainingItems(@NotNull CraftingContainer inv) {
-		return parent.getRemainingItems(inv);
+	public NonNullList<ItemStack> getRemainingItems(CraftingInput input) {
+		return parent.getRemainingItems(input);
 	}
 
 	@NotNull

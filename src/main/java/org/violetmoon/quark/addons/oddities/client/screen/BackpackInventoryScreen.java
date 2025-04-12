@@ -46,7 +46,6 @@ public class BackpackInventoryScreen extends InventoryScreen implements IQuarkBu
 	public static Player setBackpackContainer(Player entity, InventoryMenu container) {
 		oldContainer = entity.inventoryMenu;
 		entity.inventoryMenu = container;
-
 		return entity;
 	}
 

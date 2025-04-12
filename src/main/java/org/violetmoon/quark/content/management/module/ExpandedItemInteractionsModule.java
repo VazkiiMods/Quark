@@ -8,6 +8,7 @@ import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.RegistryAccess;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
@@ -26,17 +27,16 @@ import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.*;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
+import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.EntityBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.common.capabilities.ForgeCapabilities;
-import net.minecraftforge.common.extensions.IForgeMenuType;
-import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.items.IItemHandler;
-import net.minecraftforge.items.ItemHandlerHelper;
-import net.minecraftforge.items.wrapper.EmptyHandler;
-import net.minecraftforge.network.NetworkHooks;
+import net.neoforged.neoforge.capabilities.Capabilities;
+import net.neoforged.neoforge.common.extensions.IMenuTypeExtension;
+import net.neoforged.neoforge.items.IItemHandler;
+import net.neoforged.neoforge.items.ItemHandlerHelper;
+import net.neoforged.neoforge.items.ItemStackHandler;
 import org.violetmoon.quark.base.Quark;
 import org.violetmoon.quark.base.QuarkClient;
 import org.violetmoon.quark.base.config.QuarkGeneralConfig;
@@ -61,6 +61,7 @@ import org.violetmoon.zeta.util.ItemNBTHelper;
 import org.violetmoon.zeta.util.RegistryUtil;
 
 import java.util.List;
+import java.util.Optional;
 
 @ZetaLoadModule(category = "management")
 public class ExpandedItemInteractionsModule extends ZetaModule {
@@ -89,7 +90,7 @@ public class ExpandedItemInteractionsModule extends ZetaModule {
 
 	@LoadEvent
 	public final void register(ZRegister event) {
-		heldShulkerBoxMenuType = IForgeMenuType.create(HeldShulkerBoxMenu::fromNetwork);
+		heldShulkerBoxMenuType = IMenuTypeExtension.create(HeldShulkerBoxMenu::fromNetwork);
 		Quark.ZETA.registry.register(heldShulkerBoxMenuType, "held_shulker_box", Registries.MENU);
 	}
 
@@ -199,7 +200,8 @@ public class ExpandedItemInteractionsModule extends ZetaModule {
 
                 if (slot.mayPickup(player)) {
                     if (slot.mayPlace(currArmor) || (currArmor.isEmpty())) {
-                        if (currArmor.isEmpty() || (!EnchantmentHelper.hasBindingCurse(currArmor) && currArmor != stack)) {
+                        if (currArmor.isEmpty() || (!(EnchantmentHelper.getTagEnchantmentLevel(player.level().registryAccess().lookupOrThrow(Registries.ENCHANTMENT).getOrThrow(Enchantments.BINDING_CURSE), currArmor) > 0)
+								&& currArmor != stack)) {
                             if (!simulate) {
                                 player.setItemSlot(equipSlot, stack.copy());
                                 if ((currArmor.isEmpty())) slot.remove(1); // Added to allow people to grab from Forge component slots while not wearing an item. God Forge is weird.
@@ -281,7 +283,7 @@ public class ExpandedItemInteractionsModule extends ZetaModule {
 		return false;
 	}
 
-	public static BlockEntity getShulkerBoxEntity(ItemStack shulkerBox) {
+	public static BlockEntity getShulkerBoxEntity(ItemStack shulkerBox, RegistryAccess access) {
 		CompoundTag cmp = ItemNBTHelper.getCompound(shulkerBox, "BlockEntityTag", false);
 		if(cmp.contains("LootTable"))
 			return null;
@@ -295,7 +297,7 @@ public class ExpandedItemInteractionsModule extends ZetaModule {
 			if(shulkerBoxBlock instanceof EntityBlock) {
 				te = ((EntityBlock) shulkerBoxBlock).newBlockEntity(BlockPos.ZERO, defaultState);
 				if(te != null)
-					te.load(cmp);
+					te.loadWithComponents(cmp, access);
 			}
 		}
 
@@ -306,18 +308,16 @@ public class ExpandedItemInteractionsModule extends ZetaModule {
 		if(!SimilarBlockTypeHandler.isShulkerBox(shulkerBox) || !slot.mayPickup(player))
 			return null;
 
-		BlockEntity tile = getShulkerBoxEntity(shulkerBox);
+		BlockEntity tile = getShulkerBoxEntity(shulkerBox, player.level().registryAccess());
 
-		if(tile != null) {
-			LazyOptional<IItemHandler> handlerHolder = tile.getCapability(ForgeCapabilities.ITEM_HANDLER, null);
-			if(handlerHolder.isPresent()) {
-				IItemHandler handler = handlerHolder.orElseGet(EmptyHandler::new);
+		if (tile != null && tile.getLevel() != null) {
+			Optional<IItemHandler> handlerHolder = Optional.ofNullable(tile.getLevel().getCapability(Capabilities.ItemHandler.BLOCK, tile.getBlockPos(), null));
+			if(handlerHolder.isPresent() && handlerHolder.orElse(new ItemStackHandler()) instanceof IItemHandler handler) {
 				if(SimilarBlockTypeHandler.isShulkerBox(stack) && allowDump) {
-					BlockEntity otherShulker = getShulkerBoxEntity(stack);
-					if(otherShulker != null) {
-						LazyOptional<IItemHandler> otherHolder = otherShulker.getCapability(ForgeCapabilities.ITEM_HANDLER, null);
-						if(otherHolder.isPresent()) {
-							IItemHandler otherHandler = otherHolder.orElseGet(EmptyHandler::new);
+					BlockEntity otherShulker = getShulkerBoxEntity(stack, player.level().registryAccess());
+					if(otherShulker != null && otherShulker.getLevel() != null) {
+						Optional<IItemHandler> otherHolder = Optional.ofNullable(otherShulker.getLevel().getCapability(Capabilities.ItemHandler.BLOCK, otherShulker.getBlockPos(), null));
+						if(otherHolder.isPresent() && otherHolder.orElse(new ItemStackHandler()) instanceof IItemHandler otherHandler) {
 							boolean any = false;
 							for(int i = 0; i < otherHandler.getSlots(); i++) {
 								ItemStack inserting = otherHandler.extractItem(i, 64, true);
@@ -371,6 +371,7 @@ public class ExpandedItemInteractionsModule extends ZetaModule {
 
 		@LoadEvent
 		public final void clientSetup(ZClientSetup event) {
+
 			MenuScreens.register(heldShulkerBoxMenuType, HeldShulkerBoxScreen::new);
 		}
 

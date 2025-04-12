@@ -204,7 +204,7 @@ public class BackpackItem extends ArmorItem implements IZetaItem, IZetaItemExten
 	//TODO: IForgeItem
 	@NotNull
 	@Override
-	public ICapabilityProvider initCapabilities(ItemStack stack, CompoundTag oldCapNbt) {
+	public IC initCapabilities(ItemStack stack, CompoundTag oldCapNbt) {
 		ProxiedItemStackHandler handler = new ProxiedItemStackHandler(stack, 27);
 
 		if(oldCapNbt != null && oldCapNbt.contains("Parent")) {

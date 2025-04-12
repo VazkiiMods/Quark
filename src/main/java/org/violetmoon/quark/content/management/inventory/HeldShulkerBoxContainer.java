@@ -29,7 +29,7 @@ public class HeldShulkerBoxContainer implements Container, MenuProvider {
 		ShulkerBoxBlockEntity gotBe = null;
 
 		if(SimilarBlockTypeHandler.isShulkerBox(stack)) {
-			BlockEntity tile = ExpandedItemInteractionsModule.getShulkerBoxEntity(stack);
+			BlockEntity tile = ExpandedItemInteractionsModule.getShulkerBoxEntity(stack, player.level().registryAccess());
 			if(tile instanceof ShulkerBoxBlockEntity shulker)
 				gotBe = shulker;
 		}

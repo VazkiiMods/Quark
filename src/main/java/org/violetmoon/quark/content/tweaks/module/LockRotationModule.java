@@ -2,6 +2,7 @@ package org.violetmoon.quark.content.tweaks.module;
 
 import java.lang.reflect.Field;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -85,7 +86,7 @@ public class LockRotationModule extends ZetaModule {
 
 	public static BlockState getRotatedState(Level world, BlockPos pos, BlockState state, Direction face, int half) {
 		BlockState setState = state;
-		ImmutableMap<Property<?>, Comparable<?>> props = state.getValues();
+		Map<Property<?>, Comparable<?>> props = state.getValues();
 		Block block = state.getBlock();
 
 		if(block instanceof IRotationLockable lockable)

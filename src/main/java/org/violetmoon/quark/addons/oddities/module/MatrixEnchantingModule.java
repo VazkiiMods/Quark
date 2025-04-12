@@ -18,7 +18,7 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.common.extensions.IForgeMenuType;
+import net.neoforged.neoforge.common.extensions.IMenuTypeExtension;
 import net.neoforged.neoforge.common.util.FakePlayer;
 import org.violetmoon.quark.addons.oddities.block.MatrixEnchantingTableBlock;
 import org.violetmoon.quark.addons.oddities.block.be.MatrixEnchantingTableBlockEntity;
@@ -175,7 +175,7 @@ public class MatrixEnchantingModule extends ZetaModule {
 	public final void register(ZRegister event) {
 		matrixEnchanter = new MatrixEnchantingTableBlock(this);
 
-		menuType = IForgeMenuType.create(MatrixEnchantingMenu::fromNetwork);
+		menuType = IMenuTypeExtension.create(MatrixEnchantingMenu::fromNetwork);
 		Quark.ZETA.registry.register(menuType, "matrix_enchanting", Registries.MENU);
 
 		blockEntityType = BlockEntityType.Builder.of(MatrixEnchantingTableBlockEntity::new, matrixEnchanter).build(null);

@@ -36,7 +36,6 @@ import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.common.MinecraftForge;
 import net.neoforged.neoforge.common.ItemAbility;
 import net.neoforged.neoforge.common.NeoForge;
 import org.apache.commons.lang3.mutable.MutableBoolean;
@@ -328,7 +327,7 @@ public class SimpleHarvestModule extends ZetaModule {
 				QuarkClient.ZETA_CLIENT.sendToServer(new HarvestMessage(pos, hand));
 		} else {
 			if(harvestingCostsDurability && isHoe)
-				inHand.hurtAndBreak(1, player, (p) -> p.broadcastBreakEvent(InteractionHand.MAIN_HAND));
+				inHand.hurtAndBreak(1, player, Player.getSlotForHand(InteractionHand.MAIN_HAND));
 		}
 
 		return true;

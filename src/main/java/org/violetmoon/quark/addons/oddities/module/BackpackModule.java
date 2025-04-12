@@ -26,7 +26,7 @@ import net.minecraft.world.item.component.DyedItemColor;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.properties.NoteBlockInstrument;
-import net.minecraftforge.common.extensions.IForgeMenuType;
+import net.neoforged.neoforge.common.extensions.IMenuTypeExtension;
 import org.violetmoon.quark.addons.oddities.client.screen.BackpackInventoryScreen;
 import org.violetmoon.quark.addons.oddities.inventory.BackpackMenu;
 import org.violetmoon.quark.addons.oddities.item.BackpackItem;
@@ -89,7 +89,7 @@ public class BackpackModule extends ZetaModule {
 		backpack = new BackpackItem(this);
 		ravager_hide = new ZetaItem("ravager_hide", this, new Item.Properties().rarity(Rarity.RARE)).setCondition(() -> enableRavagerHide).setCreativeTab(CreativeModeTabs.INGREDIENTS, Items.RABBIT_HIDE, false);
 
-		menyType = IForgeMenuType.create(BackpackMenu::fromNetwork);
+		menyType = IMenuTypeExtension.create(BackpackMenu::fromNetwork);
 		Quark.ZETA.registry.register(menyType, "backpack", Registries.MENU);
 
 		bonded_ravager_hide = new ZetaBlock("bonded_ravager_hide", this, Block.Properties.of()
@@ -146,7 +146,7 @@ public class BackpackModule extends ZetaModule {
 				player.setItemSlot(EquipmentSlot.CHEST, armorStandCopy);
 				
 				player.swing(InteractionHand.MAIN_HAND);
-				player.playSound(SoundEvents.ARMOR_EQUIP_LEATHER);
+				player.playSound(SoundEvents.ARMOR_EQUIP_LEATHER.value());
 				
 				event.setCanceled(true);
 				event.setCancellationResult(InteractionResult.sidedSuccess(player.level().isClientSide));

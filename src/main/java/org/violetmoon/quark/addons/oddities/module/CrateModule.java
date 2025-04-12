@@ -5,8 +5,7 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntityType;
-import net.minecraftforge.common.extensions.IForgeMenuType;
-
+import net.neoforged.neoforge.common.extensions.IMenuTypeExtension;
 import org.violetmoon.quark.addons.oddities.block.CrateBlock;
 import org.violetmoon.quark.addons.oddities.block.be.CrateBlockEntity;
 import org.violetmoon.quark.addons.oddities.client.screen.CrateScreen;
@@ -36,7 +35,7 @@ public class CrateModule extends ZetaModule {
 	public final void register(ZRegister event) {
 		crate = new CrateBlock(this);
 
-		menuType = IForgeMenuType.create(CrateMenu::fromNetwork);
+		menuType = IMenuTypeExtension.create(CrateMenu::fromNetwork);
 		Quark.ZETA.registry.register(menuType, "crate", Registries.MENU);
 
 		blockEntityType = BlockEntityType.Builder.of(CrateBlockEntity::new, crate).build(null);

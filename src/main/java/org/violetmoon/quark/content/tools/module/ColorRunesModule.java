@@ -29,6 +29,7 @@ import org.violetmoon.quark.content.tools.base.RuneColor;
 import org.violetmoon.quark.content.tools.client.render.GlintRenderTypes;
 import org.violetmoon.quark.content.tools.item.RuneItem;
 import org.violetmoon.quark.content.tools.recipe.SmithingRuneRecipe;
+import org.violetmoon.quark.mixin.mixins.accessor.AccessorAbstractArrow;
 import org.violetmoon.zeta.advancement.ManualTrigger;
 import org.violetmoon.zeta.config.Config;
 import org.violetmoon.zeta.event.bus.LoadEvent;
@@ -112,7 +113,7 @@ public class ColorRunesModule extends ZetaModule {
 	private static final Map<ThrownTrident, ItemStack> TRIDENT_STACK_REFERENCES = new WeakHashMap<>();
 
 	public static void syncTrident(Consumer<Packet<?>> packetConsumer, ThrownTrident trident, boolean force) {
-		ItemStack stack = trident.getPickupItem();
+		ItemStack stack = ((AccessorAbstractArrow)trident).quark$getPickupItem();
 		ItemStack prev = TRIDENT_STACK_REFERENCES.get(trident);
 		if(force || prev == null || ItemStack.isSameItemSameComponents(stack, prev))
 			packetConsumer.accept(Quark.ZETA.network.wrapInVanilla(new UpdateTridentMessage(trident.getId(), stack), ZetaNetworkDirection.PLAY_TO_CLIENT));

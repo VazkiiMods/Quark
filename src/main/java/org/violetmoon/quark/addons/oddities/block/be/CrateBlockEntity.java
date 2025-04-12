@@ -20,15 +20,16 @@ import net.minecraft.world.level.block.entity.BaseContainerBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.phys.AABB;
-import net.minecraftforge.common.capabilities.ForgeCapabilities;
-import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.items.wrapper.EmptyHandler;
+import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.items.IItemHandler;
+import net.neoforged.neoforge.items.ItemStackHandler;
 import org.jetbrains.annotations.NotNull;
 import org.violetmoon.quark.addons.oddities.block.CrateBlock;
 import org.violetmoon.quark.addons.oddities.capability.CrateItemHandler;
 import org.violetmoon.quark.addons.oddities.inventory.CrateMenu;
 import org.violetmoon.quark.addons.oddities.module.CrateModule;
+
+import java.util.Optional;
 
 public class CrateBlockEntity extends BaseContainerBlockEntity implements WorldlyContainer {
 
@@ -83,8 +84,8 @@ public class CrateBlockEntity extends BaseContainerBlockEntity implements Worldl
 	}
 
 	public CrateItemHandler itemHandler() {
-		LazyOptional<IItemHandler> handler = getCapability(ForgeCapabilities.ITEM_HANDLER);
-		if(handler.isPresent() && handler.orElse(new EmptyHandler()) instanceof CrateItemHandler crateHandler)
+		Optional<IItemHandler> handler = Optional.ofNullable(this.level.getCapability(Capabilities.ItemHandler.BLOCK, this.getBlockPos(), null));
+		if (handler.isPresent() && handler.orElse(new ItemStackHandler()) instanceof CrateItemHandler crateHandler)
 			return crateHandler;
 
 		// Should never happen, but just to prevent null-pointers
@@ -139,9 +140,8 @@ public class CrateBlockEntity extends BaseContainerBlockEntity implements Worldl
 		return itemHandler().getSlotLimit(index) > 0;
 	}
 
-	@NotNull
 	@Override
-	public int[] getSlotsForFace(@NotNull Direction dir) {
+	public int @NotNull [] getSlotsForFace(@NotNull Direction dir) {
 		int slotCount = itemHandler().getSlots();
 		if(visibleSlots.length != slotCount) {
 			visibleSlots = new int[slotCount];

@@ -7,4 +7,3 @@ pluginManagement {
 }
 
 rootProject.name = 'Quark'
-include ':Zeta' // Dev only; remove from prod

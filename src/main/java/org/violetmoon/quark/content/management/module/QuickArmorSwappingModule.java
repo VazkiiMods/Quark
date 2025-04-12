@@ -50,7 +50,7 @@ public class QuickArmorSwappingModule extends ZetaModule {
 
 		ItemStack held = player.getItemInHand(InteractionHand.MAIN_HAND);
 
-		if(armorStandItem.isEmpty() && !held.isEmpty() && Player.getEquipmentSlotForItem(held) == slot) {
+		if(armorStandItem.isEmpty() && !held.isEmpty() && player.getEquipmentSlotForItem(held) == slot) {
 			ItemStack copy = held.copy();
 			player.setItemInHand(InteractionHand.MAIN_HAND, ItemStack.EMPTY);
 			armorStandItem = copy;

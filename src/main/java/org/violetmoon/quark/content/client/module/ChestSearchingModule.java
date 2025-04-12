@@ -1,12 +1,13 @@
 package org.violetmoon.quark.content.client.module;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
+import java.util.*;
 import java.util.function.BiPredicate;
 import java.util.regex.Pattern;
 
+import net.minecraft.world.level.Level;
+import net.neoforged.neoforge.capabilities.Capabilities;
+import net.neoforged.neoforge.items.IItemHandler;
+import net.neoforged.neoforge.items.ItemStackHandler;
 import org.jetbrains.annotations.Nullable;
 import org.violetmoon.quark.api.IQuarkButtonAllowed;
 import org.violetmoon.quark.base.client.handler.ClientUtil;
@@ -52,10 +53,6 @@ import net.minecraft.world.item.alchemy.PotionUtils;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraftforge.common.capabilities.ForgeCapabilities;
-import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.items.IItemHandler;
-import net.minecraftforge.items.wrapper.EmptyHandler;
 
 @ZetaLoadModule(category = "client")
 public class ChestSearchingModule extends ZetaModule {
@@ -229,18 +226,18 @@ public class ChestSearchingModule extends ZetaModule {
 			ResourceLocation res = BuiltInRegistries.ITEM.getKey(item);
 			if(SimilarBlockTypeHandler.isShulkerBox(res)) {
 				CompoundTag cmp = ItemNBTHelper.getCompound(stack, "BlockEntityTag", true);
-				if(cmp != null) {
+				Level level = Minecraft.getInstance().level;
+				if(cmp != null && level != null) {
 					if(!cmp.contains("id")) {
 						cmp = cmp.copy();
 						cmp.putString("id", "minecraft:shulker_box");
 					}
 
-					BlockEntity te = BlockEntity.loadStatic(BlockPos.ZERO, ((BlockItem) item).getBlock().defaultBlockState(), cmp);
-					if(te != null) {
-						LazyOptional<IItemHandler> handler = te.getCapability(ForgeCapabilities.ITEM_HANDLER, null);
+					BlockEntity be = BlockEntity.loadStatic(BlockPos.ZERO, ((BlockItem) item).getBlock().defaultBlockState(), cmp, level.registryAccess());
+					if(be != null) {
+						Optional<IItemHandler> handler = Optional.ofNullable(level.getCapability(Capabilities.ItemHandler.BLOCK, be.getBlockPos(), null));
 						if(handler.isPresent()) {
-							IItemHandler items = handler.orElseGet(EmptyHandler::new);
-
+							IItemHandler items = handler.orElse(new ItemStackHandler());
 							for(int i = 0; i < items.getSlots(); i++)
 								if(namesMatch(items.getStackInSlot(i), search))
 									return true;

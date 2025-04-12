@@ -6,12 +6,8 @@ import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
-import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.capabilities.ForgeCapabilities;
-import net.minecraftforge.common.util.LazyOptional;
 import net.neoforged.neoforge.items.IItemHandler;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import org.violetmoon.quark.content.automation.block.ChuteBlock;
 import org.violetmoon.quark.content.automation.module.ChuteModule;
 import org.violetmoon.quark.content.building.module.GrateModule;
@@ -94,6 +90,7 @@ public class ChuteBlockEntity extends ZetaBlockEntity {
 		}
 	};
 
+	/* TODO: Need to use ICapabilityProvider in registration (?)
 	@NotNull
 	@Override
 	public <T> LazyOptional<T> getCapability(@NotNull Capability<T> cap, @Nullable Direction side) {
@@ -101,4 +98,5 @@ public class ChuteBlockEntity extends ZetaBlockEntity {
 			return LazyOptional.of(() -> handler).cast();
 		return super.getCapability(cap, side);
 	}
+	 */
 }
