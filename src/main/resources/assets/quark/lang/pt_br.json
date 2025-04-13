@@ -417,7 +417,7 @@
 	
 	"quark.misc.shulker_box_shift": "Segure Shift para ver o conteúdo",
 	"quark.misc.map_shift": "Segure Shift para ver o mapa",
-	"quark.misc.rotation_lock": "Você travou de Rotação. Quaisquer blocos que você colocar serão orientados na direção que estiver olhando. Pressione [%s] para alterar ou redefinir isso. Esta mensagem não aparecerá novamente.",
+	"quark.misc.rotation_lock": "Você ativou a trava de rotação. Quaisquer blocos que você colocar serão orientados na direção que estiver olhando. Pressione [%s] para alterar ou redefinir isso. Esta mensagem não aparecerá novamente.",
 	"quark.misc.saturation0": "Refeição satisfatória",
 	"quark.misc.saturation1": "Refeição farta",
 	"quark.misc.saturation2": "Refeição",
