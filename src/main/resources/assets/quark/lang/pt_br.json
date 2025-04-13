@@ -165,7 +165,7 @@
 	"quark.camera.overlay3": "Marca d'água",
 	"quark.camera.overlay4": "Item segurado",
 	
-	"quark.camera.header": "Modo câmera",
+	"quark.camera.header": "Modo de câmera",
 	"quark.camera.info": "[%s para sair, ENTER para tirar foto]",
 	"quark.camera.reset": "Redefinir configurações (precisa agachar)",
 	"quark.camera.greetings": "Saudações de %s!",
@@ -314,7 +314,7 @@
 	"quark.keybind.patreon_emote.dance": "Dançar (Patreon)",
 	"quark.keybind.patreon_emote.tpose": "T-Pose (Patreon)",
 	"quark.keybind.patreon_emote.dab": "Dab (Patreon)",
-	"quark.keybind.patreon_emote.jet": "Jat (Patreon)",
+	"quark.keybind.patreon_emote.jet": "Jet (Patreon)",
 	"quark.keybind.patreon_emote.exorcist": "Exorcista (Patreon)",
 	"quark.keybind.patreon_emote.zombie": "Zumbi (Patreon)",
 	"quark.keybind.back": "Voltar",
