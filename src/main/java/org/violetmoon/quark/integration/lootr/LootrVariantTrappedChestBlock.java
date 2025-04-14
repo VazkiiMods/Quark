@@ -23,7 +23,7 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import noobanidus.mods.lootr.common.block.entity.LootrChestBlockEntity;
-import noobanidus.mods.lootr.config.ConfigManager;
+import noobanidus.mods.lootr.neoforge.config.ConfigManager;
 import noobanidus.mods.lootr.util.ChestUtil;
 import org.jetbrains.annotations.Nullable;
 import org.violetmoon.quark.content.building.block.VariantTrappedChestBlock;

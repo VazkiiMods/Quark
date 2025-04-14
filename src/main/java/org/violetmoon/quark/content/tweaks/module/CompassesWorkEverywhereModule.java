@@ -127,7 +127,7 @@ public class CompassesWorkEverywhereModule extends ZetaModule {
 		@LoadEvent
 		public void clientSetup(ZClientSetup e) {
 			e.enqueueWork(() -> {
-				if(!enabled)
+				if(!isEnabled())
 					return;
 
 				if(enableCompassNerf || enableNether || enableEnd)

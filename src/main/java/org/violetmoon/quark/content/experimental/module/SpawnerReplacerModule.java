@@ -34,7 +34,7 @@ public class SpawnerReplacerModule extends ZetaModule {
 
 	@LoadEvent
 	public final void configChanged(ZConfigChanged event) {
-		staticEnabled = enabled;
+		staticEnabled = isEnabled();
 
 		spawnerReplacements.clear();
 

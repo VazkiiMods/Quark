@@ -99,7 +99,7 @@ public class ParrotEggsModule extends ZetaModule {
 	@LoadEvent
 	public final void configChanged(ZConfigChanged event) {
 		// Pass over to a static reference for easier computing the coremod hook
-		isEnabled = this.enabled;
+		isEnabled = this.isEnabled();
 	}
 
 	@PlayEvent

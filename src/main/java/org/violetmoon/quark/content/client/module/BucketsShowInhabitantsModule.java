@@ -85,7 +85,7 @@ public class BucketsShowInhabitantsModule extends ZetaModule {
 
 			@Override
 			public float call(@NotNull ItemStack stack, @Nullable ClientLevel level, @Nullable LivingEntity entity, int id) {
-				if(!enabled || !featureEnabled.getAsBoolean())
+				if(!isEnabled() || !featureEnabled.getAsBoolean())
 					return 0;
 
 				return ItemNBTHelper.getInt(stack, Axolotl.VARIANT_TAG, 0) % maxVariants;
@@ -102,7 +102,7 @@ public class BucketsShowInhabitantsModule extends ZetaModule {
 
 			@Override
 			public float call(@NotNull ItemStack stack, @Nullable ClientLevel level, @Nullable LivingEntity entity, int id) {
-				if(!enabled || !featureEnabled.getAsBoolean())
+				if(!isEnabled() || !featureEnabled.getAsBoolean())
 					return 0;
 
 				CompoundTag data = ItemNBTHelper.getCompound(stack, SlimeInABucketItem.TAG_ENTITY_DATA, true);
@@ -128,7 +128,7 @@ public class BucketsShowInhabitantsModule extends ZetaModule {
 
 			@Override
 			public float call(@NotNull ItemStack stack, @Nullable ClientLevel level, @Nullable LivingEntity entity, int id) {
-				if(!enabled || !featureEnabled.getAsBoolean())
+				if(!isEnabled() || !featureEnabled.getAsBoolean())
 					return 0;
 
 				CompoundTag tag = stack.getTag();
@@ -154,17 +154,17 @@ public class BucketsShowInhabitantsModule extends ZetaModule {
 
 			@Override
 			public int getColor(@NotNull ItemStack stack, int layer) {
-				if(enabled && featureEnabled.getAsBoolean() && (layer == 1 || layer == 2)) {
+		 		if(isEnabled() && featureEnabled.getAsBoolean() && (layer == 1 || layer == 2)) {
 					CompoundTag tag = stack.getTag();
 					if(tag != null && tag.contains(TropicalFish.BUCKET_VARIANT_TAG, Tag.TAG_INT)) {
 						int variant = tag.getInt(TropicalFish.BUCKET_VARIANT_TAG);
 
 						DyeColor dyeColor = layer == 1 ? TropicalFish.getBaseColor(variant) : TropicalFish.getPatternColor(variant);
-						float[] colorComponents = dyeColor.getTextureDiffuseColor();
+						int colorComponents = dyeColor.getTextureDiffuseColor();
 
-						return ((int) (colorComponents[0] * 255) << 16) |
-								((int) (colorComponents[1] * 255) << 8) |
-								(int) (colorComponents[2] * 255);
+						return ((int) (colorComponents * 255) << 16) |
+								((int) (colorComponents * 255) << 8) |
+								(int) (colorComponents * 255);
 					}
 				}
 

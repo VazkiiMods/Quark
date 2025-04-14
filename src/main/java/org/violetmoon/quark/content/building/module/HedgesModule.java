@@ -65,12 +65,12 @@ public class HedgesModule extends ZetaModule {
 
 		@LoadEvent
 		public void blockColorProviders(ZAddBlockColorHandlers event) {
-			event.registerNamed(zeta, b -> new AlikeColorHandler((HedgeBlock) b, HedgeBlock::getLeaf), "hedge");
+			event.registerNamed(zeta(), b -> new AlikeColorHandler((HedgeBlock) b, HedgeBlock::getLeaf), "hedge");
 		}
 
 		@LoadEvent
 		public void itemColorProviders(ZAddItemColorHandlers event) {
-			event.registerNamed(zeta, i -> new AlikeColorHandler(i, HedgeBlock::getLeaf), "hedge");
+			event.registerNamed(zeta(), i -> new AlikeColorHandler(i, HedgeBlock::getLeaf), "hedge");
 		}
 
 	}

@@ -1,16 +1,17 @@
 package org.violetmoon.quark.base.client.handler;
 
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.LinkedHashSet;
-import java.util.Set;
-import java.util.TreeSet;
-import java.util.function.BooleanSupplier;
-import java.util.function.Consumer;
-import java.util.function.Predicate;
-import java.util.function.Supplier;
-
+import com.google.common.collect.Multimap;
+import com.google.common.collect.Multimaps;
+import net.minecraft.ChatFormatting;
+import net.minecraft.client.KeyMapping;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.components.Button;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
+import net.minecraft.client.gui.screens.inventory.InventoryScreen;
+import net.minecraft.client.resources.language.I18n;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.inventory.Slot;
 import net.neoforged.neoforge.client.settings.KeyConflictContext;
 import net.neoforged.neoforge.client.settings.KeyModifier;
 import org.jetbrains.annotations.NotNull;
@@ -26,19 +27,11 @@ import org.violetmoon.zeta.client.event.play.ZScreen;
 import org.violetmoon.zeta.event.bus.PlayEvent;
 import org.violetmoon.zeta.module.ZetaModule;
 
-import com.google.common.collect.Multimap;
-import com.google.common.collect.Multimaps;
-
-import net.minecraft.ChatFormatting;
-import net.minecraft.client.KeyMapping;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.components.Button;
-import net.minecraft.client.gui.screens.Screen;
-import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
-import net.minecraft.client.gui.screens.inventory.InventoryScreen;
-import net.minecraft.client.resources.language.I18n;
-import net.minecraft.network.chat.Component;
-import net.minecraft.world.inventory.Slot;
+import java.util.*;
+import java.util.function.BooleanSupplier;
+import java.util.function.Consumer;
+import java.util.function.Predicate;
+import java.util.function.Supplier;
 
 public final class InventoryButtonHandler {
 
@@ -222,7 +215,7 @@ public final class InventoryButtonHandler {
 		}
 
 		public MiniInventoryButton getButton(AbstractContainerScreen<?> parent, int x, int y) {
-			MiniInventoryButton b = (module.enabled && (enableCond == null || enableCond.getAsBoolean()))
+			MiniInventoryButton b = (module.isEnabled() && (enableCond == null || enableCond.getAsBoolean()))
 					? provider.provide(parent, x, y) : null;
 			
 			if(b != null)

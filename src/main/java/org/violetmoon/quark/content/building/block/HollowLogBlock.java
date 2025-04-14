@@ -33,7 +33,7 @@ public class HollowLogBlock extends HollowPillarBlock {
 		if(module == null) //auto registration below this line
 			return;
 
-		module.zeta.renderLayerRegistry.put(this, RenderLayerRegistry.Layer.CUTOUT_MIPPED);
+		module.zeta().renderLayerRegistry.put(this, RenderLayerRegistry.Layer.CUTOUT_MIPPED);
 		setCreativeTab(CreativeModeTabs.BUILDING_BLOCKS, sourceLog, false);
 	}
 

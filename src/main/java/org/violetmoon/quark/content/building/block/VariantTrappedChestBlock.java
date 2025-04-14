@@ -42,7 +42,7 @@ public class VariantTrappedChestBlock extends ChestBlock implements IZetaBlock, 
 			return;
 
 		String resloc = (prefix != null ? prefix + "_" : "") + type + "_trapped_chest";
-		module.zeta.registry.registerBlock(this, resloc, true);
+		module.zeta().registry.registerBlock(this, resloc, true);
 	}
 
 	public VariantTrappedChestBlock(String type, ZetaModule module, Supplier<BlockEntityType<? extends ChestBlockEntity>> supplier, Properties props) {

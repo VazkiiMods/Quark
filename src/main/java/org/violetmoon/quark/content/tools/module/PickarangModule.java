@@ -114,7 +114,7 @@ public class PickarangModule extends ZetaModule {
     @LoadEvent
     public final void configChanged(ZConfigChanged event) {
         // Pass over to a static reference for easier computing the coremod hook
-        isEnabled = this.enabled;
+        isEnabled = this.isEnabled();
     }
 
     public static boolean getIsFireResistant(boolean vanillaVal, Entity entity) {

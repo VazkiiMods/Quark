@@ -30,7 +30,7 @@ public class VariantFurnaceBlock extends FurnaceBlock implements IZetaBlock {
 	public VariantFurnaceBlock(String type, ZetaModule module, Properties props) {
 		super(props);
 
-		module.zeta.registry.registerBlock(this, type + "_furnace", true);
+		module.zeta().registry.registerBlock(this, type + "_furnace", true);
 		CreativeTabManager.addToCreativeTabNextTo(CreativeModeTabs.FUNCTIONAL_BLOCKS, this, Blocks.FURNACE, false);
 
 		this.module = module;

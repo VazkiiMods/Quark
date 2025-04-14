@@ -86,7 +86,7 @@ public class TotemOfHoldingModule extends ZetaModule {
 						.map(ItemEntity::getItem)
 						.filter(stack -> !stack.isEmpty())
 						.forEach(totem::addItem);
-				if (zeta.isModLoaded("curios"))
+				if (zeta().isModLoaded("curios"))
 					TotemOfHoldingCuriosCompat.saveCurios(player, totem);
 				if(!player.level().isClientSide)
 					player.level().addFreshEntity(totem);

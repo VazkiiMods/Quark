@@ -68,7 +68,7 @@ public class CorundumClusterBlock extends ZetaBlock implements SimpleWaterlogged
 		if(module == null) //auto registration below this line
 			return;
 
-		module.zeta.renderLayerRegistry.put(this, RenderLayerRegistry.Layer.CUTOUT);
+		module.zeta().renderLayerRegistry.put(this, RenderLayerRegistry.Layer.CUTOUT);
 		setCreativeTab(CreativeModeTabs.COLORED_BLOCKS);
 	}
 

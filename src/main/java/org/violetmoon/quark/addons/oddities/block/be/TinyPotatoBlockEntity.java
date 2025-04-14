@@ -176,8 +176,10 @@ public class TinyPotatoBlockEntity extends SimpleInventoryBlockEntity implements
 		}
 	}
 
+
+
 	@Override
-	public void inventoryChanged(int i) {
+	protected void inventoryChanged(int i) {
 		sync();
 	}
 

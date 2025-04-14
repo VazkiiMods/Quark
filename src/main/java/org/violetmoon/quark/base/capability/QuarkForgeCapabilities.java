@@ -1,9 +1,5 @@
 package org.violetmoon.quark.base.capability;
 
-import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.capabilities.CapabilityManager;
-import net.minecraftforge.common.capabilities.CapabilityToken;
-
 import org.violetmoon.quark.api.ICustomSorting;
 import org.violetmoon.quark.api.IMagnetTracker;
 import org.violetmoon.quark.api.IPistonCallback;

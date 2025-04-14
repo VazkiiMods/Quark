@@ -36,7 +36,7 @@ public class ChainsConnectBlocksModule extends ZetaModule {
 
 	@LoadEvent
 	public final void configChanged(ZConfigChanged event) {
-		staticEnabled = enabled;
+		staticEnabled = isEnabled();
 	}
 
 	public static class ChainConnection implements IIndirectConnector {

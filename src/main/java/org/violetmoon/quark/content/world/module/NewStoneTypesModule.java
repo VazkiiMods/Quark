@@ -1,11 +1,24 @@
 package org.violetmoon.quark.content.world.module;
 
-import java.util.ArrayDeque;
-import java.util.List;
-import java.util.Map;
-import java.util.Queue;
-import java.util.function.BooleanSupplier;
-
+import com.google.common.collect.Maps;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.color.block.BlockColor;
+import net.minecraft.client.color.item.ItemColor;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.entity.npc.VillagerProfession;
+import net.minecraft.world.entity.npc.VillagerTrades;
+import net.minecraft.world.entity.npc.VillagerTrades.ItemListing;
+import net.minecraft.world.item.CreativeModeTabs;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.BlockAndTintGetter;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.properties.NoteBlockInstrument;
+import net.minecraft.world.level.levelgen.GenerationStep.Decoration;
+import net.minecraft.world.level.material.MapColor;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.HitResult;
 import org.violetmoon.quark.base.Quark;
 import org.violetmoon.quark.base.util.BlockPropertyUtil;
 import org.violetmoon.quark.base.util.QuarkWorldGenWeights;
@@ -33,26 +46,11 @@ import org.violetmoon.zeta.util.Hint;
 import org.violetmoon.zeta.world.WorldGenHandler;
 import org.violetmoon.zeta.world.generator.OreGenerator;
 
-import com.google.common.collect.Maps;
-
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.color.block.BlockColor;
-import net.minecraft.client.color.item.ItemColor;
-import net.minecraft.core.BlockPos;
-import net.minecraft.world.entity.npc.VillagerProfession;
-import net.minecraft.world.entity.npc.VillagerTrades;
-import net.minecraft.world.entity.npc.VillagerTrades.ItemListing;
-import net.minecraft.world.item.CreativeModeTabs;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.BlockAndTintGetter;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.block.state.properties.NoteBlockInstrument;
-import net.minecraft.world.level.levelgen.GenerationStep.Decoration;
-import net.minecraft.world.level.material.MapColor;
-import net.minecraft.world.phys.BlockHitResult;
-import net.minecraft.world.phys.HitResult;
+import java.util.ArrayDeque;
+import java.util.List;
+import java.util.Map;
+import java.util.Queue;
+import java.util.function.BooleanSupplier;
 
 @ZetaLoadModule(category = "world")
 public class NewStoneTypesModule extends ZetaModule {
@@ -171,10 +169,10 @@ public class NewStoneTypesModule extends ZetaModule {
 
 	@LoadEvent
 	public final void configChanged(ZConfigChanged event) {
-		enabledWithLimestone = enableLimestone && this.enabled;
-		enabledWithJasper = enableJasper && this.enabled;
-		enabledWithShale = enableShale && this.enabled;
-		enabledWithMyalite = enableMyalite && this.enabled;
+		enabledWithLimestone = enableLimestone && this.isEnabled();
+		enabledWithJasper = enableJasper && this.isEnabled();
+		enabledWithShale = enableShale && this.isEnabled();
+		enabledWithMyalite = enableMyalite && this.isEnabled();
 	}
 
 	@LoadEvent
@@ -188,12 +186,12 @@ public class NewStoneTypesModule extends ZetaModule {
 
 		@LoadEvent
 		public void blockColorProviders(ZAddBlockColorHandlers event) {
-			event.registerNamed(zeta, block -> MyaliteColorHandler.INSTANCE, "myalite");
+			event.registerNamed(zeta(), block -> MyaliteColorHandler.INSTANCE, "myalite");
 		}
 
 		@LoadEvent
 		public void itemColorProviders(ZAddItemColorHandlers event) {
-			event.registerNamed(zeta, item -> MyaliteColorHandler.INSTANCE, "myalite");
+			event.registerNamed(zeta(), item -> MyaliteColorHandler.INSTANCE, "myalite");
 		}
 
 		private static class MyaliteColorHandler implements BlockColor, ItemColor {

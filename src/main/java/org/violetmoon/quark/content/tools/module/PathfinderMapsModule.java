@@ -10,6 +10,7 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.renderer.item.ItemProperties;
 import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
@@ -40,6 +41,7 @@ import org.jetbrains.annotations.NotNull;
 
 import org.violetmoon.quark.base.Quark;
 import org.violetmoon.quark.base.QuarkClient;
+import org.violetmoon.quark.base.components.QuarkDataComponents;
 import org.violetmoon.quark.content.tools.item.PathfindersQuillItem;
 import org.violetmoon.quark.content.tools.loot.InBiomeCondition;
 import org.violetmoon.zeta.advancement.ManualTrigger;
@@ -59,7 +61,6 @@ import org.violetmoon.zeta.event.play.loading.ZWandererTrades;
 import org.violetmoon.zeta.module.ZetaLoadModule;
 import org.violetmoon.zeta.module.ZetaModule;
 import org.violetmoon.zeta.util.Hint;
-import org.violetmoon.zeta.util.ItemNBTHelper;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -229,8 +230,8 @@ public class PathfinderMapsModule extends ZetaModule {
 	private boolean tryCheckCenter(Player player, InteractionHand hand) {
 		ItemStack stack = player.getItemInHand(hand);
 
-		if(stack.getItem() == Items.FILLED_MAP && stack.hasTag() && ItemNBTHelper.getBoolean(stack, TAG_IS_PATHFINDER, false)) {
-			ListTag decorations = stack.getTag().getList("Decorations", stack.getTag().getId());
+		//if(stack.getItem() == Items.FILLED_MAP && stack.get(QuarkDataComponents.IS_PATHFINDER)) {
+			/*ListTag decorations = stack.getTag().getList("Decorations", stack.getTag().getId());
 
 			for(Tag tag : decorations) {
 				if(tag instanceof CompoundTag cmp) {
@@ -251,8 +252,8 @@ public class PathfinderMapsModule extends ZetaModule {
 						}
 					}
 				}
-			}
-		}
+			}*/
+		//}
 
 		return false;
 	}

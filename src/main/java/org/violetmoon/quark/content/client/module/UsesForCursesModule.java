@@ -10,6 +10,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.enchantment.Enchantment;
+import net.minecraft.world.item.enchantment.EnchantmentEffectComponents;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.block.Blocks;
@@ -47,13 +48,13 @@ public class UsesForCursesModule extends ZetaModule {
 
 	@LoadEvent
 	public final void configChanged(ZConfigChanged event) {
-		staticEnabled = enabled;
+		staticEnabled = isEnabled();
 	}
 
 	public static boolean shouldHideArmorStandModel(ItemStack stack) {
 		if(!staticEnabled || !bindArmorStandsWithPlayerHeads || !stack.is(Items.PLAYER_HEAD))
 			return false;
-		return EnchantmentHelper.hasBindingCurse(stack);
+		return EnchantmentHelper.hasBindingCurse(stack,);
 	}
 
 	public static boolean shouldHidePumpkinOverlay(ResourceLocation location, Player player) {

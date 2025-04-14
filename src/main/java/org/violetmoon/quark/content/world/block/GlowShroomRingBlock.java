@@ -62,7 +62,7 @@ public class GlowShroomRingBlock extends ZetaBlock implements SimpleWaterloggedB
 		if(module == null) //auto registration below this line
 			return;
 
-		module.zeta.renderLayerRegistry.put(this, RenderLayerRegistry.Layer.CUTOUT);
+		module.zeta().renderLayerRegistry.put(this, RenderLayerRegistry.Layer.CUTOUT);
 		CreativeTabManager.addToCreativeTab(CreativeModeTabs.NATURAL_BLOCKS, this);
 		setCreativeTab(CreativeModeTabs.NATURAL_BLOCKS);
 	}

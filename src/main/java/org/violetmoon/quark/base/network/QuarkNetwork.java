@@ -21,8 +21,6 @@ import org.violetmoon.quark.base.network.message.oddities.HandleBackpackMessage;
 import org.violetmoon.quark.base.network.message.oddities.MatrixEnchanterOperationMessage;
 import org.violetmoon.quark.base.network.message.oddities.ScrollCrateMessage;
 import org.violetmoon.quark.content.tweaks.module.LockRotationModule;
-import org.violetmoon.zeta.network.ZetaNetworkDirection;
-import org.violetmoon.zeta.network.ZetaNetworkHandler;
 
 import net.minecraft.network.chat.LastSeenMessages;
 import net.minecraft.network.chat.MessageSignature;

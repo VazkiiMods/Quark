@@ -92,7 +92,7 @@ public class BlossomTreesModule extends ZetaModule {
 		tree.grower = new TreeGrower(configuredFeatureKey);
 		tree.sapling = new ZetaSaplingBlock(regname, this, tree.grower);
 
-		event.getVariantRegistry().addFlowerPot(tree.sapling, zeta.registry.getRegistryName(tree.sapling, BuiltInRegistries.BLOCK).getPath(), Functions.identity()); //sure
+		event.getVariantRegistry().addFlowerPot(tree.sapling, zeta().registry.getRegistryName(tree.sapling, BuiltInRegistries.BLOCK).getPath(), Functions.identity()); //sure
 
 		return tree;
 	}
@@ -106,7 +106,7 @@ public class BlossomTreesModule extends ZetaModule {
 				ComposterBlock.COMPOSTABLES.put(tree.leaves.asItem(), 0.3F);
 				ComposterBlock.COMPOSTABLES.put(tree.sapling.asItem(), 0.3F);
 				
-				zeta.fuel.addFuel(tree.sapling, 100);
+				zeta().fuel.addFuel(tree.sapling, 100);
 			}
 		});
 	}
@@ -114,7 +114,7 @@ public class BlossomTreesModule extends ZetaModule {
 	@PlayEvent
 	public void addAdditionalHints(ZGatherHints event) {
 		for(BlossomTree tree : blossomTrees)
-			event.hintItem(zeta, tree.sapling);
+			event.hintItem(zeta(), tree.sapling);
 	}
 
 	private static ResourceKey<ConfiguredFeature<?, ?>> registerKey(String name) {

@@ -112,7 +112,7 @@ public class SimpleHarvestModule extends ZetaModule {
 		crops.clear();
 		cropBlocks.clear();
 		rightClickCrops.clear();
-		staticEnabled = enabled;
+		staticEnabled = isEnabled();
 
 		if(doHarvestingSearch) {
 			for (var b : BuiltInRegistries.BLOCK) {

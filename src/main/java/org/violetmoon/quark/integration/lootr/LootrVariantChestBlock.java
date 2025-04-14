@@ -33,7 +33,6 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 import noobanidus.mods.lootr.common.api.LootrTags;
 import noobanidus.mods.lootr.common.block.entity.LootrChestBlockEntity;
 import noobanidus.mods.lootr.neoforge.config.ConfigManager;
-import noobanidus.mods.lootr.util.ChestUtil;
 import org.jetbrains.annotations.Nullable;
 import org.violetmoon.quark.content.building.block.VariantChestBlock;
 import org.violetmoon.zeta.item.ZetaBlockItem;
@@ -68,9 +67,9 @@ public class LootrVariantChestBlock extends VariantChestBlock implements IZetaBl
 	@Override
 	public InteractionResult useWithoutItem(BlockState state, Level world, BlockPos pos, Player player, BlockHitResult trace) {
 		if (player.isShiftKeyDown()) {
-			ChestUtil.handleLootSneak(this, world, pos, player);
+			//ChestUtil.handleLootSneak(this, world, pos, player);
 		} else if(!ChestBlock.isChestBlockedAt(world, pos)) {
-			ChestUtil.handleLootChest(this, world, pos, player);
+			//ChestUtil.handleLootChest(this, world, pos, player);
 		}
 		return InteractionResult.sidedSuccess(world.isClientSide);
 	}

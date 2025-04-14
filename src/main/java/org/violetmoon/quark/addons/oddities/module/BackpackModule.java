@@ -23,6 +23,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.item.*;
 import net.minecraft.world.item.component.DyedItemColor;
+import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.properties.NoteBlockInstrument;
@@ -42,7 +43,6 @@ import org.violetmoon.zeta.client.event.play.ZScreen;
 import org.violetmoon.zeta.config.Config;
 import org.violetmoon.zeta.event.bus.LoadEvent;
 import org.violetmoon.zeta.event.bus.PlayEvent;
-import org.violetmoon.zeta.event.bus.ZPhase;
 import org.violetmoon.zeta.event.load.ZCommonSetup;
 import org.violetmoon.zeta.event.load.ZRegister;
 import org.violetmoon.zeta.event.play.entity.living.ZLivingDrops;
@@ -113,6 +113,7 @@ public class BackpackModule extends ZetaModule {
 	public void onDrops(ZLivingDrops event) {
 		LivingEntity entity = event.getEntity();
 		if(enableRavagerHide && entity.getType() == EntityType.RAVAGER) {
+			//event.getSource().getEntity().getWeaponItem()
 			int amount = baseRavagerHideDrop;
 			double chance = (double) event.getLootingLevel() * extraChancePerLooting;
 			while(chance > baseRavagerHideDrop) {
@@ -204,7 +205,7 @@ public class BackpackModule extends ZetaModule {
 
 		@PlayEvent
 		public void clientTick(ZClientTick event) {
-			if (event.getPhase() != ZPhase.START) return;
+			if (!(event instanceof ZClientTick.Start)) return;
 
 			Minecraft mc = Minecraft.getInstance();
 			if(isInventoryGUI(mc.screen) && !backpackRequested && isEntityWearingBackpack(mc.player) && !mc.player.portalProcess.isInsidePortalThisTick()) {

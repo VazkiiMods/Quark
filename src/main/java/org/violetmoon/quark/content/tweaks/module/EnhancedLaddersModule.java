@@ -74,7 +74,7 @@ public class EnhancedLaddersModule extends ZetaModule {
 
 	@LoadEvent
 	public final void configChanged(ZConfigChanged event) {
-		staticEnabled = enabled;
+		staticEnabled = isEnabled();
 	}
 
 	@PlayEvent

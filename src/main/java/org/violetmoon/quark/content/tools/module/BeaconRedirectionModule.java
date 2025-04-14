@@ -62,7 +62,7 @@ public class BeaconRedirectionModule extends ZetaModule {
 
 	@LoadEvent
 	public final void configChanged(ZConfigChanged event) {
-		staticEnabled = enabled;
+		staticEnabled = isEnabled();
 	}
 
 	@PlayEvent

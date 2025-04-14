@@ -9,10 +9,8 @@ import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.ShulkerBoxBlockEntity;
-
 import org.violetmoon.quark.base.handler.SimilarBlockTypeHandler;
 import org.violetmoon.quark.content.management.module.ExpandedItemInteractionsModule;
-import org.violetmoon.zeta.util.ItemNBTHelper;
 
 public class HeldShulkerBoxContainer implements Container, MenuProvider {
 
@@ -85,8 +83,7 @@ public class HeldShulkerBoxContainer implements Container, MenuProvider {
 	@Override
 	public void setChanged() {
 		be.setChanged();
-
-		ItemNBTHelper.setCompound(stack, "BlockEntityTag", be.saveWithId());
+		//ItemNBTHelper.setCompound(stack, "BlockEntityTag", be.saveWithId());
 	}
 
 	@Override

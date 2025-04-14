@@ -39,7 +39,6 @@ import org.violetmoon.quark.addons.oddities.module.MatrixEnchantingModule;
 import org.violetmoon.quark.addons.oddities.util.Influence;
 import org.violetmoon.quark.api.IEnchantmentInfluencer;
 import org.violetmoon.quark.base.Quark;
-import org.violetmoon.zeta.util.ItemNBTHelper;
 
 import java.util.HashMap;
 import java.util.List;
@@ -184,9 +183,9 @@ public class MatrixEnchantingTableBlockEntity extends AbstractEnchantingTableBlo
 
 			if(book)
 				for(Entry<Enchantment, Integer> e : enchantments.entrySet())
-					EnchantedBookItem.addEnchantment(out, new EnchantmentInstance(e.getKey(), e.getValue()));
+					EnchantedBookItem.createForEnchantment(new EnchantmentInstance(e.getKey(), e.getValue()));
 			else {
-				EnchantmentHelper.setEnchantments(enchantments, out);
+				EnchantmentHelper.setEnchantments(out,enchantments);
 				out.removeTagKey(TAG_STACK_MATRIX);
 			}
 

@@ -43,7 +43,7 @@ public class LeafCarpetBlock extends ZetaBlock implements IZetaBlockColorProvide
 
 		if(module == null) //auto registration below this line
 			return;
-		module.zeta.renderLayerRegistry.put(this, RenderLayerRegistry.Layer.CUTOUT_MIPPED);
+		module.zeta().renderLayerRegistry.put(this, RenderLayerRegistry.Layer.CUTOUT_MIPPED);
 		setCreativeTab(CreativeModeTabs.NATURAL_BLOCKS, base, false);
 	}
 

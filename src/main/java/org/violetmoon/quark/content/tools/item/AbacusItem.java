@@ -21,7 +21,6 @@ import org.jetbrains.annotations.NotNull;
 import org.violetmoon.zeta.item.ZetaItem;
 import org.violetmoon.zeta.module.ZetaModule;
 import org.violetmoon.zeta.registry.CreativeTabManager;
-import org.violetmoon.zeta.util.ItemNBTHelper;
 
 public class AbacusItem extends ZetaItem {
 

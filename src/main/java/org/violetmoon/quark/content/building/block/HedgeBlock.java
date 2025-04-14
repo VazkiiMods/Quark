@@ -66,7 +66,7 @@ public class HedgeBlock extends ZetaFenceBlock implements IZetaBlock, IZetaBlock
 			return;
 
 		CreativeTabManager.addToCreativeTabNextTo(CreativeModeTabs.NATURAL_BLOCKS, this, leaf, false);
-		module.zeta.renderLayerRegistry.put(this, RenderLayerRegistry.Layer.CUTOUT);
+		module.zeta().renderLayerRegistry.put(this, RenderLayerRegistry.Layer.CUTOUT);
 	}
 
 	@Deprecated(forRemoval = true) //for bin compat; requires early registry-name-retrieval of blocks, which isn't composable with other mods etc.

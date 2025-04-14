@@ -54,7 +54,7 @@ public class RedstoneRandomizerBlock extends ZetaBlock {
 
 		if(module == null) //auto registration below this line
 			return;
-		module.zeta.renderLayerRegistry.put(this, RenderLayerRegistry.Layer.CUTOUT);
+		module.zeta().renderLayerRegistry.put(this, RenderLayerRegistry.Layer.CUTOUT);
 		setCreativeTab(CreativeModeTabs.REDSTONE_BLOCKS, Blocks.COMPARATOR, false);
 	}
 

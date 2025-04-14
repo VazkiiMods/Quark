@@ -68,7 +68,7 @@ public class GoldToolsHaveFortuneModule extends ZetaModule {
 
 	@LoadEvent
 	public final void configChanged(ZConfigChanged event) {
-		staticEnabled = enabled;
+		staticEnabled = isEnabled();
 		wellBakedEnchantments.clear();
 		for(String enchantment : bakedEnchantments) {
 			String[] split1 = enchantment.split("\\+");
@@ -101,7 +101,7 @@ public class GoldToolsHaveFortuneModule extends ZetaModule {
 		if(fortuneLevel > 0) {
 			for(Item item : BuiltInRegistries.ITEM) {
 				if(item instanceof TieredItem tiered && tiered.getTier() == Tiers.GOLD) {
-					Enchantment enchant = item instanceof SwordItem ? Enchantments.MOB_LOOTING : Enchantments.BLOCK_FORTUNE;
+					Enchantment enchant = item instanceof SwordItem ? Enchantments.LOOTING : Enchantments.FORTUNE;
 					var pastry = wellBakedEnchantments.computeIfAbsent(item, it -> new Object2IntArrayMap<>());
 					pastry.put(enchant, Math.max(fortuneLevel, pastry.getOrDefault(enchant, 0)));
 				}

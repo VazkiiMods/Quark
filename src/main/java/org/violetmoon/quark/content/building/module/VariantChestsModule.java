@@ -142,7 +142,7 @@ public class VariantChestsModule extends ZetaModule {
 	//only enables the block if the variant chests module is enabled
 	public static void makeChestBlocksExternal(ZetaModule module, String name, Block base, @Nullable SoundType sound, BooleanSupplier condition) {
 		VariantChestsModule me = Quark.ZETA.modules.get(VariantChestsModule.class);
-		me.makeChestBlocks(module, name, base, sound, () -> me.enabled && condition.getAsBoolean());
+		me.makeChestBlocks(module, name, base, sound, () -> me.isEnabled() && condition.getAsBoolean());
 	}
 
 	/// STUFF that has to happen after all the makeChestBlocks calls are performed...! ///
@@ -185,7 +185,7 @@ public class VariantChestsModule extends ZetaModule {
 	}
 
 	private BlockState getGenerationChestBlockState(ServerLevelAccessor accessor, BlockState current, StructureHolder structure) {
-		if(enabled && replaceWorldgenChests) {
+		if(isEnabled() && replaceWorldgenChests) {
 			if(current.getBlock() == Blocks.CHEST) {
 				return replaceChestState(accessor, current, structure, chestMappings, manualChestMappings);
 			} else if(current.getBlock() == Blocks.TRAPPED_CHEST) {

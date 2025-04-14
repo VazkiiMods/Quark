@@ -82,7 +82,7 @@ public class WoodPostBlock extends ZetaBlock implements SimpleWaterloggedBlock {
 		if(module == null) //auto registration below this line
 			return;
 
-		module.zeta.renderLayerRegistry.put(this, RenderLayerRegistry.Layer.CUTOUT);
+		module.zeta().renderLayerRegistry.put(this, RenderLayerRegistry.Layer.CUTOUT);
 		setCreativeTab(CreativeModeTabs.BUILDING_BLOCKS, parent, true);
 	}
 

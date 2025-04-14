@@ -12,6 +12,7 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.RandomSource;
@@ -24,10 +25,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.MerchantContainer;
 import net.minecraft.world.inventory.MerchantMenu;
 import net.minecraft.world.item.*;
-import net.minecraft.world.item.enchantment.Enchantment;
-import net.minecraft.world.item.enchantment.EnchantmentHelper;
-import net.minecraft.world.item.enchantment.EnchantmentInstance;
-import net.minecraft.world.item.enchantment.Enchantments;
+import net.minecraft.world.item.enchantment.*;
 import net.minecraft.world.item.trading.MerchantOffer;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
@@ -78,14 +76,14 @@ public class AncientTomesModule extends ZetaModule {
 
 	@Config(description = "Format is lootTable,weight. i.e. \"minecraft:chests/stronghold_library,30\"")
 	public static List<String> lootTables = Lists.newArrayList(
-			loot(BuiltInLootTables.STRONGHOLD_LIBRARY, 20),
-			loot(BuiltInLootTables.SIMPLE_DUNGEON, 20),
-			loot(BuiltInLootTables.BASTION_TREASURE, 25),
-			loot(BuiltInLootTables.WOODLAND_MANSION, 15),
-			loot(BuiltInLootTables.NETHER_BRIDGE, 0),
-			loot(BuiltInLootTables.UNDERWATER_RUIN_BIG, 0),
-			loot(BuiltInLootTables.UNDERWATER_RUIN_SMALL, 0),
-			loot(BuiltInLootTables.ANCIENT_CITY, 4),
+			loot(BuiltInLootTables.STRONGHOLD_LIBRARY.location(), 20),
+			loot(BuiltInLootTables.SIMPLE_DUNGEON.location(), 20),
+			loot(BuiltInLootTables.BASTION_TREASURE.location(), 25),
+			loot(BuiltInLootTables.WOODLAND_MANSION.location(), 15),
+			loot(BuiltInLootTables.NETHER_BRIDGE.location(), 0),
+			loot(BuiltInLootTables.UNDERWATER_RUIN_BIG.location(), 0),
+			loot(BuiltInLootTables.UNDERWATER_RUIN_SMALL.location(), 0),
+			loot(BuiltInLootTables.ANCIENT_CITY.location(), 4),
 			loot(MonsterBoxModule.MONSTER_BOX_LOOT_TABLE, 5)
 	);
 
@@ -378,23 +376,23 @@ public class AncientTomesModule extends ZetaModule {
 	}
 
 	private static List<String> generateDefaultEnchantmentList() {
-		Enchantment[] enchants = new Enchantment[] {
-				Enchantments.FALL_PROTECTION,
+		ResourceKey<Enchantment>[] enchants = new ResourceKey[] {
+				Enchantments.FEATHER_FALLING,
 				Enchantments.THORNS,
 				Enchantments.SHARPNESS,
 				Enchantments.SMITE,
 				Enchantments.BANE_OF_ARTHROPODS,
 				Enchantments.KNOCKBACK,
 				Enchantments.FIRE_ASPECT,
-				Enchantments.MOB_LOOTING,
+				Enchantments.LOOTING,
 				Enchantments.SWEEPING_EDGE,
-				Enchantments.BLOCK_EFFICIENCY,
+				Enchantments.EFFICIENCY,
 				Enchantments.UNBREAKING,
-				Enchantments.BLOCK_FORTUNE,
-				Enchantments.POWER_ARROWS,
-				Enchantments.PUNCH_ARROWS,
-				Enchantments.FISHING_LUCK,
-				Enchantments.FISHING_SPEED,
+				Enchantments.FORTUNE,
+				Enchantments.POWER,
+				Enchantments.PUNCH,
+				Enchantments.LUCK_OF_THE_SEA,
+				Enchantments.LURE,
 				Enchantments.LOYALTY,
 				Enchantments.RIPTIDE,
 				Enchantments.IMPALING,
@@ -402,8 +400,8 @@ public class AncientTomesModule extends ZetaModule {
 		};
 
 		List<String> strings = new ArrayList<>();
-		for(Enchantment e : enchants) {
-			ResourceLocation regname = BuiltInRegistries.ENCHANTMENT.getKey(e);
+		for(ResourceKey<Enchantment> e : enchants) {
+			ResourceLocation regname = e.location();
 			if(e != null && regname != null)
 				strings.add(regname.toString());
 		}
@@ -435,20 +433,18 @@ public class AncientTomesModule extends ZetaModule {
 		}
 	}
 
-	public static Enchantment getTomeEnchantment(ItemStack stack) {
+	public static Holder<Enchantment> getTomeEnchantment(ItemStack stack) {
 		if(stack.getItem() != ancient_tome)
 			return null;
 
-		ListTag list = EnchantedBookItem.getEnchantments(stack);
+		ItemEnchantments enchantments = stack.get(DataComponents.ENCHANTMENTS);
+		List<Holder<Enchantment>> enchantList = enchantments.keySet().stream().toList();
 
-		for(int i = 0; i < list.size(); ++i) {
-			CompoundTag nbt = list.getCompound(i);
-			Enchantment enchant = BuiltInRegistries.ENCHANTMENT.get(ResourceLocation.tryParse(nbt.getString("id")));
-			if(enchant != null)
-				return enchant;
-		}
-
-		return null;
+        for (Holder<Enchantment> enchantment : enchantList) {
+			if (enchantment != null) {
+				return enchantment;
+			}
+        }
 	}
 
 	private static boolean isAncientTomeOffer(MerchantOffer offer) {
@@ -516,7 +512,7 @@ public class AncientTomesModule extends ZetaModule {
 		@Nullable
 		@Override
 		public MerchantOffer getOffer(@NotNull Entity trader, @NotNull RandomSource random) {
-			if(validEnchants.isEmpty() || !enabled)
+			if(validEnchants.isEmpty() || !isEnabled())
 				return null;
 			Enchantment target = validEnchants.get(random.nextInt(validEnchants.size()));
 

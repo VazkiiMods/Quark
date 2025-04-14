@@ -522,23 +522,10 @@ public class Crab extends Animal implements IEntityWithComplexSpawn, Bucketable 
 
 		@Override
 		public boolean handleGameEvent(ServerLevel level, Holder<GameEvent> holder, GameEvent.Context context, Vec3 vec3) {
-			if(context == GameEvent.JUKEBOX_PLAY) {
+			if (holder == GameEvent.JUKEBOX_PLAY) {
 				Crab.this.party(BlockPos.containing(vec3), true);
 				return true;
-			} else if(context == GameEvent.JUKEBOX_STOP_PLAY) {
-				Crab.this.party(BlockPos.containing(vec3), false);
-				return true;
-			} else
-				return false;
-		}
-
-		@Override
-		public boolean handleGameEvent(@NotNull ServerLevel serverLevel, @NotNull GameEvent gameEvent,
-				@NotNull GameEvent.Context context, @NotNull Vec3 vec3) {
-			if(gameEvent == GameEvent.JUKEBOX_PLAY.value()) {
-				Crab.this.party(BlockPos.containing(vec3), true);
-				return true;
-			} else if(gameEvent == GameEvent.JUKEBOX_STOP_PLAY.value()) {
+			} else if (holder == GameEvent.JUKEBOX_STOP_PLAY) {
 				Crab.this.party(BlockPos.containing(vec3), false);
 				return true;
 			} else

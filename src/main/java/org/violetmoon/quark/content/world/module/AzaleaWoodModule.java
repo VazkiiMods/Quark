@@ -37,7 +37,7 @@ public class AzaleaWoodModule extends ZetaModule {
 		if(woodSet == null || azaleaFeature == null || !(azaleaFeature.config() instanceof TreeConfiguration treeConfig))
 			return; // Maybe we interacted with the RegistryAccess too early?
 
-		if(enabled)
+		if(isEnabled())
 			treeConfig.trunkProvider = BlockStateProvider.simple(woodSet.log);
 		else
 			treeConfig.trunkProvider = BlockStateProvider.simple(Blocks.OAK_LOG);

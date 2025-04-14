@@ -21,7 +21,6 @@ import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.EquipmentSlot;
-import net.minecraft.world.entity.MobType;
 import net.minecraft.world.entity.ai.attributes.*;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.tooltip.TooltipComponent;
@@ -44,7 +43,6 @@ import org.violetmoon.quark.content.client.resources.AttributeIconEntry;
 import org.violetmoon.quark.content.client.resources.AttributeIconEntry.CompareType;
 import org.violetmoon.quark.content.client.resources.AttributeSlot;
 import org.violetmoon.zeta.client.event.play.ZGatherTooltipComponents;
-import org.violetmoon.zeta.util.ItemNBTHelper;
 
 import java.util.*;
 

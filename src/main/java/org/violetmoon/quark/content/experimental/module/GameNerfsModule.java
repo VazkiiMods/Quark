@@ -102,7 +102,7 @@ public class GameNerfsModule extends ZetaModule {
 
 	@LoadEvent
 	public final void configChanged(ZConfigChanged event) {
-		staticEnabled = enabled;
+		staticEnabled = isEnabled();
 	}
 
 	// Source for this magic number is the ice-boat-nerf mod

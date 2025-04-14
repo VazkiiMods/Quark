@@ -36,7 +36,7 @@ public class Quark {
 	public Quark(IEventBus bus) {
 		instance = this;
 
-		ZETA.start(bus);
+		ZETA.start();
 
 		proxy = Env.unsafeRunForDist(() -> ClientProxy::new, () -> CommonProxy::new);
 		proxy.start();

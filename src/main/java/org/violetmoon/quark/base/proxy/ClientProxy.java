@@ -26,8 +26,6 @@ import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.BlockHitResult;
-import net.minecraftforge.client.ConfigScreenHandler.ConfigScreenFactory;
-import net.minecraftforge.fml.ModLoadingContext;
 
 // TODO: can we merge quark client and this class?
 public class ClientProxy extends CommonProxy {

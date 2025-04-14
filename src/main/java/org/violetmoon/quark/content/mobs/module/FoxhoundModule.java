@@ -111,7 +111,7 @@ public class FoxhoundModule extends ZetaModule {
 
 			BlockPos below = pos.below();
 			BlockState belowState = world.getBlockState(below);
-			int light = zeta.blockExtensions.get(belowState).getLightEmissionZeta(belowState, world, below);
+			int light = zeta().blockExtensions.get(belowState).getLightEmissionZeta(belowState, world, below);
 			if(light > 2)
 				event.setResult(ZResult.ALLOW);
 		}

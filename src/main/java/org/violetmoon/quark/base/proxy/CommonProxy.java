@@ -8,15 +8,9 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.BlockHitResult;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.common.capabilities.RegisterCapabilitiesEvent;
-import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;
-import net.neoforged.neoforge.common.NeoForge;
 import org.jetbrains.annotations.Nullable;
-import org.violetmoon.quark.api.*;
 import org.violetmoon.quark.base.Quark;
 import org.violetmoon.quark.base.capability.CapabilityHandler;
-import org.violetmoon.quark.base.capability.QuarkForgeCapabilities;
 import org.violetmoon.quark.base.config.QuarkGeneralConfig;
 import org.violetmoon.quark.base.handler.ContributorRewardHandler;
 import org.violetmoon.quark.base.handler.QuarkSounds;
@@ -37,23 +31,6 @@ public class CommonProxy {
 	public static boolean jingleTheBells = false;
 
 	public void start() {
-		// CAPABILITIES
-		//todo put this bit in forge-specific code
-		Quark.ZETA.capabilityManager
-				.register(QuarkCapabilities.SORTING, QuarkForgeCapabilities.SORTING)
-				.register(QuarkCapabilities.TRANSFER, QuarkForgeCapabilities.TRANSFER)
-				.register(QuarkCapabilities.PISTON_CALLBACK, QuarkForgeCapabilities.PISTON_CALLBACK)
-				.register(QuarkCapabilities.MAGNET_TRACKER_CAPABILITY, QuarkForgeCapabilities.MAGNET_TRACKER_CAPABILITY)
-				.register(QuarkCapabilities.RUNE_COLOR, QuarkForgeCapabilities.RUNE_COLOR);
-		//weird forge capability-implementation-class stuff
-		NeoForge.EVENT_BUS.addListener((RegisterCapabilitiesEvent event) -> {
-			event.register(ICustomSorting.class);
-			event.register(ITransferManager.class);
-			event.register(IPistonCallback.class);
-			event.register(IMagnetTracker.class);
-			event.register(IRuneColorProvider.class);
-		});
-
 		// GLOBAL EVENT LISTENERS
 		Quark.ZETA.loadBus
 				.subscribe(ContributorRewardHandler.class)

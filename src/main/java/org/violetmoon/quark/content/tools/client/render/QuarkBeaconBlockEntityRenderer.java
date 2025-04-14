@@ -43,7 +43,7 @@ public class QuarkBeaconBlockEntityRenderer {
 
 	public static void renderBeamSegment(PoseStack matrixStackIn, MultiBufferSource bufferIn, ResourceLocation textureLocation, ExtendedBeamSegment segment, float partialTicks, float textureScale, long totalWorldTime, float beamRadius, float glowRadius) {
 		int height = segment.getHeight();
-		float[] colors = segment.getColor();
+		int colors = segment.getColor();
 		float alpha = segment.alpha;
 
 		matrixStackIn.pushPose();
@@ -52,9 +52,9 @@ public class QuarkBeaconBlockEntityRenderer {
 		matrixStackIn.mulPose(segment.dir.getRotation());
 
 		float angle = Math.floorMod(totalWorldTime, 40L) + partialTicks;
-		float r = colors[0];
-		float g = colors[1];
-		float b = colors[2];
+		int r = colors >> 16 & 0xFF;
+		int g = colors >> 8 & 0xFF;
+		int b = colors & 0xFF;
 
 		matrixStackIn.pushPose();
 		matrixStackIn.mulPose(Axis.YP.rotationDegrees(angle * 2.25F - 45.0F));

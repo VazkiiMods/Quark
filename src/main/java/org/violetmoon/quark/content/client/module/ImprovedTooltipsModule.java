@@ -120,7 +120,7 @@ public class ImprovedTooltipsModule extends ZetaModule {
 
 		@LoadEvent
 		public final void configChanged(ZConfigChanged event) {
-			staticEnabled = enabled;
+			staticEnabled = isEnabled();
 			EnchantedBookTooltips.reloaded();
 		}
 

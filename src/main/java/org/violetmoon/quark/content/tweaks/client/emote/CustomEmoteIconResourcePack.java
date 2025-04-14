@@ -33,7 +33,7 @@ public class CustomEmoteIconResourcePack extends AbstractPackResources {
 
 	public CustomEmoteIconResourcePack() {
 		super("quark-emote-pack", true);
-		//super(EmotesModule.emotesDir);
+		//
 	}
 
 	@Nullable

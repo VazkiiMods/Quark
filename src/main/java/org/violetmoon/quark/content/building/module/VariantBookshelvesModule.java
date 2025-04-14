@@ -37,6 +37,6 @@ public class VariantBookshelvesModule extends ZetaModule {
 
 	@LoadEvent
 	public final void configChanged(ZConfigChanged event) {
-		zeta.nameChanger.changeBlock(Blocks.BOOKSHELF, "block.quark.oak_bookshelf", changeNames && enabled);
+		zeta().nameChanger.changeBlock(Blocks.BOOKSHELF, "block.quark.oak_bookshelf", changeNames && isEnabled());
 	}
 }

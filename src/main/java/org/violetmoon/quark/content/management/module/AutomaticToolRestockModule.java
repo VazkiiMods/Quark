@@ -2,6 +2,9 @@ package org.violetmoon.quark.content.management.module;
 
 import com.google.common.collect.Lists;
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.data.registries.VanillaRegistries;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Inventory;
@@ -83,7 +86,7 @@ public class AutomaticToolRestockModule extends ZetaModule {
 
 	@LoadEvent
 	public final void configChanged(ZConfigChanged event) {
-		importantEnchants = RegistryUtil.massRegistryGet(enchantNames, BuiltInRegistries.ENCHANTMENT);
+		importantEnchants = RegistryUtil.massRegistryGet(enchantNames, Registries.ENCHANTMENT);
 		itemsToIgnore = RegistryUtil.massRegistryGet(ignoredItems, BuiltInRegistries.ITEM);
 	}
 
@@ -263,12 +266,12 @@ public class AutomaticToolRestockModule extends ZetaModule {
 	}
 
 	private static List<String> generateDefaultEnchantmentList() {
-		Enchantment[] enchants = new Enchantment[] {
+		ResourceKey<Enchantment>[] enchants = new ResourceKey<Enchantment>[]{
 				Enchantments.SILK_TOUCH,
-				Enchantments.BLOCK_FORTUNE,
-				Enchantments.INFINITY_ARROWS,
-				Enchantments.FISHING_LUCK,
-				Enchantments.MOB_LOOTING
+				Enchantments.FORTUNE,
+				Enchantments.INFINITY,
+				Enchantments.LUCK_OF_THE_SEA,
+				Enchantments.LOOTING
 		};
 
 		List<String> strings = new ArrayList<>();

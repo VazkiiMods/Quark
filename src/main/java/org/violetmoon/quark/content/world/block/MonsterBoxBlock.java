@@ -36,7 +36,7 @@ public class MonsterBoxBlock extends ZetaBlock implements EntityBlock {
 		if(module == null) //auto registration below this line
 			return;
 		setCreativeTab(CreativeModeTabs.SPAWN_EGGS, Blocks.SPAWNER, false);
-		module.zeta.renderLayerRegistry.put(this, RenderLayerRegistry.Layer.CUTOUT);
+		module.zeta().renderLayerRegistry.put(this, RenderLayerRegistry.Layer.CUTOUT);
 	}
 
 	@Override

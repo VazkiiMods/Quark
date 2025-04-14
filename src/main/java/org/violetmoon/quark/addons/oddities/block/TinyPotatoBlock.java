@@ -44,11 +44,11 @@ import org.jetbrains.annotations.Nullable;
 import org.violetmoon.quark.addons.oddities.block.be.TinyPotatoBlockEntity;
 import org.violetmoon.quark.addons.oddities.item.TinyPotatoBlockItem;
 import org.violetmoon.quark.addons.oddities.module.TinyPotatoModule;
+import org.violetmoon.quark.base.components.QuarkDataComponents;
 import org.violetmoon.zeta.block.OldMaterials;
 import org.violetmoon.zeta.block.ZetaBlock;
 import org.violetmoon.zeta.module.ZetaModule;
 import org.violetmoon.zeta.registry.IZetaBlockItemProvider;
-import org.violetmoon.zeta.util.ItemNBTHelper;
 
 /**
  * @author WireSegal
@@ -64,7 +64,7 @@ public class TinyPotatoBlock extends ZetaBlock implements SimpleWaterloggedBlock
 	public static final String ANGRY = "angery";
 
 	public static boolean isAngry(ItemStack stack) {
-		return ItemNBTHelper.getBoolean(stack, ANGRY, false);
+		return stack.get(QuarkDataComponents.IS_ANGRY);
 	}
 
 	public TinyPotatoBlock(@Nullable ZetaModule module) {
@@ -121,7 +121,7 @@ public class TinyPotatoBlock extends ZetaBlock implements SimpleWaterloggedBlock
 				stack.set(DataComponents.CUSTOM_NAME, tater.getCustomName());
 
 			if(tater.angry)
-				ItemNBTHelper.setBoolean(stack, ANGRY, true);
+				stack.set(QuarkDataComponents.IS_ANGRY, true);
 		}
 		return stack;
 	}

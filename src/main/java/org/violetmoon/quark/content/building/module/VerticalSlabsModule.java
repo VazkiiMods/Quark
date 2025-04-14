@@ -115,7 +115,7 @@ public class VerticalSlabsModule extends ZetaModule {
 
 	@LoadEvent
 	public final void configChanged(ZConfigChanged event) {
-		staticEnabled = enabled;
+		staticEnabled = isEnabled();
 	}
 
 	public static BlockState messWithPaneState(LevelAccessor level, BlockPos ourPos, BlockState state) {

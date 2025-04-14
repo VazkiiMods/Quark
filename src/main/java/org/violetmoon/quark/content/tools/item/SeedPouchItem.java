@@ -37,7 +37,6 @@ import org.violetmoon.zeta.item.ZetaItem;
 import org.violetmoon.zeta.module.IDisableable;
 import org.violetmoon.zeta.module.ZetaModule;
 import org.violetmoon.zeta.registry.CreativeTabManager;
-import org.violetmoon.zeta.util.ItemNBTHelper;
 import org.violetmoon.zeta.util.RegistryUtil;
 
 import java.util.ArrayList;
@@ -376,7 +375,7 @@ public class SeedPouchItem extends ZetaItem implements IUsageTickerOverride, ITr
 			PouchContents contents = new PouchContents();
 
 			if(tag != null && tag.contains(TAG_STORED_ITEM) && tag.contains(TAG_COUNT)) {
-				contents.contents = ItemStack.of(tag.getCompound(TAG_STORED_ITEM));
+				contents.contents = new ItemStack(tag.getCompound(TAG_STORED_ITEM));
 				contents.count = tag.getInt(TAG_COUNT);
 			}
 

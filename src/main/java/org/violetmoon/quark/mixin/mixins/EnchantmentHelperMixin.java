@@ -2,6 +2,7 @@ package org.violetmoon.quark.mixin.mixins;
 
 import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 
+import net.minecraft.core.Holder;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
@@ -29,10 +30,10 @@ public class EnchantmentHelperMixin {
 
 	@Inject(method = "getEnchantments", at = @At("HEAD"), cancellable = true)
 	private static void getAncientTomeEnchantments(ItemStack stack, CallbackInfoReturnable<Map<Enchantment, Integer>> callbackInfoReturnable) {
-		Enchantment enchant = AncientTomesModule.getTomeEnchantment(stack);
+		Holder<Enchantment> enchant = AncientTomesModule.getTomeEnchantment(stack);
 
 		if(enchant != null) {
-			Map<Enchantment, Integer> map = new HashMap<>();
+			Map<Holder<Enchantment>, Integer> map = new HashMap<>();
 			map.put(enchant, 1);
 			callbackInfoReturnable.setReturnValue(map);
 		}

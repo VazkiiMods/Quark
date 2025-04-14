@@ -41,7 +41,7 @@ public class EnchantmentPredicatesModule extends ZetaModule {
 
 		@LoadEvent
 		public void clientSetup(ZClientSetup e) {
-			if(enabled) {
+			if(isEnabled()) {
 				e.enqueueWork(() -> {
 					List<Item> items = RegistryUtil.massRegistryGet(itemsToChange, BuiltInRegistries.ITEM);
 					List<Enchantment> enchants = RegistryUtil.massRegistryGet(enchantmentsToRegister, BuiltInRegistries.ENCHANTMENT);

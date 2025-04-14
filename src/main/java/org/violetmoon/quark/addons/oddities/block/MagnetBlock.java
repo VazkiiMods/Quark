@@ -50,7 +50,7 @@ public class MagnetBlock extends ZetaBlock implements EntityBlock{
 			return;
 		setCreativeTab(CreativeModeTabs.REDSTONE_BLOCKS);
 
-		module.zeta.renderLayerRegistry.put(this, RenderLayerRegistry.Layer.CUTOUT);
+		module.zeta().renderLayerRegistry.put(this, RenderLayerRegistry.Layer.CUTOUT);
 
 	}
 

@@ -47,7 +47,7 @@ public class DispensersPlaceBlocksModule extends ZetaModule {
 
 	@LoadEvent
 	public void setup(ZCommonSetup e) {
-		if(!enabled)
+		if(!isEnabled())
 			return;
 
 		BlockBehavior baseBehavior = new BlockBehavior();

@@ -37,7 +37,7 @@ public class VariantChestBlock extends ChestBlock implements IZetaBlock, IVarian
 			return;
 
 		String resloc = (prefix != null ? prefix + "_" : "") + type + "_chest";
-		module.zeta.registry.registerBlock(this, resloc, true);
+		module.zeta().registry.registerBlock(this, resloc, true);
 	}
 
 	public VariantChestBlock(String type, ZetaModule module, Supplier<BlockEntityType<? extends ChestBlockEntity>> supplier, Properties props) {

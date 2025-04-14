@@ -96,7 +96,7 @@ public class ExpandedItemInteractionsModule extends ZetaModule {
 
 	@LoadEvent
 	public final void configChanged(ZConfigChanged event) {
-		staticEnabled = enabled;
+		staticEnabled = isEnabled();
 
 		shulkers = RegistryUtil.massRegistryGet(QuarkGeneralConfig.shulkerBoxes, BuiltInRegistries.ITEM);
 	}

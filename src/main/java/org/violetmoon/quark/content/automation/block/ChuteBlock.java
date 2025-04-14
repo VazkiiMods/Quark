@@ -40,7 +40,7 @@ public class ChuteBlock extends ZetaBlock implements EntityBlock {
 		if(module == null) //auto registration below this line
 			return;
 
-		module.zeta.renderLayerRegistry.put(this, RenderLayerRegistry.Layer.CUTOUT_MIPPED);
+		module.zeta().renderLayerRegistry.put(this, RenderLayerRegistry.Layer.CUTOUT_MIPPED);
 		setCreativeTab(CreativeModeTabs.REDSTONE_BLOCKS);
 	}
 

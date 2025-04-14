@@ -364,11 +364,9 @@ public class EnchantmentMatrix {
 		if(level >= enchantment.getMaxLevel())
 			return 0;
 
-		return switch(enchantment.getRarity()) {
-		case COMMON -> level;
-		case UNCOMMON -> level / 2 + 1;
-		default -> 1;
-		};
+
+		//UNCOMMON -> level / 2 + 1;
+		return level;
 	}
 
 	public static int getValue(Enchantment enchantment, int level) {

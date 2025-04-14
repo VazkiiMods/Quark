@@ -52,7 +52,7 @@ public class HollowLogsModule extends ZetaModule {
 	
 	@LoadEvent
 	public final void configChanged(ZConfigChanged event) {
-		staticEnabled = enabled;
+		staticEnabled = isEnabled();
 	}
 	
 	@LoadEvent
