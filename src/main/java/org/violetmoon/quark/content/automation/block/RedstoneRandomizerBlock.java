@@ -65,12 +65,27 @@ public class RedstoneRandomizerBlock extends ZetaBlock {
 		boolean isPowered = isPowered(state);
 		boolean willBePowered = shouldBePowered(world, pos, state);
 		if(isPowered != willBePowered) {
+			RandomizerPowerState oldPowerState = state.getValue(POWERED);
+			RandomizerPowerState newPowerState;
 			if(!willBePowered)
-				state = state.setValue(POWERED, RandomizerPowerState.OFF);
+				newPowerState = RandomizerPowerState.OFF;
 			else
-				state = state.setValue(POWERED, rand.nextBoolean() ? RandomizerPowerState.LEFT : RandomizerPowerState.RIGHT);
+				newPowerState = rand.nextBoolean() ? RandomizerPowerState.LEFT : RandomizerPowerState.RIGHT;
 
-			world.setBlockAndUpdate(pos, state);
+			world.setBlockAndUpdate(pos, state.setValue(POWERED, newPowerState));
+
+			//if i was previously powered pointing right & just turned off, or if i was previously turned off
+			//and just became powered pointing right, my neighbor to the right should know about that
+			RandomizerPowerState notOff = oldPowerState == RandomizerPowerState.OFF ? newPowerState : oldPowerState;
+			if(notOff == RandomizerPowerState.OFF)
+				return; //impossible
+
+			Direction rel = switch(notOff) {
+				case LEFT -> state.getValue(FACING).getClockWise();
+				case RIGHT -> state.getValue(FACING).getCounterClockWise();
+				default -> throw new IllegalStateException();
+			};
+			world.updateNeighborsAtExceptFromFacing(pos.relative(rel), this, rel.getOpposite());
 		}
 	}
 
@@ -182,6 +197,7 @@ public class RedstoneRandomizerBlock extends ZetaBlock {
 		}
 	}
 
+	//TODO(quat) what's this about, it only notifies one neighbor & is only called on place/break.
 	public static void notifyNeighbors(Block block, Level world, BlockPos pos, BlockState state) {
 		Direction face = state.getValue(FACING);
 		BlockPos neighborPos = pos.relative(face.getOpposite());
