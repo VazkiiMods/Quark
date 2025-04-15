@@ -303,7 +303,7 @@
 	"quark.jei.hint.minecraft.soul_campfire": "Puxará jogadores voando com um elytra acima dele para o chão.",
 	"quark.jei.hint.minecraft.tinted_glass": "Pode ser usado para fazer feixes de farol ficarem mais fracos ao colocar o bloco no caminho. Vários se acumulam.",
 	"quark.jei.hint.minecraft.lava_bucket": "Clique com o botão direito em um item no seu inventário no balde de lava para destruí-lo para sempre! Caixas de shulker e itens imunes ao fogo, como netherita, não podem ser destruídos assim.",
-	"quark.jei.hint.minecraft.armor_stand": "Agora tem braços, permitindo segurar um item mais um escudo."
+	"quark.jei.hint.minecraft.armor_stand": "Agora tem braços, permitindo segurar um item mais um escudo.",
 	
 	"quark.keybind.change_hotbar": "Trocador de barra de atalhos",
 	"quark.keybind.lock_rotation": "Trava de rotação",
@@ -459,7 +459,7 @@
 	"quark.misc.quill_searching": "Procurando",
 	"quark.misc.variant_tooltip_hold_shift": "(SHIFT para variantes)",
 	"quark.misc.variant_tooltip_header": "Variantes:",
-	"quark.misc.disable_slot": "Clique para desativar o slot"
+	"quark.misc.disable_slot": "Clique para desativar o slot",
 	
 	"quark.misc.you_came_to_the_wrong_neighborhood.0": "Palavra de seis letras só pra me ajudar",
 	"quark.misc.you_came_to_the_wrong_neighborhood.1": "É uma complexidade e eu tô codificando no meu mod e eu,",
