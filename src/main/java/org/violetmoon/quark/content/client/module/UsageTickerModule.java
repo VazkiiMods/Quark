@@ -200,6 +200,7 @@ public class UsageTickerModule extends ZetaModule {
 				}
 
 				if(!logicLock) {
+					//We always show BlockItems even if they are unstackable - added in https://github.com/VazkiiMods/Quark/pull/5189
 					if(!stack.isStackable() && !(stack.getItem() instanceof BlockItem) && slot.getType() == Type.HAND)
 						returnStack = ItemStack.EMPTY;
 					else if(verifySize && stack.isStackable() && count == stack.getCount())
