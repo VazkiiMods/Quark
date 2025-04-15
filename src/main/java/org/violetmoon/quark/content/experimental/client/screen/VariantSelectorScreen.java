@@ -76,6 +76,10 @@ public class VariantSelectorScreen extends Screen {
         float pad = -((float) Math.PI / segments) + ((float) Math.PI / 2);
         double angle = mouseAngle(x, y, mx, my);
         double dist = (x - mx) * (x - mx) + (y - my) * (y - my);
+        int activeSegment = (dist > 64)
+            // converting to int floors towards 0 so negative values would be problematic, just add PI*2
+            ? (int) (((float) Math.PI * 2 + angle - pad) / degPer) % segments
+            : -1; // too close to activate
 
         // loop angle around to ensure the last bit is accessible
         if (angle < pad)
@@ -105,7 +109,7 @@ public class VariantSelectorScreen extends Screen {
             float start = seg * degPer + pad;
             float end = (seg + 1) * degPer + pad;
 
-            boolean mouseInSector = variantExists && start < angle && angle < end && dist > 64;
+            boolean mouseInSector = variantExists && activeSegment == seg;
             float radius = Math.max(0F, Math.min((timeIn - ((float) seg * 6F / (float) segments)) * 40F, (float) maxRadius));
 
             if (mouseInSector || rightVariant)
