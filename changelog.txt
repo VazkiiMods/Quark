@@ -1,31 +1,14 @@
-# Additions
-
-- Seed Pouch recognizes plants from a few other mods (CyberRat7)
-- Greener Grass module recognizes blocks from "Grass Slabs, Carpets, & Stairs" as grass (tomprince)
-- Added tag for where oretoises can spawn in (MehVahdJukaar)
-
 # Fixes
 
-- Fix client-only events in common code (MehVahdJukaar)
-- Fixed chute, grates, and magnets (MehVahdJukaar)
-- Remove hacky RequiredModTooltipHandler thing (MehVahdJukaar)
-- Try and fix the Lootr integration (wiresegal, MehVahdJukaar)
-- Fix non-discoverable enchantments showing up in the Matrix Enchanting Table (wiresegal)
-- Fake players can no longer hold chickens (MehVahdJukaar)
-- Fix hint tooltips not working in JEI (mezz)
-- Fix SlabToBlocksModule finding the wrong recipe for certain slabs (autumn-puffin)
-- Fix missing plank tags for vertical planks (littlej541)
-- Fix missing boat / chest boat tags on Azalea boats (cassiancc)
-- Fixed crate and crafter tile entities not having correct isValid method causing crashes when using the menu and breaking the block (MehVahdJukaar)
-- Poke something related to sound events, which might fix the mystery NoFog issue but might just make it crash in a different way, I seriously don't know dude (quat)
-- Fix Iron Ladder not having a collision box lol (quat)
-- Work around Mixin Audit-related crashes in a development workspace (quat)
+* Fix Variant Selector having a deadzone when you have lots of variants (copygirl)
+* Fix Variant Selector pick-block edge cases (copygirl)
+* Show unstackable blocks (like beds) in the Usage Ticker (copygirl)
+* Fix unintended problems with non-English locales
+* Fix Redstone Randomizer not sending enough block updates
+* Fix a pretty bad bug with pickarangs
 
-# Localizations
+# Translations
 
-- Update Traditional Chinese localization (yichifauzi)
-- Update Russian localization (kkylern)
-- Update Japanese localization (Abbage230)
-- Add Chilean Spanish localization (Ganbare-Lucifer)
-- Add English - New Zealand localization (XlosVM)
-- Update Italian localization (Mickeon)
+* Update English spelling variants in `en_gb` and `en_nz` (Qwerty97475)
+* Update Chinese localization (Hanekmio, qznfbnj)
+* Fix invalid JSON in uk_ua language file
