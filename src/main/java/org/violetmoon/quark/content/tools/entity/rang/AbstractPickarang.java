@@ -203,33 +203,38 @@ public abstract class AbstractPickarang<T extends AbstractPickarang<T>> extends 
 			return;
 
 		ItemStack prev = player.getMainHandItem();
-		player.getInventory().setItem(player.getInventory().selected, getStack());
-		player.setItemInHand(InteractionHand.MAIN_HAND, getStack());
 
-		//more general way of doing it instead of just checking hardness
-		float progress = getBlockDestroyProgress(state, player, level(), hit);
-		if(progress == 0)
-			return;
+		try {
+			//temporarily put the pickarang in the inventory, so the player can "mine" the block with it
+			player.getInventory().setItem(player.getInventory().selected, getStack());
+			player.setItemInHand(InteractionHand.MAIN_HAND, getStack());
 
-		//re calculates equivalent hardness assuming correct tool for drop
-		float equivalentHardness = ((1 / progress) / 100) * (100/30f);
+			//more general way of doing it instead of just checking hardness
+			float progress = getBlockDestroyProgress(state, player, level(), hit);
+			if(progress == 0)
+				return; //the "finally" block will still run
 
-		if((equivalentHardness <= getPickarangType().maxHardness
+			//re calculates equivalent hardness assuming correct tool for drop
+			float equivalentHardness = ((1 / progress) / 100) * (100 / 30f);
+
+			if((equivalentHardness <= getPickarangType().maxHardness
 				&& equivalentHardness >= 0
 				&& !isBlockBlackListead(state)) || player.getAbilities().instabuild) {
 
-			if(player.gameMode.destroyBlock(hit))
-				level().levelEvent(null, LevelEvent.PARTICLES_DESTROY_BLOCK, hit, Block.getId(state));
-			else
+				if(player.gameMode.destroyBlock(hit))
+					level().levelEvent(null, LevelEvent.PARTICLES_DESTROY_BLOCK, hit, Block.getId(state));
+				else
+					clank(result);
+
+				setStack(player.getInventory().getSelected());
+
+			} else
 				clank(result);
 
-			setStack(player.getInventory().getSelected());
-
-		} else
-			clank(result);
-
-		player.setItemInHand(InteractionHand.MAIN_HAND, prev);
-		player.getInventory().setItem(player.getInventory().selected, prev);
+		} finally {
+			player.setItemInHand(InteractionHand.MAIN_HAND, prev);
+			player.getInventory().setItem(player.getInventory().selected, prev);
+		}
 	}
 
 	@Override
