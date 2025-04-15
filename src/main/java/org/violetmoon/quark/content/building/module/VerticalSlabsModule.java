@@ -2,6 +2,7 @@ package org.violetmoon.quark.content.building.module;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Optional;
 
 import org.apache.commons.lang3.tuple.Pair;
@@ -155,7 +156,7 @@ public class VerticalSlabsModule extends ZetaModule {
 				if(prop instanceof EnumProperty<?> ep) {
 					Enum<?> val = (Enum<?>) state.getValue(prop);
 
-					String name = val.name().toLowerCase();
+					String name = val.name().toLowerCase(Locale.ROOT);
 					Direction vsDir = Direction.byName(name);
 					return vsDir != null && vsDir.getAxis() != dir.getAxis();
 				}

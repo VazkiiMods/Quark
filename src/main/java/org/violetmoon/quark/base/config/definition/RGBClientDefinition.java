@@ -20,6 +20,7 @@ import org.violetmoon.zeta.config.ChangeSet;
 import org.violetmoon.zeta.config.SectionDefinition;
 import org.violetmoon.zeta.config.ValueDefinition;
 
+import java.util.Locale;
 import java.util.function.Consumer;
 
 public class RGBClientDefinition implements ClientDefinitionExt<SectionDefinition> {
@@ -47,10 +48,10 @@ public class RGBClientDefinition implements ClientDefinitionExt<SectionDefinitio
 		double b = changes.get(this.b);
 
 		if(this.a == null)
-			return String.format("[%.1f, %.1f, %.1f]", r, g, b);
+			return String.format(Locale.ROOT, "[%.1f, %.1f, %.1f]", r, g, b);
 
 		double a = changes.get(this.a);
-		return String.format("[%.1f, %.1f, %.1f, %.1f]", r, g, b, a);
+		return String.format(Locale.ROOT, "[%.1f, %.1f, %.1f, %.1f]", r, g, b, a);
 	}
 
 	@Override
@@ -113,7 +114,7 @@ public class RGBClientDefinition implements ClientDefinitionExt<SectionDefinitio
 					super.render(guiGraphics, mouseX, mouseY, partialTicks);
 
 					//draw the current value
-					String displayVal = String.format("%.2f", getValue());
+					String displayVal = String.format(Locale.ROOT, "%.2f", getValue());
 					int valueColor = changes.isDirty(binding) ? ChatFormatting.GOLD.getColor() : 0xFFFFFF;
 					guiGraphics.drawString(font, displayVal, x + (float) (getWidth() / 2 - font.width(displayVal) / 2), y + 6, valueColor, true);
 

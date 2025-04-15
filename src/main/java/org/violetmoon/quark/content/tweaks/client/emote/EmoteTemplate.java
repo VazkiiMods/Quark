@@ -279,7 +279,7 @@ public class EmoteTemplate {
 		if(timeline == null)
 			throw new IllegalArgumentException("Illegal use of function move, animation not started");
 		if(tokens.length < 4)
-			throw new IllegalArgumentException(String.format("Illegal parameter amount for function move: %d (at least 4 are required)", tokens.length));
+			throw new IllegalArgumentException(String.format(Locale.ROOT, "Illegal parameter amount for function move: %d (at least 4 are required)", tokens.length));
 
 		String partStr = tokens[1];
 		int part;
@@ -331,7 +331,7 @@ public class EmoteTemplate {
 					} else
 						throw new IllegalArgumentException("Easing type " + easeType + " doesn't exist");
 				}
-				default -> throw new IllegalArgumentException(String.format("Invalid modifier %s for move function", cmd));
+				default -> throw new IllegalArgumentException(String.format(Locale.ROOT, "Invalid modifier %s for move function", cmd));
 				}
 			}
 		}
@@ -363,14 +363,14 @@ public class EmoteTemplate {
 
 			boolean repeating = playType.equals("continuous");
 			if(!repeating && !playType.equals("instant"))
-				throw new IllegalArgumentException(String.format("Invalid modifier %s for sound function", playType));
+				throw new IllegalArgumentException(String.format(Locale.ROOT, "Invalid modifier %s for sound function", playType));
 
 			assertParamSize(tokens, 4, 6);
 
 			String endCondition = tokens[2];
 			boolean endWithSequence = endCondition.equals("section");
 			if(!endWithSequence && !endCondition.equals("emote"))
-				throw new IllegalArgumentException(String.format("Invalid modifier %s for sound function", endCondition));
+				throw new IllegalArgumentException(String.format(Locale.ROOT, "Invalid modifier %s for sound function", endCondition));
 
 			String type = tokens[3];
 			float volume = 1f;
@@ -416,7 +416,7 @@ public class EmoteTemplate {
 
 	private static Timeline reset(EmoteTemplate em, HumanoidModel<?> model, Timeline timeline, String[] tokens) throws IllegalArgumentException {
 		if(tokens.length < 4)
-			throw new IllegalArgumentException(String.format("Illegal parameter amount for function reset: %d (at least 4 are required)", tokens.length));
+			throw new IllegalArgumentException(String.format(Locale.ROOT, "Illegal parameter amount for function reset: %d (at least 4 are required)", tokens.length));
 
 		String part = tokens[1];
 		boolean allParts = part.equals("all");
@@ -473,17 +473,17 @@ public class EmoteTemplate {
 
 	private static void assertParamSize(String[] tokens, int expect) throws IllegalArgumentException {
 		if(tokens.length != expect)
-			throw new IllegalArgumentException(String.format("Illegal parameter amount for function %s: %d (expected %d)", tokens[0], tokens.length, expect));
+			throw new IllegalArgumentException(String.format(Locale.ROOT, "Illegal parameter amount for function %s: %d (expected %d)", tokens[0], tokens.length, expect));
 	}
 
 	private static void assertParamSize(String[] tokens, int expectMin, int expectMax) throws IllegalArgumentException {
 		if(tokens.length > expectMax || tokens.length < expectMin)
-			throw new IllegalArgumentException(String.format("Illegal parameter amount for function %s: %d (expected between %d and %d)", tokens[0], tokens.length, expectMin, expectMax));
+			throw new IllegalArgumentException(String.format(Locale.ROOT, "Illegal parameter amount for function %s: %d (expected between %d and %d)", tokens[0], tokens.length, expectMin, expectMax));
 	}
 
 	private static void assertParamSize(String mod, String[] tokens, int expect, int startingFrom) throws IllegalArgumentException {
 		if(tokens.length - startingFrom < expect)
-			throw new IllegalArgumentException(String.format("Illegal parameter amount for move modifier %s: %d (expected at least %d)", mod, tokens.length, expect));
+			throw new IllegalArgumentException(String.format(Locale.ROOT, "Illegal parameter amount for move modifier %s: %d (expected at least %d)", mod, tokens.length, expect));
 	}
 
 	public boolean usesBodyPart(int part) {

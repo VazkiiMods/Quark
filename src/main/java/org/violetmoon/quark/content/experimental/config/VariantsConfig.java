@@ -113,12 +113,12 @@ public class VariantsConfig implements IConfigType {
 		String name = BuiltInRegistries.BLOCK.getKey(variantBlock).getPath();
 
 		for(String suffix : sortedSuffixes) {
-			if(name.endsWith(String.format("_%s", suffix)))
+			if(name.endsWith("_" + suffix))
 				return suffix;
 
 			if(aliasMap.containsKey(suffix))
 				for(String alias : aliasMap.get(suffix))
-					if(name.endsWith(String.format("_%s", alias)))
+					if(name.endsWith("_" + alias))
 						return suffix;
 		}
 
@@ -242,7 +242,7 @@ public class VariantsConfig implements IConfigType {
 					return strippedAttempt;
 			}
 
-		String targetStr = String.format(format, namespace, name, suffix);
+		String targetStr = String.format(Locale.ROOT, format, namespace, name, suffix);
 		ResourceLocation target = new ResourceLocation(targetStr);
 		Block ret = BuiltInRegistries.BLOCK.get(target);
 

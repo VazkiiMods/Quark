@@ -1,6 +1,7 @@
 package org.violetmoon.quark.addons.oddities.block.be;
 
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 
 import org.jetbrains.annotations.NotNull;
@@ -110,7 +111,7 @@ public class TinyPotatoBlockEntity extends SimpleInventoryBlockEntity implements
 			if(hasCustomName()) {
 				TinyPotatoInfo info = TinyPotatoInfo.fromComponent(name);
 
-				String checkName = info.name().toLowerCase().trim();
+				String checkName = info.name().toLowerCase(Locale.ROOT).trim();
 				if(SOUNDS.containsKey(checkName) && soundCd == 0) {
 					SoundEvent playSound = SOUNDS.get(checkName);
 					soundCd = 20;
