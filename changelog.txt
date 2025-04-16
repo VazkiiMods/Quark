@@ -1,3 +1,7 @@
+# Additions
+
+* Enhanced Ladder effects apply to Chipped's ladders by default (gamma-delta)
+
 # Fixes
 
 * Fix Variant Selector having a deadzone when you have lots of variants (copygirl)

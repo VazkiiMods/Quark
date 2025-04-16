@@ -15,6 +15,10 @@
         "quark:azalea_ladder",
         "quark:blossom_ladder",
         "quark:mangrove_ladder",
-        "quark:ancient_ladder"
+        "quark:ancient_ladder",
+        {
+            "id": "#chipped:ladder",
+            "required": false
+        }
     ]
 }
