@@ -10,6 +10,7 @@
 * Fix unintended problems with non-English locales
 * Fix Redstone Randomizer not sending enough block updates
 * Fix a pretty bad bug with pickarangs
+* Fix binding "Back Button Keybind" to a mouse button kicking you out of the options screen
 
 # Translations
 
