@@ -88,7 +88,7 @@ public class ReacharoundPlacingModule extends ZetaModule {
 			int count = stack.getCount();
 			InteractionHand hand = event.getHand();
 
-			UseOnContext context = new UseOnContext(player, hand, new BlockHitResult(new Vec3(0.5F, 1F, 0.5F), target.dir, target.pos, false));
+			UseOnContext context = new UseOnContext(player, hand, new BlockHitResult(target.pos.getCenter().add(0, 0.5, 0), target.dir, target.pos, false));
 			boolean remote = player.level().isClientSide;
 			InteractionResult res = remote ? InteractionResult.SUCCESS : stack.useOn(context);
 
