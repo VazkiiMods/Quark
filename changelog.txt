@@ -7,14 +7,15 @@
 * Fix Variant Selector having a deadzone when you have lots of variants (copygirl)
 * Fix Variant Selector pick-block edge cases (copygirl)
 * Show unstackable blocks (like beds) in the Usage Ticker (copygirl)
-* Fix unintended problems with non-English locales
+* Fix various problems and crashes with non-english system locales
 * Fix Redstone Randomizer not sending enough block updates
-* Fix a pretty bad bug with pickarangs
-* Fix binding "Back Button Keybind" to a mouse button kicking you out of the options screen
+* Fix an infinite pickarang glitch
+* Fix binding "Back Button Keybind" to a mouse button instantly kicking you out of the options screen
 * Fix Reacharound Placing always placing bottom slabs above y=1 since it used the wrong coordinates
 
 # Translations
 
 * Update English spelling variants in `en_gb` and `en_nz` (Qwerty97475)
 * Update Chinese localization (Hanekmio, qznfbnj)
-* Fix invalid JSON in uk_ua language file
+* Update Brazillion Portugese localization (Xlr11)
+* Fix invalid JSON in Ukranian localization file
