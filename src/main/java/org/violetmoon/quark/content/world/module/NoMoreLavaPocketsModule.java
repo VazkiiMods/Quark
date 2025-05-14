@@ -15,7 +15,7 @@ public class NoMoreLavaPocketsModule extends ZetaModule {
 
 	@LoadEvent
 	public final void configChanged(ZConfigChanged event) {
-		staticEnabled = isEnabled();
+		staticEnabled = this.enabled;
 	}
 
 	public static boolean shouldDisable(SpringConfiguration configuration) {

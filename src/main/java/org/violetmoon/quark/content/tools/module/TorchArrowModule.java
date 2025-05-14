@@ -35,7 +35,7 @@ public class TorchArrowModule extends ZetaModule {
 
 	@LoadEvent
 	public final void register(ZRegister event) {
-		torch_arrow = new ZetaArrowItem.Impl("torch_arrow", this, (level, stack, living) -> new TorchArrow(level, living));
+		torch_arrow = new ZetaArrowItem.Impl("torch_arrow", this, (level, ammo, shooter, weapon) -> new TorchArrow(level, shooter));
 
 		torchArrowType = EntityType.Builder.<TorchArrow>of(TorchArrow::new, MobCategory.MISC)
 				.sized(0.5F, 0.5F)

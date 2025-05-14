@@ -1,5 +1,6 @@
 package org.violetmoon.quark.addons.oddities.item;
 
+import net.minecraft.core.Holder;
 import net.minecraft.core.Holder.Reference;
 import net.minecraft.core.HolderLookup.RegistryLookup;
 import net.minecraft.core.component.DataComponents;
@@ -15,20 +16,12 @@ import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
-import net.minecraft.world.item.ArmorItem;
-import net.minecraft.world.item.ArmorMaterials;
-import net.minecraft.world.item.CreativeModeTabs;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
-import net.minecraft.world.item.Rarity;
+import net.minecraft.world.item.*;
 import net.minecraft.world.item.component.ItemAttributeModifiers;
 import net.minecraft.world.item.enchantment.Enchantment;
-import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.item.enchantment.ItemEnchantments;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.items.IItemHandler;
 import net.neoforged.neoforge.items.ItemStackHandler;
@@ -43,7 +36,6 @@ import org.violetmoon.zeta.item.ext.IZetaItemExtensions;
 import org.violetmoon.zeta.module.ZetaModule;
 import org.violetmoon.zeta.registry.CreativeTabManager;
 
-import java.util.Map;
 import java.util.Optional;
 import java.util.function.BooleanSupplier;
 import java.util.function.Consumer;
@@ -189,15 +181,15 @@ public class BackpackItem extends ArmorItem implements IZetaItem, IZetaItemExten
 			}
 		}
 
-		Map<Enchantment, Integer> enchants = EnchantmentHelper.getEnchantments(stack);
-		boolean isCursed = enchants.containsKey(Enchantments.BINDING_CURSE);
-		if(isCursed) {
-			enchants.remove(Enchantments.BINDING_CURSE);
-			EnchantmentHelper.setEnchantments(enchants, stack);
+		ItemEnchantments enchantments = Optional.ofNullable(stack.get(DataComponents.ENCHANTMENTS)).orElse(ItemEnchantments.EMPTY);
+		Holder<Enchantment> binding_curse = entityItem.level().registryAccess().lookupOrThrow(Registries.ENCHANTMENT).getOrThrow(Enchantments.BINDING_CURSE);
+		ItemEnchantments.Mutable replaceEnch = new ItemEnchantments.Mutable(enchantments);
+		if (replaceEnch.keySet().contains(binding_curse)) {
+			replaceEnch.set(binding_curse, 0);
+			stack.set(DataComponents.ENCHANTMENTS, replaceEnch.toImmutable());
 		}
-		
+
 		stack.removeTagKey("Inventory");
-		
 		return false;
 	}
 

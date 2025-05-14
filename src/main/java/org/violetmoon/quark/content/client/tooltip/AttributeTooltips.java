@@ -24,10 +24,7 @@ import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.ai.attributes.*;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.tooltip.TooltipComponent;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.PotionItem;
-import net.minecraft.world.item.TippedArrowItem;
-import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.item.*;
 import net.minecraft.world.item.component.ItemAttributeModifiers;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.item.enchantment.Enchantments;
@@ -142,9 +139,8 @@ public class AttributeTooltips {
 		if(ImprovedTooltipsModule.showUpgradeStatus && slot.hasCanonicalSlot()) {
 			ItemStack equipped = player.getItemBySlot(slot.getCanonicalSlot());
 			if(!equipped.equals(stack) && !equipped.isEmpty()) {
-				equipped.getTooltipLines(player, TooltipFlag.Default.NORMAL);
+				equipped.getTooltipLines(Item.TooltipContext.of(player.level()), player, TooltipFlag.Default.NORMAL);
 				return getModifiers(equipped, slot);
-
 			}
 		}
 		return ImmutableMultimap.of();

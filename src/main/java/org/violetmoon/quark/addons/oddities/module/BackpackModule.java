@@ -43,6 +43,7 @@ import org.violetmoon.zeta.client.event.play.ZScreen;
 import org.violetmoon.zeta.config.Config;
 import org.violetmoon.zeta.event.bus.LoadEvent;
 import org.violetmoon.zeta.event.bus.PlayEvent;
+import org.violetmoon.zeta.event.bus.ZPhase;
 import org.violetmoon.zeta.event.load.ZCommonSetup;
 import org.violetmoon.zeta.event.load.ZRegister;
 import org.violetmoon.zeta.event.play.entity.living.ZLivingDrops;
@@ -205,7 +206,7 @@ public class BackpackModule extends ZetaModule {
 
 		@PlayEvent
 		public void clientTick(ZClientTick event) {
-			if (!(event instanceof ZClientTick.Start)) return;
+			if (event.getPhase() != ZPhase.START) return;
 
 			Minecraft mc = Minecraft.getInstance();
 			if(isInventoryGUI(mc.screen) && !backpackRequested && isEntityWearingBackpack(mc.player) && !mc.player.portalProcess.isInsidePortalThisTick()) {
