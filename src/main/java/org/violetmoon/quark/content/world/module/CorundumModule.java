@@ -102,7 +102,7 @@ public class CorundumModule extends ZetaModule {
 
 	@LoadEvent
 	public final void configChanged(ZConfigChanged event) {
-		staticEnabled = isEnabled();
+		staticEnabled = enabled;
 	}
 
 	@LoadEvent

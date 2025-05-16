@@ -63,7 +63,7 @@ public class ChorusVegetationBlock extends ZetaBlock implements BonemealableBloc
 		if(module == null) //auto registration below this line
 			return;
 
-		module.zeta().renderLayerRegistry.put(this, RenderLayerRegistry.Layer.CUTOUT);
+		module.zeta.renderLayerRegistry.put(this, RenderLayerRegistry.Layer.CUTOUT);
 		setCreativeTab(CreativeModeTabs.NATURAL_BLOCKS, Blocks.CHORUS_PLANT, true);
 	}
 

@@ -143,7 +143,7 @@ public class GreenerGrassModule extends ZetaModule {
 		private BlockColor getConvulsedColor(BlockColor color, BooleanSupplier condition) {
 			return (state, world, pos, tintIndex) -> {
 				int originalColor = color.getColor(state, world, pos, tintIndex);
-				if(!isEnabled() || !condition.getAsBoolean())
+				if(!enabled || !condition.getAsBoolean())
 					return originalColor;
 
 				return colorMatrix.convolve(originalColor);
@@ -152,7 +152,7 @@ public class GreenerGrassModule extends ZetaModule {
 
 		@Override
 		public int getWaterColor(int currColor) {
-			if(!isEnabled() || !affectWater)
+			if(!enabled || !affectWater)
 				return currColor;
 
 			return waterMatrix.convolve(currColor);

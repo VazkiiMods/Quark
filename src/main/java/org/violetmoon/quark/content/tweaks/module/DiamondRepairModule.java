@@ -57,7 +57,7 @@ public class DiamondRepairModule extends ZetaModule {
 
 	@LoadEvent
 	public final void configChanged(ZConfigChanged event) {
-		staticEnabled = this.enabled;
+		staticEnabled = enabled;
 
 		repairChanges.clear();
 		for(String s : repairChangesList) {

@@ -43,8 +43,8 @@ public class VariantLaddersModule extends ZetaModule {
 
 	@LoadEvent
 	public final void configChanged(ZConfigChanged event) {
-		moduleEnabled = this.isEnabled();
-		zeta().nameChanger.changeBlock(Blocks.LADDER, "block.quark.oak_ladder", changeNames && isEnabled());
+		moduleEnabled = enabled;
+		zeta.nameChanger.changeBlock(Blocks.LADDER, "block.quark.oak_ladder", changeNames && enabled);
 	}
 
 }

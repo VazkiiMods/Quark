@@ -41,7 +41,7 @@ public class GrabChickensModule extends ZetaModule {
 
 	@LoadEvent
 	public final void configChanged(ZConfigChanged event) {
-		staticEnabled = isEnabled();
+		staticEnabled = enabled;
 	}
 
 	@PlayEvent

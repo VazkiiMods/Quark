@@ -17,7 +17,7 @@ public class MagmaKeepsConcretePowderModule extends ZetaModule {
 	
 	@LoadEvent
 	public void configChanged(ZConfigChanged event) {
-		staticEnabled = isEnabled();
+		staticEnabled = enabled;
 	}
 	
 	public static boolean preventSolidify(BlockGetter pLevel, BlockPos pPos, BlockState state) {

@@ -49,7 +49,7 @@ public class SlimeInABucketModule extends ZetaModule {
 				if(!stack.isEmpty() && stack.getItem() == Items.BUCKET) {
 					if(!event.getLevel().isClientSide) {
 						ItemStack outStack = new ItemStack(slime_in_a_bucket);
-						CompoundTag cmp = event.getTarget().serializeNBT();
+						CompoundTag cmp = event.getTarget().serializeAttachments(event.getLevel().registryAccess());
 						ItemNBTHelper.setCompound(outStack, SlimeInABucketItem.TAG_ENTITY_DATA, cmp);
 
 						if(stack.getCount() == 1)

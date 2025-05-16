@@ -400,7 +400,7 @@ public class CameraModule extends ZetaModule {
 				}
 			} else {
 				OverlayShaderModule shaderModule = Quark.ZETA.modules.get(OverlayShaderModule.class);
-				if(shaderModule != null && shaderModule.isEnabled()) {
+				if(shaderModule != null && shaderModule.enabled) {
 					for(ResourceLocation l : SHADERS) {
 						if(l != null && l.getPath().contains(shaderModule.shader + ".json")) {
 							render.loadEffect(l);

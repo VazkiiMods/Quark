@@ -26,8 +26,7 @@ public class LongRangePickBlockModule extends ZetaModule {
 
 		@Override
 		public HitResult transformHitResult(HitResult hitResult) {
-			if(!isEnabled())
-				return hitResult;
+			if(!enabled) return hitResult;
 
 			Minecraft mc = Minecraft.getInstance();
 			Player player = mc.player;

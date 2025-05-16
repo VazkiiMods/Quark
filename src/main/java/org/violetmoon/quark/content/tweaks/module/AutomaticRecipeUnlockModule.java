@@ -51,7 +51,7 @@ public class AutomaticRecipeUnlockModule extends ZetaModule {
 
 	@LoadEvent
 	public final void configChanged(ZConfigChanged event) {
-		staticEnabled = isEnabled();
+		staticEnabled = enabled;
 	}
 
 	@PlayEvent

@@ -78,7 +78,7 @@ public class AncientWoodModule extends ZetaModule {
 			ComposterBlock.COMPOSTABLES.put(ancient_leaves.asItem(), 0.3F);
 			ComposterBlock.COMPOSTABLES.put(ancient_fruit.asItem(), 0.65F);
 			
-			zeta().fuel.addFuel(ancient_sapling, 100);
+			this.zeta.fuel.addFuel(ancient_sapling, 100);
 		});
 	}
 

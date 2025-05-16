@@ -24,7 +24,7 @@ import java.util.Map;
 public class EnchantmentHelperMixin {
 
 	@ModifyReturnValue(method = "getAvailableEnchantmentResults", at = @At("RETURN"))
-	private static List<EnchantmentInstance> begoneEnchantments(List<EnchantmentInstance> prev, int cost, ItemStack stack, boolean treasure) {
+	private static List<EnchantmentInstance> begoneEnchantments(List<EnchantmentInstance> original) {
 		return EnchantmentsBegoneModule.begoneEnchantmentInstances(prev);
 	}
 

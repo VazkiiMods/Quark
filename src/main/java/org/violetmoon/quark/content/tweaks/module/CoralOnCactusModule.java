@@ -18,7 +18,7 @@ public class CoralOnCactusModule extends ZetaModule {
 
 	@LoadEvent
 	public final void configChanged(ZConfigChanged event) {
-		staticEnabled = isEnabled();
+		staticEnabled = enabled;
 	}
 
 	public static boolean scanForWater(BlockState state, BlockGetter world, BlockPos pos, boolean prevValue) {

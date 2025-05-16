@@ -155,7 +155,7 @@ public class PathfinderMapsModule extends ZetaModule {
 		loadTradeInfo(Biomes.ICE_SPIKES, true, 5, 20, 26, 0x1EC0C9);
 		loadTradeInfo(Biomes.CHERRY_GROVE, true, 5, 20, 26, 0xE9A9E8);
 
-		inBiomeConditionType = new LootItemConditionType(new InBiomeCondition.InBiomeSerializer());
+		inBiomeConditionType = new LootItemConditionType(InBiomeCondition.CODEC);
 		Registry.register(BuiltInRegistries.LOOT_CONDITION_TYPE, Quark.asResource("in_biome"), inBiomeConditionType);
 
 		pathfinderMapTrigger = event.getAdvancementModifierRegistry().registerManualTrigger("pathfinder_map_center");

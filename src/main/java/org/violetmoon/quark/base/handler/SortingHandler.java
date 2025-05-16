@@ -429,7 +429,7 @@ public final class SortingHandler {
 		else if(!hasTag1)
 			return 0;
 
-		return stack2.getTag().toString().hashCode() - stack1.getTag().toString().hashCode();
+		return stack2.getTags().toString().hashCode() - stack1.getTags().toString().hashCode();
 	}
 
 	public static int potionComplexityCompare(ItemStack stack1, ItemStack stack2) {

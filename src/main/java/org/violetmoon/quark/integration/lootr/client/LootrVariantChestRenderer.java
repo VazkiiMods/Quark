@@ -4,9 +4,11 @@ import net.minecraft.client.renderer.Sheets;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.client.renderer.blockentity.ChestRenderer;
 import net.minecraft.client.resources.model.Material;
+import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.block.state.properties.ChestType;
 import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.Vec3;
 import noobanidus.mods.lootr.common.client.ClientHooks;
 import noobanidus.mods.lootr.neoforge.config.ConfigManager;
 import org.violetmoon.quark.base.Quark;
@@ -65,6 +67,8 @@ public class LootrVariantChestRenderer<T extends LootrVariantChestBlockEntity> e
 
 	@Override
 	public AABB getRenderBoundingBox(T blockEntity) {
-		return new AABB(blockEntity.getBlockPos().offset(-1, 0, -1), blockEntity.getBlockPos().offset(2, 2, 2));
+		BlockPos pos1 = blockEntity.getBlockPos().offset(-1, 0, -1);
+		BlockPos pos2 = blockEntity.getBlockPos().offset(2, 2, 2);
+		return new AABB(new Vec3(pos1.getX(), pos1.getY(), pos1.getZ()), new Vec3(pos2.getX(), pos2.getY(), pos2.getZ()));
 	}
 }

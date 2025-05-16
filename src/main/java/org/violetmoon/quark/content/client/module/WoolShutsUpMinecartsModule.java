@@ -22,7 +22,7 @@ public class WoolShutsUpMinecartsModule extends ZetaModule {
 
 	@LoadEvent
 	public final void configChanged(ZConfigChanged event) {
-		staticEnabled = isEnabled();
+		staticEnabled = enabled;
 	}
 
 	public static boolean canPlay(AbstractMinecart cart) {
