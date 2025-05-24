@@ -84,7 +84,7 @@ public class AmbientDiscsModule extends ZetaModule {
 					soundEngine.play(sound);
 				} else {
 					ItemStack stack = tile.getTheItem();
-					if(stack.getItem() instanceof QuarkMusicDiscItem disc)
+					if (stack.getItem() instanceof QuarkMusicDiscItem disc)
 						playAmbientSound(disc, pos);
 				}
 			}

@@ -266,7 +266,7 @@ public class AutomaticToolRestockModule extends ZetaModule {
 	}
 
 	private static List<String> generateDefaultEnchantmentList() {
-		ResourceKey<Enchantment>[] enchants = new ResourceKey<Enchantment>[]{
+		ResourceKey<Enchantment>[] enchants = new ResourceKey[]{
 				Enchantments.SILK_TOUCH,
 				Enchantments.FORTUNE,
 				Enchantments.INFINITY,
@@ -275,8 +275,8 @@ public class AutomaticToolRestockModule extends ZetaModule {
 		};
 
 		List<String> strings = new ArrayList<>();
-		for(Enchantment e : enchants)
-			strings.add(BuiltInRegistries.ENCHANTMENT.getKey(e).toString());
+		for(ResourceKey<Enchantment> e : enchants)
+			strings.add(e.toString());
 
 		return strings;
 	}

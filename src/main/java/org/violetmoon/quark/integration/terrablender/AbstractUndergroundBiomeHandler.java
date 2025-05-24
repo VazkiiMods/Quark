@@ -29,7 +29,7 @@ public abstract class AbstractUndergroundBiomeHandler {
 
 	protected void addUndergroundBiomesTo(Consumer<Pair<Climate.ParameterPoint, ResourceKey<Biome>>> consumer) {
 		for(UndergroundBiomeDesc desc : undergroundBiomeDescs)
-			if(desc.module().enabled)
+			if(desc.module().isEnabled())
 				consumer.accept(Pair.of(desc.climateParameterPoint(), desc.resourceKey()));
 	}
 

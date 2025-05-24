@@ -293,7 +293,7 @@ public class ChestSearchingModule extends ZetaModule {
 
 			ResourceLocation itemName = BuiltInRegistries.ITEM.getKey(item);
 			@Nullable
-			String modDisplayName = zeta.getModDisplayName(itemName.getNamespace());
+			String modDisplayName = zeta().getModDisplayName(itemName.getNamespace());
 
 			if(modDisplayName != null && matcher.test(modDisplayName.toLowerCase(Locale.ROOT), search))
 				return true;

@@ -116,7 +116,7 @@ dependencies {
     //runtimeOnly fg.deobf("dev.emi:emi-forge:${deps.emi}")
     runtimeOnly "maven.modrinth:spark:${deps.spark}"
     
-    implementation "org.violetmoon.zeta:Zeta:1.0-20.23"
+    implementation files ("localjars/ZetaLocals.jar")
     implementation "com.github.glitchfiend:TerraBlender-neoforge:${deps.terrablender}"
     implementation "curse.maven:jei-238222:${deps.jei}"
     // implementation fg.deobf("curse.maven:flan-forge-493246:${deps.flan}")

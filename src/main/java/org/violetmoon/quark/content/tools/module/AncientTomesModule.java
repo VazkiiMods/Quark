@@ -53,7 +53,6 @@ import org.violetmoon.zeta.event.load.ZRegister;
 import org.violetmoon.zeta.event.play.ZAnvilRepair;
 import org.violetmoon.zeta.event.play.ZAnvilUpdate;
 import org.violetmoon.zeta.event.play.entity.player.ZPlayer;
-import org.violetmoon.zeta.event.play.loading.ZAttachCapabilities;
 import org.violetmoon.zeta.event.play.loading.ZLootTableLoad;
 import org.violetmoon.zeta.event.play.loading.ZVillagerTrades;
 import org.violetmoon.zeta.module.ZetaLoadModule;

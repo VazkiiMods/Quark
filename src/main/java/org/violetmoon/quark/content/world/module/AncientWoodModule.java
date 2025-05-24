@@ -33,7 +33,6 @@ import org.violetmoon.zeta.event.play.loading.ZLootTableLoad;
 import org.violetmoon.zeta.module.ZetaLoadModule;
 import org.violetmoon.zeta.module.ZetaModule;
 import org.violetmoon.zeta.util.Hint;
-import org.violetmoon.zeta.world.PassthroughTreeGrower;
 
 @ZetaLoadModule(category = "world")
 public class AncientWoodModule extends ZetaModule {
