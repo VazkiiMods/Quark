@@ -60,7 +60,7 @@ public class DoubleDoorOpeningModule extends ZetaModule {
 	}
 
 	public boolean openBlock(Level world, Player player, BlockPos pos) {
-		if(!this.enabled || world == null)
+		if(!this.isEnabled() || world == null)
 			return false;
 
 		BlockState state = world.getBlockState(pos);

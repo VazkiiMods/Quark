@@ -2,6 +2,8 @@ package org.violetmoon.quark.content.building.module;
 
 import java.util.Map;
 
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.entity.EquipmentSlot;
 import org.violetmoon.quark.content.building.block.CutVineBlock;
 import org.violetmoon.zeta.client.AlikeColorHandler;
 import org.violetmoon.zeta.client.event.load.ZAddBlockColorHandlers;
@@ -73,7 +75,7 @@ public class ShearVinesModule extends ZetaModule {
 				Player player = event.getPlayer();
 				world.playSound(player, pos, SoundEvents.SHEEP_SHEAR, SoundSource.PLAYERS, 0.5F, 1F);
 				if(!player.getAbilities().instabuild)
-					MiscUtil.damageStack(player, event.getHand(), stack, 1);
+					MiscUtil.damageStack(stack, 1, player, event.getHand().equals(InteractionHand.MAIN_HAND) ? EquipmentSlot.MAINHAND : EquipmentSlot.OFFHAND);
 
 				event.setCancellationResult(InteractionResult.sidedSuccess(world.isClientSide));
 				event.setCanceled(true);

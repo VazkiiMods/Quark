@@ -3,6 +3,7 @@ package org.violetmoon.quark.content.client.module;
 import com.mojang.blaze3d.platform.Window;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.core.Holder;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.core.registries.Registries;
@@ -25,7 +26,6 @@ import org.violetmoon.zeta.client.event.play.ZRenderGuiOverlay;
 import org.violetmoon.zeta.config.Config;
 import org.violetmoon.zeta.event.bus.LoadEvent;
 import org.violetmoon.zeta.event.bus.PlayEvent;
-import org.violetmoon.zeta.event.bus.ZPhase;
 import org.violetmoon.zeta.event.load.ZConfigChanged;
 import org.violetmoon.zeta.module.ZetaLoadModule;
 import org.violetmoon.zeta.module.ZetaModule;
@@ -74,9 +74,7 @@ public class UsageTickerModule extends ZetaModule {
 		}
 
 		@PlayEvent
-		public void clientTick(ZClientTick event) {
-			if (event.getPhase() != ZPhase.END) return;
-
+		public void clientTick(ZClientTick.End event) {
 			Minecraft mc = Minecraft.getInstance();
 			if(mc.player != null && mc.level != null)
 				for(TickerElement ticker : elements)
@@ -87,7 +85,7 @@ public class UsageTickerModule extends ZetaModule {
 		@PlayEvent
 		public void renderHUD(ZRenderGuiOverlay.Hotbar.Post event) {
 			Window window = event.getWindow();
-			Player player = Minecraft.getInstance().player;
+			LocalPlayer player = Minecraft.getInstance().player;
 			float partial = event.getPartialTick().getGameTimeDeltaTicks();
 
 			GuiGraphics guiGraphics = event.getGuiGraphics();
@@ -112,7 +110,7 @@ public class UsageTickerModule extends ZetaModule {
 				this.slot = slot;
 			}
 
-			public void tick(Player player) {
+			public void tick(LocalPlayer player) {
 				ItemStack realStack = getStack(player);
 				int count = getStackCount(player, realStack, realStack, false);
 
@@ -140,7 +138,7 @@ public class UsageTickerModule extends ZetaModule {
 				currRealStack = realStack;
 			}
 
-			public void render(GuiGraphics guiGraphics, Window window, Player player, boolean invert, float partialTicks) {
+			public void render(GuiGraphics guiGraphics, Window window, LocalPlayer player, boolean invert, float partialTicks) {
 				if(liveTicks > 0) {
 					float animProgress;
 
@@ -189,13 +187,13 @@ public class UsageTickerModule extends ZetaModule {
 				return player.getItemBySlot(slot);
 			}
 
-			public ItemStack getLogicalStack(ItemStack stack, int count, Player player, boolean renderPass) {
+			public ItemStack getLogicalStack(ItemStack stack, int count, LocalPlayer player, boolean renderPass) {
 				boolean verifySize = true;
 				ItemStack returnStack = stack;
 				boolean logicLock = false;
 
 				if(stack.getItem() instanceof IUsageTickerOverride over) {
-					stack = over.getUsageTickerItem(stack);
+					stack = over.getUsageTickerItem(stack, player.level().registryAccess());
 					returnStack = stack;
 					verifySize = over.shouldUsageTickerCheckMatchSize(currStack);
 				} else if(isProjectileWeapon(player.level().registryAccess(), stack)) {
@@ -248,7 +246,7 @@ public class UsageTickerModule extends ZetaModule {
 				return stack.getItem() instanceof ProjectileWeaponItem && Quark.ZETA.itemExtensions.get(stack).getEnchantmentLevelZeta(stack, enchantment) == 0;
 			}
 
-			public ItemStack getRenderedStack(Player player) {
+			public ItemStack getRenderedStack(LocalPlayer player) {
 				ItemStack stack = getStack(player);
 				int count = getStackCount(player, stack, stack, true);
 				ItemStack logicalStack = getLogicalStack(stack, count, player, true).copy();

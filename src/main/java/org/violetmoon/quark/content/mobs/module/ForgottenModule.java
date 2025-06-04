@@ -8,6 +8,7 @@ import net.minecraft.world.entity.*;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.phys.Vec3;
+import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.event.entity.living.MobSpawnEvent;
 import org.violetmoon.quark.base.Quark;
 import org.violetmoon.quark.base.QuarkClient;
@@ -84,7 +85,7 @@ public class ForgottenModule extends ZetaModule {
 
 				//fixme maybe broken? - IThundxr
 				MobSpawnEvent.FinalizeSpawn newEvent = new MobSpawnEvent.FinalizeSpawn(forgotten, world, event.getX(), event.getY(), event.getZ(), world.getCurrentDifficultyAt(pos), event.getSpawnType(), null, null, event.getSpawner());
-				MinecraftForge.EVENT_BUS.post(newEvent);
+				NeoForge.EVENT_BUS.post(newEvent);
 
 				if(newEvent.getResult() != Result.DENY) {
 					world.addFreshEntity(forgotten);

@@ -26,7 +26,7 @@ public class MoreBannerLayersModule extends ZetaModule {
 
 	@LoadEvent
 	public final void configChanged(ZConfigChanged event) {
-		staticEnabled = enabled;
+		staticEnabled = isEnabled();
 	}
 
 	public static int getLimit(int curr) {

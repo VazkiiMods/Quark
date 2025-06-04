@@ -7,6 +7,7 @@ import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.ComposterBlock;
+import net.minecraft.world.level.block.grower.TreeGrower;
 import net.minecraft.world.level.levelgen.feature.ConfiguredFeature;
 import net.minecraft.world.level.material.MapColor;
 import net.minecraft.world.level.storage.loot.BuiltInLootTables;
@@ -33,6 +34,8 @@ import org.violetmoon.zeta.event.play.loading.ZLootTableLoad;
 import org.violetmoon.zeta.module.ZetaLoadModule;
 import org.violetmoon.zeta.module.ZetaModule;
 import org.violetmoon.zeta.util.Hint;
+
+import java.util.Optional;
 
 @ZetaLoadModule(category = "world")
 public class AncientWoodModule extends ZetaModule {
@@ -77,7 +80,7 @@ public class AncientWoodModule extends ZetaModule {
 			ComposterBlock.COMPOSTABLES.put(ancient_leaves.asItem(), 0.3F);
 			ComposterBlock.COMPOSTABLES.put(ancient_fruit.asItem(), 0.65F);
 			
-			this.zeta.fuel.addFuel(ancient_sapling, 100);
+			this.zeta().fuel.addFuel(ancient_sapling, 100);
 		});
 	}
 
@@ -87,9 +90,7 @@ public class AncientWoodModule extends ZetaModule {
 
 		woodSet = WoodSetHandler.addWoodSet(event, this, "ancient", MapColor.TERRACOTTA_WHITE, MapColor.TERRACOTTA_WHITE, true);
 		ancient_leaves = new ZetaLeavesBlock(woodSet.name, this, MapColor.PLANT);
-		ancient_sapling = new ZetaSaplingBlock("ancient", this, new PassthroughTreeGrower(configuredFeatureKey)); //actually called "ancient_sapling"
-
-
+		ancient_sapling = new ZetaSaplingBlock("ancient", this, new TreeGrower("ancient_tree", Optional.empty(), Optional.of(configuredFeatureKey), Optional.empty())); //actually called "ancient_sapling"
 		event.getVariantRegistry().addFlowerPot(ancient_sapling, "ancient_sapling", Functions.identity()); //actually "potted_ancient_sapling"
 
 		// fruit //

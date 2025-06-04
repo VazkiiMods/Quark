@@ -60,7 +60,7 @@ public class BackpackItem extends ArmorItem implements IZetaItem, IZetaItemExten
 
 		if (module == null)return;
 
-		module.zeta.registry.registerItem(this.getItem(), "backpack");
+		module.zeta().registry.registerItem(this.getItem(), "backpack");
 
 		CreativeTabManager.addToCreativeTabNextTo(CreativeModeTabs.TOOLS_AND_UTILITIES, this.getItem(), Items.SADDLE, true);
 	}

@@ -27,7 +27,7 @@ public class ArmedArmorStandsModule extends ZetaModule {
 
 	@LoadEvent
 	public void configChange(ZConfigChanged e) {
-		staticEnabled = enabled;
+		staticEnabled = isEnabled();
 	}
 
 }

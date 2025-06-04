@@ -2,19 +2,17 @@ package org.violetmoon.quark.content.tweaks.module;
 
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
-
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-
 import org.violetmoon.zeta.config.Config;
 import org.violetmoon.zeta.event.bus.LoadEvent;
 import org.violetmoon.zeta.event.bus.PlayEvent;
 import org.violetmoon.zeta.event.load.ZConfigChanged;
-import org.violetmoon.zeta.event.play.loading.ZGatherHints;
+import org.violetmoon.zeta.event.load.ZGatherHints;
 import org.violetmoon.zeta.module.ZetaLoadModule;
 import org.violetmoon.zeta.module.ZetaModule;
 import org.violetmoon.zeta.util.RegistryUtil;
@@ -57,7 +55,7 @@ public class DiamondRepairModule extends ZetaModule {
 
 	@LoadEvent
 	public final void configChanged(ZConfigChanged event) {
-		staticEnabled = enabled;
+		staticEnabled = isEnabled();
 
 		repairChanges.clear();
 		for(String s : repairChangesList) {

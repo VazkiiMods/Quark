@@ -27,7 +27,6 @@ import net.minecraft.world.level.block.state.properties.DirectionProperty;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.VoxelShape;
-
 import org.violetmoon.quark.base.Quark;
 import org.violetmoon.zeta.client.event.play.ZInputUpdate;
 import org.violetmoon.zeta.config.Config;
@@ -35,9 +34,9 @@ import org.violetmoon.zeta.event.bus.LoadEvent;
 import org.violetmoon.zeta.event.bus.PlayEvent;
 import org.violetmoon.zeta.event.load.ZCommonSetup;
 import org.violetmoon.zeta.event.load.ZConfigChanged;
+import org.violetmoon.zeta.event.load.ZGatherHints;
 import org.violetmoon.zeta.event.play.entity.player.ZPlayerTick;
 import org.violetmoon.zeta.event.play.entity.player.ZRightClickBlock;
-import org.violetmoon.zeta.event.play.loading.ZGatherHints;
 import org.violetmoon.zeta.module.ZetaLoadModule;
 import org.violetmoon.zeta.module.ZetaModule;
 import org.violetmoon.zeta.util.RegistryUtil;
@@ -74,7 +73,7 @@ public class EnhancedLaddersModule extends ZetaModule {
 
 	@LoadEvent
 	public final void configChanged(ZConfigChanged event) {
-		staticEnabled = enabled;
+		staticEnabled = isEnabled();
 	}
 
 	@PlayEvent
@@ -223,7 +222,6 @@ public class EnhancedLaddersModule extends ZetaModule {
 	}
 
 	protected boolean isScaffolding(BlockState state, LivingEntity entity) {
-		return zeta.blockExtensions.get(state).isScaffoldingZeta(state, entity.level(), entity.blockPosition(), entity);
+		return zeta().blockExtensions.get(state).isScaffoldingZeta(state, entity.level(), entity.blockPosition(), entity);
 	}
-
 }

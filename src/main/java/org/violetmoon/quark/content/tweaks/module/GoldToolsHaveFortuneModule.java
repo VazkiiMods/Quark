@@ -68,7 +68,7 @@ public class GoldToolsHaveFortuneModule extends ZetaModule {
 
 	@LoadEvent
 	public final void configChanged(ZConfigChanged event) {
-		staticEnabled = enabled;
+		staticEnabled = isEnabled();
 		wellBakedEnchantments.clear();
 		for(String enchantment : bakedEnchantments) {
 			String[] split1 = enchantment.split("\\+");

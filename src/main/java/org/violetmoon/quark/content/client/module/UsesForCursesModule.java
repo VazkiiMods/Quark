@@ -50,7 +50,7 @@ public class UsesForCursesModule extends ZetaModule {
 
 	@LoadEvent
 	public final void configChanged(ZConfigChanged event) {
-		staticEnabled = enabled;
+		staticEnabled = isEnabled();
 	}
 
 	public static boolean shouldHideArmorStandModel(ItemStack stack) {

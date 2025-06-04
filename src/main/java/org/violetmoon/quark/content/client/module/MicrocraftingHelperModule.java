@@ -195,8 +195,7 @@ public class MicrocraftingHelperModule extends ZetaModule {
 
 
 		@PlayEvent
-		public void onTick(ZClientTick event) {
-			if (event.getPhase() != ZPhase.START) return;
+		public void onTick(ZClientTick.Start event) {
 
 			Minecraft mc = Minecraft.getInstance();
 			Screen prevScreen = currentScreen;

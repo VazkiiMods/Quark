@@ -95,7 +95,7 @@ public class VariantAnimalTexturesModule extends ZetaModule {
 		@LoadEvent
 		public final void configChanged(ZConfigChanged event) {
 			// Pass over to a static reference for easier computing the coremod hook
-			staticEnabled = enabled;
+			staticEnabled = isEnabled();
 		}
 
 		@PlayEvent

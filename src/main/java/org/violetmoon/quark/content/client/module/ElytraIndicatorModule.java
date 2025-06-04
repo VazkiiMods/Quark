@@ -37,7 +37,7 @@ public class ElytraIndicatorModule extends ZetaModule {
 			Player player = mc.player;
 			ItemStack itemstack = player.getItemBySlot(EquipmentSlot.CHEST);
 
-			if(zeta.itemExtensions.get(itemstack).canElytraFlyZeta(itemstack, player)) {
+			if(zeta().itemExtensions.get(itemstack).canElytraFlyZeta(itemstack, player)) {
 				int armor = player.getArmorValue();
 				shift = (armor >= 20 ? 0 : 9);
 
@@ -69,7 +69,7 @@ public class ElytraIndicatorModule extends ZetaModule {
 
 		@Override
 		public int getArmorLimit(int curr) {
-			if(!enabled)
+			if(!isEnabled())
 				return curr;
 
 			return 20 - ((shift / 9) * 2);

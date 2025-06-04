@@ -1,5 +1,6 @@
 package org.violetmoon.quark.base.handler;
 
+import net.minecraft.core.Holder;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
@@ -16,6 +17,7 @@ import net.minecraft.world.item.alchemy.Potion;
 import net.minecraft.world.item.alchemy.PotionUtils;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
+import net.minecraft.world.item.enchantment.ItemEnchantments;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.neoforged.neoforge.items.IItemHandler;
@@ -380,11 +382,12 @@ public final class SortingHandler {
 		if(!stack.isEnchanted())
 			return 0;
 
-		Map<Enchantment, Integer> enchantments = EnchantmentHelper.getEnchantments(stack);
+		ItemEnchantments enchantments = stack.getTagEnchantments();
 		int total = 0;
 
-		for(Integer i : enchantments.values())
-			total += i;
+		for (Holder<Enchantment> enchantment : enchantments.keySet()) {
+			total += enchantments.getLevel(enchantment);
+		}
 
 		return total;
 	}

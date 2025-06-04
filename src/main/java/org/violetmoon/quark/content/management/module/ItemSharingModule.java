@@ -58,7 +58,7 @@ public class ItemSharingModule extends ZetaModule {
 	private static final Object2IntMap<UUID> lastSendTimes = new Object2IntOpenHashMap<>();
 
 	public static boolean canShare(UUID sender, MinecraftServer server) {
-		if(!Quark.ZETA.modules.get(ItemSharingModule.class).enabled)
+		if(!Quark.ZETA.modules.get(ItemSharingModule.class).isEnabled())
 			return false;
 
 		// serverside throttling

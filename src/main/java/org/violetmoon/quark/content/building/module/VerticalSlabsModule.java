@@ -1,10 +1,18 @@
 package org.violetmoon.quark.content.building.module;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-
+import com.google.common.collect.ImmutableSet;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.core.registries.Registries;
+import net.minecraft.tags.TagKey;
+import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.PipeBlock;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.properties.BooleanProperty;
+import net.minecraft.world.level.block.state.properties.EnumProperty;
+import net.minecraft.world.level.block.state.properties.Property;
 import net.neoforged.neoforge.common.ItemAbilities;
 import org.apache.commons.lang3.tuple.Pair;
 import org.violetmoon.quark.base.Quark;
@@ -19,19 +27,9 @@ import org.violetmoon.zeta.module.ZetaLoadModule;
 import org.violetmoon.zeta.module.ZetaModule;
 import org.violetmoon.zeta.util.handler.ToolInteractionHandler;
 
-import com.google.common.collect.ImmutableSet;
-
-import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
-import net.minecraft.tags.TagKey;
-import net.minecraft.world.level.LevelAccessor;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.PipeBlock;
-import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.block.state.properties.BooleanProperty;
-import net.minecraft.world.level.block.state.properties.EnumProperty;
-import net.minecraft.world.level.block.state.properties.Property;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 
 @ZetaLoadModule(category = "building")
 public class VerticalSlabsModule extends ZetaModule {
@@ -115,7 +113,7 @@ public class VerticalSlabsModule extends ZetaModule {
 
 	@LoadEvent
 	public final void configChanged(ZConfigChanged event) {
-		staticEnabled = enabled;
+		staticEnabled = isEnabled();
 	}
 
 	public static BlockState messWithPaneState(LevelAccessor level, BlockPos ourPos, BlockState state) {

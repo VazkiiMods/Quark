@@ -28,7 +28,7 @@ public class EnchantmentHelperMixin {
 		return EnchantmentsBegoneModule.begoneEnchantmentInstances(prev);
 	}
 
-	@Inject(method = "getEnchantments", at = @At("HEAD"), cancellable = true)
+	@Inject(method = "getComponentType", at = @At("HEAD"), cancellable = true)
 	private static void getAncientTomeEnchantments(ItemStack stack, CallbackInfoReturnable<Map<Enchantment, Integer>> callbackInfoReturnable) {
 		Holder<Enchantment> enchant = AncientTomesModule.getTomeEnchantment(stack);
 

@@ -169,10 +169,10 @@ public class NewStoneTypesModule extends ZetaModule {
 
 	@LoadEvent
 	public final void configChanged(ZConfigChanged event) {
-		enabledWithLimestone = enableLimestone && this.enabled;
-		enabledWithJasper = enableJasper && this.enabled;
-		enabledWithShale = enableShale && this.enabled;
-		enabledWithMyalite = enableMyalite && this.enabled;
+		enabledWithLimestone = enableLimestone && this.isEnabled();
+		enabledWithJasper = enableJasper && this.isEnabled();
+		enabledWithShale = enableShale && this.isEnabled();
+		enabledWithMyalite = enableMyalite && this.isEnabled();
 	}
 
 	@LoadEvent
@@ -186,12 +186,12 @@ public class NewStoneTypesModule extends ZetaModule {
 
 		@LoadEvent
 		public void blockColorProviders(ZAddBlockColorHandlers event) {
-			event.registerNamed(this.zeta, block -> MyaliteColorHandler.INSTANCE, "myalite");
+			event.registerNamed(this.zeta(), block -> MyaliteColorHandler.INSTANCE, "myalite");
 		}
 
 		@LoadEvent
 		public void itemColorProviders(ZAddItemColorHandlers event) {
-			event.registerNamed(this.zeta, item -> MyaliteColorHandler.INSTANCE, "myalite");
+			event.registerNamed(this.zeta(), item -> MyaliteColorHandler.INSTANCE, "myalite");
 		}
 
 		private static class MyaliteColorHandler implements BlockColor, ItemColor {

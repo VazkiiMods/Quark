@@ -51,7 +51,7 @@ public class AutomaticRecipeUnlockModule extends ZetaModule {
 
 	@LoadEvent
 	public final void configChanged(ZConfigChanged event) {
-		staticEnabled = enabled;
+		staticEnabled = isEnabled();
 	}
 
 	@PlayEvent
@@ -121,23 +121,21 @@ public class AutomaticRecipeUnlockModule extends ZetaModule {
 		}
 
 		@PlayEvent
-		public void clientTick(ZClientTick event) {
-			if (event.getPhase() != ZPhase.END) return;
-
+		public void clientTick(ZClientTick.End event) {
 			Minecraft mc = Minecraft.getInstance();
 			if(mc.player != null && mc.player.tickCount < 20) {
 				ToastComponent toasts = mc.getToasts();
 				Queue<Toast> toastQueue = toasts.queued;
-				for(Toast toast : toastQueue)
-					if(toast instanceof RecipeToast recipeToast) {
+				for (Toast toast : toastQueue) {
+					if (toast instanceof RecipeToast recipeToast) {
 						List<RecipeHolder<?>> stacks = recipeToast.recipes;
-						if(stacks.size() > 100) {
+						if (stacks.size() > 100) {
 							toastQueue.remove(toast);
 							return;
 						}
 					}
+					}
 			}
 		}
-
 	}
 }

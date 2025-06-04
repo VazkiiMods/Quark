@@ -6,6 +6,7 @@ import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.InventoryScreen;
 import net.minecraft.client.renderer.item.ItemProperties;
+import net.minecraft.core.Holder;
 import net.minecraft.core.cauldron.CauldronInteraction;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.sounds.SoundEvents;
@@ -23,6 +24,8 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.item.*;
 import net.minecraft.world.item.component.DyedItemColor;
+import net.minecraft.world.item.enchantment.Enchantment;
+import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.SoundType;
@@ -43,7 +46,6 @@ import org.violetmoon.zeta.client.event.play.ZScreen;
 import org.violetmoon.zeta.config.Config;
 import org.violetmoon.zeta.event.bus.LoadEvent;
 import org.violetmoon.zeta.event.bus.PlayEvent;
-import org.violetmoon.zeta.event.bus.ZPhase;
 import org.violetmoon.zeta.event.load.ZCommonSetup;
 import org.violetmoon.zeta.event.load.ZRegister;
 import org.violetmoon.zeta.event.play.entity.living.ZLivingDrops;
@@ -113,10 +115,12 @@ public class BackpackModule extends ZetaModule {
 	@PlayEvent
 	public void onDrops(ZLivingDrops event) {
 		LivingEntity entity = event.getEntity();
+		ItemStack weapon = event.getSource().getWeaponItem();
 		if(enableRavagerHide && entity.getType() == EntityType.RAVAGER) {
-			//event.getSource().getEntity().getWeaponItem()
+			Holder<Enchantment> looting = event.getEntity().level().registryAccess().lookupOrThrow(Registries.ENCHANTMENT).getOrThrow(Enchantments.FORTUNE);
 			int amount = baseRavagerHideDrop;
-			double chance = (double) event.getLootingLevel() * extraChancePerLooting;
+			int lootingLevel = weapon != null ? EnchantmentHelper.getTagEnchantmentLevel(looting, weapon) : 0;
+			double chance = (double) lootingLevel * extraChancePerLooting;
 			while(chance > baseRavagerHideDrop) {
 				chance--;
 				amount++;
@@ -205,8 +209,7 @@ public class BackpackModule extends ZetaModule {
 		}
 
 		@PlayEvent
-		public void clientTick(ZClientTick event) {
-			if (event.getPhase() != ZPhase.START) return;
+		public void clientTick(ZClientTick.Start event) {
 
 			Minecraft mc = Minecraft.getInstance();
 			if(isInventoryGUI(mc.screen) && !backpackRequested && isEntityWearingBackpack(mc.player) && !mc.player.portalProcess.isInsidePortalThisTick()) {

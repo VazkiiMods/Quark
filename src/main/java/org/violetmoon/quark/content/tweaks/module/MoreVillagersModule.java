@@ -36,7 +36,7 @@ public class MoreVillagersModule extends ZetaModule {
 
     @LoadEvent
     public final void onCommonSetup(ZCommonSetup event) {
-        if (this.enabled) {
+        if (this.isEnabled()) {
             var map = new HashMap<>(VillagerType.BY_BIOME);
             if (oceanVillager) {
                 map.put(Biomes.WARM_OCEAN, ocean);
