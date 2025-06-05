@@ -1,8 +1,9 @@
 package org.violetmoon.quark.content.tools.item;
 
-import net.minecraft.nbt.CompoundTag;
+import net.minecraft.core.RegistryAccess;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.*;
@@ -12,21 +13,19 @@ import net.minecraft.world.phys.BlockHitResult;
 import org.jetbrains.annotations.NotNull;
 import org.violetmoon.quark.api.ITrowelable;
 import org.violetmoon.quark.api.IUsageTickerOverride;
+import org.violetmoon.quark.base.components.QuarkDataComponents;
 import org.violetmoon.quark.content.tools.module.TrowelModule;
 import org.violetmoon.zeta.item.ZetaItem;
 import org.violetmoon.zeta.module.ZetaModule;
 import org.violetmoon.zeta.registry.CreativeTabManager;
-import org.violetmoon.zeta.util.ItemNBTHelper;
 import org.violetmoon.zeta.util.MiscUtil;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.Random;
 
 public class TrowelItem extends ZetaItem implements IUsageTickerOverride {
-
-	private static final String TAG_PLACING_SEED = "placing_seed";
-	private static final String TAG_LAST_STACK = "last_stack";
 
 	public TrowelItem(ZetaModule module) {
 		super("trowel", module, new Item.Properties()
@@ -53,9 +52,9 @@ public class TrowelItem extends ZetaItem implements IUsageTickerOverride {
 
 		ItemStack trowel = player.getItemInHand(hand);
 
-		long seed = ItemNBTHelper.getLong(trowel, TAG_PLACING_SEED, 0);
+		long seed = Optional.ofNullable(trowel.get(QuarkDataComponents.TAG_PLACING_SEED)).orElse(0L);
 		Random rand = new Random(seed);
-		ItemNBTHelper.setLong(trowel, TAG_PLACING_SEED, rand.nextLong());
+		trowel.set(QuarkDataComponents.TAG_PLACING_SEED, rand.nextLong());
 
 		int targetSlot = targets.get(rand.nextInt(targets.size()));
 		ItemStack toPlaceStack = inventory.getItem(targetSlot);
@@ -70,11 +69,10 @@ public class TrowelItem extends ZetaItem implements IUsageTickerOverride {
 		inventory.setItem(targetSlot, newHandItem);
 
 		if (result.consumesAction()) {
-			CompoundTag cmp = toPlaceStack.serializeNBT();
-			ItemNBTHelper.setCompound(trowel, TAG_LAST_STACK, cmp);
+			trowel.set(QuarkDataComponents.TAG_LAST_STACK, toPlaceStack);
 
-			if(TrowelModule.maxDamage > 0)
-				MiscUtil.damageStack(player, hand, context.getItemInHand(), 1);
+			if (TrowelModule.maxDamage > 0)
+				MiscUtil.damageStack(context.getItemInHand(), 1, player, hand == InteractionHand.MAIN_HAND ? EquipmentSlot.MAINHAND : EquipmentSlot.OFFHAND);
 		}
 
 		return result;
@@ -90,8 +88,7 @@ public class TrowelItem extends ZetaItem implements IUsageTickerOverride {
 	}
 
 	public static ItemStack getLastStack(ItemStack stack) {
-		CompoundTag cmp = ItemNBTHelper.getCompound(stack, TAG_LAST_STACK, false);
-		return ItemStack.of(cmp);
+		return stack.get(QuarkDataComponents.TAG_LAST_STACK);
 	}
 
 	@Override
@@ -105,17 +102,16 @@ public class TrowelItem extends ZetaItem implements IUsageTickerOverride {
 	}
 
 	@Override
-	public ItemStack getUsageTickerItem(ItemStack stack) {
+	public ItemStack getUsageTickerItem(ItemStack stack, RegistryAccess access) {
 		return getLastStack(stack);
 	}
 
-	class TrowelBlockItemUseContext extends BlockPlaceContext {
+	static class TrowelBlockItemUseContext extends BlockPlaceContext {
 
 		public TrowelBlockItemUseContext(UseOnContext context, ItemStack stack) {
 			super(context.getLevel(), context.getPlayer(), context.getHand(), stack,
 					new BlockHitResult(context.getClickLocation(), context.getClickedFace(), context.getClickedPos(), context.isInside()));
 		}
-
 	}
 
 }

@@ -126,7 +126,7 @@ public class CompassesWorkEverywhereModule extends ZetaModule {
 		@LoadEvent
 		public void clientSetup(ZClientSetup e) {
 			e.enqueueWork(() -> {
-				if(!enabled) return;
+				if(!isEnabled()) return;
 
 				if(enableCompassNerf || enableNether || enableEnd)
 					ItemProperties.register(Items.COMPASS, Quark.asResource("angle"), new CompassAnglePropertyFunction());

@@ -15,7 +15,6 @@ import org.violetmoon.zeta.client.event.play.ZClientTick;
 import org.violetmoon.zeta.config.Config;
 import org.violetmoon.zeta.event.bus.LoadEvent;
 import org.violetmoon.zeta.event.bus.PlayEvent;
-import org.violetmoon.zeta.event.bus.ZPhase;
 import org.violetmoon.zeta.event.load.ZRegister;
 import org.violetmoon.zeta.event.play.loading.ZLootTableLoad;
 import org.violetmoon.zeta.item.ZetaItem;
@@ -68,9 +67,7 @@ public class EndermoshMusicDiscModule extends ZetaModule {
 		private SimpleSoundInstance sound;
 
 		@PlayEvent
-		public void clientTick(ZClientTick event) {
-			if (event.getPhase() != ZPhase.END) return;
-
+		public void clientTick(ZClientTick.End event) {
 			if(playEndermoshDuringEnderdragonFight) {
 				boolean wasFightingDragon = isFightingDragon;
 

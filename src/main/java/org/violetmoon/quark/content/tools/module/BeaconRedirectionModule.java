@@ -18,7 +18,6 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraft.world.phys.AABB;
-
 import org.violetmoon.quark.base.Quark;
 import org.violetmoon.quark.content.world.block.CorundumClusterBlock;
 import org.violetmoon.quark.content.world.module.CorundumModule;
@@ -27,8 +26,8 @@ import org.violetmoon.zeta.config.Config;
 import org.violetmoon.zeta.event.bus.LoadEvent;
 import org.violetmoon.zeta.event.bus.PlayEvent;
 import org.violetmoon.zeta.event.load.ZConfigChanged;
+import org.violetmoon.zeta.event.load.ZGatherHints;
 import org.violetmoon.zeta.event.load.ZRegister;
-import org.violetmoon.zeta.event.play.loading.ZGatherHints;
 import org.violetmoon.zeta.module.ZetaLoadModule;
 import org.violetmoon.zeta.module.ZetaModule;
 import org.violetmoon.zeta.util.Hint;
@@ -71,7 +70,7 @@ public class BeaconRedirectionModule extends ZetaModule {
 		String type = "amethyst";
 
 		if(!Quark.ZETA.modules.isEnabled(CorundumModule.class))
-			event.hintItem(zeta(), Items.AMETHYST_CLUSTER, redirectHint);
+			event.hintItem(Items.AMETHYST_CLUSTER, redirectHint, zeta());
 		else
 			type = "corundum";
 

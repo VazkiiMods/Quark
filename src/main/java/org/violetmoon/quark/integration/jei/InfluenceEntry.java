@@ -16,7 +16,6 @@ import org.violetmoon.quark.content.client.tooltip.EnchantedBookTooltips;
 import org.violetmoon.quark.content.experimental.module.EnchantmentsBegoneModule;
 import org.violetmoon.quark.content.tools.base.RuneColor;
 import org.violetmoon.quark.content.tools.module.ColorRunesModule;
-import org.violetmoon.zeta.util.ItemNBTHelper;
 
 import java.util.List;
 

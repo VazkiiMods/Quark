@@ -10,7 +10,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.phys.Vec3;
-
+import org.violetmoon.quark.base.components.QuarkDataComponents;
 import org.violetmoon.zeta.advancement.ManualTrigger;
 import org.violetmoon.zeta.event.bus.LoadEvent;
 import org.violetmoon.zeta.event.bus.PlayEvent;
@@ -19,7 +19,6 @@ import org.violetmoon.zeta.event.play.entity.living.ZLivingDrops;
 import org.violetmoon.zeta.module.ZetaLoadModule;
 import org.violetmoon.zeta.module.ZetaModule;
 import org.violetmoon.zeta.util.Hint;
-import org.violetmoon.zeta.util.ItemNBTHelper;
 
 import java.util.Arrays;
 import java.util.List;
@@ -45,7 +44,7 @@ public class SnowGolemPlayerHeadsModule extends ZetaModule {
 			if(snowman.hasPumpkin()) {
 				ItemStack stack = new ItemStack(Items.PLAYER_HEAD);
 				String name = e.getCustomName().getString();
-				ItemNBTHelper.setString(stack, "SkullOwner", name);
+				stack.set(QuarkDataComponents.SKULL_OWNER, name);
 				Vec3 pos = e.position();
 				event.getDrops().add(new ItemEntity(e.level(), pos.x, pos.y, pos.z, stack));
 

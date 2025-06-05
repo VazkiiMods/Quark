@@ -24,6 +24,7 @@ import org.jetbrains.annotations.Nullable;
 import org.violetmoon.quark.api.IRuneColorProvider;
 import org.violetmoon.quark.api.QuarkCapabilities;
 import org.violetmoon.quark.base.Quark;
+import org.violetmoon.quark.base.components.QuarkDataComponents;
 import org.violetmoon.quark.base.network.message.UpdateTridentMessage;
 import org.violetmoon.quark.content.tools.base.RuneColor;
 import org.violetmoon.quark.content.tools.client.render.GlintRenderTypes;
@@ -55,8 +56,6 @@ import java.util.function.Supplier;
  */
 @ZetaLoadModule(category = "tools")
 public class ColorRunesModule extends ZetaModule {
-
-	public static final String TAG_RUNE_COLOR = Quark.MOD_ID + ":RuneColor";
 
 	private static final ThreadLocal<RuneColor> targetColor = new ThreadLocal<>();
 	@Hint
@@ -105,9 +104,8 @@ public class ColorRunesModule extends ZetaModule {
 
 	@Nullable
 	public static RuneColor getAppliedStackColor(ItemStack target) {
-		if(target == null)
-			return null;
-		return RuneColor.byName(ItemNBTHelper.getString(target, TAG_RUNE_COLOR, null));
+		if(target == null) return null;
+		return RuneColor.byName(target.get(QuarkDataComponents.TAG_RUNE_COLOR));
 	}
 
 	private static final Map<ThrownTrident, ItemStack> TRIDENT_STACK_REFERENCES = new WeakHashMap<>();
@@ -123,7 +121,7 @@ public class ColorRunesModule extends ZetaModule {
 
 	public static ItemStack withRune(ItemStack stack, @Nullable RuneColor color) {
 		if (color != null) {
-			ItemNBTHelper.setString(stack, ColorRunesModule.TAG_RUNE_COLOR, color.getSerializedName());
+			stack.set(QuarkDataComponents.TAG_RUNE_COLOR, color.getSerializedName());
 		}
 		return stack;
 	}

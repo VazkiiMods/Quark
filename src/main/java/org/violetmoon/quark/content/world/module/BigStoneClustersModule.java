@@ -23,7 +23,7 @@ import org.violetmoon.zeta.event.bus.LoadEvent;
 import org.violetmoon.zeta.event.bus.PlayEvent;
 import org.violetmoon.zeta.event.load.ZCommonSetup;
 import org.violetmoon.zeta.event.load.ZConfigChanged;
-import org.violetmoon.zeta.event.play.loading.ZGatherHints;
+import org.violetmoon.zeta.event.load.ZGatherHints;
 import org.violetmoon.zeta.module.ZetaLoadModule;
 import org.violetmoon.zeta.module.ZetaModule;
 import org.violetmoon.zeta.util.BooleanSuppliers;
@@ -95,7 +95,7 @@ public class BigStoneClustersModule extends ZetaModule {
 	@PlayEvent
 	public void addAdditionalHints(ZGatherHints event) {
 		if(calcite.enabled)
-			event.hintItem(zeta, Items.CALCITE);
+			event.hintItem(Items.CALCITE, zeta());
 	}
 
 	private void add(BigStoneClusterConfig config, Block block, BooleanSupplier condition) {

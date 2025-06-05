@@ -23,8 +23,8 @@ import org.violetmoon.zeta.config.Config;
 import org.violetmoon.zeta.event.bus.LoadEvent;
 import org.violetmoon.zeta.event.bus.PlayEvent;
 import org.violetmoon.zeta.event.load.ZCommonSetup;
+import org.violetmoon.zeta.event.load.ZGatherHints;
 import org.violetmoon.zeta.event.load.ZRegister;
-import org.violetmoon.zeta.event.play.loading.ZGatherHints;
 import org.violetmoon.zeta.module.ZetaLoadModule;
 import org.violetmoon.zeta.module.ZetaModule;
 import org.violetmoon.zeta.world.WorldGenHandler;
@@ -92,7 +92,7 @@ public class BlossomTreesModule extends ZetaModule {
 		tree.grower = new TreeGrower(configuredFeatureKey);
 		tree.sapling = new ZetaSaplingBlock(regname, this, tree.grower);
 
-		event.getVariantRegistry().addFlowerPot(tree.sapling, this.zeta.registry.getRegistryName(tree.sapling, BuiltInRegistries.BLOCK).getPath(), Functions.identity()); //sure
+		event.getVariantRegistry().addFlowerPot(tree.sapling, this.zeta().registry.getRegistryName(tree.sapling, BuiltInRegistries.BLOCK).getPath(), Functions.identity()); //sure
 
 		return tree;
 	}
@@ -106,7 +106,7 @@ public class BlossomTreesModule extends ZetaModule {
 				ComposterBlock.COMPOSTABLES.put(tree.leaves.asItem(), 0.3F);
 				ComposterBlock.COMPOSTABLES.put(tree.sapling.asItem(), 0.3F);
 
-				this.zeta.fuel.addFuel(tree.sapling, 100);
+				this.zeta().fuel.addFuel(tree.sapling, 100);
 			}
 		});
 	}
@@ -114,7 +114,7 @@ public class BlossomTreesModule extends ZetaModule {
 	@PlayEvent
 	public void addAdditionalHints(ZGatherHints event) {
 		for(BlossomTree tree : blossomTrees)
-			event.hintItem(this.zeta, tree.sapling);
+			event.hintItem(tree.sapling, this.zeta());
 	}
 
 	private static ResourceKey<ConfiguredFeature<?, ?>> registerKey(String name) {
