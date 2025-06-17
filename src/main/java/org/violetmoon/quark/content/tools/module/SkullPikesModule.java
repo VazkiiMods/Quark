@@ -1,5 +1,20 @@
 package org.violetmoon.quark.content.tools.module;
 
+import net.minecraft.client.renderer.entity.EntityRenderers;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.tags.BlockTags;
+import net.minecraft.tags.TagKey;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.MobCategory;
+import net.minecraft.world.entity.monster.Monster;
+import net.minecraft.world.entity.monster.PatrollingMonster;
+import net.minecraft.world.entity.monster.warden.Warden;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
 import org.violetmoon.quark.base.Quark;
 import org.violetmoon.quark.content.tools.ai.RunAwayFromPikesGoal;
 import org.violetmoon.quark.content.tools.client.render.entity.SkullPikeRenderer;
@@ -16,22 +31,6 @@ import org.violetmoon.zeta.module.ZetaLoadModule;
 import org.violetmoon.zeta.module.ZetaModule;
 import org.violetmoon.zeta.util.Hint;
 import org.violetmoon.zeta.util.MiscUtil;
-
-import net.minecraft.client.renderer.entity.EntityRenderers;
-import net.minecraft.core.BlockPos;
-import net.minecraft.core.registries.Registries;
-import net.minecraft.tags.BlockTags;
-import net.minecraft.tags.TagKey;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.MobCategory;
-import net.minecraft.world.entity.monster.Monster;
-import net.minecraft.world.entity.monster.PatrollingMonster;
-import net.minecraft.world.entity.monster.warden.Warden;
-import net.minecraft.world.level.Level;
-import net.minecraft.world.level.LevelAccessor;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.state.BlockState;
 
 @ZetaLoadModule(category = "tools")
 public class SkullPikesModule extends ZetaModule {
@@ -84,7 +83,7 @@ public class SkullPikesModule extends ZetaModule {
 	@PlayEvent
 	public void onMonsterAppear(ZEntityJoinLevel event) {
 		Entity e = event.getEntity();
-		if(e instanceof Monster monster && !(e instanceof PatrollingMonster) && !(e instanceof Warden) && e.canUsePortal() && e.isAlive()) {
+		if(e instanceof Monster monster && !(e instanceof PatrollingMonster) && !(e instanceof Warden) && !e.canUsePortal(false)) {
 			boolean alreadySetUp = monster.goalSelector.getAvailableGoals().stream().anyMatch((goal) -> goal.getGoal() instanceof RunAwayFromPikesGoal);
 
 			if(!alreadySetUp)

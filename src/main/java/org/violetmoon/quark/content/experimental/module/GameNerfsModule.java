@@ -2,8 +2,11 @@ package org.violetmoon.quark.content.experimental.module;
 
 import com.mojang.serialization.Dynamic;
 import net.minecraft.ChatFormatting;
+import net.minecraft.core.Holder;
+import net.minecraft.core.RegistryAccess;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.nbt.CompoundTag;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.NbtOps;
 import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;
@@ -18,6 +21,7 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.item.enchantment.Enchantments;
+import net.minecraft.world.item.enchantment.ItemEnchantments;
 import net.minecraft.world.level.Level;
 import org.violetmoon.quark.base.Quark;
 import org.violetmoon.zeta.config.Config;
@@ -32,10 +36,7 @@ import org.violetmoon.zeta.event.play.entity.living.ZLivingTick;
 import org.violetmoon.zeta.module.ZetaLoadModule;
 import org.violetmoon.zeta.module.ZetaModule;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 import java.util.function.Predicate;
 
 @ZetaLoadModule(category = "experimental", enabledByDefault = false)
@@ -96,7 +97,7 @@ public class GameNerfsModule extends ZetaModule {
 	public static List<String> nonGriefingEntities = Arrays.asList("minecraft:creeper", "minecraft:enderman");
 
 	@Config
-	public static List<String> elytraAllowedDimensions = Arrays.asList("minecraft:the_end");
+	public static List<String> elytraAllowedDimensions = List.of("minecraft:the_end");
 
 	private static boolean staticEnabled;
 
@@ -147,54 +148,59 @@ public class GameNerfsModule extends ZetaModule {
 			event.setCanGrief(false);
 	}
 
-	public static Predicate<ItemStack> limitMendingItems(Predicate<ItemStack> base) {
-		if(!staticEnabled || !nerfMending)
-			return base;
+	public static Predicate<ItemStack> limitMendingItems(Predicate<ItemStack> base, RegistryAccess access) {
+		if(!staticEnabled || !nerfMending) return base;
 
-		if(noNerfForMendingTwo)
-			return (stack) -> base.test(stack) && Quark.ZETA.itemExtensions.get(stack).getEnchantmentLevelZeta(stack, Enchantments.MENDING) > 1;
+		if (noNerfForMendingTwo) {
+			Holder<Enchantment> mending = access.lookupOrThrow(Registries.ENCHANTMENT).getOrThrow(Enchantments.MENDING);
+			return (stack) -> base.test(stack) && Quark.ZETA.itemExtensions.get(stack).getEnchantmentLevelZeta(stack, mending) > 1;
+		}
 		return (stack) -> false;
 	}
 
-	private boolean isMending(Map<Enchantment, Integer> enchantments) {
-		return enchantments.containsKey(Enchantments.MENDING) && (!noNerfForMendingTwo || enchantments.get(Enchantments.MENDING) < 2);
+	private boolean hasMending(ItemStack stack, Holder<Enchantment> mending) {
+		int mendingLevel = EnchantmentHelper.getTagEnchantmentLevel(mending, stack);
+		return mendingLevel > 0 && (!noNerfForMendingTwo || mendingLevel < 2);
 	}
 
 	@PlayEvent
 	public void onAnvilUpdate(ZAnvilUpdate event) {
-		if(!nerfMending)
-			return;
+		if (!nerfMending) return;
 
+		Holder<Enchantment> mending = event.getPlayer().level().registryAccess().lookupOrThrow(Registries.ENCHANTMENT).getOrThrow(Enchantments.MENDING);
 		ItemStack left = event.getLeft();
 		ItemStack right = event.getRight();
-		ItemStack out = event.getOutput();
+		ItemStack output = event.getOutput();
 
-		if(out.isEmpty() && (left.isEmpty() || right.isEmpty()))
-			return;
+		if (output.isEmpty() && (left.isEmpty() || right.isEmpty())) return;
 
 		boolean isMended = false;
 
-		Map<Enchantment, Integer> enchLeft = EnchantmentHelper.getEnchantments(left);
-		Map<Enchantment, Integer> enchRight = EnchantmentHelper.getEnchantments(right);
-
-		if(isMending(enchLeft) || isMending(enchRight)) {
-			if(left.getItem() == right.getItem())
+		if (hasMending(left, mending) || hasMending(right, mending)) {
+			if ((left.getItem() == right.getItem()) || (right.getItem() == Items.ENCHANTED_BOOK)) {
 				isMended = true;
-
-			if(right.getItem() == Items.ENCHANTED_BOOK)
-				isMended = true;
+			}
 		}
 
-		if(isMended) {
-			if(out.isEmpty())
-				out = left.copy();
+		if (isMended) {
+			if (output.isEmpty()) {
+				output = left.copy();
+			}
 
-			if(!out.hasTag())
-				out.setTag(new CompoundTag());
+			ItemEnchantments enchOutput = Optional.ofNullable(output.get(DataComponents.ENCHANTMENTS)).orElse(ItemEnchantments.EMPTY);
+			ItemEnchantments.Mutable toApply = new ItemEnchantments.Mutable(enchOutput);
+			ItemEnchantments enchRight = Optional.ofNullable(right.get(DataComponents.ENCHANTMENTS)).orElse(ItemEnchantments.EMPTY);
 
-			Map<Enchantment, Integer> enchOutput = EnchantmentHelper.getEnchantments(out);
+			if (!enchRight.isEmpty()) {
+
+			}
+
+			toApply.set(mending, 0);
+			output.set(DataComponents.ENCHANTMENTS, toApply.toImmutable());
+
+			Map<Enchantment, Integer> enchOutput = EnchantmentHelper.getEnchantments(output);
 			for(Enchantment enchantment : enchRight.keySet()) {
-				if(enchantment.canEnchant(out)) {
+				if(enchantment.canEnchant(output)) {
 					int level = enchRight.get(enchantment);
 					if(enchOutput.containsKey(enchantment)) {
 						int levelPresent = enchOutput.get(enchantment);
@@ -207,16 +213,13 @@ public class GameNerfsModule extends ZetaModule {
 					}
 				}
 			}
-			if(isMending(enchOutput))
-				enchOutput.remove(Enchantments.MENDING);
 
-			EnchantmentHelper.setEnchantments(enchOutput, out);
+			output.set(DataComponents.REPAIR_COST, 0);
+			if (output.isDamageableItem()) {
+				output.setDamageValue(0);
+			}
 
-			out.setRepairCost(0);
-			if(out.isDamageableItem())
-				out.setDamageValue(0);
-
-			event.setOutput(out);
+			event.setOutput(output);
 			event.setCost(5);
 		}
 	}
@@ -226,13 +229,12 @@ public class GameNerfsModule extends ZetaModule {
 
 		@PlayEvent
 		public void onTooltip(ZItemTooltip event) {
-			if(!nerfMending)
-				return;
+			if (!nerfMending) return;
 
 			Component itemgotmodified = Component.translatable("quark.misc.repaired").withStyle(ChatFormatting.YELLOW);
-			int repairCost = event.getItemStack().getBaseRepairCost();
-			if(repairCost > 0)
+			if (Optional.ofNullable(event.getItemStack().get(DataComponents.REPAIR_COST)).orElse(0) > 0) {
 				event.getToolTip().add(itemgotmodified);
+			}
 		}
 	}
 

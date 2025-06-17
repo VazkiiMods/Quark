@@ -1,7 +1,7 @@
 package org.violetmoon.quark.content.tweaks.module;
 
 import com.google.common.collect.Lists;
-import net.minecraft.advancements.Advancement;
+import net.minecraft.advancements.AdvancementHolder;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.ImageButton;
 import net.minecraft.client.gui.components.events.GuiEventListener;
@@ -10,12 +10,12 @@ import net.minecraft.client.gui.components.toasts.Toast;
 import net.minecraft.client.gui.components.toasts.ToastComponent;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.recipebook.RecipeUpdateListener;
+import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.RecipeBookType;
-import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.level.GameRules;
 import org.violetmoon.quark.base.Quark;
@@ -61,22 +61,24 @@ public class AutomaticRecipeUnlockModule extends ZetaModule {
 		if(player instanceof ServerPlayer spe) {
 			MinecraftServer server = spe.getServer();
 			if(server != null) {
-				List<Recipe<?>> recipes = new ArrayList<>(server.getRecipeManager().getRecipes());
-				recipes.removeIf(
-						(recipe) -> recipe == null
-								|| recipe.getResultItem(event.getPlayer().level().registryAccess()) == null
-								|| ignoredRecipes.contains(Objects.toString(recipe.getId()))
-								|| recipe.getResultItem(event.getPlayer().level().registryAccess()).isEmpty());
+				List<RecipeHolder<?>> recipes = new ArrayList<>(server.getRecipeManager().getRecipes());
+
+				recipes.removeIf((recipe) -> {
+                    if (recipe == null) return true;
+                    recipe.value().getResultItem(event.getPlayer().level().registryAccess());
+                    return ignoredRecipes.contains(Objects.toString(recipe.id())) || recipe.value().getResultItem(event.getPlayer().level().registryAccess()).isEmpty();
+                });
 
 				int idx = 0;
 				int maxShift = 1000;
 				int shift;
 				int size = recipes.size();
+
 				do {
 					shift = size - idx;
 					int effShift = Math.min(maxShift, shift);
+					List<RecipeHolder<?>> sectionedRecipes = recipes.subList(idx, idx + effShift);
 
-					List<Recipe<?>> sectionedRecipes = recipes.subList(idx, idx + effShift);
 					player.awardRecipes(sectionedRecipes);
 					idx += effShift;
 				} while(shift > maxShift);
@@ -87,19 +89,18 @@ public class AutomaticRecipeUnlockModule extends ZetaModule {
 		}
 	}
 
-	public static void removeRecipeAdvancements(Map<ResourceLocation, Advancement.Builder> builders) {
-		if(!staticEnabled || !filterRecipeAdvancements)
-			return;
+	public static void removeRecipeAdvancements(Map<ResourceLocation, AdvancementHolder> advancements) {
+		if(!staticEnabled || !filterRecipeAdvancements) return;
 
-		int i = 0;
-		for(var iterator = builders.entrySet().iterator(); iterator.hasNext();) {
-			Map.Entry<ResourceLocation, Advancement.Builder> entry = iterator.next();
-			if(entry.getKey().getPath().startsWith("recipes/") && entry.getValue().containsKey("has_the_recipe")) {
-				iterator.remove();
-				i++;
+		int removeCount = 0;
+
+		for (Map.Entry<ResourceLocation, AdvancementHolder> advancement : advancements.entrySet()) {
+			if (advancement.getKey().getPath().startsWith("recipes/") && advancement.getValue().value().criteria().containsKey("has_the_recipe")) {
+				advancement.getValue().value().criteria().remove("has_the_recipe");
+				removeCount++;
 			}
 		}
-		Quark.LOG.info("[Automatic Recipe Unlock] Removed {} recipe advancements", i);
+		Quark.LOG.info("[Automatic Recipe Unlock] Removed {} recipe advancements", removeCount);
 	}
 
 	@ZetaLoadModule(clientReplacement = true)
@@ -107,9 +108,10 @@ public class AutomaticRecipeUnlockModule extends ZetaModule {
 
 		@PlayEvent
 		public void onInitGui(ZScreen.Init.Post event) {
+			LocalPlayer player = Minecraft.getInstance().player;
 			Screen gui = event.getScreen();
-			if(disableRecipeBook && gui instanceof RecipeUpdateListener) {
-				Minecraft.getInstance().player.getRecipeBook().getBookSettings().setOpen(RecipeBookType.CRAFTING, false);
+			if (disableRecipeBook && player != null && gui instanceof RecipeUpdateListener) {
+				player.getRecipeBook().getBookSettings().setOpen(RecipeBookType.CRAFTING, false);
 
 				List<GuiEventListener> widgets = event.getListenersList();
 				for(GuiEventListener w : widgets)
@@ -134,7 +136,7 @@ public class AutomaticRecipeUnlockModule extends ZetaModule {
 							return;
 						}
 					}
-					}
+				}
 			}
 		}
 	}

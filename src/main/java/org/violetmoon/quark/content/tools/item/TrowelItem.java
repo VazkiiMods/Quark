@@ -92,16 +92,6 @@ public class TrowelItem extends ZetaItem implements IUsageTickerOverride {
 	}
 
 	@Override
-	public int getMaxDamageZeta(ItemStack stack) {
-		return TrowelModule.maxDamage;
-	}
-
-	@Override
-	public boolean canBeDepleted() {
-		return TrowelModule.maxDamage > 0;
-	}
-
-	@Override
 	public ItemStack getUsageTickerItem(ItemStack stack, RegistryAccess access) {
 		return getLastStack(stack);
 	}

@@ -3,15 +3,12 @@ package org.violetmoon.quark.content.tools.recipe;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
-import net.minecraft.util.RandomSource;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.SmithingRecipeInput;
 import net.minecraft.world.item.crafting.SmithingTrimRecipe;
-import net.minecraft.world.item.enchantment.EnchantmentHelper;
-import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.Level;
 import org.violetmoon.quark.base.Quark;
 import org.violetmoon.quark.content.client.module.ImprovedTooltipsModule;
@@ -34,20 +31,13 @@ public final class SmithingRuneRecipe extends SmithingTrimRecipe { // Extends to
 	private final Ingredient template;
 	private final Ingredient addition;
 	private final RuneColor runeColor;
-
 	private static Ingredient used;
-	private static final RandomSource BASE_INGREDIENT_RANDOM = RandomSource.createThreadSafe();
 
 	private static ItemStack makeEnchantedDisplayItem(ItemStack input) {
 		ItemStack stack = input.copy();
-		stack.hideTooltipPart(ItemStack.TooltipPart.ENCHANTMENTS);
-		stack.hideTooltipPart(ItemStack.TooltipPart.MODIFIERS);
 		stack.set(DataComponents.CUSTOM_NAME, Component.translatable("quark.jei.any_enchanted"));
-		if(Quark.ZETA.itemExtensions.get(stack).getEnchantmentValueZeta(stack) <= 0) { // If it can't take anything in ench. tables...
-			stack.enchant(Enchantments.UNBREAKING, 3); // it probably accepts unbreaking anyways
-			return stack;
-		}
-		return EnchantmentHelper.enchantItem(BASE_INGREDIENT_RANDOM, stack, 25, false);
+		stack.set(DataComponents.ENCHANTMENT_GLINT_OVERRIDE, true);
+		return stack;
 	}
 
 	private static Ingredient createBaseIngredient() {

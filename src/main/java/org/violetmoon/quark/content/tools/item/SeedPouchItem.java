@@ -312,7 +312,7 @@ public class SeedPouchItem extends ZetaItem implements IUsageTickerOverride, ITr
 	}
 
 	@Override
-	public ItemStack getUsageTickerItem(ItemStack stack) {
+	public ItemStack getUsageTickerItem(ItemStack stack, RegistryAccess access) {
 		PouchContents contents = getContents(stack);
 		return contents.isEmpty() ? stack : contents.getContents();
 	}
@@ -349,20 +349,19 @@ public class SeedPouchItem extends ZetaItem implements IUsageTickerOverride, ITr
 		private int count = 0;
 
 		public ItemStack writeToStack(ItemStack target) {
-			CompoundTag tag = target.getTag();
+			CompoundTag tag = new CompoundTag();
+			target.save(access, tag);
 
 			if(isEmpty()) {
 				//If we are empty, and the target doesn't have any NBT tag, that's cool. Nothing to do.
 				//If the target *does* have an NBT tag, ensure we remove our tags.
-				if(tag != null) {
-					tag.remove(TAG_STORED_ITEM);
-					tag.remove(TAG_COUNT);
+                tag.remove(TAG_STORED_ITEM);
+                tag.remove(TAG_COUNT);
 
-					//And, if we just removed *all* the tags on the target, erase its NBT tag entirely.
-					if(tag.isEmpty())
-						target.setTag(null);
-				}
-			} else {
+                //And, if we just removed *all* the tags on the target, erase its NBT tag entirely.
+                if(tag.isEmpty())
+                    target.setTag(null);
+            } else {
 				ItemNBTHelper.setCompound(target, TAG_STORED_ITEM, contents.save(new CompoundTag()));
 				ItemNBTHelper.setInt(target, TAG_COUNT, count);
 			}

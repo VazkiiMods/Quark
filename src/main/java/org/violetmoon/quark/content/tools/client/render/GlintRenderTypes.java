@@ -1,6 +1,6 @@
 package org.violetmoon.quark.content.tools.client.render;
 
-import com.mojang.blaze3d.vertex.BufferBuilder;
+import com.mojang.blaze3d.vertex.ByteBufferBuilder;
 import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 import com.mojang.blaze3d.vertex.VertexFormat;
 import it.unimi.dsi.fastutil.objects.Object2ObjectLinkedOpenHashMap;
@@ -28,7 +28,7 @@ public class GlintRenderTypes extends RenderType {
 	public static Map<RuneColor, RenderType> armorGlint = newRenderMap(GlintRenderTypes::buildArmorGlintRenderType);
 	public static Map<RuneColor, RenderType> armorEntityGlint = newRenderMap(GlintRenderTypes::buildArmorEntityGlintRenderType);
 
-	public static void addGlintTypes(Object2ObjectLinkedOpenHashMap<RenderType, BufferBuilder> map) {
+	public static void addGlintTypes(Object2ObjectLinkedOpenHashMap<RenderType, ByteBufferBuilder> map) {
 		addGlintTypes(map, glint);
 		addGlintTypes(map, glintTranslucent);
 		addGlintTypes(map, entityGlint);
@@ -47,10 +47,10 @@ public class GlintRenderTypes extends RenderType {
 		return map;
 	}
 
-	private static void addGlintTypes(Object2ObjectLinkedOpenHashMap<RenderType, BufferBuilder> map, Map<RuneColor, RenderType> typeMap) {
+	private static void addGlintTypes(Object2ObjectLinkedOpenHashMap<RenderType, ByteBufferBuilder> map, Map<RuneColor, RenderType> typeMap) {
 		for(RenderType renderType : typeMap.values())
 			if(!map.containsKey(renderType))
-				map.put(renderType, new BufferBuilder(renderType.bufferSize()));
+				map.put(renderType, new ByteBufferBuilder(renderType.bufferSize()));
 	}
 
 	private static RenderType buildGlintRenderType(String name) {

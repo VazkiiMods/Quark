@@ -20,7 +20,7 @@ import java.util.Map.Entry;
 public record SlabToBlockExtension<R extends CraftingRecipe>(SlabToBlockRecipe recipe) implements ICraftingCategoryExtension<R> {
 
 	@Override
-	public void setRecipe(RecipeHolder recipeHolder, IRecipeLayoutBuilder builder, ICraftingGridHelper craftingGridHelper, IFocusGroup focuses) {
+	public void setRecipe(RecipeHolder<R> recipeHolder, IRecipeLayoutBuilder builder, ICraftingGridHelper craftingGridHelper, IFocusGroup focuses) {
 		List<ItemStack> input1 = Lists.newArrayList();
 		List<ItemStack> input2 = Lists.newArrayList();
 		List<ItemStack> outputs = Lists.newArrayList();

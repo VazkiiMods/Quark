@@ -9,7 +9,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.common.NeoForge;
-import net.neoforged.neoforge.event.entity.living.MobSpawnEvent;
+import net.neoforged.neoforge.event.entity.living.FinalizeSpawnEvent;
 import org.violetmoon.quark.base.Quark;
 import org.violetmoon.quark.base.QuarkClient;
 import org.violetmoon.quark.base.client.handler.ModelHandler;
@@ -66,8 +66,7 @@ public class ForgottenModule extends ZetaModule {
 
 	@PlayEvent
 	public void onSkeletonSpawn(ZMobSpawnEvent.CheckSpawn.Lowest event) {
-		if(event.getSpawnType() == MobSpawnType.SPAWNER)
-			return;
+		if (event.getSpawnType() == MobSpawnType.SPAWNER) return;
 
 		LivingEntity entity = event.getEntity();
 		ZResult result = event.getResult();
@@ -83,11 +82,10 @@ public class ForgottenModule extends ZetaModule {
 
 				BlockPos pos = BlockPos.containing(event.getX(), event.getY(), event.getZ());
 
-				//fixme maybe broken? - IThundxr
-				MobSpawnEvent.FinalizeSpawn newEvent = new MobSpawnEvent.FinalizeSpawn(forgotten, world, event.getX(), event.getY(), event.getZ(), world.getCurrentDifficultyAt(pos), event.getSpawnType(), null, null, event.getSpawner());
+				FinalizeSpawnEvent newEvent = new FinalizeSpawnEvent(forgotten, world, event.getX(), event.getY(), event.getZ(), world.getCurrentDifficultyAt(pos), event.getSpawnType(), null, event.getSpawner());
 				NeoForge.EVENT_BUS.post(newEvent);
 
-				if(newEvent.getResult() != Result.DENY) {
+				if(!newEvent.isCanceled()) {
 					world.addFreshEntity(forgotten);
 					event.setResult(ZResult.DENY);
 				}

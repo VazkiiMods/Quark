@@ -15,13 +15,12 @@ import java.util.function.UnaryOperator;
 
 public class QuarkDataComponents {
 
-    public static final DataComponentType<Boolean> IS_PATHFINDER = register(
-            ResourceLocation.fromNamespaceAndPath("quark", "is_pathfinder"), builder -> builder.persistent(Codec.BOOL).networkSynchronized(ByteBufCodecs.BOOL)
-    );
+    // Tater
     public static final DataComponentType<Boolean> IS_ANGRY = register(
             ResourceLocation.fromNamespaceAndPath("quark", "is_angry"), builder -> builder.persistent(Codec.BOOL).networkSynchronized(ByteBufCodecs.BOOL)
     );
 
+    // Abacus
     public static final DataComponentType<BlockPos> BOUNDS_POS = register(
             ResourceLocation.fromNamespaceAndPath("quark", "bounds_pos"), builder -> builder.persistent(BlockPos.CODEC).networkSynchronized(BlockPos.STREAM_CODEC)
     );
@@ -30,20 +29,28 @@ public class QuarkDataComponents {
             ResourceLocation.fromNamespaceAndPath("quark", "quark_music_disc"), builder -> builder.persistent(Unit.CODEC).networkSynchronized(StreamCodec.unit(Unit.INSTANCE))
     );
 
+    //Snow golem player heads
     public static final DataComponentType<String> SKULL_OWNER = register(
             ResourceLocation.fromNamespaceAndPath("quark", "skull_owner"), builder -> builder.persistent(Codec.STRING).networkSynchronized(ByteBufCodecs.STRING_UTF8)
     );
 
+    // Runes
     public static final DataComponentType<String> TAG_RUNE_COLOR = register(
             ResourceLocation.fromNamespaceAndPath("quark", "rune_color"), builder -> builder.persistent(Codec.STRING).networkSynchronized(ByteBufCodecs.STRING_UTF8)
     );
 
+    // Trowel
     public static final DataComponentType<Long> TAG_PLACING_SEED = register(
             ResourceLocation.fromNamespaceAndPath("quark", "placing_seed"), builder -> builder.persistent(Codec.LONG).networkSynchronized(ByteBufCodecs.VAR_LONG)
     );
 
     public static final DataComponentType<ItemStack> TAG_LAST_STACK = register(
             ResourceLocation.fromNamespaceAndPath("quark", "last_stack"), builder -> builder.persistent(ItemStack.CODEC).networkSynchronized(ItemStack.STREAM_CODEC)
+    );
+
+    // Pathfinder Quill
+    public static final DataComponentType<Boolean> IS_PATHFINDER = register(
+            ResourceLocation.fromNamespaceAndPath("quark", "is_pathfinder"), builder -> builder.persistent(Codec.BOOL).networkSynchronized(ByteBufCodecs.BOOL)
     );
 
     public static final DataComponentType<String> TAG_BIOME = register(
@@ -84,6 +91,15 @@ public class QuarkDataComponents {
 
     public static final DataComponentType<Integer> TAG_POS_LEG_INDEX = register(
             ResourceLocation.fromNamespaceAndPath("quark", "searchPosLegIndex"), builder -> builder.persistent(Codec.INT).networkSynchronized(ByteBufCodecs.INT)
+    );
+
+    // Seed pouch
+    public static final DataComponentType<ItemStack> STORED_ITEM = register(
+            ResourceLocation.fromNamespaceAndPath("quark", "storedItem"), builder -> builder.persistent(ItemStack.CODEC).networkSynchronized(ItemStack.STREAM_CODEC)
+    );
+
+    public static final DataComponentType<Integer> ITEM_COUNT = register(
+            ResourceLocation.fromNamespaceAndPath("quark", "itemCount"), builder -> builder.persistent(Codec.INT).networkSynchronized(ByteBufCodecs.INT)
     );
 
     private static <T> DataComponentType<T> register(ResourceLocation id, UnaryOperator<DataComponentType.Builder<T>> builderOp) {
