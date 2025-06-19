@@ -7,6 +7,9 @@ import java.util.Objects;
 import java.util.UUID;
 
 import com.mojang.blaze3d.platform.GlStateManager;
+import io.netty.buffer.ByteBuf;
+import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.codec.StreamCodec;
 import org.violetmoon.quark.api.IRotationLockable;
 import org.violetmoon.quark.base.Quark;
 import org.violetmoon.quark.base.QuarkClient;
@@ -162,41 +165,11 @@ public class LockRotationModule extends ZetaModule {
 	}
 
 	public record LockProfile(Direction facing, int half) {
-
-		public static LockProfile readProfile(FriendlyByteBuf buf, Field field) {
-			boolean valid = buf.readBoolean();
-			if(!valid)
-				return null;
-
-			int face = buf.readInt();
-			int half = buf.readInt();
-			return new LockProfile(Direction.from3DDataValue(face), half);
-		}
-
-		public static void writeProfile(FriendlyByteBuf buf, Field field, LockProfile p) {
-			if(p == null)
-				buf.writeBoolean(false);
-			else {
-				buf.writeBoolean(true);
-				buf.writeInt(p.facing.get3DDataValue());
-				buf.writeInt(p.half);
-			}
-		}
-
-		@Override
-		public boolean equals(Object other) {
-			if(other == this)
-				return true;
-			if(!(other instanceof LockProfile otherProfile))
-				return false;
-
-			return otherProfile.facing == facing && otherProfile.half == half;
-		}
-
-		@Override
-		public int hashCode() {
-			return facing.hashCode() * 31 + half;
-		}
+		public static final StreamCodec<ByteBuf, LockProfile> STREAM_CODEC = StreamCodec.composite(
+		    Direction.STREAM_CODEC, LockProfile::facing,
+			ByteBufCodecs.INT, LockProfile::half,
+		    LockProfile::new
+		);
 	}
 
 	@ZetaLoadModule(clientReplacement = true)

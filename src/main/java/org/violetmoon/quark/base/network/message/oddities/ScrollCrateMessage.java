@@ -1,38 +1,28 @@
 package org.violetmoon.quark.base.network.message.oddities;
 
+import io.netty.buffer.ByteBuf;
+import net.createmod.catnip.net.base.ServerboundPacketPayload;
+import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.inventory.AbstractContainerMenu;
-
 import org.violetmoon.quark.addons.oddities.inventory.CrateMenu;
-import org.violetmoon.zeta.network.IZetaMessage;
-import org.violetmoon.zeta.network.IZetaNetworkEventContext;
+import org.violetmoon.quark.base.network.QuarkNetwork;
 
-import java.io.Serial;
+public record ScrollCrateMessage(boolean down) implements ServerboundPacketPayload {
+	public static final StreamCodec<ByteBuf, ScrollCrateMessage> STREAM_CODEC = ByteBufCodecs.BOOL
+			.map(ScrollCrateMessage::new, ScrollCrateMessage::down);
 
-public class ScrollCrateMessage implements IZetaMessage {
+	@Override
+	public void handle(ServerPlayer player) {
+		AbstractContainerMenu container = player.containerMenu;
 
-	@Serial
-	private static final long serialVersionUID = -921358009630134620L;
-
-	public boolean down;
-
-	public ScrollCrateMessage() {}
-
-	public ScrollCrateMessage(boolean down) {
-		this.down = down;
+		if (container instanceof CrateMenu crate)
+			crate.scroll(down, false);
 	}
 
 	@Override
-	public boolean receive(IZetaNetworkEventContext context) {
-		context.enqueueWork(() -> {
-			ServerPlayer player = context.getSender();
-			AbstractContainerMenu container = player.containerMenu;
-
-			if(container instanceof CrateMenu crate)
-				crate.scroll(down, false);
-		});
-
-		return true;
+	public PacketTypeProvider getTypeProvider() {
+		return QuarkNetwork.SCROLL_CRATE_MESSAGE;
 	}
-
 }

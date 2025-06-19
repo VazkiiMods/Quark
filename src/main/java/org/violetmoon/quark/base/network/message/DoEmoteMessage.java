@@ -1,43 +1,36 @@
 package org.violetmoon.quark.base.network.message;
 
+import io.netty.buffer.ByteBuf;
+import net.createmod.catnip.net.base.ClientboundPacketPayload;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.core.UUIDUtil;
+import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
-import net.neoforged.api.distmarker.Dist;
-import net.neoforged.api.distmarker.OnlyIn;
+import org.violetmoon.quark.base.network.QuarkNetwork;
 import org.violetmoon.quark.content.tweaks.client.emote.EmoteHandler;
-import org.violetmoon.zeta.network.IZetaMessage;
-import org.violetmoon.zeta.network.IZetaNetworkEventContext;
 
-import java.io.Serial;
 import java.util.UUID;
 
-public class DoEmoteMessage implements IZetaMessage {
+public record DoEmoteMessage(String emote, UUID playerUUID, int tier) implements ClientboundPacketPayload {
+	public static final StreamCodec<ByteBuf, DoEmoteMessage> STREAM_CODEC = StreamCodec.composite(
+		ByteBufCodecs.STRING_UTF8, DoEmoteMessage::emote,
+		UUIDUtil.STREAM_CODEC, DoEmoteMessage::playerUUID,
+		ByteBufCodecs.INT, DoEmoteMessage::tier,
+	    DoEmoteMessage::new
+	);
 
-	@Serial
-	private static final long serialVersionUID = -7952633556330869633L;
-
-	public String emote;
-	public UUID playerUUID;
-	public int tier;
-
-	public DoEmoteMessage() {}
-
-	public DoEmoteMessage(String emote, UUID playerUUID, int tier) {
-		this.emote = emote;
-		this.playerUUID = playerUUID;
-		this.tier = tier;
+	@Override
+	public void handle(LocalPlayer localPlayer) {
+		Level world = Minecraft.getInstance().level;
+		Player player = world.getPlayerByUUID(playerUUID);
+		EmoteHandler.putEmote(player, emote, tier);
 	}
 
 	@Override
-	@OnlyIn(Dist.CLIENT)
-	public boolean receive(IZetaNetworkEventContext context) {
-		context.enqueueWork(() -> {
-			Level world = Minecraft.getInstance().level;
-			Player player = world.getPlayerByUUID(playerUUID);
-			EmoteHandler.putEmote(player, emote, tier);
-		});
-		return true;
+	public PacketTypeProvider getTypeProvider() {
+		return QuarkNetwork.DO_EMOTE_MESSAGE;
 	}
-
 }

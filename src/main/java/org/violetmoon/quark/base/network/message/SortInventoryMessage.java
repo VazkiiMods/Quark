@@ -1,23 +1,24 @@
 package org.violetmoon.quark.base.network.message;
 
+import io.netty.buffer.ByteBuf;
+import net.createmod.catnip.net.base.ServerboundPacketPayload;
+import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.server.level.ServerPlayer;
 import org.violetmoon.quark.base.handler.SortingHandler;
-import org.violetmoon.zeta.network.IZetaMessage;
-import org.violetmoon.zeta.network.IZetaNetworkEventContext;
+import org.violetmoon.quark.base.network.QuarkNetwork;
 
-public class SortInventoryMessage implements IZetaMessage {
+public record SortInventoryMessage(boolean forcePlayer) implements ServerboundPacketPayload {
+	public static final StreamCodec<ByteBuf, SortInventoryMessage> STREAM_CODEC = ByteBufCodecs.BOOL
+			.map(SortInventoryMessage::new, SortInventoryMessage::forcePlayer);
 
-	public boolean forcePlayer;
-
-	public SortInventoryMessage() {}
-
-	public SortInventoryMessage(boolean forcePlayer) {
-		this.forcePlayer = forcePlayer;
+	@Override
+	public void handle(ServerPlayer player) {
+		SortingHandler.sortInventory(player, forcePlayer);
 	}
 
 	@Override
-	public boolean receive(IZetaNetworkEventContext context) {
-		context.enqueueWork(() -> SortingHandler.sortInventory(context.getSender(), forcePlayer));
-		return true;
+	public PacketTypeProvider getTypeProvider() {
+		return QuarkNetwork.SORT_INVENTORY_MESSAGE;
 	}
-
 }
