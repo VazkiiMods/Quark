@@ -45,7 +45,7 @@ public class EnchantmentMatrix {
 	private static final String TAG_TYPE_COUNT = "typeCount";
 	private static final String TAG_INFLUENCED = "influenced";
 
-	public final Map<Enchantment, Integer> totalValue = new HashMap<>();
+	public final Map<Holder<Enchantment>, Integer> totalValue = new HashMap<>();
 	public final Map<Integer, Piece> pieces = new HashMap<>();
 	public List<Integer> benchedPieces = new ArrayList<>();
 	public List<Integer> placedPieces = new ArrayList<>();
@@ -316,7 +316,7 @@ public class EnchantmentMatrix {
 			Piece piece = new Piece();
 			piece.readFromNBT(pieceTag);
 			pieces.put(id, piece);
-			totalValue.put(piece.enchant.value(), totalValue.getOrDefault(piece.enchant.value(), 0) + piece.getValue());
+			totalValue.put(piece.enchant, totalValue.getOrDefault(piece.enchant, 0) + piece.getValue());
 		}
 
 		benchedPieces = unpackList(cmp.getIntArray(TAG_BENCHED_PIECES));

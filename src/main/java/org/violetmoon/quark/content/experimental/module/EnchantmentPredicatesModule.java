@@ -4,6 +4,7 @@ import com.google.common.collect.Lists;
 
 import net.minecraft.client.renderer.item.ItemProperties;
 import net.minecraft.client.renderer.item.ItemPropertyFunction;
+import net.minecraft.core.Holder;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
@@ -50,7 +51,7 @@ public class EnchantmentPredicatesModule extends ZetaModule {
 					for(Enchantment enchant : enchants) {
 						ResourceLocation enchantRes = BuiltInRegistries.ENCHANTMENT.getKey(enchant);
 						ResourceLocation name = ResourceLocation.parse(Quark.MOD_ID + "_has_enchant_" + enchantRes.getNamespace() + "_" + enchantRes.getPath());
-						ItemPropertyFunction fun = (stack, level, entity, i) -> EnchantmentHelper.getTagEnchantmentLevel(enchant, stack);
+						ItemPropertyFunction fun = (stack, level, entity, i) -> EnchantmentHelper.getTagEnchantmentLevel(Holder.direct(enchant), stack);
 
 						for(Item item : items)
 							ItemProperties.register(item, name, fun);

@@ -15,6 +15,7 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent;
 import net.minecraft.client.renderer.GameRenderer;
+import net.minecraft.core.Holder;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
@@ -83,7 +84,7 @@ public class AttributeTooltips {
 		}
 		case MULTIPLIER -> {
 			AttributeSupplier supplier = DefaultAttributes.getSupplier(EntityType.PLAYER);
-			double scaledValue = value / supplier.getBaseValue(attribute);
+			double scaledValue = value / supplier.getBaseValue(Holder.direct(attribute));
 			return Component.literal(ItemAttributeModifiers.ATTRIBUTE_MODIFIER_FORMAT.format(scaledValue) + "x")
 					.withStyle(scaledValue < 1 ? ChatFormatting.RED : ChatFormatting.WHITE);
 		}

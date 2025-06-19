@@ -5,6 +5,7 @@ import com.google.common.collect.Lists;
 import net.minecraft.world.item.ItemStack;
 
 import org.violetmoon.quark.base.Quark;
+import org.violetmoon.quark.base.components.QuarkDataComponents;
 import org.violetmoon.quark.content.client.resources.AttributeTooltipManager;
 import org.violetmoon.quark.content.client.tooltip.AttributeTooltips;
 import org.violetmoon.quark.content.client.tooltip.EnchantedBookTooltips;
@@ -124,7 +125,7 @@ public class ImprovedTooltipsModule extends ZetaModule {
 		}
 
 		private static boolean ignore(ItemStack stack) {
-			return ItemNBTHelper.getBoolean(stack, IGNORE_TAG, false);
+			return Boolean.TRUE.equals(stack.get(QuarkDataComponents.IGNORE));
 		}
 
 		@PlayEvent

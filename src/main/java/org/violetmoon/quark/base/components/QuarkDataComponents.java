@@ -152,6 +152,10 @@ public class QuarkDataComponents {
             Quark.asResource("slime_nbt"), builder -> builder.persistent(CustomData.CODEC_WITH_ID).networkSynchronized(CustomData.STREAM_CODEC)
     );
 
+    public static final DataComponentType<Boolean> IGNORE = register(
+            Quark.asResource("ignore"), builder -> builder.persistent(Codec.BOOL).networkSynchronized(ByteBufCodecs.BOOL)
+    );
+
 
     private static <T> DataComponentType<T> register(ResourceLocation id, UnaryOperator<DataComponentType.Builder<T>> builderOp) {
         return Registry.register(BuiltInRegistries.DATA_COMPONENT_TYPE, id, builderOp.apply(DataComponentType.builder()).build());

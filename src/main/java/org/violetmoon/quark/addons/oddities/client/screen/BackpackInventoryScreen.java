@@ -98,10 +98,10 @@ public class BackpackInventoryScreen extends InventoryScreen implements IQuarkBu
 	protected void renderBg(GuiGraphics guiGraphics, float partialTicks, int mouseX, int mouseY) {
 		RenderSystem.setShader(GameRenderer::getPositionTexShader);
 		RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
-		int i = leftPos;
-		int j = topPos;
-		guiGraphics.blit(BACKPACK_INVENTORY_BACKGROUND, i, j, 0, 0, imageWidth, imageHeight);
-		renderEntityInInventoryFollowsMouse(guiGraphics, i + 51, j + 75, 30, i + 51 - mouseX, j + 75 - 50 - mouseY, minecraft.player);
+		int leftPos = this.leftPos;
+		int topPos = this.topPos;
+		guiGraphics.blit(BACKPACK_INVENTORY_BACKGROUND, leftPos, topPos, 0, 0, imageWidth, imageHeight);
+		renderEntityInInventoryFollowsMouse(guiGraphics, leftPos + 51, topPos + 75, leftPos + 51 - mouseX, topPos + 75 - 50 - mouseY,30, 0F, mouseX, mouseY,  minecraft.player);
 		moveCharmsButtons();
 	}
 

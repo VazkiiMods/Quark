@@ -2,6 +2,7 @@ package org.violetmoon.quark.content.mobs.module;
 
 import com.google.common.collect.ImmutableSet;
 import net.minecraft.client.renderer.entity.EntityRenderers;
+import net.minecraft.core.Holder;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.tags.BiomeTags;
 import net.minecraft.tags.TagKey;
@@ -48,6 +49,7 @@ import org.violetmoon.zeta.util.Hint;
 import org.violetmoon.zeta.util.ZetaEffect;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  * @author WireSegal
@@ -120,7 +122,7 @@ public class CrabsModule extends ZetaModule {
 		Quark.ZETA.entitySpawn.registerSpawn(crabType, MobCategory.CREATURE, SpawnPlacementTypes.ON_GROUND, Types.MOTION_BLOCKING_NO_LEAVES, Crab::spawnPredicate, spawnConfig);
 		Quark.ZETA.entitySpawn.addEgg(this, crabType, 0x893c22, 0x916548, spawnConfig);
 
-		event.getAdvancementModifierRegistry().addModifier(new FuriousCocktailModifier(this, () -> enableBrewing, resilience)
+		event.getAdvancementModifierRegistry().addModifier(new FuriousCocktailModifier(this, () -> enableBrewing, Set.of(Holder.direct(resilience)))
 				.setCondition(() -> resilienceRequiredForAllEffects));
 		event.getAdvancementModifierRegistry().addModifier(new TwoByTwoModifier(this, ImmutableSet.of(crabType)));
 		event.getAdvancementModifierRegistry().addModifier(new BalancedDietModifier(this, ImmutableSet.of(crab_leg, cookedCrabLeg)));

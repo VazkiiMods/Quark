@@ -4,10 +4,15 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonSyntaxException;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.NonNullList;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.GsonHelper;
 import net.minecraft.world.inventory.CraftingContainer;
@@ -110,27 +115,23 @@ public class ExclusionRecipe implements CraftingRecipe {
 		return parent.category();
 	}
 
-	private static class ShapedExclusionRecipe extends ExclusionRecipe implements IShapedRecipe<CraftingContainer> {
-		private final IShapedRecipe<CraftingContainer> shapedParent;
+	private static class ShapedExclusionRecipe extends ExclusionRecipe implements CraftingRecipe {
+		private final ShapedRecipe shapedParent;
 
-		@SuppressWarnings("unchecked")
 		public ShapedExclusionRecipe(CraftingRecipe shapedParent, List<ResourceLocation> excluded) {
 			super(shapedParent, excluded);
-			this.shapedParent = (IShapedRecipe<CraftingContainer>) shapedParent;
-		}
-
-		@Override
-		public int getRecipeWidth() {
-			return shapedParent.getRecipeWidth();
-		}
-
-		@Override
-		public int getRecipeHeight() {
-			return shapedParent.getRecipeHeight();
+			this.shapedParent = (ShapedRecipe)shapedParent;
 		}
 	}
 
 	public static class Serializer implements RecipeSerializer<ExclusionRecipe> {
+		public static final MapCodec<ExclusionRecipe> CODEC = RecordCodecBuilder.mapCodec(
+				instance -> instance.group(
+								ResourceLocation.CODEC.listOf().fieldOf("excluded").forGetter((exclusionRecipe -> exclusionRecipe.excluded))
+								//Codec.STRING.optionalFieldOf("parent", "").forGetter(exclusionRecipe -> exclusionRecipe.parent)
+								)
+						.apply(instance, ExclusionRecipe::new)
+		);
 
 		@NotNull
 		@Override
@@ -154,7 +155,7 @@ public class ExclusionRecipe implements CraftingRecipe {
 			if(!(parent instanceof CraftingRecipe))
 				throw new JsonSyntaxException("Type '" + trueType + "' is not a crafting recipe");
 
-			if(parent instanceof IShapedRecipe)
+			if(parent instanceof ShapedRecipe)
 				return new ShapedExclusionRecipe((CraftingRecipe) parent, excludedRecipes);
 			return new ExclusionRecipe((CraftingRecipe) parent, excludedRecipes);
 		}
@@ -191,6 +192,16 @@ public class ExclusionRecipe implements CraftingRecipe {
 				buffer.writeUtf(loc.toString(), 32767);
 			buffer.writeUtf(Objects.toString(BuiltInRegistries.RECIPE_SERIALIZER.getKey(recipe.parent.getSerializer())), 32767);
 			((RecipeSerializer<Recipe<?>>) recipe.parent.getSerializer()).toNetwork(buffer, recipe.parent);
+		}
+
+		@Override
+		public MapCodec<ExclusionRecipe> codec() {
+			return null;
+		}
+
+		@Override
+		public StreamCodec<RegistryFriendlyByteBuf, ExclusionRecipe> streamCodec() {
+			return null;
 		}
 	}
 }

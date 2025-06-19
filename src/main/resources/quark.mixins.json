@@ -77,6 +77,7 @@
     "accessor.AccessorBlockItem",
     "accessor.AccessorChunkAccess",
     "accessor.AccessorLivingEntity",
+    "accessor.AccessorMerchantMenu",
     "accessor.AccessorMerchantOffer",
     "accessor.AccessorServerGamePacketListener",
     "accessor.AccessorSinglePoolElement",

@@ -7,6 +7,7 @@ import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.util.Unit;
 import net.minecraft.world.Containers;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.Entity;
@@ -65,10 +66,10 @@ public class BackpackItem extends ArmorItem implements IZetaItem, IZetaItemExten
 		CreativeTabManager.addToCreativeTabNextTo(CreativeModeTabs.TOOLS_AND_UTILITIES, this.getItem(), Items.SADDLE, true);
 	}
 
-	@Override
+	/*@Override
 	public int getDefaultTooltipHideFlagsZeta(@NotNull ItemStack stack) {
-		return stack.isEnchanted() ? ItemStack.TooltipPart.ENCHANTMENTS.getMask() : 0;
-	}
+		return stack.isEnchanted() & stack.has(DataComponents.HIDE_TOOLTIP) ? 1 : 0;
+	}*/
 
 	@Override
 	public ZetaModule getModule() {
@@ -189,12 +190,13 @@ public class BackpackItem extends ArmorItem implements IZetaItem, IZetaItemExten
 			stack.set(DataComponents.ENCHANTMENTS, replaceEnch.toImmutable());
 		}
 
-		stack.removeTagKey("Inventory");
+		//Originally removed an inventory tag, but that no longer exists. I assume its the Container tag now?
+		stack.remove(DataComponents.CONTAINER);
 		return false;
 	}
 
 	//TODO: IForgeItem
-	@NotNull
+	/*@NotNull
 	@Override
 	public IC initCapabilities(ItemStack stack, CompoundTag oldCapNbt) {
 		ProxiedItemStackHandler handler = new ProxiedItemStackHandler(stack, 27);
@@ -211,16 +213,16 @@ public class BackpackItem extends ArmorItem implements IZetaItem, IZetaItemExten
 		}
 
 		return handler;
-	}
+	}*/
 
 	public static ItemAttributeModifiers createAttributes(){
 		return ItemAttributeModifiers.builder().build();
 	}
 
-	@Override
+	/*@Override
 	public String getArmorTextureZeta(ItemStack stack, Entity entity, EquipmentSlot slot, String type) {
 		return type != null && type.equals("overlay") ? WORN_OVERLAY_TEXTURE : WORN_TEXTURE;
-	}
+	}*/
 
 	@Override
 	public boolean isFoil(@NotNull ItemStack stack) {

@@ -96,7 +96,7 @@ public class BeaconRedirectionModule extends ZetaModule {
 
 		beacon.checkingBeamSections.clear();
 
-		float[] currColor = new float[] { 1, 1, 1 };
+		int currColor = 16777215; // (255 << 16) + (255 << 8) + 255
 		float alpha = 1F;
 
 		Direction lastDir = null;
@@ -125,7 +125,7 @@ public class BeaconRedirectionModule extends ZetaModule {
 
 			BlockState blockstate = world.getBlockState(currPos);
 			Block block = blockstate.getBlock();
-			float[] targetColor = blockstate.getBeaconColorMultiplier(world, currPos, beaconPos);
+			Integer targetColor = blockstate.getBeaconColorMultiplier(world, currPos, beaconPos);
 			float targetAlpha = -1;
 
 			if(allowTintedGlassTransparency) {
@@ -142,26 +142,25 @@ public class BeaconRedirectionModule extends ZetaModule {
 					beacon.checkingBeamSections.add(currSegment);
 
 					targetColor = getTargetColor(block);
-					if(targetColor[0] == 1F && targetColor[1] == 1F && targetColor[2] == 1F)
+					if(targetColor >> 16 == 255 && targetColor >> 8 == 255 && targetColor == 255)
 						targetColor = currColor;
 
-					float[] mixedColor = new float[] { (currColor[0] + targetColor[0] * 3) / 4.0F, (currColor[1] + targetColor[1] * 3) / 4.0F, (currColor[2] + targetColor[2] * 3) / 4.0F };
-					currColor = mixedColor;
+                    currColor = (((currColor >> 16) + (targetColor >> 16) * 3) / 4) + (((currColor >> 8) + (targetColor >> 8) * 3) / 4) + ((currColor + targetColor * 3) / 4);
 					alpha = 1F;
 					didRedirection = true;
 					lastDir = currSegment.dir;
 					currSegment = new ExtendedBeamSegment(dir, currPos.subtract(beaconPos), currColor, alpha);
 				}
 			} else if(targetColor != null || targetAlpha != -1) {
-				if(Arrays.equals(targetColor, currColor) && targetAlpha == alpha)
+				if (targetColor.equals(currColor) && targetAlpha == alpha)
 					currSegment.increaseHeight();
 				else {
 					check = true;
 					beacon.checkingBeamSections.add(currSegment);
 
-					float[] mixedColor = currColor;
+					int mixedColor = currColor;
 					if(targetColor != null) {
-						mixedColor = new float[] { (currColor[0] + targetColor[0]) / 2.0F, (currColor[1] + targetColor[1]) / 2.0F, (currColor[2] + targetColor[2]) / 2.0F };
+						mixedColor = (((currColor >> 16) + (targetColor >> 16)) / 2) + (((currColor >> 8) + (targetColor >> 8)) / 2) + ((currColor + targetColor) / 2);
 
 						if(!hardColorSet) {
 							mixedColor = targetColor;
@@ -233,8 +232,8 @@ public class BeaconRedirectionModule extends ZetaModule {
 		return CorundumModule.staticEnabled ? block instanceof CorundumClusterBlock : block == Blocks.AMETHYST_CLUSTER;
 	}
 
-	private static float[] getTargetColor(Block block) {
-		return block instanceof CorundumClusterBlock cc ? cc.base.colorComponents : new float[] { 1F, 1F, 1F };
+	private static int getTargetColor(Block block) {
+		return block instanceof CorundumClusterBlock cc ? cc.base.color : 16777216;
 	}
 
 	public static class ExtendedBeamSegment extends BeaconBeamSection {
@@ -245,7 +244,7 @@ public class BeaconRedirectionModule extends ZetaModule {
 
 		private boolean isTurn = false;
 
-		public ExtendedBeamSegment(Direction dir, Vec3i offset, float[] colorsIn, float alpha) {
+		public ExtendedBeamSegment(Direction dir, Vec3i offset, int colorsIn, float alpha) {
 			super(colorsIn);
 			this.offset = offset;
 			this.dir = dir;

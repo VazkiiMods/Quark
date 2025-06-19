@@ -7,6 +7,7 @@ import it.unimi.dsi.fastutil.objects.Object2IntArrayMap;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
+import net.minecraft.core.component.DataComponentPredicate;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
@@ -46,6 +47,7 @@ import org.violetmoon.quark.content.tools.base.RuneColor;
 import org.violetmoon.quark.content.tools.item.AncientTomeItem;
 import org.violetmoon.quark.content.tools.loot.EnchantTome;
 import org.violetmoon.quark.content.world.module.MonsterBoxModule;
+import org.violetmoon.quark.mixin.mixins.accessor.AccessorMerchantMenu;
 import org.violetmoon.zeta.advancement.ManualTrigger;
 import org.violetmoon.zeta.config.Config;
 import org.violetmoon.zeta.event.bus.LoadEvent;
@@ -344,14 +346,13 @@ public class AncientTomesModule extends ZetaModule {
 	}
 
 	private static boolean isOverlevel(ItemStack stack) {
-		Map<Enchantment, Integer> enchants = EnchantmentHelper.getEnchantments(stack);
-		for(Map.Entry<Enchantment, Integer> entry : enchants.entrySet()) {
-			Enchantment enchantment = entry.getKey();
-			if(enchantment == null)
+		ItemEnchantments enchantments = stack.get(DataComponents.ENCHANTMENTS);
+		for(Holder<Enchantment> enchant : enchantments.keySet()) {
+			if(enchant == null)
 				continue;
 
-			int level = entry.getValue();
-			if(level > enchantment.getMaxLevel()) {
+			int level = enchantments.getLevel(enchant);
+			if(level > enchant.value().getMaxLevel()) {
 				return true;
 			}
 		}
@@ -361,7 +362,7 @@ public class AncientTomesModule extends ZetaModule {
 
 	private static final ResourceLocation OVERLEVEL_COLOR_HANDLER = Quark.asResource("overlevel_rune");
 
-	@PlayEvent
+	/*@PlayEvent
 	public void attachRuneCapability(ZAttachCapabilities.ItemStackCaps event) {
 		if(event.getObject().getItem() == Items.ENCHANTED_BOOK) {
 			event.addCapability(OVERLEVEL_COLOR_HANDLER, QuarkCapabilities.RUNE_COLOR, stack -> {
@@ -371,7 +372,7 @@ public class AncientTomesModule extends ZetaModule {
 					return null;
 			});
 		}
-	}
+	}*/
 
 	public static Rarity shiftRarity(ItemStack itemStack, Rarity returnValue) {
 		return Quark.ZETA.modules.isEnabled(AncientTomesModule.class) && overleveledBooksGlowRainbow &&
@@ -471,7 +472,7 @@ public class AncientTomesModule extends ZetaModule {
 	}
 
 	private static void moveFromInventoryToPaymentSlot(MerchantMenu menu, MerchantContainer container, MerchantOffer offer, int tradeSlot, ItemStack targetStack) {
-		menu.moveFromInventoryToPaymentSlot(tradeSlot, targetStack);
+		((AccessorMerchantMenu)menu).invokeMoveFromInventoryToPaymentSlot(tradeSlot, new ItemCost(targetStack.getItemHolder(), targetStack.getCount(), DataComponentPredicate.allOf(targetStack.getComponents())));
 		// Do a second pass with a softer match severity, but don't put in books that are the same as the output
 		if(container.getItem(tradeSlot).isEmpty() && !targetStack.isEmpty()) {
 			for(int slot = 3; slot < 39; ++slot) {
@@ -523,10 +524,21 @@ public class AncientTomesModule extends ZetaModule {
 				return null;
 			Holder<Enchantment> target = validEnchants.get(random.nextInt(validEnchants.size()));
 
-			ItemStack anyTome = new ItemStack(ancient_tome);
-			ItemStack enchantedBook = EnchantedBookItem.createForEnchantment(new EnchantmentInstance(target, target.getMaxLevel()));
+			ItemStack enchantedBook = EnchantedBookItem.createForEnchantment(new EnchantmentInstance(target, target.value().getMaxLevel()));
 			ItemStack outputTome = AncientTomeItem.getEnchantedItemStack(target);
-			return new MerchantOffer(new ItemCost(anyTome.getItemHolder()), enchantedBook, outputTome, 3, 3, 0.2F);
+			return new MerchantOffer(
+					new ItemCost(ancient_tome),
+					Optional.of(
+							new ItemCost(
+									enchantedBook.getItemHolder(),
+									1,
+									DataComponentPredicate.allOf(enchantedBook.getComponents()
+									))),
+					outputTome,
+					3,
+					3,
+					0.2F
+			);
 		}
 	}
 }

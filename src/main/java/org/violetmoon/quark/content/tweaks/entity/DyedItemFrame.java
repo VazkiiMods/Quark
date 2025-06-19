@@ -12,6 +12,7 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.decoration.ItemFrame;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.item.component.DyedItemColor;
 import net.minecraft.world.level.Level;
 import org.violetmoon.quark.base.Quark;
 import org.violetmoon.quark.content.tweaks.module.DyeableItemFramesModule;
@@ -94,7 +95,7 @@ public class DyedItemFrame extends ItemFrame {
 	@Override
 	protected ItemStack getFrameItemStack() {
 		ItemStack stack = new ItemStack(isGlow() ? Items.GLOW_ITEM_FRAME : Items.ITEM_FRAME);
-		Quark.ZETA.dyeables.applyDye(stack, getColor());
+		Quark.ZETA.dyeables.applyDye(stack, new DyedItemColor(getColor(), false));
 
 		return stack;
 	}
