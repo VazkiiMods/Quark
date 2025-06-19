@@ -17,6 +17,7 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.item.enchantment.Enchantment;
 import org.jetbrains.annotations.NotNull;
 import org.violetmoon.quark.addons.oddities.block.be.MatrixEnchantingTableBlockEntity;
 import org.violetmoon.quark.addons.oddities.inventory.EnchantmentMatrix;
@@ -59,7 +60,7 @@ public class MatrixEnchantingScreen extends AbstractContainerScreen<MatrixEnchan
 		selectedPiece = -1;
 		addRenderableWidget(plusButton = new MatrixEnchantingPlusButton(leftPos + 86, topPos + 63, this::add));
 		pieceList = new MatrixEnchantingPieceList(this, 28, 64, topPos + 11, topPos + 75, 22);
-		pieceList.setLeftPos(leftPos + 139);
+		pieceList.setX(leftPos + 139);
 		addRenderableWidget(pieceList);
 		updateButtonStatus();
 
@@ -174,7 +175,7 @@ public class MatrixEnchantingScreen extends AbstractContainerScreen<MatrixEnchan
 
 		if(hoveredPiece != null) {
 			List<Component> tooltip = new LinkedList<>();
-			tooltip.add(Component.translatable(hoveredPiece.enchant.getFullname(hoveredPiece.level).getString().replaceAll("\\u00A7.", "")).withStyle(ChatFormatting.GOLD));
+			tooltip.add(Component.translatable(Enchantment.getFullname(hoveredPiece.enchant,hoveredPiece.level).getString().replaceAll("\\u00A7.", "")).withStyle(ChatFormatting.GOLD));
 
 			if(hoveredPiece.influence > 0)
 				tooltip.add(Component.translatable("quark.gui.enchanting.influence", (int) (hoveredPiece.influence * MatrixEnchantingModule.influencePower * 100)).withStyle(ChatFormatting.GRAY));
@@ -191,7 +192,7 @@ public class MatrixEnchantingScreen extends AbstractContainerScreen<MatrixEnchan
 				tooltip.add(Component.translatable("quark.gui.enchanting.right_click").withStyle(ChatFormatting.GRAY));
 			} else if(selectedPiece != -1) {
 				Piece p = getPiece(selectedPiece);
-				if(p != null && p.enchant == hoveredPiece.enchant && hoveredPiece.level < hoveredPiece.enchant.getMaxLevel()) {
+				if(p != null && p.enchant == hoveredPiece.enchant && hoveredPiece.level < hoveredPiece.enchant.value().getMaxLevel()) {
 					tooltip.add(Component.literal(""));
 					tooltip.add(Component.translatable("quark.gui.enchanting.merge").withStyle(ChatFormatting.GRAY));
 				}
@@ -351,7 +352,7 @@ public class MatrixEnchantingScreen extends AbstractContainerScreen<MatrixEnchan
 		int hover = enchanter.matrix.matrix[gridHoverX][gridHoverY];
 		Piece p = getPiece(hover);
 		Piece p1 = getPiece(selectedPiece);
-		if(p != null && p1 != null && p.enchant == p1.enchant && p.level < p.enchant.getMaxLevel()) {
+		if(p != null && p1 != null && p.enchant == p1.enchant && p.level < p.enchant.value().getMaxLevel()) {
 			send(MatrixEnchantingTableBlockEntity.OPER_MERGE, hover, id, 0);
 			selectedPiece = -1;
 			click();

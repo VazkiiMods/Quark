@@ -23,6 +23,7 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.item.enchantment.EnchantmentInstance;
+import net.minecraft.world.item.enchantment.ItemEnchantments;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
@@ -169,14 +170,14 @@ public class MatrixEnchantingTableBlockEntity extends AbstractEnchantingTableBlo
 				book = true;
 			}
 
-			Map<Enchantment, Integer> enchantments = new HashMap<>();
+			Map<Holder<Enchantment>, Integer> enchantments = new HashMap<>();
 
 			for(int i : matrix.placedPieces) {
 				Piece p = matrix.pieces.get(i);
 
 				if(p != null && p.enchant != null) {
-					for(Enchantment o : enchantments.keySet())
-						if(o == p.enchant || !p.enchant.isCompatibleWith(o) || !o.isCompatibleWith(p.enchant))
+					for (Holder<Enchantment> o : enchantments.keySet())
+						if(o == p.enchant || p.enchant.value().exclusiveSet().contains(o) || o.value().exclusiveSet().contains(p.enchant))
 							return; // Incompatible
 
 					enchantments.put(p.enchant, p.level);
@@ -184,7 +185,7 @@ public class MatrixEnchantingTableBlockEntity extends AbstractEnchantingTableBlo
 			}
 
 			if(book)
-				for(Entry<Enchantment, Integer> e : enchantments.entrySet())
+				for(Entry<Holder<Enchantment>, Integer> e : enchantments.entrySet())
 					EnchantedBookItem.createForEnchantment(new EnchantmentInstance(e.getKey(), e.getValue()));
 			else {
 				EnchantmentHelper.setEnchantments(out,enchantments);

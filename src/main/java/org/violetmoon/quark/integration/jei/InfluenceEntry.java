@@ -12,6 +12,7 @@ import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.EnchantmentInstance;
 import net.minecraft.world.level.block.Block;
 import org.violetmoon.quark.addons.oddities.util.Influence;
+import org.violetmoon.quark.base.components.QuarkDataComponents;
 import org.violetmoon.quark.content.client.tooltip.EnchantedBookTooltips;
 import org.violetmoon.quark.content.experimental.module.EnchantmentsBegoneModule;
 import org.violetmoon.quark.content.tools.base.RuneColor;
@@ -57,7 +58,7 @@ public class InfluenceEntry implements IRecipeCategoryExtension {
 				if(stack.isEmpty()) {
 					stack = ColorRunesModule.withRune(new ItemStack(Items.ENCHANTED_BOOK), runeColor);
 					stack.set(DataComponents.CUSTOM_NAME, Component.translatable(locKey).withStyle(chatColor));
-					ItemNBTHelper.setBoolean(stack, EnchantedBookTooltips.TABLE_ONLY_DISPLAY, true);
+					stack.set(QuarkDataComponents.TABLE_ONLY_ENCHANTS, true);
 				}
 				EnchantedBookItem.createForEnchantment(stack, new EnchantmentInstance(enchantment, enchantment.getMaxLevel()));
 			}

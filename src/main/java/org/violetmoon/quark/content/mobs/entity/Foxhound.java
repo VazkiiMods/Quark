@@ -60,6 +60,7 @@ import org.jetbrains.annotations.NotNull;
 import org.violetmoon.quark.addons.oddities.block.TinyPotatoBlock;
 import org.violetmoon.quark.addons.oddities.module.TinyPotatoModule;
 import org.violetmoon.quark.base.Quark;
+import org.violetmoon.quark.base.components.QuarkDataComponents;
 import org.violetmoon.quark.base.handler.QuarkSounds;
 import org.violetmoon.quark.content.mobs.ai.FindPlaceToSleepGoal;
 import org.violetmoon.quark.content.mobs.ai.SleepGoal;
@@ -92,6 +93,8 @@ public class Foxhound extends Wolf implements Enemy {
 	@Override
 	protected void defineSynchedData(SynchedEntityData.Builder builder) {
 		super.defineSynchedData(builder);
+
+		//todo: Mixin accessor or accesswidener
 		setCollarColor(DyeColor.ORANGE);
 		builder.define(TEMPTATION, false);
 		builder.define(IS_BLUE, false);
@@ -149,7 +152,7 @@ public class Foxhound extends Wolf implements Enemy {
 			if(--timeUntilPotatoEmerges == 0) {
 				setTatering(false);
 				ItemStack stack = new ItemStack(TinyPotatoModule.tiny_potato);
-				ItemNBTHelper.setBoolean(stack, TinyPotatoBlock.ANGRY, true);
+				stack.set(QuarkDataComponents.IS_ANGRY, true);
 
 				spawnAtLocation(stack);
 				playSound(QuarkSounds.BLOCK_POTATO_HURT, 1f, 1f);

@@ -25,6 +25,8 @@ import org.jetbrains.annotations.Nullable;
 import org.violetmoon.quark.base.components.QuarkDataComponents;
 import org.violetmoon.quark.content.tweaks.module.CompassesWorkEverywhereModule;
 
+import java.util.Optional;
+
 @OnlyIn(Dist.CLIENT)
 public class CompassAnglePropertyFunction implements ItemPropertyFunction {
 
@@ -37,7 +39,7 @@ public class CompassAnglePropertyFunction implements ItemPropertyFunction {
 		if(entityIn == null && !stack.isFramed())
 			return 0F;
 
-		if(CompassesWorkEverywhereModule.enableCompassNerf && (!stack.hasTag() || !ItemNBTHelper.getBoolean(stack, CompassesWorkEverywhereModule.TAG_COMPASS_CALCULATED, false)))
+		if(CompassesWorkEverywhereModule.enableCompassNerf && (!Boolean.TRUE.equals(stack.get(QuarkDataComponents.IS_COMPASS_CALCULATED))))
 			return 0F;
 
 		boolean carried = entityIn != null;

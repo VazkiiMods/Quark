@@ -12,6 +12,7 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.dimension.LevelStem;
 import org.violetmoon.quark.base.Quark;
+import org.violetmoon.quark.base.components.QuarkDataComponents;
 import org.violetmoon.quark.content.tweaks.client.item.ClockTimePropertyFunction;
 import org.violetmoon.quark.content.tweaks.client.item.CompassAnglePropertyFunction;
 import org.violetmoon.zeta.client.event.load.ZClientSetup;
@@ -73,16 +74,14 @@ public class CompassesWorkEverywhereModule extends ZetaModule {
 		}
 	}
 
-	public static final String TAG_CLOCK_CALCULATED = "quark:clock_calculated";
-
 	public static void tickClock(ItemStack stack) {
 		boolean calculated = isClockCalculated(stack);
 		if(!calculated)
-			ItemNBTHelper.setBoolean(stack, TAG_CLOCK_CALCULATED, true);
+			stack.set(QuarkDataComponents.IS_CLOCK_CALCULATED, true);
 	}
 
 	public static boolean isClockCalculated(ItemStack stack) {
-		return stack.hasTag() && ItemNBTHelper.getBoolean(stack, TAG_CLOCK_CALCULATED, false);
+		return Boolean.TRUE.equals(stack.get(QuarkDataComponents.IS_COMPASS_CALCULATED));
 	}
 
 	public static final String TAG_COMPASS_CALCULATED = "quark:compass_calculated";
@@ -96,27 +95,27 @@ public class CompassesWorkEverywhereModule extends ZetaModule {
 		boolean nether = player.level().dimension().location().equals(LevelStem.NETHER.location());
 
 		if(calculated) {
-			boolean wasInNether = ItemNBTHelper.getBoolean(stack, TAG_WAS_IN_NETHER, false);
+			boolean wasInNether = Boolean.TRUE.equals(stack.get(QuarkDataComponents.WAS_IN_NETHER));
 			BlockPos pos = player.blockPosition();
 			boolean isInPortal = player.level().getBlockState(pos).getBlock() == Blocks.NETHER_PORTAL;
 
 			if(nether && !wasInNether && isInPortal) {
-				ItemNBTHelper.setInt(stack, TAG_NETHER_TARGET_X, pos.getX());
-				ItemNBTHelper.setInt(stack, TAG_NETHER_TARGET_Z, pos.getZ());
-				ItemNBTHelper.setBoolean(stack, TAG_WAS_IN_NETHER, true);
-				ItemNBTHelper.setBoolean(stack, TAG_POSITION_SET, true);
+				stack.set(QuarkDataComponents.NETHER_TARGET_X, pos.getX());
+				stack.set(QuarkDataComponents.NETHER_TARGET_Z, pos.getZ());
+				stack.set(QuarkDataComponents.WAS_IN_NETHER, true);
+				stack.set(QuarkDataComponents.IS_POS_SET, true);
 			} else if(!nether && wasInNether) {
-				ItemNBTHelper.setBoolean(stack, TAG_WAS_IN_NETHER, false);
-				ItemNBTHelper.setBoolean(stack, TAG_POSITION_SET, false);
+				stack.set(QuarkDataComponents.WAS_IN_NETHER, false);
+				stack.set(QuarkDataComponents.IS_POS_SET, false);
 			}
 		} else {
-			ItemNBTHelper.setBoolean(stack, TAG_COMPASS_CALCULATED, true);
-			ItemNBTHelper.setBoolean(stack, TAG_WAS_IN_NETHER, nether);
+			stack.set(QuarkDataComponents.IS_COMPASS_CALCULATED, true);
+			stack.set(QuarkDataComponents.WAS_IN_NETHER, nether);
 		}
 	}
 
 	public static boolean isCompassCalculated(ItemStack stack) {
-		return stack.hasTag() && ItemNBTHelper.getBoolean(stack, TAG_COMPASS_CALCULATED, false);
+		return Boolean.TRUE.equals(stack.get(QuarkDataComponents.WAS_IN_NETHER));
 	}
 
 	@ZetaLoadModule(clientReplacement = true)

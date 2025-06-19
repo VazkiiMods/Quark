@@ -96,11 +96,11 @@ public class QuarkDataComponents {
 
     // Seed pouch
     public static final DataComponentType<ItemStack> STORED_ITEM = register(
-            Quark.asResource("storedItem"), builder -> builder.persistent(ItemStack.CODEC).networkSynchronized(ItemStack.STREAM_CODEC)
+            Quark.asResource("stored_item"), builder -> builder.persistent(ItemStack.CODEC).networkSynchronized(ItemStack.STREAM_CODEC)
     );
 
     public static final DataComponentType<Integer> ITEM_COUNT = register(
-            Quark.asResource("itemCount"), builder -> builder.persistent(Codec.INT).networkSynchronized(ByteBufCodecs.INT)
+            Quark.asResource("item_count"), builder -> builder.persistent(Codec.INT).networkSynchronized(ByteBufCodecs.INT)
     );
 
     // For Tater
@@ -108,17 +108,34 @@ public class QuarkDataComponents {
             Quark.asResource("ticks"), builder -> builder.persistent(Codec.INT).networkSynchronized(ByteBufCodecs.INT)
     );
 
-    // For Compasses that work everywhere
+    // For "Compasses Work Everywhere"
     public static final DataComponentType<Boolean> IS_POS_SET = register(
-            Quark.asResource("is_pos_set"), builder -> builder.persistent(Codec.BOOL).networkSynchronized(ByteBufCodecs.BOOL)
+            Quark.asResource("compass_position_set"), builder -> builder.persistent(Codec.BOOL).networkSynchronized(ByteBufCodecs.BOOL)
+    );
+
+    public static final DataComponentType<Boolean> WAS_IN_NETHER = register(
+            Quark.asResource("compass_in_nether"), builder -> builder.persistent(Codec.BOOL).networkSynchronized(ByteBufCodecs.BOOL)
     );
 
     public static final DataComponentType<Integer> NETHER_TARGET_X = register(
-            Quark.asResource("nether_target_x"), builder -> builder.persistent(Codec.INT).networkSynchronized(ByteBufCodecs.INT)
+            Quark.asResource("nether_x"), builder -> builder.persistent(Codec.INT).networkSynchronized(ByteBufCodecs.INT)
     );
 
     public static final DataComponentType<Integer> NETHER_TARGET_Z = register(
-            Quark.asResource("nether_target_z"), builder -> builder.persistent(Codec.INT).networkSynchronized(ByteBufCodecs.INT)
+            Quark.asResource("nether_z"), builder -> builder.persistent(Codec.INT).networkSynchronized(ByteBufCodecs.INT)
+    );
+
+    public static final DataComponentType<Boolean> IS_COMPASS_CALCULATED = register(
+            Quark.asResource("is_compass_calculated"), builder -> builder.persistent(Codec.BOOL).networkSynchronized(ByteBufCodecs.BOOL)
+    );
+
+    //todo: Consider merging this and the one above?
+    public static final DataComponentType<Boolean> IS_CLOCK_CALCULATED = register(
+            Quark.asResource("is_clock_calculated"), builder -> builder.persistent(Codec.BOOL).networkSynchronized(ByteBufCodecs.BOOL)
+    );
+
+    public static final DataComponentType<Boolean> TABLE_ONLY_ENCHANTS = register(
+            Quark.asResource("only_show_table_enchantments"), builder -> builder.persistent(Codec.BOOL).networkSynchronized(ByteBufCodecs.BOOL)
     );
 
 

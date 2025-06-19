@@ -10,12 +10,14 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent;
 import net.minecraft.client.renderer.GameRenderer;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.FormattedText;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.inventory.tooltip.TooltipComponent;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.MapItem;
+import net.minecraft.world.level.saveddata.maps.MapId;
 import net.minecraft.world.level.saveddata.maps.MapItemSavedData;
 
 import org.jetbrains.annotations.NotNull;
@@ -49,7 +51,7 @@ public class MapTooltips {
 			PoseStack pose = guiGraphics.pose();
 
 			MapItemSavedData mapdata = MapItem.getSavedData(stack, mc.level);
-			Integer mapID = MapItem.getMapId(stack);
+			MapId mapID = stack.get(DataComponents.MAP_ID);
 
 			if(mapdata == null)
 				return;

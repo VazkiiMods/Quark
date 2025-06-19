@@ -18,6 +18,7 @@ import net.minecraft.world.item.Rarity;
 import net.minecraft.world.level.block.entity.JukeboxBlockEntity;
 import org.violetmoon.quark.base.handler.QuarkSounds;
 import org.violetmoon.quark.base.item.QuarkMusicDiscItem;
+import org.violetmoon.quark.mixin.mixins.client.accessor.AccessorLevelRenderer;
 import org.violetmoon.zeta.config.Config;
 import org.violetmoon.zeta.event.bus.LoadEvent;
 import org.violetmoon.zeta.event.bus.PlayEvent;
@@ -77,7 +78,7 @@ public class AmbientDiscsModule extends ZetaModule {
 			LevelRenderer render = mc.levelRenderer;
 			BlockPos pos = tile.getBlockPos();
 
-			SoundInstance sound = render.playingJukeboxSongs.get(pos);
+			SoundInstance sound = ((AccessorLevelRenderer)render).getPlayingJukeboxSongs().get(pos);
 			SoundManager soundEngine = mc.getSoundManager();
 			if(sound == null || !soundEngine.isActive(sound)) {
 				if(sound != null) {
@@ -98,7 +99,7 @@ public class AmbientDiscsModule extends ZetaModule {
 
 				SimpleSoundInstance simplesound = new SimpleSoundInstance(disc.soundSupplier.get().getLocation(), SoundSource.RECORDS, (float) AmbientDiscsModule.volume, 1.0F, SoundInstance.createUnseededRandom(), true, 0, SoundInstance.Attenuation.LINEAR, pos.getX(), pos.getY(), pos.getZ(), false);
 
-				render.playingJukeboxSongs.put(pos, simplesound);
+				((AccessorLevelRenderer)render).getPlayingJukeboxSongs().put(pos, simplesound);
 				soundEngine.play(simplesound);
 
 				if(mc.level != null)
