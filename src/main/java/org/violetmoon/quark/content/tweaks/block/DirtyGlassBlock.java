@@ -16,8 +16,8 @@ import org.violetmoon.zeta.module.ZetaModule;
  *         Created at 12:49 PM on 8/24/19.
  */
 public class DirtyGlassBlock extends ZetaGlassBlock {
-
-	private static final float[] BEACON_COLOR_MULTIPLIER = new float[] { 0.25F, 0.125F, 0F };
+	// Red - 63, Blue - 31, Green - 0
+	private static final int BEACON_COLOR_MULTIPLIER = 4136704;
 
 	public DirtyGlassBlock(String regname, @Nullable ZetaModule module, Properties properties) {
 		super(regname, module, true, properties);
@@ -30,6 +30,7 @@ public class DirtyGlassBlock extends ZetaGlassBlock {
 	@Nullable
 	@Override
 	public Integer getBeaconColorMultiplierZeta(BlockState state, LevelReader world, BlockPos pos, BlockPos beaconPos) {
+
 		return BEACON_COLOR_MULTIPLIER;
 	}
 

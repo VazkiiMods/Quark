@@ -44,7 +44,7 @@ public class EnchantmentsBegoneModule extends ZetaModule {
 		enchantments.clear();
 
 		for(String enchantKey : enchantmentsToBegone) {
-			Enchantment enchantment = BuiltInRegistries.ENCHANTMENT.get(ResourceLocation.parse(enchantKey));
+			Holder<Enchantment> enchantment = BuiltInRegistries.ENCHANTMENT.get(ResourceLocation.parse(enchantKey));
 			if(enchantment != null)
 				enchantments.add(enchantment);
 		}

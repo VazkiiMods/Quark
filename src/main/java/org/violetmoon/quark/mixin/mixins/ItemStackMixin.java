@@ -49,10 +49,10 @@ public class ItemStackMixin implements PseudoAccessorItemStack {
 	private void hasTagIfBaked(Item.TooltipContext context, Player player, TooltipFlag flag, CallbackInfoReturnable<List<Component>> cir,
 							   @Share("removedEnchantments") LocalBooleanRef ref) {
 		ItemStack self = (ItemStack) (Object) this;
-		if(!self.hasTag() && GoldToolsHaveFortuneModule.shouldShowEnchantments(self)) {
+		/*if(!self.hasTag() && GoldToolsHaveFortuneModule.shouldShowEnchantments(self)) {
 			ref.set(true);
 			self.setTag(new CompoundTag());
-		}
+		}*/
 	}
 
 	@ModifyExpressionValue(method = "getTooltipLines", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/item/ItemStack;hasTag()Z", ordinal = 0))
@@ -63,8 +63,7 @@ public class ItemStackMixin implements PseudoAccessorItemStack {
 	@Inject(method = "getTooltipLines", at = @At("RETURN"))
 	private void removeTagIfBaked(Item.TooltipContext context, Player p_41652_, TooltipFlag p_41653_, CallbackInfoReturnable<List<Component>> cir, @Share("removedEnchantments") LocalBooleanRef ref) {
 		ItemStack self = (ItemStack) (Object) this;
-		if(ref.get())
-			self.setTag(null);
+		//if(ref.get()) self.setTag(null);
 	}
 
 	@ModifyArg(method = "getTooltipLines", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/item/ItemStack;appendEnchantmentNames(Ljava/util/List;Lnet/minecraft/nbt/ListTag;)V"))

@@ -302,9 +302,9 @@ public class MatrixEnchantingTableBlockEntity extends AbstractEnchantingTableBlo
 				int count = influencer.getInfluenceStack(world, pos, state);
 
 				List<Holder.Reference<Enchantment>> influencedEnchants = world.registryAccess().lookupOrThrow(Registries.ENCHANTMENT).listElements()
-						.filter((it) -> influencer.influencesEnchantment(world, pos, state, it.value())).toList();
+						.filter((it) -> influencer.influencesEnchantment(world, pos, state, it)).toList();
 				List<Holder.Reference<Enchantment>> dampenedEnchants = world.registryAccess().lookupOrThrow(Registries.ENCHANTMENT).listElements()
-						.filter((it) -> influencer.dampensEnchantment(world, pos, state, it.value())).toList();
+						.filter((it) -> influencer.dampensEnchantment(world, pos, state, it)).toList();
 				if(!influencedEnchants.isEmpty() || !dampenedEnchants.isEmpty()) {
 					for(Holder.Reference<Enchantment> e : influencedEnchants) {
 						int curr = influences.getOrDefault(e.value(), 0);
@@ -432,7 +432,7 @@ public class MatrixEnchantingTableBlockEntity extends AbstractEnchantingTableBlo
 		}
 
 		@Override
-		public float[] getEnchantmentInfluenceColor(BlockGetter world, BlockPos pos, BlockState state) {
+		public int getEnchantmentInfluenceColor(BlockGetter world, BlockPos pos, BlockState state) {
 			DyeColor color = getColor(state);
 			return color == null ? null : color.getTextureDiffuseColor();
 		}
@@ -456,22 +456,22 @@ public class MatrixEnchantingTableBlockEntity extends AbstractEnchantingTableBlo
 		}
 
 		@Override
-		public boolean influencesEnchantment(BlockGetter world, BlockPos pos, BlockState state, Enchantment enchantment) {
+		public boolean influencesEnchantment(BlockGetter world, BlockPos pos, BlockState state, Holder<Enchantment> enchantment) {
 			DyeColor color = getColor(state);
 			if(color == null)
 				return false;
 			Influence influence = MatrixEnchantingModule.candleInfluences.get(color);
-			List<Enchantment> boosts = inverted ? influence.dampen() : influence.boost();
+			List<Holder<Enchantment>> boosts = inverted ? influence.dampen() : influence.boost();
 			return boosts.contains(enchantment);
 		}
 
 		@Override
-		public boolean dampensEnchantment(BlockGetter world, BlockPos pos, BlockState state, Enchantment enchantment) {
+		public boolean dampensEnchantment(BlockGetter world, BlockPos pos, BlockState state, Holder<Enchantment> enchantment) {
 			DyeColor color = getColor(state);
 			if(color == null)
 				return false;
 			Influence influence = MatrixEnchantingModule.candleInfluences.get(color);
-			List<Enchantment> dampens = inverted ? influence.boost() : influence.dampen();
+			List<Holder<Enchantment>> dampens = inverted ? influence.boost() : influence.dampen();
 			return dampens.contains(enchantment);
 		}
 	}

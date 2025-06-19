@@ -71,11 +71,11 @@ public class InventoryTransferHandler {
 	//	}
 
 	private static boolean hasProvider(Object te) {
-		return te instanceof BlockEntity be && Quark.ZETA.capabilityManager.hasCapability(QuarkCapabilities.TRANSFER, be);
+		return false /*te instanceof BlockEntity be && Quark.ZETA.capabilityManager.hasCapability(QuarkCapabilities.TRANSFER, be)*/;
 	}
 
 	private static ITransferManager getProvider(Object te) {
-		return Quark.ZETA.capabilityManager.getCapability(QuarkCapabilities.TRANSFER, (BlockEntity) te);
+		return null /*Quark.ZETA.capabilityManager.getCapability(QuarkCapabilities.TRANSFER, (BlockEntity) te)*/;
 	}
 
 	public static boolean accepts(AbstractContainerMenu container, Player player) {

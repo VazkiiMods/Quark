@@ -12,9 +12,9 @@ import net.minecraft.world.item.crafting.*;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 
-public class MixedExclusionRecipe implements CraftingRecipe, IShapedRecipe<CraftingContainer> {
+public class MixedExclusionRecipe /*implements CraftingRecipe, IShapedRecipe<CraftingContainer>*/ {
 
-	public static final RecipeSerializer<MixedExclusionRecipe> SERIALIZER = new Serializer();
+	/*public static final RecipeSerializer<MixedExclusionRecipe> SERIALIZER = new Serializer();
 
 	private NonNullList<Ingredient> ingredients;
 
@@ -130,7 +130,7 @@ public class MixedExclusionRecipe implements CraftingRecipe, IShapedRecipe<Craft
 
 	private static class Serializer implements RecipeSerializer<MixedExclusionRecipe> {
 
-		/*
+
 		@NotNull
 		@Override
 		public MixedExclusionRecipe fromJson(@NotNull ResourceLocation arg0, JsonObject arg1) {
@@ -147,7 +147,7 @@ public class MixedExclusionRecipe implements CraftingRecipe, IShapedRecipe<Craft
 		public void toNetwork(FriendlyByteBuf arg0, MixedExclusionRecipe arg1) {
 			arg0.writeUtf(arg1.type);
 		}
-		 */
+
 
 		private MixedExclusionRecipe forType(String type) {
 			return switch(type) {
@@ -158,5 +158,5 @@ public class MixedExclusionRecipe implements CraftingRecipe, IShapedRecipe<Craft
 			};
 		}
 	}
-
+*/
 }

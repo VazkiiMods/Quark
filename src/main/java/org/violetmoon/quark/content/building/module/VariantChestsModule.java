@@ -33,7 +33,6 @@ import org.violetmoon.quark.content.building.block.VariantTrappedChestBlock;
 import org.violetmoon.quark.content.building.block.be.VariantChestBlockEntity;
 import org.violetmoon.quark.content.building.block.be.VariantTrappedChestBlockEntity;
 import org.violetmoon.quark.content.building.client.render.be.VariantChestRenderer;
-import org.violetmoon.quark.content.building.recipe.MixedExclusionRecipe;
 import org.violetmoon.quark.mixin.mixins.accessor.AccessorAbstractChestedHorse;
 import org.violetmoon.zeta.client.SimpleWithoutLevelRenderer;
 import org.violetmoon.zeta.client.event.load.ZClientSetup;
@@ -98,7 +97,7 @@ public class VariantChestsModule extends ZetaModule {
 
 	@LoadEvent
 	public final void register(ZRegister event) {
-		event.getRegistry().register(MixedExclusionRecipe.SERIALIZER, "mixed_exclusion", Registries.RECIPE_SERIALIZER);
+		//event.getRegistry().register(MixedExclusionRecipe.SERIALIZER, "mixed_exclusion", Registries.RECIPE_SERIALIZER);
 
 		for(Wood s : VanillaWoods.ALL)
 			makeChestBlocks(s.name(), Blocks.CHEST, s.soundPlanks());

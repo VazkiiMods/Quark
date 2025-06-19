@@ -3,6 +3,7 @@ package org.violetmoon.quark.content.world.module;
 import com.google.common.base.Functions;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
+import net.minecraft.data.worldgen.features.TreeFeatures;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.tags.BiomeTags;
 import net.minecraft.world.level.block.ComposterBlock;
@@ -31,6 +32,7 @@ import org.violetmoon.zeta.world.WorldGenHandler;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @ZetaLoadModule(category = "world")
 public class BlossomTreesModule extends ZetaModule {
@@ -89,7 +91,12 @@ public class BlossomTreesModule extends ZetaModule {
 		tree.leaves = new BlossomLeavesBlock(regname, this, color);
 
 		tree.configuredFeatureKey = configuredFeatureKey;
-		tree.grower = new TreeGrower(configuredFeatureKey);
+		tree.grower = new TreeGrower(
+				regname,
+				Optional.empty(),
+				Optional.of(configuredFeatureKey),
+				Optional.empty()
+		);
 		tree.sapling = new ZetaSaplingBlock(regname, this, tree.grower);
 
 		event.getVariantRegistry().addFlowerPot(tree.sapling, this.zeta().registry.getRegistryName(tree.sapling, BuiltInRegistries.BLOCK).getPath(), Functions.identity()); //sure

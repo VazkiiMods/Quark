@@ -25,14 +25,11 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.inventory.InventoryMenu;
-import net.minecraft.world.item.BannerItem;
-import net.minecraft.world.item.ItemDisplayContext;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.MapItem;
-import net.minecraft.world.item.ShieldItem;
+import net.minecraft.world.item.*;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BannerBlockEntity;
 import net.minecraft.world.level.block.entity.BannerPatternLayers;
+import net.minecraft.world.level.saveddata.maps.MapId;
 import net.minecraft.world.level.saveddata.maps.MapItemSavedData;
 import net.minecraft.world.phys.Vec3;
 
@@ -44,6 +41,7 @@ import org.violetmoon.quark.base.Quark;
 import org.violetmoon.quark.content.building.entity.GlassItemFrame;
 import org.violetmoon.quark.content.building.entity.GlassItemFrame.SignAttachment;
 import org.violetmoon.quark.content.building.module.GlassItemFrameModule;
+import org.violetmoon.quark.mixin.mixins.client.accessor.AccessorEntityRenderDispatcher;
 
 import java.util.List;
 
@@ -73,7 +71,7 @@ public class GlassItemFrameRenderer extends EntityRenderer<GlassItemFrame> {
 
 		Minecraft mc = Minecraft.getInstance();
 		this.itemRenderer = mc.getItemRenderer();
-		this.defaultRenderer = (ItemFrameRenderer<?>) mc.getEntityRenderDispatcher().renderers.get(EntityType.ITEM_FRAME);
+		this.defaultRenderer = (ItemFrameRenderer<?>) ((AccessorEntityRenderDispatcher)mc.getEntityRenderDispatcher()).getRenderers().get(EntityType.ITEM_FRAME);
 	}
 
 	@Override
@@ -178,13 +176,13 @@ public class GlassItemFrameRenderer extends EntityRenderer<GlassItemFrame> {
 			int rotation = mapdata != null ? itemFrame.getRotation() % 4 * 2 : itemFrame.getRotation();
 			matrix.mulPose(Axis.ZP.rotationDegrees((float) rotation * 360.0F / 8.0F));
 
-			if(!NeoForge.EVENT_BUS.post(new RenderItemInFrameEvent(itemFrame, defaultRenderer, matrix, buff, light))) {
+			if(!NeoForge.EVENT_BUS.post(new RenderItemInFrameEvent(itemFrame, defaultRenderer, matrix, buff, light)).isCanceled()) {
 				if(mapdata != null) {
 					matrix.mulPose(Axis.ZP.rotationDegrees(180.0F));
 					matrix.scale(0.0078125F, 0.0078125F, 0.0078125F);
 					matrix.translate(-64.0F, -64.0F, 62.5F); // <- Use 62.5 instead of 64 to prevent z-fighting
 
-					Integer mapID = MapItem.getMapId(stack);
+					MapId mapID = stack.get(DataComponents.MAP_ID);
 					this.mc.gameRenderer.getMapRenderer().render(matrix, buff, mapID, mapdata, true, light);
 				} else {
 					float s = (float) GlassItemFrameModule.itemRenderScale;
@@ -195,7 +193,7 @@ public class GlassItemFrameRenderer extends EntityRenderer<GlassItemFrame> {
 						matrix.pushPose();
 						matrix.translate(0.0001F, -0.5001F, 0.55F);
 						matrix.scale(0.799999F, 0.399999F, 0.5F);
-						BannerRenderer.renderPatterns(matrix, buff, light, OverlayTexture.NO_OVERLAY, bannerModel, ModelBakery.BANNER_BASE, true, patterns);
+						BannerRenderer.renderPatterns(matrix, buff, light, OverlayTexture.NO_OVERLAY, bannerModel, ModelBakery.BANNER_BASE, true, DyeColor.WHITE, patterns);
 						matrix.popPose();
 					} else {
 						if(stack.getItem() instanceof ShieldItem) {

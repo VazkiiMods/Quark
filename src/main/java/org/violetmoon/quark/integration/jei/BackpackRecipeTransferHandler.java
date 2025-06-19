@@ -32,7 +32,7 @@ import java.util.Optional;
  * @author mezz, tbh
  *
  */
-public class BackpackRecipeTransferHandler implements IRecipeTransferHandler<BackpackMenu, CraftingRecipe> {
+public class BackpackRecipeTransferHandler implements IRecipeTransferHandler<BackpackMenu, RecipeHolder<CraftingRecipe>> {
 
 	private static final IntSet PLAYER_INV_INDEXES = IntArraySet.of(0, 1, 3, 4);
 
@@ -56,13 +56,13 @@ public class BackpackRecipeTransferHandler implements IRecipeTransferHandler<Bac
 	}
 
 	@Override
-	public RecipeType<CraftingRecipe> getRecipeType() {
+	public RecipeType<RecipeHolder<CraftingRecipe>> getRecipeType() {
 		return RecipeTypes.CRAFTING;
 	}
 
 	@Nullable
 	@Override
-	public IRecipeTransferError transferRecipe(BackpackMenu container, CraftingRecipe recipe, IRecipeSlotsView recipeSlotsView, Player player, boolean maxTransfer, boolean doTransfer) {
+	public IRecipeTransferError transferRecipe(BackpackMenu container, RecipeHolder<CraftingRecipe> recipe, IRecipeSlotsView recipeSlotsView, Player player, boolean maxTransfer, boolean doTransfer) {
 		if(!handlerHelper.recipeTransferHasServerSupport()) {
 			Component tooltipMessage = Component.translatable("jei.tooltip.error.recipe.transfer.no.server");
 			return this.handlerHelper.createUserErrorWithTooltip(tooltipMessage);

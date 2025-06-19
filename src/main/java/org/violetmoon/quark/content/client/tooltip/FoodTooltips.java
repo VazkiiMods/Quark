@@ -13,6 +13,7 @@ import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.FormattedText;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.effect.MobEffectCategory;
 import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.inventory.tooltip.TooltipComponent;
@@ -24,6 +25,13 @@ import org.violetmoon.zeta.client.event.play.ZGatherTooltipComponents;
 import java.util.List;
 
 public class FoodTooltips {
+	//Grabbed from client.Gui.
+	public static final ResourceLocation FOOD_EMPTY_HUNGER_SPRITE = ResourceLocation.withDefaultNamespace("hud/food_empty_hunger");
+	public static final ResourceLocation FOOD_HALF_HUNGER_SPRITE = ResourceLocation.withDefaultNamespace("hud/food_half_hunger");
+	public static final ResourceLocation FOOD_FULL_HUNGER_SPRITE = ResourceLocation.withDefaultNamespace("hud/food_full_hunger");
+	public static final ResourceLocation FOOD_EMPTY_SPRITE = ResourceLocation.withDefaultNamespace("hud/food_empty");
+	public static final ResourceLocation FOOD_HALF_SPRITE = ResourceLocation.withDefaultNamespace("hud/food_half");
+	public static final ResourceLocation FOOD_FULL_SPRITE = ResourceLocation.withDefaultNamespace("hud/food_full");
 
 	private static boolean isPoison(FoodProperties food) {
 		for(FoodProperties.PossibleEffect effect : food.effects()) {
@@ -122,23 +130,30 @@ public class FoodTooltips {
 					RenderSystem.setShader(GameRenderer::getPositionTexShader);
 					RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
 
-					for(int i = 0; i < renderCount; i++) {
+					for (int i = 0; i < renderCount; i++) {
 						int x = tooltipX + i * 9 - 1;
 
-						int u = 16;
-						if(poison)
-							u += 117;
-						int v = 27;
+						// Outlines/Empty
+						if (poison) {
+							guiGraphics.blit(FOOD_EMPTY_HUNGER_SPRITE, x, y, 0, 0, 9, 9, 9, 9);
+						} else {
+							guiGraphics.blit(FOOD_EMPTY_SPRITE, x, y, 0, 0, 9, 9, 9, 9);
+						}
 
-						guiGraphics.blit(Gui.GUI_ICONS_LOCATION, x, y, u, v, 9, 9, 256, 256);
-
-						u = 52;
-						if(fract && i == (renderCount - 1))
-							u += 9;
-						if(poison)
-							u += 36;
-
-						guiGraphics.blit(Gui.GUI_ICONS_LOCATION, x, y, u, v, 9, 9, 256, 256);
+						// Half
+						if (fract && i == (renderCount - 1)) {
+							if (poison) {
+								guiGraphics.blit(FOOD_HALF_HUNGER_SPRITE, x, y, 0, 0, 9, 9, 9, 9);
+							} else {
+								guiGraphics.blit(FOOD_HALF_SPRITE, x, y, 0, 0, 9, 9, 9, 9);
+							}
+						} else {
+							if (poison) {
+								guiGraphics.blit(FOOD_FULL_HUNGER_SPRITE, x, y, 0, 0, 9, 9, 9, 9);
+							} else {
+								guiGraphics.blit(FOOD_FULL_SPRITE, x, y, 0, 0, 9, 9, 9, 9);
+							}
+						}
 					}
 
 					if(compress)

@@ -30,8 +30,9 @@ import java.util.Optional;
  * @author WireSegal
  *         Created at 2:08 PM on 8/24/19.
  */
-public class ExclusionRecipe implements CraftingRecipe {
-	public static final Serializer SERIALIZER = new Serializer();
+// todo: Remake the exclusions
+public class ExclusionRecipe /*implements CraftingRecipe*/ {
+	/*public static final Serializer SERIALIZER = new Serializer();
 
 	protected final CraftingRecipe parent;
 	private final List<ResourceLocation> excluded;
@@ -203,5 +204,5 @@ public class ExclusionRecipe implements CraftingRecipe {
 		public StreamCodec<RegistryFriendlyByteBuf, ExclusionRecipe> streamCodec() {
 			return null;
 		}
-	}
+	}*/
 }

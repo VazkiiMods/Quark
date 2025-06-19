@@ -93,20 +93,20 @@ public class PickarangModule extends ZetaModule {
 
         knownTypes.add(type);
         type.setEntityType(entityType, thrownFactory);
-        return (PickarangItem) new PickarangItem(name, this, propertiesFor(type.durability, type.isFireResistant()), type).setCondition(condition);
+        return (PickarangItem) new PickarangItem(name, this, propertiesFor(type), type).setCondition(condition);
     }
 
-    private Item.Properties propertiesFor(int durability, boolean fireResist) {
+    private <T extends AbstractPickarang<T>> Item.Properties propertiesFor(PickarangType<T> type) {
         Item.Properties properties = new Item.Properties()
                 .stacksTo(1);
 
-        if (durability > 0)
-            properties.durability(durability);
+        if (type.durability > 0)
+            properties.durability(type.durability);
 
-        if (fireResist)
+        if (type.isFireResistant())
             properties.fireResistant();
 
-        properties.attributes(PickarangItem.createAttributes());
+        properties.attributes(PickarangItem.createAttributes(type));
 
         return properties;
     }

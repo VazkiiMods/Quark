@@ -120,7 +120,7 @@ public class PickarangItem extends ZetaItem {
 		return InteractionResultHolder.sidedSuccess( itemstack, worldIn.isClientSide);
 	}
 
-	public static ItemAttributeModifiers createAttributes() {
+	public static ItemAttributeModifiers createAttributes(PickarangType<?> type) {
 		ItemAttributeModifiers.Builder builder = ItemAttributeModifiers.builder();
 
 		builder.add(Attributes.ATTACK_DAMAGE, new AttributeModifier(Quark.asResource("pickarang_attack_damage"), type.attackDamage, AttributeModifier.Operation.ADD_VALUE), EquipmentSlotGroup.MAINHAND);

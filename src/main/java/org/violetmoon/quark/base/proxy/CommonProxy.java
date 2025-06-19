@@ -1,7 +1,6 @@
 package org.violetmoon.quark.base.proxy;
 
 import net.minecraft.core.RegistryAccess;
-import net.minecraft.core.registries.Registries;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
@@ -16,7 +15,6 @@ import org.violetmoon.quark.base.handler.ContributorRewardHandler;
 import org.violetmoon.quark.base.handler.QuarkSounds;
 import org.violetmoon.quark.base.handler.WoodSetHandler;
 import org.violetmoon.quark.base.network.QuarkNetwork;
-import org.violetmoon.quark.base.recipe.ExclusionRecipe;
 import org.violetmoon.zeta.event.bus.LoadEvent;
 import org.violetmoon.zeta.event.load.ZRegister;
 import org.violetmoon.zeta.module.ZetaCategory;
@@ -71,7 +69,7 @@ public class CommonProxy {
 	//TODO find a better place for this little one-off thing, lol
 	@LoadEvent
 	public void recipe(ZRegister event) {
-		event.getRegistry().register(ExclusionRecipe.SERIALIZER, "exclusion", Registries.RECIPE_SERIALIZER);
+		//event.getRegistry().register(ExclusionRecipe.SERIALIZER, "exclusion", Registries.RECIPE_SERIALIZER);
 	}
 
 	/**

@@ -124,18 +124,18 @@ public class MatrixEnchantingTableBlock extends EnchantingTableBlock implements 
 							IEnchantmentInfluencer influencer = MatrixEnchantingTableBlockEntity.getInfluencerFromBlock(state, worldIn, blockpos);
 
 							if(influencer != null) {
-								float[] comp = influencer.getEnchantmentInfluenceColor(worldIn, blockpos, state);
+								int comp = influencer.getEnchantmentInfluenceColor(worldIn, blockpos, state);
 								ParticleOptions extra = influencer.getExtraParticleOptions(worldIn, blockpos, state);
 								double chance = influencer.getExtraParticleChance(worldIn, blockpos, state);
 
-								if(comp != null || extra != null) {
+								if(extra != null) {
 									int steps = 20;
 									double dx = (double) (pos.getX() - blockpos.getX()) / steps;
 									double dy = (double) (pos.getY() - blockpos.getY()) / steps;
 									double dz = (double) (pos.getZ() - blockpos.getZ()) / steps;
 
 									for(int p = 0; p < steps; p++) {
-										boolean doDust = comp != null && rand.nextDouble() < 0.5;
+										boolean doDust = rand.nextDouble() < 0.5;
 										boolean doExtra = extra != null && rand.nextDouble() < chance;
 										if(!doDust && !doExtra)
 											continue;
@@ -145,7 +145,7 @@ public class MatrixEnchantingTableBlock extends EnchantingTableBlock implements 
 										double pz = blockpos.getZ() + 0.5 + dz * p + rand.nextDouble() * 0.2 - 0.1;
 
 										if(doDust)
-											worldIn.addParticle(new DustParticleOptions(new Vector3f(comp[0], comp[1], comp[2]), 1F), px, py, pz, 0, 0, 0);
+											worldIn.addParticle(new DustParticleOptions(new Vector3f((comp >> 16)/255f, (comp >> 8) / 255f, comp / 255f), 1F), px, py, pz, 0, 0, 0);
 										if(doExtra)
 											worldIn.addParticle(extra, px, py, pz, 0, 0, 0);
 									}

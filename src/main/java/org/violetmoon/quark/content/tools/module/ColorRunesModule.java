@@ -225,7 +225,13 @@ public class ColorRunesModule extends ZetaModule {
 
 	private static @Nullable IRuneColorProvider get(ItemStack stack) {
 
-		return Quark.ZETA.capabilityManager.getCapability(QuarkCapabilities.RUNE_COLOR, stack);
+		return new IRuneColorProvider() {
+			@Override
+			public RuneColor getRuneColor(ItemStack stack) {
+				//todo: Change this!
+				return RuneColor.WHITE;
+			}
+		}; /*Quark.ZETA.capabilityManager.getCapability(QuarkCapabilities.RUNE_COLOR, stack);*/
 	}
 
 	@ZetaLoadModule(clientReplacement = true)

@@ -1,6 +1,7 @@
 package org.violetmoon.quark.api;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Holder;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.level.BlockGetter;
@@ -13,7 +14,7 @@ import org.jetbrains.annotations.Nullable;
  */
 public interface IEnchantmentInfluencer {
 	@Nullable
-	float[] getEnchantmentInfluenceColor(BlockGetter world, BlockPos pos, BlockState state);
+	int getEnchantmentInfluenceColor(BlockGetter world, BlockPos pos, BlockState state);
 
 	default int getInfluenceStack(BlockGetter world, BlockPos pos, BlockState state) {
 		return 1;
@@ -28,7 +29,7 @@ public interface IEnchantmentInfluencer {
 		return 1;
 	}
 
-	boolean influencesEnchantment(BlockGetter world, BlockPos pos, BlockState state, Enchantment enchantment);
+	boolean influencesEnchantment(BlockGetter world, BlockPos pos, BlockState state, Holder<Enchantment> enchantment);
 
-	boolean dampensEnchantment(BlockGetter world, BlockPos pos, BlockState state, Enchantment enchantment);
+	boolean dampensEnchantment(BlockGetter world, BlockPos pos, BlockState state, Holder<Enchantment> enchantment);
 }

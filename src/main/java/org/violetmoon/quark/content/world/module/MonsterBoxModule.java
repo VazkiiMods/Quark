@@ -2,6 +2,7 @@ package org.violetmoon.quark.content.world.module;
 
 import java.util.ArrayList;
 
+import net.minecraft.resources.ResourceKey;
 import org.violetmoon.quark.base.Quark;
 import org.violetmoon.quark.base.util.QuarkWorldGenWeights;
 import org.violetmoon.quark.content.world.block.MonsterBoxBlock;
@@ -87,7 +88,7 @@ public class MonsterBoxModule extends ZetaModule {
 				&& entity.getPersistentData().getBoolean(TAG_MONSTER_BOX_SPAWNED)
 				&& entity.level().getGameRules().getBoolean(GameRules.RULE_DOMOBLOOT)
 				&& ((AccessorLivingEntity) entity).quark$lastHurtByPlayerTime() > 0) {
-			LootTable loot = serverLevel.getServer().reloadableRegistries().getLootTable(MONSTER_BOX_LOOT_TABLE).getLootTable(MONSTER_BOX_LOOT_TABLE);
+			LootTable loot = serverLevel.getServer().reloadableRegistries().getLootTable(ResourceKey.create(Registries.LOOT_TABLE, MONSTER_BOX_LOOT_TABLE));
 			ObjectArrayList<ItemStack> generatedLoot = loot.getRandomItems(getLootParamsBuilder(entity, true, event.getSource()).create(LootContextParamSets.ENTITY));
 			entity.captureDrops(new ArrayList<>());
 			for(ItemStack stack : generatedLoot)

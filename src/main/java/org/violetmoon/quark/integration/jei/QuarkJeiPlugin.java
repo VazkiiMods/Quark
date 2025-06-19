@@ -9,6 +9,7 @@ import mezz.jei.api.recipe.RecipeType;
 import mezz.jei.api.recipe.vanilla.IJeiAnvilRecipe;
 import mezz.jei.api.recipe.vanilla.IVanillaRecipeFactory;
 import mezz.jei.api.registration.*;
+import mezz.jei.library.ingredients.subtypes.SubtypeInterpreters;
 import net.minecraft.client.renderer.Rect2i;
 import net.minecraft.core.Holder;
 import net.minecraft.core.component.DataComponents;
@@ -55,13 +56,13 @@ public class QuarkJeiPlugin implements IModPlugin {
 
     @Override
     public void registerItemSubtypes(@NotNull ISubtypeRegistration registration) {
-        registration.useNbtForSubtypes(AncientTomesModule.ancient_tome);
+        //registration.registerSubtypeInterpreter(AncientTomesModule.ancient_tome);
     }
 
     @Override
     public void registerVanillaCategoryExtensions(@NotNull IVanillaCategoryExtensionRegistration registration) {
-        registration.getCraftingCategory().addExtension(ElytraDuplicationRecipe.class, ElytraDuplicationExtension::new);
-        registration.getCraftingCategory().addExtension(SlabToBlockRecipe.class, SlabToBlockExtension::new);
+        //registration.getCraftingCategory().addExtension(ElytraDuplicationRecipe.class, ElytraDuplicationExtension::new);
+        //registration.getCraftingCategory().addExtension(SlabToBlockRecipe.class, SlabToBlockExtension::new);
     }
 
     private boolean matrix() {
