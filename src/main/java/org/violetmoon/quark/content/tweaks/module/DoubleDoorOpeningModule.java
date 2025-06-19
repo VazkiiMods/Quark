@@ -2,6 +2,7 @@ package org.violetmoon.quark.content.tweaks.module;
 
 import com.google.common.base.Predicate;
 import com.google.common.base.Predicates;
+import net.createmod.catnip.platform.CatnipServices;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.registries.Registries;
@@ -135,7 +136,7 @@ public class DoubleDoorOpeningModule extends ZetaModule {
 			handling = false;
 
 			if(opened)
-				QuarkClient.ZETA_CLIENT.sendToServer(new DoubleDoorMessage(pos));
+				CatnipServices.NETWORK.sendToServer(new DoubleDoorMessage(pos));
 		}
 	}
 }

@@ -12,6 +12,7 @@ package org.violetmoon.quark.content.management.module;
 
 import java.util.UUID;
 
+import net.createmod.catnip.platform.CatnipServices;
 import org.lwjgl.glfw.GLFW;
 import org.violetmoon.quark.base.Quark;
 import org.violetmoon.quark.base.QuarkClient;
@@ -130,7 +131,7 @@ public class ItemSharingModule extends ZetaModule {
 
 			//TODO: smuggle into a correctly signed chat message, so stuff like discord integration picks up on it
 
-			QuarkClient.ZETA_CLIENT.sendToServer(new ShareItemC2SMessage(stack));
+			CatnipServices.NETWORK.sendToServer(new ShareItemC2SMessage(stack));
 			return true;
 		}
 

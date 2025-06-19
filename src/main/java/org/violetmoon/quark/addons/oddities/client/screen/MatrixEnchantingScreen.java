@@ -2,6 +2,7 @@ package org.violetmoon.quark.addons.oddities.client.screen;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
+import net.createmod.catnip.platform.CatnipServices;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
@@ -359,7 +360,7 @@ public class MatrixEnchantingScreen extends AbstractContainerScreen<MatrixEnchan
 
 	private void send(int operation, int arg0, int arg1, int arg2) {
 		MatrixEnchanterOperationMessage message = new MatrixEnchanterOperationMessage(operation, arg0, arg1, arg2);
-		QuarkClient.ZETA_CLIENT.sendToServer(message);
+		CatnipServices.NETWORK.sendToServer(message);
 	}
 
 	private void click() {

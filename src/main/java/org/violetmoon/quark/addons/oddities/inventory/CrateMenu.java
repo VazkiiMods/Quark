@@ -1,5 +1,6 @@
 package org.violetmoon.quark.addons.oddities.inventory;
 
+import net.createmod.catnip.platform.CatnipServices;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.player.Inventory;
@@ -219,7 +220,7 @@ public class CrateMenu extends AbstractContainerMenu {
 			broadcastChanges();
 
 			if(packet)
-				QuarkClient.ZETA_CLIENT.sendToServer(new ScrollCrateMessage(down));
+				CatnipServices.NETWORK.sendToServer(new ScrollCrateMessage(down));
 		}
 	}
 

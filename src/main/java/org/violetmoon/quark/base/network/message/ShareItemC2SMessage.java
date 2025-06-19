@@ -1,14 +1,13 @@
 package org.violetmoon.quark.base.network.message;
 
 import net.createmod.catnip.net.base.ServerboundPacketPayload;
+import net.createmod.catnip.platform.CatnipServices;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.ItemStack;
-
-import org.violetmoon.quark.base.Quark;
 import org.violetmoon.quark.base.network.QuarkNetwork;
 import org.violetmoon.quark.content.management.module.ItemSharingModule;
 
@@ -28,7 +27,7 @@ public record ShareItemC2SMessage(ItemStack toShare) implements ServerboundPacke
 
 		Component senderName = player.getDisplayName();
 
-		Quark.ZETA.network.sendToAllPlayers(new ShareItemS2CMessage(player.getUUID(), senderName, toShare), server);
+		CatnipServices.NETWORK.sendToAllClients(new ShareItemS2CMessage(player.getUUID(), senderName, toShare));
 	}
 
 	@Override

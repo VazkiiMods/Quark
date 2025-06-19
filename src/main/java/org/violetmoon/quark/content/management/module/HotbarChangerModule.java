@@ -4,6 +4,7 @@ import com.mojang.blaze3d.platform.Window;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 
+import net.createmod.catnip.platform.CatnipServices;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
@@ -185,7 +186,7 @@ public class HotbarChangerModule extends ZetaModule {
 				else if(hotbarChangeOpen)
 					for(int i = 0; i < 3; i++)
 						if(isKeyDownOrFallback(mc.options.keyHotbarSlots[i], 49 + i, currInput)) {
-							QuarkClient.ZETA_CLIENT.sendToServer(new ChangeHotbarMessage(i + 1));
+							CatnipServices.NETWORK.sendToServer(new ChangeHotbarMessage(i + 1));
 							hotbarChangeOpen = false;
 							currentHeldItem = mc.player.getInventory().selected;
 							return;

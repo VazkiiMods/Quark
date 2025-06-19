@@ -13,6 +13,7 @@ package org.violetmoon.quark.content.tweaks.module;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
+import net.createmod.catnip.platform.CatnipServices;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -30,7 +31,13 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.*;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.BonemealableBlock;
+import net.minecraft.world.level.block.BushBlock;
+import net.minecraft.world.level.block.CropBlock;
+import net.minecraft.world.level.block.GrowingPlantBlock;
+import net.minecraft.world.level.block.LevelEvent;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.phys.BlockHitResult;
@@ -43,7 +50,6 @@ import org.jetbrains.annotations.Nullable;
 import org.violetmoon.quark.api.event.SimpleHarvestEvent;
 import org.violetmoon.quark.api.event.SimpleHarvestEvent.ActionType;
 import org.violetmoon.quark.base.Quark;
-import org.violetmoon.quark.base.QuarkClient;
 import org.violetmoon.quark.base.network.message.HarvestMessage;
 import org.violetmoon.zeta.config.Config;
 import org.violetmoon.zeta.event.bus.LoadEvent;
@@ -324,7 +330,7 @@ public class SimpleHarvestModule extends ZetaModule {
 
 		if(level.isClientSide) {
 			if(inHand.isEmpty())
-				QuarkClient.ZETA_CLIENT.sendToServer(new HarvestMessage(pos, hand));
+				CatnipServices.NETWORK.sendToServer(new HarvestMessage(pos, hand));
 		} else {
 			if(harvestingCostsDurability && isHoe)
 				inHand.hurtAndBreak(1, player, Player.getSlotForHand(InteractionHand.MAIN_HAND));

@@ -9,6 +9,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.TextColor;
 import net.minecraft.network.protocol.Packet;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.EquipmentSlot;
@@ -110,11 +111,11 @@ public class ColorRunesModule extends ZetaModule {
 
 	private static final Map<ThrownTrident, ItemStack> TRIDENT_STACK_REFERENCES = new WeakHashMap<>();
 
-	public static void syncTrident(Consumer<Packet<?>> packetConsumer, ThrownTrident trident, boolean force) {
+	public static void syncTrident(Consumer<CustomPacketPayload> packetConsumer, ThrownTrident trident, boolean force) {
 		ItemStack stack = ((AccessorAbstractArrow)trident).quark$getPickupItem();
 		ItemStack prev = TRIDENT_STACK_REFERENCES.get(trident);
 		if(force || prev == null || ItemStack.isSameItemSameComponents(stack, prev))
-			packetConsumer.accept(Quark.ZETA.network.wrapInVanilla(new UpdateTridentMessage(trident.getId(), stack), ZetaNetworkDirection.PLAY_TO_CLIENT));
+			packetConsumer.accept(new UpdateTridentMessage(trident.getId(), stack));
 		else
 			TRIDENT_STACK_REFERENCES.put(trident, stack);
 	}

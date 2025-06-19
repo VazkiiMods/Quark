@@ -1,5 +1,6 @@
 package org.violetmoon.quark.content.management.module;
 
+import net.createmod.catnip.platform.CatnipServices;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.sounds.SimpleSoundInstance;
@@ -41,7 +42,7 @@ public class InventorySortingModule extends ZetaModule {
 						if(enablePlayerInventory) {
 							if(satisfyingClick)
 								click();
-							QuarkClient.ZETA_CLIENT.sendToServer(new SortInventoryMessage(true));
+							CatnipServices.NETWORK.sendToServer(new SortInventoryMessage(true));
 						}
 					},
 					provider("sort", true, () -> enablePlayerInventory),
@@ -53,7 +54,7 @@ public class InventorySortingModule extends ZetaModule {
 						if(enablePlayerInventoryInChests) {
 							if(satisfyingClick)
 								click();
-							QuarkClient.ZETA_CLIENT.sendToServer(new SortInventoryMessage(true));
+							CatnipServices.NETWORK.sendToServer(new SortInventoryMessage(true));
 						}
 					},
 					provider("sort_inventory", true, () -> enablePlayerInventoryInChests),
@@ -65,7 +66,7 @@ public class InventorySortingModule extends ZetaModule {
 						if(enableChests) {
 							if(satisfyingClick)
 								click();
-							QuarkClient.ZETA_CLIENT.sendToServer(new SortInventoryMessage(false));
+							CatnipServices.NETWORK.sendToServer(new SortInventoryMessage(false));
 						}
 					},
 					provider("sort_container", false, () -> enableChests),
@@ -73,7 +74,7 @@ public class InventorySortingModule extends ZetaModule {
 		}
 
 		private InventoryButtonHandler.ButtonProvider provider(String tooltip, boolean forcePlayer, BooleanSupplier condition) {
-			return (parent, x, y) -> !condition.getAsBoolean() ? null : new MiniInventoryButton(parent, 0, tooltip.equals("sort_container") ? parent.getXSize() - 18 : x, tooltip.equals("sort_container") ? 5 : y, "quark.gui.button." + tooltip, (b) -> QuarkClient.ZETA_CLIENT.sendToServer(new SortInventoryMessage(forcePlayer)));
+			return (parent, x, y) -> !condition.getAsBoolean() ? null : new MiniInventoryButton(parent, 0, tooltip.equals("sort_container") ? parent.getXSize() - 18 : x, tooltip.equals("sort_container") ? 5 : y, "quark.gui.button." + tooltip, (b) -> CatnipServices.NETWORK.sendToServer(new SortInventoryMessage(forcePlayer)));
 		}
 
 		private void click() {

@@ -1,5 +1,6 @@
 package org.violetmoon.quark.content.tools.item;
 
+import net.createmod.catnip.animation.AnimationTickHolder;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.*;
 import net.minecraft.core.component.DataComponents;
@@ -357,7 +358,7 @@ public class PathfindersQuillItem extends ZetaItem implements CreativeTabManager
 	public static MutableComponent getSearchingComponent() {
 		MutableComponent comp = Component.translatable("quark.misc.quill_searching");
 
-		int dots = ((QuarkClient.ticker.ticksInGame / 10) % 4);
+		int dots = ((AnimationTickHolder.getTicks() / 10) % 4);
 		for(int i = 0; i < dots; i++)
 			comp.append(".");
 

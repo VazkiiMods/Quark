@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Objects;
 
 import com.mojang.blaze3d.platform.GlStateManager;
+import net.createmod.catnip.platform.CatnipServices;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.lwjgl.glfw.GLFW;
@@ -164,7 +165,7 @@ public class VariantSelectorModule extends ZetaModule {
 	public void onPlayerJoin(ZPlayer.LoggedIn event) {
 		if (event.getPlayer() instanceof ServerPlayer player) {
 			String variant = getSavedVariant(player);
-			Quark.ZETA.network.sendToPlayer(new PlaceVariantRestoreMessage(variant), player);
+			CatnipServices.NETWORK.sendToClient(player, new PlaceVariantRestoreMessage(variant));
 		}
 	}
 
@@ -234,7 +235,7 @@ public class VariantSelectorModule extends ZetaModule {
 
 		public static void setClientVariant(String variant, boolean sync) {
 			if(sync && !Objects.equals(clientVariant, variant)) {
-				QuarkClient.ZETA_CLIENT.sendToServer(new PlaceVariantUpdateMessage(variant));
+				CatnipServices.NETWORK.sendToServer(new PlaceVariantUpdateMessage(variant));
 			}
 
             clientVariant = variant;

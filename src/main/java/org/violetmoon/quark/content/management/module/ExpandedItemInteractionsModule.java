@@ -1,6 +1,7 @@
 package org.violetmoon.quark.content.management.module;
 
 import com.mojang.datafixers.util.Either;
+import net.createmod.catnip.platform.CatnipServices;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
@@ -453,7 +454,7 @@ public class ExpandedItemInteractionsModule extends ZetaModule {
 							event.setCanceled(true);
 							if(scrollDelta < -0.1 || scrollDelta > 0.1) {
 								rotateBundle(underStack, scrollDelta);
-								QuarkClient.ZETA_CLIENT.sendToServer(new ScrollOnBundleMessage(menu.containerId, menu.getStateId(), under.index, scrollDelta));
+								CatnipServices.NETWORK.sendToServer(new ScrollOnBundleMessage(menu.containerId, menu.getStateId(), under.index, scrollDelta));
 							}
 						}
 					}

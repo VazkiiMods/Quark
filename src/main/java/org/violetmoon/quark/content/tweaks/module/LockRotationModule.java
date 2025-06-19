@@ -8,6 +8,7 @@ import java.util.UUID;
 
 import com.mojang.blaze3d.platform.GlStateManager;
 import io.netty.buffer.ByteBuf;
+import net.createmod.catnip.platform.CatnipServices;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import org.violetmoon.quark.api.IRotationLockable;
@@ -221,7 +222,7 @@ public class LockRotationModule extends ZetaModule {
 					clientProfile = null;
 				else
 					clientProfile = newProfile;
-				QuarkClient.ZETA_CLIENT.sendToServer(new SetLockProfileMessage(clientProfile));
+				CatnipServices.NETWORK.sendToServer(new SetLockProfileMessage(clientProfile));
 			}
 		}
 

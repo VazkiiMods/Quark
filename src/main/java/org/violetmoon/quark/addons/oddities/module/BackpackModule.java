@@ -1,5 +1,6 @@
 package org.violetmoon.quark.addons.oddities.module;
 
+import net.createmod.catnip.platform.CatnipServices;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.color.item.ItemColor;
 import net.minecraft.client.gui.screens.MenuScreens;
@@ -162,7 +163,7 @@ public class BackpackModule extends ZetaModule {
 
 	public static void requestBackpack() {
 		heldStack = Minecraft.getInstance().player.inventoryMenu.getCarried();
-		QuarkClient.ZETA_CLIENT.sendToServer(new HandleBackpackMessage(true));
+		CatnipServices.NETWORK.sendToServer(new HandleBackpackMessage(true));
 	}
 
 	public static boolean isEntityWearingBackpack(Entity e) {

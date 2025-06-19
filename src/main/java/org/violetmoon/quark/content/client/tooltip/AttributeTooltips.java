@@ -154,13 +154,13 @@ public class AttributeTooltips {
 			var map = capturedModifiers.get(slot);
 			if(slot == AttributeSlot.MAINHAND) {
 				if(!map.containsKey(Attributes.ATTACK_DAMAGE) && (map.containsKey(Attributes.ATTACK_SPEED) || EnchantmentHelper.getDamageBonus(stack, MobType.UNDEFINED) > 0))
-					map.put(Attributes.ATTACK_DAMAGE.value(), new AttributeModifier(ResourceLocation.fromNamespaceAndPath("quark", "ign_id"), 0, AttributeModifier.Operation.ADD_VALUE));
+					map.put(Attributes.ATTACK_DAMAGE.value(), new AttributeModifier(Quark.asResource("ign_id"), 0, AttributeModifier.Operation.ADD_VALUE));
 
 				if(!map.containsKey(Attributes.ATTACK_SPEED) && map.containsKey(Attributes.ATTACK_DAMAGE))
-					map.put(Attributes.ATTACK_SPEED.value(), new AttributeModifier(ResourceLocation.fromNamespaceAndPath("quark", "ign_id"), 0, AttributeModifier.Operation.ADD_VALUE));
+					map.put(Attributes.ATTACK_SPEED.value(), new AttributeModifier(Quark.asResource("ign_id"), 0, AttributeModifier.Operation.ADD_VALUE));
 
 				if(!map.containsKey(Attributes.ATTACK_KNOCKBACK) && Quark.ZETA.itemExtensions.get(stack).getEnchantmentLevelZeta(stack, Enchantments.KNOCKBACK) > 0)
-					map.put(Attributes.ATTACK_KNOCKBACK.value(), new AttributeModifier(ResourceLocation.fromNamespaceAndPath("quark", "ign_id"), 0, AttributeModifier.Operation.ADD_VALUE));
+					map.put(Attributes.ATTACK_KNOCKBACK.value(), new AttributeModifier(Quark.asResource("ign_id"), 0, AttributeModifier.Operation.ADD_VALUE));
 			}
 			return map;
 		}

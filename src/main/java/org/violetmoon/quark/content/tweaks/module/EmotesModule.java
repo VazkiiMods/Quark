@@ -6,6 +6,7 @@ import com.mojang.blaze3d.platform.Window;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 
+import net.createmod.catnip.platform.CatnipServices;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
@@ -222,7 +223,7 @@ public class EmotesModule extends ZetaModule {
 								x, y,
 								EMOTE_BUTTON_WIDTH - 1, EMOTE_BUTTON_WIDTH - 1,
 								desc,
-								() -> QuarkClient.ZETA_CLIENT.sendToServer(new RequestEmoteMessage(desc.getRegistryName()))
+								() -> CatnipServices.NETWORK.sendToServer(new RequestEmoteMessage(desc.getRegistryName()))
 							);
 
 							emoteButtons.add(button);
@@ -261,7 +262,7 @@ public class EmotesModule extends ZetaModule {
 				for(KeyMapping key : Client.emoteKeybinds.keySet()) {
 					if(key.isDown()) {
 						String emote = Client.emoteKeybinds.get(key);
-						QuarkClient.ZETA_CLIENT.sendToServer(new RequestEmoteMessage(emote));
+						CatnipServices.NETWORK.sendToServer(new RequestEmoteMessage(emote));
 						return;
 					}
 				}

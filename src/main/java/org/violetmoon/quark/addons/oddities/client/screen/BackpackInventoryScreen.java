@@ -2,6 +2,7 @@ package org.violetmoon.quark.addons.oddities.client.screen;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 
+import net.createmod.catnip.platform.CatnipServices;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.Button;
@@ -77,7 +78,7 @@ public class BackpackInventoryScreen extends InventoryScreen implements IQuarkBu
 			ItemStack curr = player.containerMenu.getCarried();
 			BackpackMenu.saveCraftingInventory(player);
 			closeHack = true;
-			QuarkClient.ZETA_CLIENT.sendToServer(new HandleBackpackMessage(false));
+			CatnipServices.NETWORK.sendToServer(new HandleBackpackMessage(false));
 			minecraft.setScreen(new InventoryScreen(player));
 			player.inventoryMenu.setCarried(curr);
 		}

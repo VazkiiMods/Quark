@@ -1,9 +1,17 @@
 package org.violetmoon.quark.base.proxy;
 
-import java.time.LocalDateTime;
-import java.time.Month;
-
+import net.createmod.catnip.animation.AnimationTickHolder;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.core.RegistryAccess;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.BlockHitResult;
 import net.neoforged.fml.ModLoadingContext;
+import net.neoforged.neoforge.client.gui.IConfigScreenFactory;
 import org.jetbrains.annotations.Nullable;
 import org.violetmoon.quark.base.Quark;
 import org.violetmoon.quark.base.QuarkClient;
@@ -17,15 +25,9 @@ import org.violetmoon.quark.base.handler.ContributorRewardHandler;
 import org.violetmoon.quark.base.handler.WoodSetHandler;
 import org.violetmoon.quark.mixin.mixins.client.accessor.AccessorMultiPlayerGameMode;
 
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.screens.Screen;
-import net.minecraft.client.player.LocalPlayer;
-import net.minecraft.core.RegistryAccess;
-import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResult;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.level.Level;
-import net.minecraft.world.phys.BlockHitResult;
+import java.time.LocalDateTime;
+import java.time.Month;
+import java.util.function.Supplier;
 
 // TODO: can we merge quark client and this class?
 public class ClientProxy extends CommonProxy {
@@ -53,7 +55,9 @@ public class ClientProxy extends CommonProxy {
 
 		super.start(); //<- loads and initializes modules
 
-		ModLoadingContext.get().registerExtensionPoint(ConfigScreenFactory.class, () -> new ConfigScreenFactory((minecraft, screen) -> new QuarkConfigHomeScreen(screen)));
+		Supplier<IConfigScreenFactory> configScreen = () ->
+				(mc, previousScreen) -> new QuarkConfigHomeScreen(previousScreen);
+		ModLoadingContext.get().registerExtensionPoint(IConfigScreenFactory.class, configScreen);
 	}
 
 	@Override
@@ -78,7 +82,7 @@ public class ClientProxy extends CommonProxy {
 
 	@Override
 	public float getVisualTime() {
-		return QuarkClient.ticker.total;
+		return AnimationTickHolder.getTicks();
 	}
 
 	@Override
