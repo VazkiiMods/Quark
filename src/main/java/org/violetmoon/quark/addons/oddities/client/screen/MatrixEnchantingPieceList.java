@@ -59,28 +59,23 @@ public class MatrixEnchantingPieceList extends ObjectSelectionList<MatrixEnchant
 	}
 
 	protected int getMaxScroll2() {
-		return Math.max(0, this.getMaxPosition() - (this.y1 - this.y0 - 4));
+		return Math.max(0, this.getMaxPosition() - (this.getHeight() - this.getY() - 4));
 	}
 
 	private void renderScroll(GuiGraphics guiGraphics, int i, int j) {
 		int j1 = this.getMaxScroll2();
 		if(j1 > 0) {
-			int k1 = (int) ((float) ((this.y1 - this.y0) * (this.y1 - this.y0)) / (float) this.getMaxPosition());
-			k1 = Mth.clamp(k1, 32, this.y1 - this.y0 - 8);
-			int l1 = (int) this.getScrollAmount() * (this.y1 - this.y0 - k1) / j1 + this.y0;
-			if(l1 < this.y0) {
-				l1 = this.y0;
+			int k1 = (int) ((float) ((this.getHeight() - this.getY()) * (this.getHeight() - this.getY())) / (float) this.getMaxPosition());
+			k1 = Mth.clamp(k1, 32, this.getHeight() - this.getY() - 8);
+			int l1 = (int) this.getScrollAmount() * (this.getHeight() -  this.getY() - k1) / j1 + this.getY();
+			if(l1 < this.getY()) {
+				l1 = this.getY();
 			}
 
-			guiGraphics.fill(i, y1, j, y0, 0xFF000000);
+			guiGraphics.fill(i, getHeight(), j, getY(), 0xFF000000);
 			guiGraphics.fill(i, (l1 + k1), j, l1, 0xFF818181);
 			guiGraphics.fill(i, (l1 + k1 - 1), j - 1, l1, 0xFFc0c0c0);
 		}
-	}
-
-	@Override
-	protected void renderBackground(@NotNull GuiGraphics guiGraphics) {
-		// NO-OP
 	}
 
 	protected class PieceEntry extends ObjectSelectionList.Entry<PieceEntry> {

@@ -13,6 +13,7 @@ package org.violetmoon.quark.content.mobs.entity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Holder;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.RegistryFriendlyByteBuf;
@@ -35,18 +36,21 @@ import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.damagesource.DamageSources;
 import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.entity.*;
+import net.minecraft.world.entity.ai.Brain;
 import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier.Operation;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.goal.*;
+import net.minecraft.world.entity.ai.memory.MemoryModuleType;
 import net.minecraft.world.entity.animal.Animal;
 import net.minecraft.world.entity.animal.Bucketable;
 import net.minecraft.world.entity.animal.axolotl.Axolotl;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.vehicle.DismountHelper;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.component.CustomData;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
@@ -65,6 +69,7 @@ import net.neoforged.neoforge.fluids.FluidType;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.violetmoon.quark.base.Quark;
+import org.violetmoon.quark.base.components.QuarkDataComponents;
 import org.violetmoon.quark.base.handler.QuarkSounds;
 import org.violetmoon.quark.content.mobs.ai.RaveGoal;
 import org.violetmoon.quark.content.mobs.module.CrabsModule;
@@ -99,7 +104,7 @@ public class Crab extends Animal implements IEntityWithComplexSpawn, Bucketable 
 			entityData.set(SIZE_MODIFIER, sizeModifier);
 
 		PositionSource source = new EntityPositionSource(this, this.getEyeHeight());
-		this.dynamicJukeboxListener = new DynamicGameEventListener<>(new JukeboxListener(source, GameEvent.JUKEBOX_PLAY.getNotificationRadius()));
+		this.dynamicJukeboxListener = new DynamicGameEventListener<>(new JukeboxListener(source, GameEvent.JUKEBOX_PLAY.value().notificationRadius()));
 	}
 
 	@Override
@@ -116,11 +121,13 @@ public class Crab extends Animal implements IEntityWithComplexSpawn, Bucketable 
 	@SuppressWarnings("deprecation")
 	public void saveToBucketTag(@NotNull ItemStack stack) {
 		Bucketable.saveDefaultDataToBucketTag(this, stack);
-		CompoundTag tag = stack.getOrCreateTag();
 
-		if(noSpike)
-			tag.putBoolean("NoSpike", true);
-		tag.putInt(Axolotl.VARIANT_TAG, getVariant());
+
+		stack.set(DataComponents.BUCKET_ENTITY_DATA, CustomData.EMPTY);
+		CustomData.update(DataComponents.BUCKET_ENTITY_DATA, stack, tag -> {
+			tag.putInt("Variant", this.getVariant());
+			tag.putBoolean("NoSpike", noSpike);
+		});
 	}
 
 	@Override
@@ -128,8 +135,7 @@ public class Crab extends Animal implements IEntityWithComplexSpawn, Bucketable 
 	public void loadFromBucketTag(@NotNull CompoundTag tag) {
 		Bucketable.loadDefaultDataFromBucketTag(this, tag);
 
-		if(tag.contains("NoSpike"))
-			noSpike = tag.getBoolean("NoSpike");
+		if(tag.contains("NoSpike")) noSpike = tag.getBoolean("NoSpike");
 		entityData.set(VARIANT, tag.getInt(Axolotl.VARIANT_TAG));
 	}
 
@@ -437,7 +443,7 @@ public class Crab extends Animal implements IEntityWithComplexSpawn, Bucketable 
 
 	public boolean shouldStopRaving() {
 		return jukeboxPosition == null
-				|| !jukeboxPosition.closerToCenterThan(position(), GameEvent.JUKEBOX_PLAY.getNotificationRadius())
+				|| !jukeboxPosition.closerToCenterThan(position(), GameEvent.JUKEBOX_PLAY.value().notificationRadius())
 				|| !level().getBlockState(jukeboxPosition).is(Blocks.JUKEBOX);
 	}
 

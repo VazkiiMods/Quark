@@ -1,6 +1,7 @@
 package org.violetmoon.quark.content.tools.module;
 
 import net.minecraft.client.renderer.item.ItemProperties;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -11,8 +12,10 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.MobBucketItem;
+import net.minecraft.world.item.component.CustomData;
 import net.minecraft.world.level.gameevent.GameEvent;
 import org.violetmoon.quark.base.Quark;
+import org.violetmoon.quark.base.components.QuarkDataComponents;
 import org.violetmoon.quark.content.tools.item.SlimeInABucketItem;
 import org.violetmoon.zeta.client.event.load.ZClientSetup;
 import org.violetmoon.zeta.event.bus.LoadEvent;
@@ -50,7 +53,7 @@ public class SlimeInABucketModule extends ZetaModule {
 					if(!event.getLevel().isClientSide) {
 						ItemStack outStack = new ItemStack(slime_in_a_bucket);
 						CompoundTag cmp = event.getTarget().serializeAttachments(event.getLevel().registryAccess());
-						ItemNBTHelper.setCompound(outStack, SlimeInABucketItem.TAG_ENTITY_DATA, cmp);
+						outStack.set(DataComponents.ENTITY_DATA, CustomData.of(cmp));
 
 						if(stack.getCount() == 1)
 							player.setItemInHand(hand, outStack);
@@ -78,7 +81,7 @@ public class SlimeInABucketModule extends ZetaModule {
 		@LoadEvent
 		public void clientSetup(ZClientSetup event) {
 			event.enqueueWork(() -> ItemProperties.register(slime_in_a_bucket, Quark.asResource("excited"),
-					(stack, world, e, id) -> ItemNBTHelper.getBoolean(stack, SlimeInABucketItem.TAG_EXCITED, false) ? 1 : 0));
+					(stack, world, e, id) -> stack.get(QuarkDataComponents.EXCITED) ? 1 : 0));
 		}
 	}
 }

@@ -35,7 +35,8 @@ public class ProxiedItemStackHandler implements IItemHandler, IItemHandlerModifi
 		this.size = size;
 	}
 
-	private ListTag getStackList() {
+	//todo: Get this working
+	/*private ListTag getStackList() {
 		ListTag list = ItemNBTHelper.getList(stack, key, 10, true);
 		if(list == null)
 			ItemNBTHelper.setList(stack, key, list = new ListTag());
@@ -44,15 +45,15 @@ public class ProxiedItemStackHandler implements IItemHandler, IItemHandlerModifi
 			list.add(new CompoundTag());
 
 		return list;
-	}
+	}*/
 
 	private void writeStack(int index, @NotNull ItemStack stack) {
-		getStackList().set(index, stack.serializeNBT());
+		//getStackList().set(index, stack.serializeNBT());
 		onContentsChanged(index);
 	}
 
 	private ItemStack readStack(int index) {
-		return ItemStack.of(getStackList().getCompound(index));
+		return ItemStack.EMPTY; //new ItemStack(getStackList().getCompound(index));
 	}
 
 	@Override

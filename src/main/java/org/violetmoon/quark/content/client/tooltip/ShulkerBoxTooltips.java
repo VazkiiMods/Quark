@@ -53,7 +53,7 @@ public class ShulkerBoxTooltips {
 
 			ClientPacketListener listener = Minecraft.getInstance().getConnection();
 			BlockEntity te = BlockEntity.loadStatic(BlockPos.ZERO, ((BlockItem) stack.getItem()).getBlock().defaultBlockState(), cmp, listener.registryAccess());
-			if(te != null && te.getCapability(ForgeCapabilities.ITEM_HANDLER).isPresent()) {
+			if(te != null) {
 				List<Either<FormattedText, TooltipComponent>> tooltip = event.getTooltipElements();
 				List<Either<FormattedText, TooltipComponent>> tooltipCopy = new ArrayList<>(tooltip);
 
@@ -110,8 +110,8 @@ public class ShulkerBoxTooltips {
 					if(te instanceof RandomizableContainerBlockEntity randomizable)
 						randomizable.setLootTable(null, 0);
 
-					Optional<IItemHandler> handler = te.getCapability(ForgeCapabilities.ITEM_HANDLER, null);
-					handler.ifPresent((capability) -> {
+					//Optional<IItemHandler> handler = te.getCapability(ForgeCapabilities.ITEM_HANDLER, null);
+					/*handler.ifPresent((capability) -> {
 						ItemStack currentBox = stack;
 						int currentX = tooltipX;
 						int currentY = tooltipY - 1;
@@ -162,7 +162,7 @@ public class ShulkerBoxTooltips {
 						}
 
 						pose.popPose();
-					});
+					});*/
 
 				}
 			}

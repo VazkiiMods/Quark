@@ -13,6 +13,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.item.component.CustomData;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -65,7 +66,7 @@ public class ShulkerPackingModule extends ZetaModule {
 						if(be instanceof Nameable nameable && nameable.hasCustomName()) {
 							Component component = nameable.getCustomName();
 							if(component != null) {
-								shulkerBoxData.setCustomName(component);
+								shulkerBoxData.name = component;
 								newShulkerBox.set(DataComponents.CUSTOM_NAME, component);
 							}
 						}
@@ -80,7 +81,7 @@ public class ShulkerPackingModule extends ZetaModule {
 							offHand.shrink(1);
 						}
 
-						ItemNBTHelper.setCompound(newShulkerBox, "BlockEntityTag", shulkerBoxData.saveWithFullMetadata());
+						newShulkerBox.set(DataComponents.BLOCK_ENTITY_DATA, CustomData.of(shulkerBoxData.saveWithFullMetadata(level.registryAccess())));
 						ItemHandlerHelper.giveItemToPlayer(player, newShulkerBox, player.getInventory().selected);
 					}
 				}

@@ -3,6 +3,7 @@ package org.violetmoon.quark.addons.oddities.block.be;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
+import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundEvent;
@@ -157,16 +158,20 @@ public class CrateBlockEntity extends BaseContainerBlockEntity implements Worldl
 		return Component.translatable(CrateModule.crate.getDescriptionId());
 	}
 
-	@NotNull
 	@Override
-	protected AbstractContainerMenu createMenu(int id, @NotNull Inventory player) {
-		return new CrateMenu(id, player, this, crateData);
+	protected NonNullList<ItemStack> getItems() {
+		return null;
+	}
+
+	@Override
+	protected void setItems(NonNullList<ItemStack> p_332640_) {
+
 	}
 
 	@NotNull
 	@Override
-	protected IItemHandler createUnSidedHandler() {
-		return new CrateItemHandler();
+	protected AbstractContainerMenu createMenu(int id, @NotNull Inventory player) {
+		return new CrateMenu(id, player, this, crateData);
 	}
 
 	// Vaniller copy =========================

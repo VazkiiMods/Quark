@@ -56,7 +56,6 @@
     "PistonBaseBlockMixin",
     "PistonMovingBlockEntityMixin",
     "PlayerAdvancementsMixin",
-    "PotionUtilsMixin",
     "ProjectileWeaponItemMixin",
     "RegistrySetBuilderHackMixin",
     "ServerAdvancementManagerMixin",

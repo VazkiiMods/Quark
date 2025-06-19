@@ -29,8 +29,6 @@ public class TinyPotatoBlockItem extends ZetaBlockItem implements IRuneColorProv
 	private static final int NOT_MY_NAME = 17;
 	private static final List<String> TYPOS = List.of("vaskii", "vazki", "voskii", "vazkkii", "vazkki", "vazzki", "vaskki", "vozkii", "vazkil", "vaskil", "vazkill", "vaskill", "vaski");
 
-	private static final String TICKS = "notMyNameTicks";
-
 	public TinyPotatoBlockItem(Block block, Properties properties) {
 		super(block, properties);
 	}
@@ -63,10 +61,10 @@ public class TinyPotatoBlockItem extends ZetaBlockItem implements IRuneColorProv
 			}
 
 			//remove this?
-			if(tileTag.contains(TinyPotatoBlockEntity.TAG_NAME, Tag.TAG_STRING)) {
+			/*if(tileTag.contains(TinyPotatoBlockEntity.TAG_NAME, Tag.TAG_STRING)) {
 				stack.set(DataComponents.CUSTOM_NAME, (Component.Serializer.fromJson(tileTag.getString(TinyPotatoBlockEntity.TAG_NAME))));
 				tileTag.remove(TinyPotatoBlockEntity.TAG_NAME);
-			}
+			}*/
 		}
 
 		if(Boolean.TRUE.equals(stack.get(QuarkDataComponents.IS_ANGRY)))
