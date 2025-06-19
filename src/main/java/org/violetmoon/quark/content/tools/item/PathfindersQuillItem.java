@@ -22,13 +22,13 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.biome.BiomeSource;
 import net.minecraft.world.level.biome.Climate;
+import net.minecraft.world.level.saveddata.maps.MapDecorationTypes;
 import net.minecraft.world.level.saveddata.maps.MapItemSavedData;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
 import org.jetbrains.annotations.Nullable;
 import org.violetmoon.quark.base.Quark;
-import org.violetmoon.quark.base.QuarkClient;
 import org.violetmoon.quark.base.components.QuarkDataComponents;
 import org.violetmoon.quark.content.mobs.module.StonelingsModule;
 import org.violetmoon.quark.content.tools.module.PathfinderMapsModule;
@@ -346,10 +346,9 @@ public class PathfindersQuillItem extends ZetaItem implements CreativeTabManager
 		ItemStack stack = MapItem.create(level, targetPos.getX(), targetPos.getZ(), (byte) 2, true, true);
 
 		MapItem.renderBiomePreviewMap(level, stack);
-		MapItemSavedData.addTargetDecoration(stack, targetPos, "+", Type.RED_X);
+		MapItemSavedData.addTargetDecoration(stack, targetPos, "+", MapDecorationTypes.RED_X);
 		stack.set(DataComponents.CUSTOM_NAME, Component.translatable("item.quark.biome_map", biomeComponent));
-
-		stack.getOrCreateTagElement("display").putInt("MapColor", color);
+		stack.set(QuarkDataComponents.MAP_COLOR, color);
 		stack.set(QuarkDataComponents.IS_PATHFINDER, true);
 		return stack;
 	}

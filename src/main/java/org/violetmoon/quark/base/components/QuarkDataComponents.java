@@ -95,6 +95,10 @@ public class QuarkDataComponents {
             Quark.asResource("search_pos_leg_index"), builder -> builder.persistent(Codec.INT).networkSynchronized(ByteBufCodecs.INT)
     );
 
+    public static final DataComponentType<Integer> MAP_COLOR = register(
+            Quark.asResource("display"), builder -> builder.persistent(Codec.INT).networkSynchronized(ByteBufCodecs.INT)
+    );
+
     // Seed pouch
     public static final DataComponentType<ItemStack> STORED_ITEM = register(
             Quark.asResource("stored_item"), builder -> builder.persistent(ItemStack.CODEC).networkSynchronized(ItemStack.STREAM_CODEC)

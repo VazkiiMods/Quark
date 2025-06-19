@@ -41,8 +41,6 @@ import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 
 import org.violetmoon.quark.base.Quark;
-import org.violetmoon.quark.base.QuarkClient;
-import org.violetmoon.quark.base.components.QuarkDataComponents;
 import org.violetmoon.quark.content.tools.item.PathfindersQuillItem;
 import org.violetmoon.quark.content.tools.loot.InBiomeCondition;
 import org.violetmoon.zeta.advancement.ManualTrigger;
