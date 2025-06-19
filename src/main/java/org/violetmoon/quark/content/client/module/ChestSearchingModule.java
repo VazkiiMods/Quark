@@ -4,6 +4,10 @@ import java.util.*;
 import java.util.function.BiPredicate;
 import java.util.regex.Pattern;
 
+import net.minecraft.core.Holder;
+import net.minecraft.core.component.DataComponents;
+import net.minecraft.world.item.alchemy.PotionContents;
+import net.minecraft.world.item.enchantment.ItemEnchantments;
 import net.minecraft.world.level.Level;
 import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.items.IItemHandler;
@@ -26,7 +30,6 @@ import org.violetmoon.zeta.event.bus.LoadEvent;
 import org.violetmoon.zeta.event.bus.PlayEvent;
 import org.violetmoon.zeta.module.ZetaLoadModule;
 import org.violetmoon.zeta.module.ZetaModule;
-import org.violetmoon.zeta.util.ItemNBTHelper;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -49,7 +52,6 @@ import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.alchemy.PotionUtils;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -225,7 +227,7 @@ public class ChestSearchingModule extends ZetaModule {
 			Item item = stack.getItem();
 			ResourceLocation res = BuiltInRegistries.ITEM.getKey(item);
 			if(SimilarBlockTypeHandler.isShulkerBox(res)) {
-				CompoundTag cmp = ItemNBTHelper.getCompound(stack, "BlockEntityTag", true);
+				CompoundTag cmp = stack.get(DataComponents.BLOCK_ENTITY_DATA).copyTag();
 				Level level = Minecraft.getInstance().level;
 				if(cmp != null && level != null) {
 					if(!cmp.contains("id")) {
@@ -262,25 +264,26 @@ public class ChestSearchingModule extends ZetaModule {
 			}
 
 			if(stack.isEnchanted()) {
-				Map<Enchantment, Integer> enchants = EnchantmentHelper.getEnchantments(stack);
-				for(Enchantment e : enchants.keySet())
-					if(e != null && matcher.test(e.getFullname(enchants.get(e)).toString().toLowerCase(Locale.ROOT), search))
+				ItemEnchantments enchants = stack.get(DataComponents.ENCHANTMENTS);
+				for(Holder<Enchantment> e : enchants.keySet())
+					if(e != null && matcher.test(Enchantment.getFullname(e, enchants.getLevel(e)).toString().toLowerCase(Locale.ROOT), search))
 						return true;
 			}
 
 			List<Component> potionNames = new ArrayList<>();
-			PotionUtils.addPotionTooltip(stack, potionNames, 1F);
+			PotionContents.addPotionTooltip(stack.get(DataComponents.POTION_CONTENTS).getAllEffects(), (component) -> potionNames.add(component), 1F, Item.TooltipContext.EMPTY.tickRate());
 			for(Component s : potionNames) {
 				if(matcher.test(ChatFormatting.stripFormatting(s.toString().trim().toLowerCase(Locale.ROOT)), search))
 					return true;
 			}
 
-			for(Map.Entry<Enchantment, Integer> entry : EnchantmentHelper.getEnchantments(stack).entrySet()) {
+			//todo: Check if this is even necessary
+			/*for(Map.Entry<Enchantment, Integer> entry : EnchantmentHelper.getEnchantments(stack).entrySet()) {
 				int lvl = entry.getValue();
 				Enchantment e = entry.getKey();
 				if(e != null && matcher.test(e.getFullname(lvl).toString().toLowerCase(Locale.ROOT), search))
 					return true;
-			}
+			}*/
 
 			for(String tabDisplayName : BuiltInRegistries.CREATIVE_MODE_TAB.stream()
 				.filter(tab -> tab.contains(stack))

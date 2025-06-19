@@ -11,6 +11,7 @@ import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.item.enchantment.EnchantmentInstance;
 
+import net.minecraft.world.item.enchantment.ItemEnchantments;
 import org.violetmoon.zeta.config.Config;
 import org.violetmoon.zeta.event.bus.LoadEvent;
 import org.violetmoon.zeta.event.bus.PlayEvent;
@@ -84,10 +85,10 @@ public class EnchantmentsBegoneModule extends ZetaModule {
 		if(!staticEnabled || stack.isEmpty())
 			return stack;
 
-		Map<Enchantment, Integer> map = EnchantmentHelper.getEnchantments(stack);
+		ItemEnchantments map = EnchantmentHelper.getEnchantmentsForCrafting(stack);
 		if(map.keySet().removeIf(enchantments::contains)) {
 			ItemStack out = stack.copy();
-			EnchantmentHelper.setEnchantments(map, out);
+			EnchantmentHelper.setEnchantments(out, map);
 			return out;
 		}
 

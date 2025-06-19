@@ -16,7 +16,7 @@ import org.violetmoon.zeta.util.BooleanSuppliers;
 import java.util.function.BooleanSupplier;
 import java.util.function.Supplier;
 
-public class QuarkMusicDiscItem extends RecordItem implements IZetaItem {
+public class QuarkMusicDiscItem extends Item implements IZetaItem {
 
 	private final ZetaModule module;
 	public final boolean isAmbient;

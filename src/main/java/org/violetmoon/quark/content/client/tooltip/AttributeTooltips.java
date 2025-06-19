@@ -14,6 +14,7 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent;
 import net.minecraft.client.renderer.GameRenderer;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.FormattedText;
@@ -153,13 +154,13 @@ public class AttributeTooltips {
 			var map = capturedModifiers.get(slot);
 			if(slot == AttributeSlot.MAINHAND) {
 				if(!map.containsKey(Attributes.ATTACK_DAMAGE) && (map.containsKey(Attributes.ATTACK_SPEED) || EnchantmentHelper.getDamageBonus(stack, MobType.UNDEFINED) > 0))
-					map.put(Attributes.ATTACK_DAMAGE, new AttributeModifier(Util.NIL_UUID, "-", 0, AttributeModifier.Operation.ADD_VALUE));
+					map.put(Attributes.ATTACK_DAMAGE.value(), new AttributeModifier(ResourceLocation.fromNamespaceAndPath("quark", "ign_id"), 0, AttributeModifier.Operation.ADD_VALUE));
 
 				if(!map.containsKey(Attributes.ATTACK_SPEED) && map.containsKey(Attributes.ATTACK_DAMAGE))
-					map.put(Attributes.ATTACK_SPEED, new AttributeModifier(Util.NIL_UUID, "-", 0, AttributeModifier.Operation.ADD_VALUE));
+					map.put(Attributes.ATTACK_SPEED.value(), new AttributeModifier(ResourceLocation.fromNamespaceAndPath("quark", "ign_id"), 0, AttributeModifier.Operation.ADD_VALUE));
 
 				if(!map.containsKey(Attributes.ATTACK_KNOCKBACK) && Quark.ZETA.itemExtensions.get(stack).getEnchantmentLevelZeta(stack, Enchantments.KNOCKBACK) > 0)
-					map.put(Attributes.ATTACK_KNOCKBACK, new AttributeModifier(Util.NIL_UUID, "-", 0, AttributeModifier.Operation.ADD_VALUE));
+					map.put(Attributes.ATTACK_KNOCKBACK.value(), new AttributeModifier(ResourceLocation.fromNamespaceAndPath("quark", "ign_id"), 0, AttributeModifier.Operation.ADD_VALUE));
 			}
 			return map;
 		}
@@ -249,10 +250,21 @@ public class AttributeTooltips {
 		if(stack.isEmpty())
 			return false;
 
-		if(slot == AttributeSlot.POTION)
-			return (ItemNBTHelper.getInt(stack, "HideFlags", 0) & 32) == 0;
+		/*
+		 This will be remade in Quark 1.21.6, but I don't know if it will be fully accurate in 1.21.1.
+		 So, for future reference, heres the 1.20.1 code and a link to how the tooltip hiding works in 1.20.1
+		 https://minecraft.wiki/w/Item_format/Before_1.20.5#Display_Properties
 
-		return (ItemNBTHelper.getInt(stack, "HideFlags", 0) & 2) == 0;
+		 if(slot == AttributeSlot.POTION)
+		 	return (ItemNBTHelper.getInt(stack, "HideFlags", 0) & 32) == 0;
+
+		 return (ItemNBTHelper.getInt(stack, "HideFlags", 0) & 2) == 0;
+		 */
+
+		if(slot == AttributeSlot.POTION)
+			return stack.has(DataComponents.HIDE_ADDITIONAL_TOOLTIP);
+
+		return stack.has(DataComponents.HIDE_TOOLTIP);
 	}
 
 	private static double getAttribute(Player player, AttributeSlot slot, ItemStack stack, Multimap<Attribute, AttributeModifier> map, Attribute key) {

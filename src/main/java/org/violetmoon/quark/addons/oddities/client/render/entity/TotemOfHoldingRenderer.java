@@ -33,7 +33,7 @@ public class TotemOfHoldingRenderer extends EntityRenderer<TotemOfHoldingEntity>
 	public void render(TotemOfHoldingEntity entity, float entityYaw, float partialTicks, @NotNull PoseStack matrixStackIn, @NotNull MultiBufferSource bufferIn, int packedLightIn) {
 		int deathTicks = entity.getDeathTicks();
 		boolean dying = entity.isDying();
-		float time = QuarkClient.ticker.ticksInGame + partialTicks;
+		float time = entity.tickCount + partialTicks;
 		float scale = !dying ? 1F : Math.max(0, TotemOfHoldingEntity.DEATH_TIME - (deathTicks + partialTicks)) / TotemOfHoldingEntity.DEATH_TIME;
 		float rotation = time + (!dying ? 0 : (deathTicks + partialTicks) * 5);
 		double translation = !dying ? (Math.sin(time * 0.03) * 0.1) : ((deathTicks + partialTicks) / TotemOfHoldingEntity.DEATH_TIME * 5);

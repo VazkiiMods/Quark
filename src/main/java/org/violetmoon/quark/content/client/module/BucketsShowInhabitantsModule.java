@@ -4,6 +4,7 @@ import net.minecraft.client.color.item.ItemColor;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.renderer.item.ItemProperties;
 import net.minecraft.client.renderer.item.ItemPropertyFunction;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.world.entity.LivingEntity;
@@ -20,7 +21,6 @@ import org.violetmoon.quark.base.Quark;
 import org.violetmoon.quark.base.QuarkClient;
 import org.violetmoon.quark.content.mobs.entity.Crab;
 import org.violetmoon.quark.content.mobs.module.CrabsModule;
-import org.violetmoon.quark.content.tools.item.SlimeInABucketItem;
 import org.violetmoon.quark.content.tools.module.SlimeInABucketModule;
 import org.violetmoon.zeta.client.event.load.ZAddItemColorHandlers;
 import org.violetmoon.zeta.client.event.load.ZClientSetup;
@@ -28,7 +28,6 @@ import org.violetmoon.zeta.config.Config;
 import org.violetmoon.zeta.event.bus.LoadEvent;
 import org.violetmoon.zeta.module.ZetaLoadModule;
 import org.violetmoon.zeta.module.ZetaModule;
-import org.violetmoon.zeta.util.ItemNBTHelper;
 
 import java.util.UUID;
 import java.util.function.BooleanSupplier;
@@ -85,10 +84,10 @@ public class BucketsShowInhabitantsModule extends ZetaModule {
 
 			@Override
 			public float call(@NotNull ItemStack stack, @Nullable ClientLevel level, @Nullable LivingEntity entity, int id) {
-				if(!enabled || !featureEnabled.getAsBoolean())
+				if(!isEnabled() || !featureEnabled.getAsBoolean())
 					return 0;
 
-				return ItemNBTHelper.getInt(stack, Axolotl.VARIANT_TAG, 0) % maxVariants;
+				return stack.get(DataComponents.BUCKET_ENTITY_DATA).copyTag().getInt(Axolotl.VARIANT_TAG) % maxVariants;
 			}
 		}
 
@@ -102,10 +101,10 @@ public class BucketsShowInhabitantsModule extends ZetaModule {
 
 			@Override
 			public float call(@NotNull ItemStack stack, @Nullable ClientLevel level, @Nullable LivingEntity entity, int id) {
-				if(!enabled || !featureEnabled.getAsBoolean())
+				if(!isEnabled() || !featureEnabled.getAsBoolean())
 					return 0;
 
-				CompoundTag data = ItemNBTHelper.getCompound(stack, SlimeInABucketItem.TAG_ENTITY_DATA, true);
+				CompoundTag data = stack.get(DataComponents.BUCKET_ENTITY_DATA).copyTag();
 				if(data != null && data.hasUUID("UUID")) {
 					UUID uuid = data.getUUID("UUID");
 					if(VariantAnimalTexturesModule.Client.isShiny(uuid))
@@ -128,10 +127,10 @@ public class BucketsShowInhabitantsModule extends ZetaModule {
 
 			@Override
 			public float call(@NotNull ItemStack stack, @Nullable ClientLevel level, @Nullable LivingEntity entity, int id) {
-				if(!enabled || !featureEnabled.getAsBoolean())
+				if(!isEnabled() || !featureEnabled.getAsBoolean())
 					return 0;
 
-				CompoundTag tag = stack.getTag();
+				CompoundTag tag = stack.get(DataComponents.BUCKET_ENTITY_DATA).copyTag();
 				if(tag != null && tag.contains(TropicalFish.BUCKET_VARIANT_TAG, Tag.TAG_INT)) {
 					int variant = tag.getInt(TropicalFish.BUCKET_VARIANT_TAG);
 					return extractor.applyAsInt(variant) + 1;
@@ -154,17 +153,18 @@ public class BucketsShowInhabitantsModule extends ZetaModule {
 
 			@Override
 			public int getColor(@NotNull ItemStack stack, int layer) {
-		 		if(enabled && featureEnabled.getAsBoolean() && (layer == 1 || layer == 2)) {
-					CompoundTag tag = stack.getTag();
+		 		if(isEnabled() && featureEnabled.getAsBoolean() && (layer == 1 || layer == 2)) {
+					CompoundTag tag = stack.get(DataComponents.BUCKET_ENTITY_DATA).copyTag();
+
 					if(tag != null && tag.contains(TropicalFish.BUCKET_VARIANT_TAG, Tag.TAG_INT)) {
 						int variant = tag.getInt(TropicalFish.BUCKET_VARIANT_TAG);
 
 						DyeColor dyeColor = layer == 1 ? TropicalFish.getBaseColor(variant) : TropicalFish.getPatternColor(variant);
 						int colorComponents = dyeColor.getTextureDiffuseColor();
 
-						return ((int) (colorComponents * 255) << 16) |
-								((int) (colorComponents * 255) << 8) |
-								(int) (colorComponents * 255);
+						return ((colorComponents * 255) << 16) |
+								((colorComponents * 255) << 8) |
+                                (colorComponents * 255);
 					}
 				}
 

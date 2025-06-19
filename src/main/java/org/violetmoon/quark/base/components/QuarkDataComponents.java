@@ -54,43 +54,43 @@ public class QuarkDataComponents {
     );
 
     public static final DataComponentType<String> TAG_BIOME = register(
-            ResourceLocation.fromNamespaceAndPath("quark", "targetBiome"), builder -> builder.persistent(Codec.STRING).networkSynchronized(ByteBufCodecs.STRING_UTF8)
+            ResourceLocation.fromNamespaceAndPath("quark", "target_biome"), builder -> builder.persistent(Codec.STRING).networkSynchronized(ByteBufCodecs.STRING_UTF8)
     );
 
     public static final DataComponentType<Integer> TAG_COLOR = register(
-            ResourceLocation.fromNamespaceAndPath("quark", "targetBiomeColor"), builder -> builder.persistent(Codec.INT).networkSynchronized(ByteBufCodecs.INT)
+            ResourceLocation.fromNamespaceAndPath("quark", "target_biome_color"), builder -> builder.persistent(Codec.INT).networkSynchronized(ByteBufCodecs.INT)
     );
 
     public static final DataComponentType<Boolean> IS_UNDERGROUND = register(
-            ResourceLocation.fromNamespaceAndPath("quark", "targetBiomeUnderground"), builder -> builder.persistent(Codec.BOOL).networkSynchronized(ByteBufCodecs.BOOL)
+            ResourceLocation.fromNamespaceAndPath("quark", "target_biome_underground"), builder -> builder.persistent(Codec.BOOL).networkSynchronized(ByteBufCodecs.BOOL)
     );
 
     public static final DataComponentType<Boolean> IS_SEARCHING = register(
-            ResourceLocation.fromNamespaceAndPath("quark", "isSearchingForBiome"), builder -> builder.persistent(Codec.BOOL).networkSynchronized(ByteBufCodecs.BOOL)
+            ResourceLocation.fromNamespaceAndPath("quark", "is_searching_for_biome"), builder -> builder.persistent(Codec.BOOL).networkSynchronized(ByteBufCodecs.BOOL)
     );
 
     public static final DataComponentType<Integer> TAG_SOURCE_X = register(
-            ResourceLocation.fromNamespaceAndPath("quark", "searchSourceX"), builder -> builder.persistent(Codec.INT).networkSynchronized(ByteBufCodecs.INT)
+            ResourceLocation.fromNamespaceAndPath("quark", "search_source_x"), builder -> builder.persistent(Codec.INT).networkSynchronized(ByteBufCodecs.INT)
     );
 
     public static final DataComponentType<Integer> TAG_SOURCE_Z = register(
-            ResourceLocation.fromNamespaceAndPath("quark", "searchSourceZ"), builder -> builder.persistent(Codec.INT).networkSynchronized(ByteBufCodecs.INT)
+            ResourceLocation.fromNamespaceAndPath("quark", "search_source_z"), builder -> builder.persistent(Codec.INT).networkSynchronized(ByteBufCodecs.INT)
     );
 
     public static final DataComponentType<Integer> TAG_POS_X = register(
-            ResourceLocation.fromNamespaceAndPath("quark", "searchPosX"), builder -> builder.persistent(Codec.INT).networkSynchronized(ByteBufCodecs.INT)
+            ResourceLocation.fromNamespaceAndPath("quark", "search_pox_x"), builder -> builder.persistent(Codec.INT).networkSynchronized(ByteBufCodecs.INT)
     );
 
     public static final DataComponentType<Integer> TAG_POS_Z = register(
-            ResourceLocation.fromNamespaceAndPath("quark", "searchPosZ"), builder -> builder.persistent(Codec.INT).networkSynchronized(ByteBufCodecs.INT)
+            ResourceLocation.fromNamespaceAndPath("quark", "search_pos_z"), builder -> builder.persistent(Codec.INT).networkSynchronized(ByteBufCodecs.INT)
     );
 
     public static final DataComponentType<Integer> TAG_POS_LEG = register(
-            ResourceLocation.fromNamespaceAndPath("quark", "searchPosLeg"), builder -> builder.persistent(Codec.INT).networkSynchronized(ByteBufCodecs.INT)
+            ResourceLocation.fromNamespaceAndPath("quark", "search_pos_leg"), builder -> builder.persistent(Codec.INT).networkSynchronized(ByteBufCodecs.INT)
     );
 
     public static final DataComponentType<Integer> TAG_POS_LEG_INDEX = register(
-            ResourceLocation.fromNamespaceAndPath("quark", "searchPosLegIndex"), builder -> builder.persistent(Codec.INT).networkSynchronized(ByteBufCodecs.INT)
+            ResourceLocation.fromNamespaceAndPath("quark", "search_pos_leg_index"), builder -> builder.persistent(Codec.INT).networkSynchronized(ByteBufCodecs.INT)
     );
 
     // Seed pouch
@@ -101,6 +101,27 @@ public class QuarkDataComponents {
     public static final DataComponentType<Integer> ITEM_COUNT = register(
             ResourceLocation.fromNamespaceAndPath("quark", "itemCount"), builder -> builder.persistent(Codec.INT).networkSynchronized(ByteBufCodecs.INT)
     );
+
+    // For Tater
+    public static final DataComponentType<Integer> TICKS = register(
+            ResourceLocation.fromNamespaceAndPath("quark", "ticks"), builder -> builder.persistent(Codec.INT).networkSynchronized(ByteBufCodecs.INT)
+    );
+
+    // For Compasses that work everywhere
+    public static final DataComponentType<Boolean> IS_POS_SET = register(
+            ResourceLocation.fromNamespaceAndPath("quark", "is_pos_set"), builder -> builder.persistent(Codec.BOOL).networkSynchronized(ByteBufCodecs.BOOL)
+    );
+
+    public static final DataComponentType<Integer> NETHER_TARGET_X = register(
+            ResourceLocation.fromNamespaceAndPath("quark", "nether_target_x"), builder -> builder.persistent(Codec.INT).networkSynchronized(ByteBufCodecs.INT)
+    );
+
+    public static final DataComponentType<Integer> NETHER_TARGET_Z = register(
+            ResourceLocation.fromNamespaceAndPath("quark", "nether_target_z"), builder -> builder.persistent(Codec.INT).networkSynchronized(ByteBufCodecs.INT)
+    );
+
+
+
 
     private static <T> DataComponentType<T> register(ResourceLocation id, UnaryOperator<DataComponentType.Builder<T>> builderOp) {
         return Registry.register(BuiltInRegistries.DATA_COMPONENT_TYPE, id, builderOp.apply(DataComponentType.builder()).build());
