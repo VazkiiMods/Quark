@@ -24,6 +24,7 @@ import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.item.enchantment.ItemEnchantments;
 import net.minecraft.world.level.Level;
 import org.violetmoon.quark.base.Quark;
+import org.violetmoon.quark.base.util.ItemEnchantsUtil;
 import org.violetmoon.zeta.config.Config;
 import org.violetmoon.zeta.event.bus.LoadEvent;
 import org.violetmoon.zeta.event.bus.PlayEvent;
@@ -187,8 +188,8 @@ public class GameNerfsModule extends ZetaModule {
 				output = left.copy();
 			}
 
-			ItemEnchantments enchOutput = Optional.ofNullable(output.get(DataComponents.ENCHANTMENTS)).orElse(ItemEnchantments.EMPTY);
-			ItemEnchantments.Mutable toApply = new ItemEnchantments.Mutable(enchOutput);
+			ItemEnchantments enchLeft = Optional.ofNullable(output.get(DataComponents.ENCHANTMENTS)).orElse(ItemEnchantments.EMPTY);
+			ItemEnchantments.Mutable toApply = new ItemEnchantments.Mutable(enchLeft);
 			ItemEnchantments enchRight = Optional.ofNullable(right.get(DataComponents.ENCHANTMENTS)).orElse(ItemEnchantments.EMPTY);
 
 			if (!enchRight.isEmpty()) {
@@ -198,18 +199,18 @@ public class GameNerfsModule extends ZetaModule {
 			toApply.set(mending, 0);
 			output.set(DataComponents.ENCHANTMENTS, toApply.toImmutable());
 
-			Map<Enchantment, Integer> enchOutput = EnchantmentHelper.getEnchantments(output);
-			for(Enchantment enchantment : enchRight.keySet()) {
-				if(enchantment.canEnchant(output)) {
-					int level = enchRight.get(enchantment);
-					if(enchOutput.containsKey(enchantment)) {
-						int levelPresent = enchOutput.get(enchantment);
+			ItemEnchantments enchOutput = output.get(DataComponents.ENCHANTMENTS);
+			for(Holder<Enchantment> enchantment : enchRight.keySet()) {
+				if(enchantment.value().canEnchant(output)) {
+					int level = enchRight.getLevel(enchantment);
+					if(enchOutput.keySet().contains(enchantment)) {
+						int levelPresent = enchOutput.getLevel(enchantment);
 						if(level > levelPresent)
-							enchOutput.put(enchantment, level);
-						else if(level == levelPresent && enchantment.getMaxLevel() > level)
-							enchOutput.put(enchantment, level + 1);
+							enchOutput = ItemEnchantsUtil.addEnchantmentToList(enchOutput, enchantment, level);
+						else if(level == levelPresent && enchantment.value().getMaxLevel() > level)
+							enchOutput = ItemEnchantsUtil.addEnchantmentToList(enchOutput, enchantment, level + 1);
 					} else {
-						enchOutput.put(enchantment, level);
+						enchOutput = ItemEnchantsUtil.addEnchantmentToList(enchOutput, enchantment, level);
 					}
 				}
 			}

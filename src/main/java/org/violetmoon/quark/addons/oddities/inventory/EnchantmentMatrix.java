@@ -170,7 +170,7 @@ public class EnchantmentMatrix {
 			}
 
 			if(isValid
-					&& !EnchantmentsBegoneModule.shouldBegone(enchantment.value())
+					&& !EnchantmentsBegoneModule.shouldBegone(enchantment)
 					&& !MatrixEnchantingModule.disallowedEnchantments.contains(id)
 					//Neo versions of these methods do exist I think
 					//todo: An additional check exists to see if an enchantment was allowed on books, will need to be replaced. "|| (book && enchantment.isAllowedOnBooks())"

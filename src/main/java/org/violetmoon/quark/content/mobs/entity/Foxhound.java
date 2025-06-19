@@ -66,6 +66,7 @@ import org.violetmoon.quark.content.mobs.ai.FindPlaceToSleepGoal;
 import org.violetmoon.quark.content.mobs.ai.SleepGoal;
 import org.violetmoon.quark.content.mobs.module.FoxhoundModule;
 import org.violetmoon.quark.content.tweaks.ai.WantLoveGoal;
+import org.violetmoon.quark.mixin.mixins.accessor.AccessorWolf;
 
 import java.util.List;
 import java.util.Optional;
@@ -95,7 +96,8 @@ public class Foxhound extends Wolf implements Enemy {
 		super.defineSynchedData(builder);
 
 		//todo: Mixin accessor or accesswidener
-		setCollarColor(DyeColor.ORANGE);
+
+		((AccessorWolf)this).invokeSetCollarColor(DyeColor.ORANGE);
 		builder.define(TEMPTATION, false);
 		builder.define(IS_BLUE, false);
 		builder.define(TATERING, false);

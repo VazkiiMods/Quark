@@ -2,7 +2,9 @@ package org.violetmoon.quark.content.experimental.module;
 
 import com.google.common.collect.Lists;
 
+import net.minecraft.core.Holder;
 import net.minecraft.core.NonNullList;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
@@ -33,7 +35,7 @@ public class EnchantmentsBegoneModule extends ZetaModule {
 
 	private static boolean staticEnabled;
 
-	private static final List<Enchantment> enchantments = Lists.newArrayList();
+	private static final List<Holder<Enchantment>> enchantments = Lists.newArrayList();
 
 	@LoadEvent
 	public final void configChanged(ZConfigChanged event) {
@@ -59,8 +61,8 @@ public class EnchantmentsBegoneModule extends ZetaModule {
 
 		stacks.removeIf((it) -> {
 			if(it.is(Items.ENCHANTED_BOOK)) {
-				Map<Enchantment, Integer> enchants = EnchantmentHelper.getEnchantments(it);
-				for(Enchantment key : enchants.keySet()) {
+				ItemEnchantments enchants = it.get(DataComponents.ENCHANTMENTS);
+				for(Holder<Enchantment> key : enchants.keySet()) {
 					if(enchantments.contains(key)) {
 						return true;
 					}
@@ -70,7 +72,7 @@ public class EnchantmentsBegoneModule extends ZetaModule {
 		});
 	}
 
-	public static boolean shouldBegone(Enchantment enchantment) {
+	public static boolean shouldBegone(Holder<Enchantment> enchantment) {
 		return staticEnabled && enchantments.contains(enchantment);
 	}
 

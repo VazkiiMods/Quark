@@ -16,7 +16,6 @@ import org.violetmoon.zeta.event.play.loading.ZAttachCapabilities;
 public class CapabilityHandler {
 	private static final ResourceLocation DROPOFF_MANAGER = Quark.asResource("dropoff");
 	private static final ResourceLocation SORTING_HANDLER = Quark.asResource("sort");
-	private static final ResourceLocation MAGNET_TRACKER = Quark.asResource("magnet_tracker");
 	private static final ResourceLocation RUNE_COLOR_HANDLER = Quark.asResource("rune_color");
 
 	@PlayEvent
@@ -34,10 +33,5 @@ public class CapabilityHandler {
 	public static void attachTileCapabilities(ZAttachCapabilities.BlockEntityCaps event) {
 		if(event.getObject() instanceof ITransferManager impl)
 			event.addCapability(DROPOFF_MANAGER, QuarkCapabilities.TRANSFER, impl);
-	}
-
-	@PlayEvent
-	public static void attachLevelCapabilities(ZAttachCapabilities.LevelCaps event) {
-		event.addCapability(MAGNET_TRACKER, QuarkCapabilities.MAGNET_TRACKER_CAPABILITY, new MagnetTracker(event.getObject()));
 	}
 }

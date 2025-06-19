@@ -155,10 +155,11 @@ public class GoldToolsHaveFortuneModule extends ZetaModule {
 
 	public static void fakeEnchantmentTooltip(ItemStack stack, List<Component> components) {
 		if(staticEnabled && displayBakedEnchantmentsInTooltip)
+
 			for(Object2IntMap.Entry<Holder<Enchantment>> entry : Quark.ZETA.itemExtensions.get(stack).getAllEnchantmentsZeta(stack).entrySet()) {
 				int actualLevel = EnchantmentHelper.getTagEnchantmentLevel(entry.getKey(), stack);
 				if(actualLevel != entry.getValue()) {
-					Component comp = entry.getKey().getFullname(entry.getValue());
+					Component comp = Enchantment.getFullname(entry.getKey(), entry.getValue());
 					if(italicTooltip)
 						comp = comp.copy().withStyle(ChatFormatting.ITALIC);
 

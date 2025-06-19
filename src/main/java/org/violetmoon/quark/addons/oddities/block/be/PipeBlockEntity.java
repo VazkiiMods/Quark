@@ -379,6 +379,11 @@ public class PipeBlockEntity extends SimpleInventoryBlockEntity {
 	}
 
 	@Override
+	public void inventoryChanged(int i) {
+
+	}
+
+	@Override
 	public int getContainerSize() {
 		return 6;
 	}
@@ -427,9 +432,9 @@ public class PipeBlockEntity extends SimpleInventoryBlockEntity {
 		BlockEntity tile = world.getBlockEntity(truePos);
 
 		if(tile != null) {
-			if(tile instanceof PipeBlockEntity)
+			if (tile instanceof PipeBlockEntity)
 				return ConnectionType.PIPE;
-			else if(tile instanceof Container || tile.getCapability(ForgeCapabilities.ITEM_HANDLER, face.getOpposite()).isPresent())
+			else if (tile instanceof Container)
 				return canHaveOffset(state, pos, world, face) ? ConnectionType.TERMINAL_OFFSET : ConnectionType.TERMINAL;
 		}
 

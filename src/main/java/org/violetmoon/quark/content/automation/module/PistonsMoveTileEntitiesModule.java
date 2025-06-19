@@ -247,11 +247,11 @@ public class PistonsMoveTileEntitiesModule extends ZetaModule {
 	}
 
 	private static void callCallback(@Nullable BlockEntity entity, Consumer<? super IPistonCallback> caller) {
-		if(entity != null) {
+		/*if(entity != null) {
 			IPistonCallback cb = Quark.ZETA.capabilityManager.getCapability(QuarkCapabilities.PISTON_CALLBACK, entity);
 			if(cb != null)
 				caller.accept(cb);
-		}
+		}*/
 	}
 
 	public static class ChestConnection implements IIndirectConnector {

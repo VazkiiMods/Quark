@@ -2,6 +2,7 @@ package org.violetmoon.quark.mixin.mixins;
 
 import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 
+import net.minecraft.core.Holder;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.enchantment.Enchantment;
 
@@ -16,6 +17,6 @@ public class EnchantmentMixin {
 	@ModifyReturnValue(method = "canEnchant", at = @At("RETURN"))
 	private boolean canApply(boolean prev, ItemStack stack) {
 		Enchantment self = (Enchantment) (Object) this;
-		return !EnchantmentsBegoneModule.shouldBegone(self);
+		return !EnchantmentsBegoneModule.shouldBegone(Holder.direct(self));
 	}
 }

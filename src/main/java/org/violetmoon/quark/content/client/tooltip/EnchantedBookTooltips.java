@@ -12,6 +12,7 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent;
 import net.minecraft.core.Holder;
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.FormattedText;
 import net.minecraft.resources.ResourceLocation;
@@ -144,7 +145,7 @@ public class EnchantedBookTooltips {
 
 	private static void computeTestItems() {
 		testItems = ImprovedTooltipsModule.enchantingStacks.stream()
-				.map(ResourceLocation::new)
+				.map(ResourceLocation::parse)
 				.map(BuiltInRegistries.ITEM::get)
 				.filter(i -> i != Items.AIR)
 				.map(ItemStack::new)
@@ -162,7 +163,8 @@ public class EnchantedBookTooltips {
 			String left = tokens[0];
 			String right = tokens[1];
 
-			BuiltInRegistries.ENCHANTMENT.getOptional(ResourceLocation.parse(left))
+			//Evil getConnection
+			Minecraft.getInstance().getConnection().registryAccess().registry(Registries.ENCHANTMENT).get().getOptional(ResourceLocation.parse(left))
 					.ifPresent(ench -> {
 						for(String itemId : right.split(",")) {
 							BuiltInRegistries.ITEM.getOptional(ResourceLocation.parse(itemId)).ifPresent(item -> additionalStacks.put(ench, new ItemStack(item)));

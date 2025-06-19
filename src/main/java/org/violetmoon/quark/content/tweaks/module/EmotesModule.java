@@ -29,7 +29,6 @@ import org.violetmoon.zeta.client.event.load.ZKeyMapping;
 import org.violetmoon.zeta.client.event.play.ZInput;
 import org.violetmoon.zeta.client.event.play.ZRenderGuiOverlay;
 import org.violetmoon.zeta.client.event.play.ZRenderLiving;
-import org.violetmoon.zeta.client.event.play.ZRenderTick;
 import org.violetmoon.zeta.client.event.play.ZScreen;
 import org.violetmoon.zeta.config.Config;
 import org.violetmoon.zeta.event.bus.LoadEvent;
@@ -304,10 +303,10 @@ public class EmotesModule extends ZetaModule {
 			}
 		}
 
-		@PlayEvent
+		/*@PlayEvent
 		public void renderTick(ZRenderTick event) {
 			EmoteHandler.onRenderTick(Minecraft.getInstance());
-		}
+		}*/
 
 		@PlayEvent
 		public void preRenderLiving(ZRenderLiving.PreHighest event) {

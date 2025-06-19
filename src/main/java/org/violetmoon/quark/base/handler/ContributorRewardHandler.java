@@ -132,10 +132,11 @@ public class ContributorRewardHandler {
 			if(player instanceof AbstractClientPlayer clientPlayer && DEV_UUID.contains(uuid) && !done.contains(uuid)) {
 				if(/*clientPlayer.isCapeLoaded()*/true) {
 					PlayerInfo info = clientPlayer.playerInfo;
-					Map<MinecraftProfileTexture.Type, ResourceLocation> textures = info.getSkin().capeTexture();
+					//todo: We have to make this a mixin probably.
+					/*Map<MinecraftProfileTexture.Type, ResourceLocation> textures = info.getSkin().capeTexture();
 					ResourceLocation loc = Quark.asResource("textures/misc/dev_cape.png");
 					textures.put(MinecraftProfileTexture.Type.CAPE, loc);
-					textures.put(MinecraftProfileTexture.Type.ELYTRA, loc);
+					textures.put(MinecraftProfileTexture.Type.ELYTRA, loc);*/
 					done.add(uuid);
 				}
 			}

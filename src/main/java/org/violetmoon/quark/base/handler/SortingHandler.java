@@ -14,9 +14,7 @@ import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.*;
 import net.minecraft.world.item.alchemy.Potion;
-import net.minecraft.world.item.alchemy.PotionUtils;
 import net.minecraft.world.item.enchantment.Enchantment;
-import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.item.enchantment.ItemEnchantments;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
@@ -27,7 +25,6 @@ import org.violetmoon.quark.addons.oddities.inventory.BackpackMenu;
 import org.violetmoon.quark.addons.oddities.inventory.slot.CachedItemHandlerSlot;
 import org.violetmoon.quark.api.ICustomSorting;
 import org.violetmoon.quark.api.ISortingLockedSlots;
-import org.violetmoon.quark.api.QuarkCapabilities;
 import org.violetmoon.quark.base.Quark;
 import org.violetmoon.quark.content.management.module.InventorySortingModule;
 
@@ -41,7 +38,7 @@ public final class SortingHandler {
 			SortingHandler::damageCompare,
 			(ItemStack s1, ItemStack s2) -> s2.getCount() - s1.getCount(),
 			(ItemStack s1, ItemStack s2) -> s2.hashCode() - s1.hashCode(),
-			SortingHandler::fallbackNBTCompare));
+			SortingHandler::fallbackComponentCompare));
 
 	private static final Comparator<ItemStack> FOOD_COMPARATOR = jointComparator(Arrays.asList(
 			SortingHandler::foodHealCompare,
@@ -371,7 +368,7 @@ public final class SortingHandler {
 	}
 
 	private static int foodSaturationCompare(ItemStack stack1, ItemStack stack2) {
-		return (int) (saturation(stack2.getItem().getFoodProperties()) - saturation(stack1.getItem().getFoodProperties()));
+		return (int) (saturation(stack2.get(DataComponents.FOOD)) - saturation(stack1.get(DataComponents.FOOD)));
 	}
 
 	private static int enchantmentCompare(ItemStack stack1, ItemStack stack2) {
@@ -421,9 +418,10 @@ public final class SortingHandler {
 		return stack1.getDamageValue() - stack2.getDamageValue();
 	}
 
-	public static int fallbackNBTCompare(ItemStack stack1, ItemStack stack2) {
-		boolean hasTag1 = stack1.hasTag();
-		boolean hasTag2 = stack2.hasTag();
+	public static int fallbackComponentCompare(ItemStack stack1, ItemStack stack2) {
+		//Can components even be empty?
+		boolean hasTag1 = !stack1.getComponents().isEmpty();
+		boolean hasTag2 = !stack2.getComponents().isEmpty();
 
 		if(hasTag2 && !hasTag1)
 			return -1;
@@ -432,7 +430,7 @@ public final class SortingHandler {
 		else if(!hasTag1)
 			return 0;
 
-		return stack2.getTags().toString().hashCode() - stack1.getTags().toString().hashCode();
+		return stack2.getComponents().toString().hashCode() - stack1.getComponents().toString().hashCode();
 	}
 
 	public static int potionComplexityCompare(ItemStack stack1, ItemStack stack2) {
@@ -452,18 +450,30 @@ public final class SortingHandler {
 	}
 
 	public static int potionTypeCompare(ItemStack stack1, ItemStack stack2) {
-		Potion potion1 = PotionUtils.getPotion(stack1);
-		Potion potion2 = PotionUtils.getPotion(stack2);
+		Holder<Potion> potion1 = stack1.get(DataComponents.POTION_CONTENTS).potion().get();
+		Holder<Potion> potion2 = stack2.get(DataComponents.POTION_CONTENTS).potion().get();
 
-		return BuiltInRegistries.POTION.getId(potion2) - BuiltInRegistries.POTION.getId(potion1);
+		return BuiltInRegistries.POTION.getId(potion2.value()) - BuiltInRegistries.POTION.getId(potion1.value());
 	}
 
 	static boolean hasCustomSorting(ItemStack stack) {
-		return Quark.ZETA.capabilityManager.hasCapability(QuarkCapabilities.SORTING, stack);
+		return false;
+		//return Quark.ZETA.capabilityManager.hasCapability(QuarkCapabilities.SORTING, stack);
 	}
 
 	static ICustomSorting getCustomSorting(ItemStack stack) {
-		return Quark.ZETA.capabilityManager.getCapability(QuarkCapabilities.SORTING, stack);
+		return new ICustomSorting() {
+			@Override
+			public Comparator<ItemStack> getItemComparator() {
+				return null;
+			}
+
+			@Override
+			public String getSortingCategory() {
+				return "NULL";
+			}
+		};
+		//return Quark.ZETA.capabilityManager.getCapability(QuarkCapabilities.SORTING, stack);
 	}
 
 	private enum ItemType {

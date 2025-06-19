@@ -81,6 +81,7 @@
     "accessor.AccessorServerGamePacketListener",
     "accessor.AccessorSinglePoolElement",
     "accessor.AccessorTemptingSensor",
+    "accessor.AccessorWolf",
     "self.IZetaBlockMixin_FAKE",
     "self.IZetaItemMixin_FAKE"
   ],

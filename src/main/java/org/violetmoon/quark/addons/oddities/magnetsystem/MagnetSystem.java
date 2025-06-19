@@ -11,6 +11,7 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import org.jetbrains.annotations.Nullable;
 import org.violetmoon.quark.addons.oddities.block.MovingMagnetizedBlock;
 import org.violetmoon.quark.addons.oddities.block.be.MagnetBlockEntity;
+import org.violetmoon.quark.addons.oddities.capability.MagnetTracker;
 import org.violetmoon.quark.addons.oddities.module.MagnetsModule;
 import org.violetmoon.quark.api.IMagnetMoveAction;
 import org.violetmoon.quark.api.IMagnetTracker;
@@ -47,7 +48,8 @@ public class MagnetSystem {
 	}
 
 	public static @Nullable IMagnetTracker getTracker(Level level) {
-		return Quark.ZETA.capabilityManager.getCapability(QuarkCapabilities.MAGNET_TRACKER_CAPABILITY, level);
+		//Todo: Replaced capability, check if it works.
+		return new MagnetTracker(level);
 	}
 
 	public static void tick(boolean start, Level level) {

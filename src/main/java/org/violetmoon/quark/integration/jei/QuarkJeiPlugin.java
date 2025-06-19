@@ -10,6 +10,8 @@ import mezz.jei.api.recipe.vanilla.IJeiAnvilRecipe;
 import mezz.jei.api.recipe.vanilla.IVanillaRecipeFactory;
 import mezz.jei.api.registration.*;
 import net.minecraft.client.renderer.Rect2i;
+import net.minecraft.core.Holder;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.*;
 import net.minecraft.world.item.enchantment.Enchantment;
@@ -119,8 +121,8 @@ public class QuarkJeiPlugin implements IModPlugin {
 
     private void registerAncientTomeAnvilRecipes(@NotNull IRecipeRegistration registration, @NotNull IVanillaRecipeFactory factory) {
         List<IJeiAnvilRecipe> recipes = new ArrayList<>();
-        for (Enchantment enchant : AncientTomesModule.validEnchants) {
-            EnchantmentInstance data = new EnchantmentInstance(enchant, enchant.getMaxLevel());
+        for (Holder<Enchantment> enchant : AncientTomesModule.validEnchants) {
+            EnchantmentInstance data = new EnchantmentInstance(enchant, enchant.value().getMaxLevel());
             recipes.add(factory.createAnvilRecipe(EnchantedBookItem.createForEnchantment(data),
                     Collections.singletonList(AncientTomeItem.getEnchantedItemStack(enchant)),
                     Collections.singletonList(EnchantedBookItem.createForEnchantment(new EnchantmentInstance(data.enchantment, data.level + 1)))));
@@ -194,7 +196,7 @@ public class QuarkJeiPlugin implements IModPlugin {
             ItemStack left = new ItemStack(item);
             ItemStack out = left.copy();
 
-            int max = Quark.ZETA.itemExtensions.get(left).getMaxDamageZeta(left);
+            int max = left.get(DataComponents.MAX_DAMAGE);
 
             left.setDamageValue(max - 1);
             out.setDamageValue(max - max / 4);

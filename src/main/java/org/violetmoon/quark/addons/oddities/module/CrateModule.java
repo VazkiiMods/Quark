@@ -11,6 +11,7 @@ import org.violetmoon.quark.addons.oddities.block.be.CrateBlockEntity;
 import org.violetmoon.quark.addons.oddities.client.screen.CrateScreen;
 import org.violetmoon.quark.addons.oddities.inventory.CrateMenu;
 import org.violetmoon.quark.base.Quark;
+import org.violetmoon.quark.mixin.mixins.client.accessor.AccessorMenuScreens;
 import org.violetmoon.zeta.client.event.load.ZClientSetup;
 import org.violetmoon.zeta.config.Config;
 import org.violetmoon.zeta.event.bus.LoadEvent;
@@ -46,7 +47,7 @@ public class CrateModule extends ZetaModule {
 	public static class Client extends CrateModule {
 		@LoadEvent
 		public final void clientSetup(ZClientSetup event) {
-			MenuScreens.register(menuType, CrateScreen::new);
+			AccessorMenuScreens.invokeRegister(menuType, CrateScreen::new);
 		}
 	}
 }

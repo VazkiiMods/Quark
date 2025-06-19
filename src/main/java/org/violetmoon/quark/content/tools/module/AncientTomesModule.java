@@ -1,6 +1,7 @@
 package org.violetmoon.quark.content.tools.module;
 
 import com.google.common.collect.Lists;
+import com.mojang.serialization.*;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import it.unimi.dsi.fastutil.objects.Object2IntArrayMap;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
@@ -26,6 +27,7 @@ import net.minecraft.world.inventory.MerchantContainer;
 import net.minecraft.world.inventory.MerchantMenu;
 import net.minecraft.world.item.*;
 import net.minecraft.world.item.enchantment.*;
+import net.minecraft.world.item.trading.ItemCost;
 import net.minecraft.world.item.trading.MerchantOffer;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
@@ -38,6 +40,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.violetmoon.quark.api.QuarkCapabilities;
 import org.violetmoon.quark.base.Quark;
+import org.violetmoon.quark.base.util.ItemEnchantsUtil;
 import org.violetmoon.quark.content.experimental.module.EnchantmentsBegoneModule;
 import org.violetmoon.quark.content.tools.base.RuneColor;
 import org.violetmoon.quark.content.tools.item.AncientTomeItem;
@@ -59,10 +62,8 @@ import org.violetmoon.zeta.module.ZetaLoadModule;
 import org.violetmoon.zeta.module.ZetaModule;
 import org.violetmoon.zeta.util.Hint;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Stream;
 
 @ZetaLoadModule(category = "tools")
 public class AncientTomesModule extends ZetaModule {
@@ -96,7 +97,7 @@ public class AncientTomesModule extends ZetaModule {
 	@Config
 	public static int limitBreakUpgradeCost = 30;
 
-	public static LootItemFunctionType tomeEnchantType;
+	public static LootItemFunctionType<EnchantTome> tomeEnchantType;
 
 	@Config(name = "Valid Enchantments")
 	public static List<String> enchantNames = generateDefaultEnchantmentList();
@@ -124,7 +125,7 @@ public class AncientTomesModule extends ZetaModule {
 
 	@Hint
 	public static Item ancient_tome;
-	public static final List<Enchantment> validEnchants = new ArrayList<>();
+	public static final List<Holder<Enchantment>> validEnchants = new ArrayList<>();
 	private static boolean initialized = false;
 
 	public static ManualTrigger overlevelTrigger;
@@ -134,7 +135,7 @@ public class AncientTomesModule extends ZetaModule {
 	public void register(ZRegister event) {
 		ancient_tome = new AncientTomeItem(this);
 
-		tomeEnchantType = new LootItemFunctionType(new EnchantTome.Serializer());
+		tomeEnchantType = new LootItemFunctionType<>(EnchantTome.CODEC);
 		Registry.register(BuiltInRegistries.LOOT_FUNCTION_TYPE, Quark.asResource("tome_enchant"), tomeEnchantType);
 
 		overlevelTrigger = event.getAdvancementModifierRegistry().registerManualTrigger("overlevel");
@@ -189,7 +190,7 @@ public class AncientTomesModule extends ZetaModule {
 			LootPoolEntryContainer entry = LootItem.lootTableItem(ancient_tome)
 					.setWeight(weight)
 					.setQuality(itemQuality)
-					.apply(() -> new EnchantTome(new LootItemCondition[0]))
+					.apply(() -> new EnchantTome(List.of(new LootItemCondition[0])))
 					.build();
 
 			event.add(entry);
@@ -214,11 +215,11 @@ public class AncientTomesModule extends ZetaModule {
 					return;
 
 				Holder<Enchantment> ench = getTomeEnchantment(right);
-				Map<Holder<Enchantment>, Integer> enchants = EnchantmentHelper(left);
+				ItemEnchantments enchants = left.get(DataComponents.ENCHANTMENTS);
 
-				if(ench != null && enchants.containsKey(ench) && enchants.get(ench) <= ench.value().getMaxLevel()) {
-					int lvl = enchants.get(ench) + 1;
-					enchants.put(ench, lvl);
+				if(ench != null && enchants.keySet().contains(ench) && enchants.getLevel(ench) <= ench.value().getMaxLevel()) {
+					int lvl = enchants.getLevel(ench) + 1;
+					enchants = ItemEnchantsUtil.addEnchantmentToList(enchants, ench, lvl);
 
 					ItemStack out = left.copy();
 					ItemEnchantments.Mutable mutable = new ItemEnchantments.Mutable(ItemEnchantments.EMPTY);
@@ -240,16 +241,16 @@ public class AncientTomesModule extends ZetaModule {
 
 			// Apply overleveled book to item
 			else if(combineWithBooks && right.is(Items.ENCHANTED_BOOK)) {
-				Map<Holder<Enchantment>, Integer> enchants = EnchantmentHelper.getEnchantments(right);
-				Map<Holder<Enchantment>, Integer> currentEnchants = EnchantmentHelper.getEnchantments(left);
+				ItemEnchantments enchants = right.get(DataComponents.ENCHANTMENTS);
+				ItemEnchantments currentEnchants = left.get(DataComponents.ENCHANTMENTS);
 				boolean hasOverLevel = false;
 				boolean hasMatching = false;
-				for(Map.Entry<Holder<Enchantment>, Integer> entry : enchants.entrySet()) {
+				for(Object2IntMap.Entry<Holder<Enchantment>> entry : enchants.entrySet()) {
 					Holder<Enchantment> enchantment = entry.getKey();
 					if(enchantment == null)
 						continue;
 
-					int level = entry.getValue();
+					int level = entry.getIntValue();
 					if(level > enchantment.value().getMaxLevel()) {
 						hasOverLevel = true;
 						if(enchantment.value().canEnchant(left) || left.is(Items.ENCHANTED_BOOK)) {
@@ -260,26 +261,26 @@ public class AncientTomesModule extends ZetaModule {
 								if(comparingEnchantment == enchantment)
 									continue;
 
-								if(!comparingEnchantment.exclusiveSet(enchantment)) {
+								if(!comparingEnchantment.value().exclusiveSet().contains(enchantment)) {
 									iterator.remove();
 								}
 							}
-							currentEnchants.put(enchantment, level);
+							currentEnchants = ItemEnchantsUtil.addEnchantmentToList(currentEnchants, enchantment, level);
 						}
-					} else if(enchantment.canEnchant(left)) {
+					} else if(enchantment.value().canEnchant(left)) {
 						boolean compatible = true;
 						//don't apply incompatible enchantments
-						for(Enchantment comparingEnchantment : currentEnchants.keySet()) {
+						for(Holder<Enchantment> comparingEnchantment : currentEnchants.keySet()) {
 							if(comparingEnchantment == enchantment)
 								continue;
 
-							if(comparingEnchantment != null && !comparingEnchantment.isCompatibleWith(enchantment)) {
+							if(comparingEnchantment != null && !comparingEnchantment.value().exclusiveSet().contains(enchantment)) {
 								compatible = false;
 								break;
 							}
 						}
 						if(compatible) {
-							currentEnchants.put(enchantment, level);
+							currentEnchants = ItemEnchantsUtil.addEnchantmentToList(currentEnchants, enchantment, level);
 						}
 					}
 				}
@@ -287,7 +288,7 @@ public class AncientTomesModule extends ZetaModule {
 				if(hasOverLevel) {
 					if(hasMatching) {
 						ItemStack out = left.copy();
-						EnchantmentHelper.setEnchantments(currentEnchants, out);
+						out.set(DataComponents.ENCHANTMENTS, currentEnchants);
 						int cost = normalUpgradeCost;
 
 						if(name != null && !name.isEmpty() && (!out.has(DataComponents.CUSTOM_NAME) || !out.getHoverName().getString().equals(name))) {
@@ -415,21 +416,22 @@ public class AncientTomesModule extends ZetaModule {
 	private void setupEnchantList() {
 		initializeEnchantmentList(enchantNames, validEnchants);
 		if(sanityCheck)
-			validEnchants.removeIf((ench) -> ench.getMaxLevel() == 1);
+			validEnchants.removeIf((ench) -> ench.value().getMaxLevel() == 1);
 	}
 	
-	public static void initializeEnchantmentList(Iterable<String> enchantNames, List<Enchantment> enchants) {
+	public static void initializeEnchantmentList(Iterable<String> enchantNames, List<Holder<Enchantment>> enchants) {
 		enchants.clear();
 		for(String s : enchantNames) {
-			Enchantment enchant = BuiltInRegistries.ENCHANTMENT.get(ResourceLocation.parse(s));
+			Holder<Enchantment> enchant = BuiltInRegistries.ENCHANTMENT.get(ResourceLocation.parse(s));
 			if(enchant != null && !EnchantmentsBegoneModule.shouldBegone(enchant))
 				enchants.add(enchant);
 		}
 	}
 
-	private final List<Enchantment> curses = new ArrayList<>();
+	private final List<Holder<Enchantment>> curses = new ArrayList<>();
 
 	public void setupCursesList() {
+
 		for(var e : BuiltInRegistries.ENCHANTMENT) {
 			if(e.isCurse())
 				curses.add(e);
@@ -448,6 +450,8 @@ public class AncientTomesModule extends ZetaModule {
 				return enchantment;
 			}
         }
+
+		return null;
 	}
 
 	private static boolean isAncientTomeOffer(MerchantOffer offer) {
@@ -475,7 +479,7 @@ public class AncientTomesModule extends ZetaModule {
 				ItemStack currentStack = container.getItem(tradeSlot);
 
 				if(!ItemStack.isSameItemSameComponents(inSlot, offer.getResult()) &&
-						!inSlot.isEmpty() && (currentStack.isEmpty() ? offer.isRequiredItem(inSlot, targetStack) : ItemStack.isSameItemSameComponents(targetStack, inSlot))) {
+						!inSlot.isEmpty() && (currentStack.isEmpty() ? offer.satisfiedBy(inSlot, targetStack) : ItemStack.isSameItemSameComponents(targetStack, inSlot))) {
 					int currentCount = currentStack.isEmpty() ? 0 : currentStack.getCount();
 					int amountToTake = Math.min(targetStack.getMaxStackSize() - currentCount, inSlot.getCount());
 					ItemStack newStack = inSlot.copy();
@@ -494,12 +498,12 @@ public class AncientTomesModule extends ZetaModule {
 	public static boolean matchWildcardEnchantedBook(MerchantOffer offer, ItemStack comparing, ItemStack reference) {
 		// Doesn't check if enabled, since this should apply to the trades that have already been generated regardless
 		if(isAncientTomeOffer(offer) && comparing.is(Items.ENCHANTED_BOOK) && reference.is(Items.ENCHANTED_BOOK)) {
-			Map<Enchantment, Integer> referenceEnchants = EnchantmentHelper.getEnchantments(reference);
+			ItemEnchantments referenceEnchants = reference.get(DataComponents.ENCHANTMENTS);
 			if(referenceEnchants.size() == 1) {
-				Enchantment enchantment = referenceEnchants.keySet().iterator().next();
-				int level = referenceEnchants.get(enchantment);
+				Holder<Enchantment> enchantment = referenceEnchants.keySet().iterator().next();
+				int level = referenceEnchants.getLevel(enchantment);
 
-				Map<Enchantment, Integer> comparingEnchants = EnchantmentHelper.getEnchantments(comparing);
+				ItemEnchantments comparingEnchants = comparing.get(DataComponents.ENCHANTMENTS);
 				for(var entry : comparingEnchants.entrySet()) {
 					if(entry.getKey() == enchantment && entry.getValue() >= level) {
 						return true;
@@ -517,12 +521,12 @@ public class AncientTomesModule extends ZetaModule {
 		public MerchantOffer getOffer(@NotNull Entity trader, @NotNull RandomSource random) {
 			if(validEnchants.isEmpty() || !isEnabled())
 				return null;
-			Enchantment target = validEnchants.get(random.nextInt(validEnchants.size()));
+			Holder<Enchantment> target = validEnchants.get(random.nextInt(validEnchants.size()));
 
 			ItemStack anyTome = new ItemStack(ancient_tome);
 			ItemStack enchantedBook = EnchantedBookItem.createForEnchantment(new EnchantmentInstance(target, target.getMaxLevel()));
 			ItemStack outputTome = AncientTomeItem.getEnchantedItemStack(target);
-			return new MerchantOffer(anyTome, enchantedBook, outputTome, 3, 3, 0.2F);
+			return new MerchantOffer(new ItemCost(anyTome.getItemHolder()), enchantedBook, outputTome, 3, 3, 0.2F);
 		}
 	}
 }

@@ -35,9 +35,9 @@ public class AncientTomeItem extends ZetaItem implements CreativeTabManager.Appe
 		return true;
 	}
 
-	public static ItemStack getEnchantedItemStack(Enchantment ench) {
+	public static ItemStack getEnchantedItemStack(Holder<Enchantment> ench) {
 		ItemStack stack = new ItemStack(AncientTomesModule.ancient_tome);
-		stack.enchant(Holder.direct(ench), ench.getMaxLevel());
+		stack.enchant(ench, ench.value().getMaxLevel());
 		return stack;
 	}
 
@@ -65,15 +65,14 @@ public class AncientTomeItem extends ZetaItem implements CreativeTabManager.Appe
 		List<ItemStack> items = new ArrayList<>();
 
 		if (getModule().zeta().side == ZetaSide.CLIENT) {
-			QuarkClient.ZETA_CLIENT.hackilyGetCurrentClientLevelRegistryAccess().registry(Registries.ENCHANTMENT).get().forEach(ench -> {
-				if (!EnchantmentsBegoneModule.shouldBegone(ench) && (!AncientTomesModule.sanityCheck || ench.getMaxLevel() != 1)) {
+			QuarkClient.ZETA_CLIENT.hackilyGetCurrentClientLevelRegistryAccess().registry(Registries.ENCHANTMENT).get().asHolderIdMap().forEach(ench -> {
+				if (!EnchantmentsBegoneModule.shouldBegone(ench) && (!AncientTomesModule.sanityCheck || ench.value().getMaxLevel() != 1)) {
 					if (!AncientTomesModule.isInitialized() || AncientTomesModule.validEnchants.contains(ench)) {
 						items.add(getEnchantedItemStack(ench));
 					}
 				}
 			});
-			return items;
-		}
-		else return items;
-	}
+        }
+        return items;
+    }
 }

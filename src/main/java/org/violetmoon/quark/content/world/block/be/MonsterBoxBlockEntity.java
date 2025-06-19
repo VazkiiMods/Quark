@@ -1,7 +1,10 @@
 package org.violetmoon.quark.content.world.block.be;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.Difficulty;
@@ -74,7 +77,7 @@ public class MonsterBoxBlockEntity extends ZetaBlockEntity {
 		if(level instanceof ServerLevel serverLevel) {
 			BlockPos pos = getBlockPos();
 
-			LootTable loot = serverLevel.getServer().getLootData().getLootTable(MonsterBoxModule.MONSTER_BOX_SPAWNS_LOOT_TABLE);
+			LootTable loot = serverLevel.getServer().reloadableRegistries().getLootTable(ResourceKey.create(Registries.LOOT_TABLE, MonsterBoxModule.MONSTER_BOX_SPAWNS_LOOT_TABLE));
 			LootParams.Builder builder = (new LootParams.Builder(serverLevel))
 					.withParameter(LootContextParams.ORIGIN, Vec3.atCenterOf(pos))
 					.withParameter(LootContextParams.BLOCK_STATE, getBlockState())
@@ -90,7 +93,7 @@ public class MonsterBoxBlockEntity extends ZetaBlockEntity {
 					Entity e = null;
 
 					if(stack.getItem() instanceof SpawnEggItem egg) {
-						EntityType<?> entitytype = egg.getType(stack.getTag());
+						EntityType<?> entitytype = egg.getType(stack);
 						e = entitytype.spawn(serverLevel, stack, null, pos, MobSpawnType.SPAWNER, true, true);
 
 						if(e != null) {

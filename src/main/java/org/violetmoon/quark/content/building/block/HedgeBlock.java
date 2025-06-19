@@ -9,6 +9,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.tags.BlockTags;
 import net.minecraft.world.item.CreativeModeTabs;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
@@ -141,7 +142,7 @@ public class HedgeBlock extends ZetaFenceBlock implements IZetaBlock, IZetaBlock
 
 	@Override
 	public TriState canSustainPlantZeta(BlockState state, BlockGetter level, BlockPos soilPosition, Direction facing, BlockState plant) {
-		return facing == Direction.UP && !state.getValue(WATERLOGGED) && "plains".equals(plantabletype);
+		return (facing == Direction.UP && !state.getValue(WATERLOGGED)) ? TriState.TRUE : TriState.FALSE;
 	}
 
 	@Override

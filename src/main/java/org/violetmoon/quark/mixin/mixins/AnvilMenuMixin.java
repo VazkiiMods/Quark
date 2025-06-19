@@ -5,6 +5,7 @@ import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.llamalad7.mixinextras.sugar.Local;
 
+import net.minecraft.core.Holder;
 import net.minecraft.world.inventory.AnvilMenu;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.enchantment.Enchantment;
@@ -29,17 +30,18 @@ public class AnvilMenuMixin {
 		return DiamondRepairModule.isValidRepairItem(isValid, itemStack.getItem(), repairStack);
 	}
 
+	//Todo: Hey, this is a mixin on a Neoforge call, keep that in mind for later.
 	@WrapOperation(
 		method = "createResult()V", at = @At(
 			value = "INVOKE",
-			target = "Lnet/minecraft/world/item/enchantment/Enchantment;canEnchant(Lnet/minecraft/world/item/ItemStack;)Z"
+			target = "Lnet/minecraft/world/item/ItemStack;supportsEnchantment(Lnet/minecraft/core/Holder;)Z"
 		),
 		require = 0
 	)
-	public boolean canEnchant(Enchantment enchantment, ItemStack stack, Operation<Boolean> original) {
+	public boolean canEnchant(ItemStack stack, Holder<Enchantment> enchantment, Operation<Boolean> original) {
 		if(EnchantmentsBegoneModule.shouldBegone(enchantment))
 			return false;
-		return original.call(enchantment, stack);
+		return original.call(stack, enchantment);
 	}
 
 }
