@@ -6,6 +6,7 @@ import com.google.common.collect.Multimap;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.datafixers.util.Either;
+import net.createmod.catnip.animation.AnimationTickHolder;
 import net.minecraft.ChatFormatting;
 import net.minecraft.Util;
 import net.minecraft.client.Minecraft;
@@ -220,7 +221,7 @@ public class AttributeTooltips {
 								if(color != ChatFormatting.WHITE) {
 									int xp = x - 2;
 									int yp = y - 2;
-									if(ImprovedTooltipsModule.animateUpDownArrows && QuarkClient.ticker.total % 20 < 10)
+									if(ImprovedTooltipsModule.animateUpDownArrows && AnimationTickHolder.getTicks() + Minecraft.getInstance().getTimer().getGameTimeDeltaTicks() % 20 < 10)
 										yp++;
 
 									guiGraphics.blit(color == ChatFormatting.RED ? TEXTURE_DOWNGRADE : TEXTURE_UPGRADE, xp, yp, 0, 0, 13, 13, 13, 13);

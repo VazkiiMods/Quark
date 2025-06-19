@@ -10,6 +10,7 @@ import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Unit;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.component.CustomData;
 import org.violetmoon.quark.base.Quark;
 
 import java.util.function.UnaryOperator;
@@ -138,7 +139,18 @@ public class QuarkDataComponents {
             Quark.asResource("only_show_table_enchantments"), builder -> builder.persistent(Codec.BOOL).networkSynchronized(ByteBufCodecs.BOOL)
     );
 
+    //todo: Probably should transfer this to an actual specialized thing.
+    public static final DataComponentType<CustomData> STACK_MATRIX = register(
+            Quark.asResource("enchanting_matrix"), builder -> builder.persistent(CustomData.CODEC_WITH_ID).networkSynchronized(CustomData.STREAM_CODEC)
+    );
 
+    public static final DataComponentType<Boolean> EXCITED = register(
+            Quark.asResource("excited"), builder -> builder.persistent(Codec.BOOL).networkSynchronized(ByteBufCodecs.BOOL)
+    );
+
+    public static final DataComponentType<CustomData> SLIME_NBT = register(
+            Quark.asResource("slime_nbt"), builder -> builder.persistent(CustomData.CODEC_WITH_ID).networkSynchronized(CustomData.STREAM_CODEC)
+    );
 
 
     private static <T> DataComponentType<T> register(ResourceLocation id, UnaryOperator<DataComponentType.Builder<T>> builderOp) {

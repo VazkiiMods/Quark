@@ -2,6 +2,7 @@ package org.violetmoon.quark.addons.oddities.client.screen;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
+import net.createmod.catnip.animation.AnimationTickHolder;
 import net.createmod.catnip.platform.CatnipServices;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
@@ -295,7 +296,7 @@ public class MatrixEnchantingScreen extends AbstractContainerScreen<MatrixEnchan
 
 				float a = 0.2F;
 				if(matrix.canPlace(piece, gridHoverX, gridHoverY))
-					a = (float) ((Math.sin(QuarkClient.ticker.total * 0.2) + 1) * 0.4 + 0.4);
+					a = (float) ((Math.sin(AnimationTickHolder.getTicks() + Minecraft.getInstance().getTimer().getGameTimeDeltaTicks() * 0.2) + 1) * 0.4 + 0.4);
 				renderPiece(guiGraphics, piece, a);
 				stack.popPose();
 			}

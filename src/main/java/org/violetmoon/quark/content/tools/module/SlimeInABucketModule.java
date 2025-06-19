@@ -10,6 +10,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.item.MobBucketItem;
 import net.minecraft.world.level.gameevent.GameEvent;
 import org.violetmoon.quark.base.Quark;
 import org.violetmoon.quark.content.tools.item.SlimeInABucketItem;

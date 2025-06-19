@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
+import net.createmod.catnip.animation.AnimationTickHolder;
 import org.jetbrains.annotations.NotNull;
 import org.violetmoon.quark.base.QuarkClient;
 import org.violetmoon.quark.base.client.handler.ClientUtil;
@@ -112,7 +113,7 @@ public class QButton extends Button {
 
 	@Override
 	public int getFGColor() {
-		return gay ? Color.HSBtoRGB((QuarkClient.ticker.total / 200F), 1F, 1F) : 0x48DDBC;
+		return gay ? Color.HSBtoRGB((AnimationTickHolder.getTicks() + Minecraft.getInstance().getTimer().getGameTimeDeltaTicks() / 200F), 1F, 1F) : 0x48DDBC;
 	}
 
 	@Override
@@ -152,7 +153,7 @@ public class QButton extends Button {
 		if(showBubble && QuarkGeneralConfig.enableOnboarding) {
 			Font font = Minecraft.getInstance().font;
 			int cy = getY() - 2;
-			if(QuarkClient.ticker.total % 20 > 10)
+			if(AnimationTickHolder.getTicks() + Minecraft.getInstance().getTimer().getGameTimeDeltaTicks() % 20 > 10)
 				cy++;
 
 			ClientUtil.drawChatBubble(guiGraphics, getX() + 16, cy, font, I18n.get("quark.misc.configure_quark_here"), alpha, true);

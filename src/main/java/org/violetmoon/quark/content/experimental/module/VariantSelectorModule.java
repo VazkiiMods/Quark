@@ -180,8 +180,6 @@ public class VariantSelectorModule extends ZetaModule {
 
 				if(otherBlock != block) {
 					ItemStack clone = new ItemStack(otherBlock.asItem());
-					clone.setTag(stack.getTag());
-					clone.setCount(stack.getCount()); //TODO: maybe this leads to double slab dupes lol
 					ie.setItem(clone);
 				}
 			}
@@ -393,7 +391,7 @@ public class VariantSelectorModule extends ZetaModule {
 				int posX = x - offset - width + hudOffsetX;
 				int posY = y + hudOffsetY;
 
-				if( !showSimpleHud) {
+				if(!showSimpleHud) {
 					guiGraphics.renderFakeItem(displayLeft, posX, posY);
 
 					RenderSystem.enableBlend();

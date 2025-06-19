@@ -10,6 +10,7 @@ import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.RegistryAccess;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
@@ -27,6 +28,8 @@ import net.minecraft.world.inventory.InventoryMenu;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.*;
+import net.minecraft.world.item.component.BundleContents;
+import net.minecraft.world.item.component.CustomData;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.block.Block;
@@ -47,6 +50,7 @@ import org.violetmoon.quark.content.management.client.screen.HeldShulkerBoxScree
 import org.violetmoon.quark.content.management.inventory.HeldShulkerBoxContainer;
 import org.violetmoon.quark.content.management.inventory.HeldShulkerBoxMenu;
 import org.violetmoon.quark.mixin.mixins.client.accessor.AccessorCustomCreativeSlot;
+import org.violetmoon.quark.mixin.mixins.client.accessor.AccessorMenuScreens;
 import org.violetmoon.zeta.client.event.load.ZClientSetup;
 import org.violetmoon.zeta.client.event.play.ZRenderTooltip;
 import org.violetmoon.zeta.client.event.play.ZScreen;
@@ -60,6 +64,7 @@ import org.violetmoon.zeta.module.ZetaModule;
 import org.violetmoon.zeta.util.Hint;
 import org.violetmoon.zeta.util.RegistryUtil;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -163,11 +168,11 @@ public class ExpandedItemInteractionsModule extends ZetaModule {
 
 	private static void rotateBundle(ItemStack stack, double scrollDelta) {
 		if(stack.is(Items.BUNDLE)) {
-			CompoundTag tag = stack.getTag();
-			if(tag != null) {
-				ListTag items = tag.getList("Items", Tag.TAG_COMPOUND);
+			BundleContents bundleContents = stack.get(DataComponents.BUNDLE_CONTENTS);
+			if(bundleContents != null) {
+				List<ItemStack> items = (List<ItemStack>) bundleContents.items();
 				if(items.size() > 1) {
-					ListTag rotatedItems = new ListTag();
+					List<ItemStack> rotatedItems = new ArrayList<>();
 					if(scrollDelta < 0) {
 						rotatedItems.add(items.get(items.size() - 1));
 						for(int i = 0; i < items.size() - 1; i++)
@@ -177,7 +182,7 @@ public class ExpandedItemInteractionsModule extends ZetaModule {
 							rotatedItems.add(items.get(i));
 						rotatedItems.add(items.get(0));
 					}
-					tag.put("Items", rotatedItems);
+					stack.set(DataComponents.BUNDLE_CONTENTS, new BundleContents(rotatedItems));
 				}
 			}
 		}
@@ -226,7 +231,7 @@ public class ExpandedItemInteractionsModule extends ZetaModule {
 				&& !player.getAbilities().instabuild
 				&& slot.allowModification(player)
 				&& slot.mayPlace(stack)
-				&& !incoming.getItem().isFireResistant()
+				&& !incoming.has(DataComponents.FIRE_RESISTANT)
 				&& !SimilarBlockTypeHandler.isShulkerBox(incoming);
 	}
 
@@ -284,7 +289,7 @@ public class ExpandedItemInteractionsModule extends ZetaModule {
 	}
 
 	public static BlockEntity getShulkerBoxEntity(ItemStack shulkerBox, RegistryAccess access) {
-		CompoundTag cmp = ItemNBTHelper.getCompound(shulkerBox, "BlockEntityTag", false);
+		CompoundTag cmp = shulkerBox.get(DataComponents.BLOCK_ENTITY_DATA).copyTag();
 		if(cmp.contains("LootTable"))
 			return null;
 
@@ -338,8 +343,8 @@ public class ExpandedItemInteractionsModule extends ZetaModule {
 							if(any) {
 								ItemStack workStack = useCopy ? shulkerBox.copy() : shulkerBox;
 
-								ItemNBTHelper.setCompound(workStack, "BlockEntityTag", tile.saveWithId());
-								ItemNBTHelper.setCompound(stack, "BlockEntityTag", otherShulker.saveWithId());
+								workStack.set(DataComponents.BLOCK_ENTITY_DATA, CustomData.of(tile.saveWithId(player.level().registryAccess())));
+								stack.set(DataComponents.BLOCK_ENTITY_DATA, CustomData.of(otherShulker.saveWithId(player.level().registryAccess())));
 
 								if(slot.mayPlace(workStack))
 									return workStack;
@@ -355,7 +360,7 @@ public class ExpandedItemInteractionsModule extends ZetaModule {
 					if(!simulate)
 						stack.setCount(result.getCount());
 
-					ItemNBTHelper.setCompound(workStack, "BlockEntityTag", tile.saveWithId());
+					workStack.set(DataComponents.BLOCK_ENTITY_DATA, CustomData.of(tile.saveWithId(player.level().registryAccess())));
 
 					if(slot.mayPlace(workStack))
 						return workStack;
@@ -372,7 +377,7 @@ public class ExpandedItemInteractionsModule extends ZetaModule {
 		@LoadEvent
 		public final void clientSetup(ZClientSetup event) {
 
-			MenuScreens.register(heldShulkerBoxMenuType, HeldShulkerBoxScreen::new);
+			AccessorMenuScreens.invokeRegister(heldShulkerBoxMenuType, HeldShulkerBoxScreen::new);
 		}
 
 		@PlayEvent
@@ -446,9 +451,10 @@ public class ExpandedItemInteractionsModule extends ZetaModule {
 
 				ItemStack underStack = under.getItem();
 				if(underStack.is(Items.BUNDLE)) {
-					CompoundTag tag = underStack.getTag();
-					if(tag != null) {
-						ListTag items = tag.getList("Items", Tag.TAG_COMPOUND);
+					BundleContents bundleContents = underStack.get(DataComponents.BUNDLE_CONTENTS);
+
+					if(bundleContents != null) {
+						List<ItemStack> items = (List<ItemStack>) bundleContents.items();
 						if(items.size() > 1) {
 							var menu = containerGui.getMenu();
 							event.setCanceled(true);

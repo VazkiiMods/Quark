@@ -20,6 +20,7 @@ import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.EnchantedBookItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.item.component.CustomData;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.item.enchantment.EnchantmentInstance;
@@ -42,6 +43,7 @@ import org.violetmoon.quark.addons.oddities.module.MatrixEnchantingModule;
 import org.violetmoon.quark.addons.oddities.util.Influence;
 import org.violetmoon.quark.api.IEnchantmentInfluencer;
 import org.violetmoon.quark.base.Quark;
+import org.violetmoon.quark.base.components.QuarkDataComponents;
 
 import java.util.HashMap;
 import java.util.List;
@@ -188,8 +190,12 @@ public class MatrixEnchantingTableBlockEntity extends AbstractEnchantingTableBlo
 				for(Entry<Holder<Enchantment>, Integer> e : enchantments.entrySet())
 					EnchantedBookItem.createForEnchantment(new EnchantmentInstance(e.getKey(), e.getValue()));
 			else {
-				EnchantmentHelper.setEnchantments(out,enchantments);
-				out.removeTagKey(TAG_STACK_MATRIX);
+				ItemEnchantments.Mutable mutableEnchList = new ItemEnchantments.Mutable(net.minecraft.world.item.enchantment.ItemEnchantments.EMPTY);
+				for (Entry<Holder<Enchantment>, Integer> e : enchantments.entrySet()) {
+					mutableEnchList.set(e.getKey(), e.getValue());
+				}
+				EnchantmentHelper.setEnchantments(out,mutableEnchList.toImmutable());
+				out.remove(QuarkDataComponents.STACK_MATRIX);
 			}
 
 			setItem(2, out);
@@ -207,8 +213,8 @@ public class MatrixEnchantingTableBlockEntity extends AbstractEnchantingTableBlo
 				matrixDirty = true;
 				makeUUID();
 
-				if(ItemNBTHelper.verifyExistence(stack, TAG_STACK_MATRIX)) {
-					CompoundTag cmp = ItemNBTHelper.getCompound(stack, TAG_STACK_MATRIX, true);
+			if (stack.has(QuarkDataComponents.STACK_MATRIX)) {
+					CompoundTag cmp = stack.get(QuarkDataComponents.STACK_MATRIX).copyTag();
 					if(cmp != null)
 						matrix.readFromNBT(cmp);
 				}
@@ -222,7 +228,7 @@ public class MatrixEnchantingTableBlockEntity extends AbstractEnchantingTableBlo
 
 		CompoundTag cmp = new CompoundTag();
 		matrix.writeToNBT(cmp);
-		ItemNBTHelper.setCompound(stack, TAG_STACK_MATRIX, cmp);
+		stack.set(QuarkDataComponents.STACK_MATRIX, CustomData.of(cmp));
 
 		matrixDirty = true;
 		makeUUID();

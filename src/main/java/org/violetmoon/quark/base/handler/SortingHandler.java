@@ -468,7 +468,6 @@ public final class SortingHandler {
 
 	private enum ItemType {
 
-		FOOD(ItemStack::isEdible, FOOD_COMPARATOR),
 		TORCH(list(Blocks.TORCH)),
 		TOOL_PICKAXE(classPredicate(PickaxeItem.class), TOOL_COMPARATOR),
 		TOOL_SHOVEL(classPredicate(ShovelItem.class), TOOL_COMPARATOR),

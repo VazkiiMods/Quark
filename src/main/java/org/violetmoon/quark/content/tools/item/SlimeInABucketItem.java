@@ -2,7 +2,9 @@ package org.violetmoon.quark.content.tools.item;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.RegistryAccess;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.Connection;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
@@ -28,6 +30,7 @@ import net.minecraft.world.phys.Vec3;
 
 import org.jetbrains.annotations.NotNull;
 
+import org.violetmoon.quark.base.components.QuarkDataComponents;
 import org.violetmoon.zeta.item.ZetaItem;
 import org.violetmoon.zeta.module.ZetaModule;
 import org.violetmoon.zeta.registry.CreativeTabManager;
@@ -52,9 +55,9 @@ public class SlimeInABucketItem extends ZetaItem {
 			int x = Mth.floor(pos.x);
 			int z = Mth.floor(pos.z);
 			boolean slime = isSlimeChunk(serverLevel, x, z);
-			boolean excited = ItemNBTHelper.getBoolean(stack, TAG_EXCITED, false);
+			boolean excited = Boolean.TRUE.equals(stack.get(QuarkDataComponents.EXCITED));
 			if(excited != slime)
-				ItemNBTHelper.setBoolean(stack, TAG_EXCITED, slime);
+				stack.set(QuarkDataComponents.EXCITED, slime);
 		}
 	}
 
@@ -74,7 +77,7 @@ public class SlimeInABucketItem extends ZetaItem {
 		if(!worldIn.isClientSide) {
 			Slime slime = new Slime(EntityType.SLIME, worldIn);
 
-			CompoundTag data = ItemNBTHelper.getCompound(playerIn.getItemInHand(hand), TAG_ENTITY_DATA, true);
+			CompoundTag data = playerIn.getItemInHand(hand).get(QuarkDataComponents.SLIME_NBT).copyTag();
 			if(data != null)
 				slime.load(data);
 			else {
@@ -100,14 +103,17 @@ public class SlimeInABucketItem extends ZetaItem {
 
 	@NotNull
 	@Override
+	//todo: Fix this shit
 	public Component getName(@NotNull ItemStack stack) {
-		if(stack.hasTag()) {
-			CompoundTag cmp = ItemNBTHelper.getCompound(stack, TAG_ENTITY_DATA, false);
+		/*if(stack.has(QuarkDataComponents.SLIME_NBT)) {
+			CompoundTag cmp = stack.get(QuarkDataComponents.SLIME_NBT).copyTag();
 			if(cmp != null && cmp.contains("CustomName")) {
-				Component custom = Component.Serializer.fromJson(cmp.getString("CustomName"));
+
+				Component custom = Component.Serializer.fromJson(cmp.getString("CustomName", RegistryAccess.EMPTY));
 				return Component.translatable("item.quark.slime_in_a_bucket.named", custom);
 			}
 		}
+		 */
 
 		return super.getName(stack);
 	}

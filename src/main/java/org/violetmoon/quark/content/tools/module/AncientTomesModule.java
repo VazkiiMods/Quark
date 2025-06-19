@@ -213,16 +213,20 @@ public class AncientTomesModule extends ZetaModule {
 				if(!combineWithBooks && left.is(Items.ENCHANTED_BOOK))
 					return;
 
-				Enchantment ench = getTomeEnchantment(right);
-				Map<Enchantment, Integer> enchants = EnchantmentHelper(left);
+				Holder<Enchantment> ench = getTomeEnchantment(right);
+				Map<Holder<Enchantment>, Integer> enchants = EnchantmentHelper(left);
 
-				if(ench != null && enchants.containsKey(ench) && enchants.get(ench) <= ench.getMaxLevel()) {
+				if(ench != null && enchants.containsKey(ench) && enchants.get(ench) <= ench.value().getMaxLevel()) {
 					int lvl = enchants.get(ench) + 1;
 					enchants.put(ench, lvl);
 
 					ItemStack out = left.copy();
-					EnchantmentHelper.setEnchantments(enchants, out);
-					int cost = lvl > ench.getMaxLevel() ? limitBreakUpgradeCost : normalUpgradeCost;
+					ItemEnchantments.Mutable mutable = new ItemEnchantments.Mutable(ItemEnchantments.EMPTY);
+					for (Map.Entry<Holder<Enchantment>, Integer> enchEntry : enchants.entrySet()) {
+						mutable.set(enchEntry.getKey(), enchEntry.getValue());
+					}
+					EnchantmentHelper.setEnchantments(out, mutable.toImmutable());
+					int cost = lvl > ench.value().getMaxLevel() ? limitBreakUpgradeCost : normalUpgradeCost;
 
 					if(name != null && !name.isEmpty() && (!out.has(DataComponents.CUSTOM_NAME) || !out.getHoverName().getString().equals(name))) {
 						out.set(DataComponents.CUSTOM_NAME, Component.literal(name));
@@ -236,27 +240,27 @@ public class AncientTomesModule extends ZetaModule {
 
 			// Apply overleveled book to item
 			else if(combineWithBooks && right.is(Items.ENCHANTED_BOOK)) {
-				Map<Enchantment, Integer> enchants = EnchantmentHelper.getEnchantments(right);
-				Map<Enchantment, Integer> currentEnchants = EnchantmentHelper.getEnchantments(left);
+				Map<Holder<Enchantment>, Integer> enchants = EnchantmentHelper.getEnchantments(right);
+				Map<Holder<Enchantment>, Integer> currentEnchants = EnchantmentHelper.getEnchantments(left);
 				boolean hasOverLevel = false;
 				boolean hasMatching = false;
-				for(Map.Entry<Enchantment, Integer> entry : enchants.entrySet()) {
-					Enchantment enchantment = entry.getKey();
+				for(Map.Entry<Holder<Enchantment>, Integer> entry : enchants.entrySet()) {
+					Holder<Enchantment> enchantment = entry.getKey();
 					if(enchantment == null)
 						continue;
 
 					int level = entry.getValue();
-					if(level > enchantment.getMaxLevel()) {
+					if(level > enchantment.value().getMaxLevel()) {
 						hasOverLevel = true;
-						if(enchantment.canEnchant(left) || left.is(Items.ENCHANTED_BOOK)) {
+						if(enchantment.value().canEnchant(left) || left.is(Items.ENCHANTED_BOOK)) {
 							hasMatching = true;
 							//remove incompatible enchantments
-							for(Iterator<Enchantment> iterator = currentEnchants.keySet().iterator(); iterator.hasNext();) {
-								Enchantment comparingEnchantment = iterator.next();
+							for(Iterator<Holder<Enchantment>> iterator = currentEnchants.keySet().iterator(); iterator.hasNext();) {
+								Holder<Enchantment> comparingEnchantment = iterator.next();
 								if(comparingEnchantment == enchantment)
 									continue;
 
-								if(!comparingEnchantment.isCompatibleWith(enchantment)) {
+								if(!comparingEnchantment.exclusiveSet(enchantment)) {
 									iterator.remove();
 								}
 							}

@@ -111,6 +111,7 @@
     "client.ThrownTridentRendererMixin",
     "client.accessor.AccessorCustomCreativeSlot",
     "client.accessor.AccessorLevelRenderer",
+    "client.accessor.AccessorMenuScreens",
     "client.accessor.AccessorModelManager",
     "client.accessor.AccessorMultiPlayerGameMode",
     "client.variants.BeeRendererMixin",

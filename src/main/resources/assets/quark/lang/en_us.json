@@ -1561,5 +1561,7 @@
 	"advancements.quark.poison_baby.title": "Forever Young",
 	"advancements.quark.poison_baby.description": "Successfully poison a baby animal with a Poisoned Potato",
 	"advancements.quark.crab_in_a_bucket.title": "Crabtured",
-	"advancements.quark.crab_in_a_bucket.description": "Capture a Crab in a Bucket"
+	"advancements.quark.crab_in_a_bucket.description": "Capture a Crab in a Bucket",
+
+	"quark.pack.emote_icon_pack": "Quark Emote Icon Pack"
 }

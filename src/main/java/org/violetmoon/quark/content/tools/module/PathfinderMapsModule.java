@@ -4,6 +4,7 @@ import com.mojang.blaze3d.platform.Window;
 
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 
+import net.createmod.catnip.animation.AnimationTickHolder;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.color.item.ItemColor;
 import net.minecraft.client.gui.GuiGraphics;
@@ -397,7 +398,8 @@ public class PathfinderMapsModule extends ZetaModule {
 					int qy = y - 15;
 
 					float speed = 0.1F;
-					float total = QuarkClient.ticker.total * speed;
+
+					float total = AnimationTickHolder.getTicks() * speed;
 
 					float offX = (float) (Math.sin(total) + 1) * 20;
 					float offY = (float) (Math.sin(total * 8) - 1);

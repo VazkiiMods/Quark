@@ -2,6 +2,7 @@ package org.violetmoon.quark.content.experimental.module;
 
 import com.mojang.text2speech.Narrator;
 
+import net.createmod.catnip.animation.AnimationTickHolder;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
@@ -80,7 +81,7 @@ public class NarratorReadoutModule extends ZetaModule {
 		private void acceptInput(boolean down, boolean full) {
 			Minecraft mc = Minecraft.getInstance();
 
-			float curr = QuarkClient.ticker.total;
+			float curr = AnimationTickHolder.getTicks() + Minecraft.getInstance().getTimer().getGameTimeDeltaTicks();
 			if(down && (curr - last) > 10) {
 				Narrator narrator = Narrator.getNarrator();
 				String readout = getReadout(mc, full);

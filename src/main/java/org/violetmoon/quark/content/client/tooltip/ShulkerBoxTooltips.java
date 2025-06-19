@@ -9,8 +9,10 @@ import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent;
+import net.minecraft.client.multiplayer.ClientPacketListener;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.FormattedText;
@@ -41,7 +43,7 @@ public class ShulkerBoxTooltips {
 	public static void makeTooltip(ZGatherTooltipComponents event) {
 		ItemStack stack = event.getItemStack();
 		if(SimilarBlockTypeHandler.isShulkerBox(stack)) {
-			CompoundTag cmp = ItemNBTHelper.getCompound(stack, "BlockEntityTag", false);
+			CompoundTag cmp = stack.get(DataComponents.BLOCK_ENTITY_DATA).copyTag();
 
 			if(cmp.contains("LootTable"))
 				return;
@@ -49,7 +51,8 @@ public class ShulkerBoxTooltips {
 			if(!cmp.contains("id"))
 				return;
 
-			BlockEntity te = BlockEntity.loadStatic(BlockPos.ZERO, ((BlockItem) stack.getItem()).getBlock().defaultBlockState(), cmp);
+			ClientPacketListener listener = Minecraft.getInstance().getConnection();
+			BlockEntity te = BlockEntity.loadStatic(BlockPos.ZERO, ((BlockItem) stack.getItem()).getBlock().defaultBlockState(), cmp, listener.registryAccess());
 			if(te != null && te.getCapability(ForgeCapabilities.ITEM_HANDLER).isPresent()) {
 				List<Either<FormattedText, TooltipComponent>> tooltip = event.getTooltipElements();
 				List<Either<FormattedText, TooltipComponent>> tooltipCopy = new ArrayList<>(tooltip);
@@ -93,7 +96,7 @@ public class ShulkerBoxTooltips {
 
 			PoseStack pose = guiGraphics.pose();
 
-			CompoundTag cmp = ItemNBTHelper.getCompound(stack, "BlockEntityTag", true);
+			CompoundTag cmp = stack.get(DataComponents.BLOCK_ENTITY_DATA).copyTag();
 			if(cmp != null) {
 				if(cmp.contains("LootTable"))
 					return;

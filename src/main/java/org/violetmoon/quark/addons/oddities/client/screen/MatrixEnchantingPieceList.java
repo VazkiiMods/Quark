@@ -24,7 +24,7 @@ public class MatrixEnchantingPieceList extends ObjectSelectionList<MatrixEnchant
 
 	@Override
 	protected int getScrollbarPosition() {
-		return getLeft() + this.listWidth - 5;
+		return getX() + this.listWidth - 5;
 	}
 
 	@Override
@@ -48,11 +48,11 @@ public class MatrixEnchantingPieceList extends ObjectSelectionList<MatrixEnchant
 		int i = this.getScrollbarPosition();
 		int j = i + 6;
 
-		guiGraphics.fill(getLeft(), getTop(), getLeft() + getWidth() + 1, getTop() + getHeight(), 0xFF2B2B2B);
+		guiGraphics.fill(getX(), getY(), getX() + getWidth() + 1, getY() + getHeight(), 0xFF2B2B2B);
 
 		Window main = parent.getMinecraft().getWindow();
 		int res = (int) main.getGuiScale();
-		RenderSystem.enableScissor(getLeft() * res, (main.getGuiScaledHeight() - getBottom()) * res, getWidth() * res, getHeight() * res);
+		RenderSystem.enableScissor(getX() * res, (main.getGuiScaledHeight() - getBottom()) * res, getWidth() * res, getHeight() * res);
 		renderListItems(guiGraphics, mouseX, mouseY, partialTicks);
 		RenderSystem.disableScissor();
 		renderScroll(guiGraphics, i, j);
