@@ -141,9 +141,8 @@ public abstract class AbstractEnchantingTableBlockEntity extends SimpleInventory
 	}
 
 	@Override
-	protected void inventoryChanged(int i) {
-		super.inventoryChanged(i);
-		sync();
+	public void inventoryChanged(int i) {
+        sync();
 	}
 
 	@Override

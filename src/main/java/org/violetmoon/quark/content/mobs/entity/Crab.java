@@ -248,11 +248,6 @@ public class Crab extends Animal implements IEntityWithComplexSpawn, Bucketable 
 		return QuarkSounds.ENTITY_CRAB_HURT;
 	}
 
-	@Override
-	protected float getStandingEyeHeight(@NotNull Pose pose, EntityDimensions size) {
-		return 0.2f * size.height;
-	}
-
 	public float getSizeModifier() {
 		return entityData.get(SIZE_MODIFIER);
 	}
@@ -311,6 +306,8 @@ public class Crab extends Animal implements IEntityWithComplexSpawn, Bucketable 
 		}
 	}
 
+	//Todo: Double check this doesnt cause any issues
+	/*
 	@Override
 	public float getStepHeight() { //TODO figure out when to recalculate attribute -Partonetrain
 		float baseStep = isInWater() ? 1F : 0.6F;
@@ -319,12 +316,16 @@ public class Crab extends Animal implements IEntityWithComplexSpawn, Bucketable 
 			return (float) Math.max(0, baseStep + stepHeightAttribute.getValue());
 		return baseStep;
 	}
+	 */
 
+	//Todo: Double check this doesnt cause any issues
+	/*
 	@NotNull
 	@Override
 	public EntityDimensions getDimensions(@NotNull Pose poseIn) {
 		return super.getDimensions(poseIn).scale(this.getSizeModifier());
 	}
+	*/
 
 	@Override
 	public boolean isPushedByFluid(FluidType type) {

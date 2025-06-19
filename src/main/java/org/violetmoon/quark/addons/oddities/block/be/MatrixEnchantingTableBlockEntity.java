@@ -2,10 +2,12 @@ package org.violetmoon.quark.addons.oddities.block.be;
 
 import com.google.common.collect.Lists;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Holder;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.tags.BlockTags;
@@ -200,7 +202,7 @@ public class MatrixEnchantingTableBlockEntity extends AbstractEnchantingTableBlo
 			matrix = null;
 
 			if(stack.isEnchantable()) {
-				matrix = new EnchantmentMatrix(stack, level.random);
+				matrix = new EnchantmentMatrix(stack, level);
 				matrixDirty = true;
 				makeUUID();
 
@@ -292,19 +294,19 @@ public class MatrixEnchantingTableBlockEntity extends AbstractEnchantingTableBlo
 			if(influencer != null) {
 				int count = influencer.getInfluenceStack(world, pos, state);
 
-				List<Enchantment> influencedEnchants = BuiltInRegistries.ENCHANTMENT.stream()
-						.filter((it) -> influencer.influencesEnchantment(world, pos, state, it)).toList();
-				List<Enchantment> dampenedEnchants = BuiltInRegistries.ENCHANTMENT.stream()
-						.filter((it) -> influencer.dampensEnchantment(world, pos, state, it)).toList();
+				List<Holder.Reference<Enchantment>> influencedEnchants = world.registryAccess().lookupOrThrow(Registries.ENCHANTMENT).listElements()
+						.filter((it) -> influencer.influencesEnchantment(world, pos, state, it.value())).toList();
+				List<Holder.Reference<Enchantment>> dampenedEnchants = world.registryAccess().lookupOrThrow(Registries.ENCHANTMENT).listElements()
+						.filter((it) -> influencer.dampensEnchantment(world, pos, state, it.value())).toList();
 				if(!influencedEnchants.isEmpty() || !dampenedEnchants.isEmpty()) {
-					for(Enchantment e : influencedEnchants) {
-						int curr = influences.getOrDefault(e, 0);
-						influences.put(e, curr + count);
+					for(Holder.Reference<Enchantment> e : influencedEnchants) {
+						int curr = influences.getOrDefault(e.value(), 0);
+						influences.put(e.value(), curr + count);
 					}
 
-					for(Enchantment e : dampenedEnchants) {
-						int curr = influences.getOrDefault(e, 0);
-						influences.put(e, curr - count);
+					for(Holder.Reference<Enchantment> e : dampenedEnchants) {
+						int curr = influences.getOrDefault(e.value(), 0);
+						influences.put(e.value(), curr - count);
 					}
 
 					return 1;
@@ -344,7 +346,7 @@ public class MatrixEnchantingTableBlockEntity extends AbstractEnchantingTableBlo
 			if(!newId.equals(matrixId)) {
 				CompoundTag matrixCmp = cmp.getCompound(TAG_MATRIX);
 				matrixId = newId;
-				matrix = new EnchantmentMatrix(getItem(0), RandomSource.create());
+				matrix = new EnchantmentMatrix(getItem(0), level);
 				matrix.readFromNBT(matrixCmp);
 			}
 			clientMatrixDirty = true;

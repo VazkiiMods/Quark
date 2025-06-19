@@ -3,6 +3,7 @@ package org.violetmoon.quark.content.mobs.client.model;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.model.geom.ModelPart.Cube;
@@ -232,7 +233,7 @@ public class ToretoiseModel extends EntityModel<Toretoise> {
 		matrix.pushPose();
 		int bufferTime = 10;
 		if(entity.angeryTicks > 0 && entity.angeryTicks < Toretoise.ANGERY_TIME - bufferTime) {
-			double angeryTime = (entity.angeryTicks - QuarkClient.ticker.partialTicks) / (Toretoise.ANGERY_TIME - bufferTime) * Math.PI;
+			double angeryTime = (entity.angeryTicks - Minecraft.getInstance().getTimer().getGameTimeDeltaPartialTick(true)) / (Toretoise.ANGERY_TIME - bufferTime) * Math.PI;
 			angeryTime = Math.sin(angeryTime) * -20;
 
 			matrix.translate(0, 1., 1);
@@ -254,7 +255,7 @@ public class ToretoiseModel extends EntityModel<Toretoise> {
 		float rideMultiplier = 0;
 
 		if(entity.rideTime > 0)
-			rideMultiplier = Math.min(30, entity.rideTime - 1 + QuarkClient.ticker.partialTicks) / 30.0F;
+			rideMultiplier = Math.min(30, entity.rideTime - 1 + Minecraft.getInstance().getTimer().getGameTimeDeltaPartialTick(true)) / 30.0F;
 
 		bodyTrans *= (1F - rideMultiplier);
 

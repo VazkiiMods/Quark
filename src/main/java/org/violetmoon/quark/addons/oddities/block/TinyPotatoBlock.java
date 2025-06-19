@@ -9,6 +9,7 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.Containers;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
@@ -132,9 +133,10 @@ public class TinyPotatoBlock extends ZetaBlock implements SimpleWaterloggedBlock
 		return SHAPE;
 	}
 
+
 	@NotNull
 	@Override
-	public InteractionResult use(@NotNull BlockState state, Level world, @NotNull BlockPos pos, @NotNull Player player, @NotNull InteractionHand hand, @NotNull BlockHitResult hit) {
+	protected ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
 		BlockEntity be = world.getBlockEntity(pos);
 		if(be instanceof TinyPotatoBlockEntity tater) {
 			tater.interact(player, hand, player.getItemInHand(hand), hit.getDirection());
@@ -147,7 +149,7 @@ public class TinyPotatoBlock extends ZetaBlock implements SimpleWaterloggedBlock
 				serverLevel.sendParticles(ParticleTypes.HEART, pos.getX() + box.minX + Math.random() * (box.maxX - box.minX), pos.getY() + box.maxY, pos.getZ() + box.minZ + Math.random() * (box.maxZ - box.minZ), 1, 0, 0, 0, 0);
 			}
 		}
-		return InteractionResult.sidedSuccess(world.isClientSide);
+		return ItemInteractionResult.sidedSuccess(world.isClientSide);
 	}
 
 	@NotNull

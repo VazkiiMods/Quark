@@ -287,7 +287,7 @@ public class MatrixEnchantingScreen extends AbstractContainerScreen<MatrixEnchan
 
 		if(selectedPiece != -1 && gridHoverX != -1) {
 			Piece piece = getPiece(selectedPiece);
-			if(piece != null && !(hoveredPiece != null && piece.enchant == hoveredPiece.enchant && hoveredPiece.level < hoveredPiece.enchant.getMaxLevel())) {
+			if(piece != null && !(hoveredPiece != null && piece.enchant == hoveredPiece.enchant && hoveredPiece.level < hoveredPiece.enchant.value().getMaxLevel())) {
 				stack.pushPose();
 				stack.translate(gridHoverX * 10, gridHoverY * 10, 0);
 

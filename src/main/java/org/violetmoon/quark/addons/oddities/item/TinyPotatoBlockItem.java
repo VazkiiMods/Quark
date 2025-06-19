@@ -18,10 +18,10 @@ import org.violetmoon.quark.addons.oddities.block.TinyPotatoBlock;
 import org.violetmoon.quark.addons.oddities.block.be.TinyPotatoBlockEntity;
 import org.violetmoon.quark.addons.oddities.util.TinyPotatoInfo;
 import org.violetmoon.quark.api.IRuneColorProvider;
+import org.violetmoon.quark.base.components.QuarkDataComponents;
 import org.violetmoon.quark.base.handler.ContributorRewardHandler;
 import org.violetmoon.quark.content.tools.base.RuneColor;
 import org.violetmoon.zeta.item.ZetaBlockItem;
-import org.violetmoon.zeta.util.ItemNBTHelper;
 
 import java.util.List;
 
@@ -49,28 +49,28 @@ public class TinyPotatoBlockItem extends ZetaBlockItem implements IRuneColorProv
 	}
 
 	private void updateData(ItemStack stack) {
-		CompoundTag tileTag = stack.getTagElement("BlockEntityTag");
+		CompoundTag tileTag = stack.get(DataComponents.BLOCK_ENTITY_DATA).copyTag();
 		// TODO: seems to me like this whole block isnt needed as tater never has that tag
 		if(tileTag != null) {
 			// this code seems to move angry tag out of blockEntity tag. Maybe it could be simplified
 			if(tileTag.contains(TinyPotatoBlockEntity.TAG_ANGRY, Tag.TAG_ANY_NUMERIC)) {
 				boolean angry = tileTag.getBoolean(TinyPotatoBlockEntity.TAG_ANGRY);
 				if(angry)
-					ItemNBTHelper.setBoolean(stack, TinyPotatoBlock.ANGRY, true);
+					stack.set(QuarkDataComponents.IS_ANGRY, true);
 				else if(TinyPotatoBlock.isAngry(stack))
-					stack.getOrCreateTag().remove(TinyPotatoBlock.ANGRY);
+					stack.set(QuarkDataComponents.IS_ANGRY, false);
 				tileTag.remove(TinyPotatoBlockEntity.TAG_ANGRY);
 			}
 
 			//remove this?
 			if(tileTag.contains(TinyPotatoBlockEntity.TAG_NAME, Tag.TAG_STRING)) {
-				stack.setHoverName(Component.Serializer.fromJson(tileTag.getString(TinyPotatoBlockEntity.TAG_NAME)));
+				stack.set(DataComponents.CUSTOM_NAME, (Component.Serializer.fromJson(tileTag.getString(TinyPotatoBlockEntity.TAG_NAME))));
 				tileTag.remove(TinyPotatoBlockEntity.TAG_NAME);
 			}
 		}
 
-		if(!ItemNBTHelper.getBoolean(stack, TinyPotatoBlock.ANGRY, false))
-			stack.getOrCreateTag().remove(TinyPotatoBlock.ANGRY);
+		if(Boolean.TRUE.equals(stack.get(QuarkDataComponents.IS_ANGRY)))
+			stack.set(QuarkDataComponents.IS_ANGRY, false);
 	}
 
 	@Override
@@ -84,10 +84,10 @@ public class TinyPotatoBlockItem extends ZetaBlockItem implements IRuneColorProv
 		updateData(stack);
 
 		if(!world.isClientSide && holder instanceof Player player && holder.tickCount % 30 == 0 && TYPOS.contains(ChatFormatting.stripFormatting(stack.getDisplayName().getString()))) {
-			int ticks = ItemNBTHelper.getInt(stack, TICKS, 0);
+			int ticks = stack.get(QuarkDataComponents.TICKS);
 			if(ticks < NOT_MY_NAME) {
 				player.sendSystemMessage(Component.translatable("quark.misc.you_came_to_the_wrong_neighborhood." + ticks).withStyle(ChatFormatting.RED));
-				ItemNBTHelper.setInt(stack, TICKS, ticks + 1);
+				stack.set(QuarkDataComponents.TICKS, ticks + 1);
 			}
 		}
 	}
