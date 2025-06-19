@@ -28,7 +28,6 @@ import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.level.block.SkullBlock;
 import org.jetbrains.annotations.NotNull;
 import org.violetmoon.quark.content.client.module.UsesForCursesModule;
-import org.violetmoon.zeta.util.ItemNBTHelper;
 
 public class ArmorStandFakePlayerLayer<M extends EntityModel<ArmorStand>> extends RenderLayer<ArmorStand, M> {
 

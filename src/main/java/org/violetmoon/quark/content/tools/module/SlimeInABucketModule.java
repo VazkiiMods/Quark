@@ -21,7 +21,6 @@ import org.violetmoon.zeta.event.play.entity.player.ZPlayerInteract;
 import org.violetmoon.zeta.module.ZetaLoadModule;
 import org.violetmoon.zeta.module.ZetaModule;
 import org.violetmoon.zeta.util.Hint;
-import org.violetmoon.zeta.util.ItemNBTHelper;
 
 @ZetaLoadModule(category = "tools")
 public class SlimeInABucketModule extends ZetaModule {

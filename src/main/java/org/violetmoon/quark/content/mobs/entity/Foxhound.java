@@ -65,7 +65,6 @@ import org.violetmoon.quark.content.mobs.ai.FindPlaceToSleepGoal;
 import org.violetmoon.quark.content.mobs.ai.SleepGoal;
 import org.violetmoon.quark.content.mobs.module.FoxhoundModule;
 import org.violetmoon.quark.content.tweaks.ai.WantLoveGoal;
-import org.violetmoon.zeta.util.ItemNBTHelper;
 
 import java.util.List;
 import java.util.Optional;

@@ -24,9 +24,6 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.violetmoon.quark.base.components.QuarkDataComponents;
 import org.violetmoon.quark.content.tweaks.module.CompassesWorkEverywhereModule;
-import org.violetmoon.zeta.util.ItemNBTHelper;
-
-import java.util.Optional;
 
 @OnlyIn(Dist.CLIENT)
 public class CompassAnglePropertyFunction implements ItemPropertyFunction {

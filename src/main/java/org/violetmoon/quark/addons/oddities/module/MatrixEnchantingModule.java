@@ -41,7 +41,6 @@ import org.violetmoon.zeta.event.play.ZItemTooltip;
 import org.violetmoon.zeta.event.play.entity.player.ZPlayerInteract;
 import org.violetmoon.zeta.module.ZetaLoadModule;
 import org.violetmoon.zeta.module.ZetaModule;
-import org.violetmoon.zeta.util.ItemNBTHelper;
 import org.violetmoon.zeta.util.MiscUtil;
 
 import java.util.ArrayList;
