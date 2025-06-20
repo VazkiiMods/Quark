@@ -81,7 +81,7 @@ repositories {
     maven { url = "https://maven.theillusivec4.top/" }
     maven { url = "https://api.modrinth.com/maven" }
     maven { url = "https://maven.minecraftforge.net" }
-    maven { url = "https://maven.createmod.net" }
+    //maven { url = "https://maven.createmod.net" }
     maven { url = "https://jitpack.io" }
 }
 
@@ -95,7 +95,7 @@ dependencies {
     //runtimeOnly fg.deobf("dev.emi:emi-forge:${deps.emi}")
     runtimeOnly "maven.modrinth:spark:${deps.spark}"
 
-    implementation(jarJar("net.createmod.ponder:Ponder-NeoForge-${config.mc_version}:${deps.ponder}")) { transitive = false }
+    //implementation(jarJar("net.createmod.ponder:Ponder-NeoForge-${config.mc_version}:${deps.ponder}")) { transitive = false }
     
     implementation files ("localjars/ZetaLocals.jar")
     implementation "com.github.glitchfiend:TerraBlender-neoforge:${deps.terrablender}"

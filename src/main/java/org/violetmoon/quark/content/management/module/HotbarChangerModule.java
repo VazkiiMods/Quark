@@ -3,8 +3,6 @@ package org.violetmoon.quark.content.management.module;
 import com.mojang.blaze3d.platform.Window;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
-
-import net.createmod.catnip.platform.CatnipServices;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
@@ -15,9 +13,8 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-
+import net.neoforged.neoforge.network.PacketDistributor;
 import org.lwjgl.opengl.GL11;
-
 import org.violetmoon.quark.base.QuarkClient;
 import org.violetmoon.quark.base.network.message.ChangeHotbarMessage;
 import org.violetmoon.zeta.client.event.load.ZKeyMapping;
@@ -186,7 +183,7 @@ public class HotbarChangerModule extends ZetaModule {
 				else if(hotbarChangeOpen)
 					for(int i = 0; i < 3; i++)
 						if(isKeyDownOrFallback(mc.options.keyHotbarSlots[i], 49 + i, currInput)) {
-							CatnipServices.NETWORK.sendToServer(new ChangeHotbarMessage(i + 1));
+							PacketDistributor.sendToServer(new ChangeHotbarMessage(i + 1));
 							hotbarChangeOpen = false;
 							currentHeldItem = mc.player.getInventory().selected;
 							return;

@@ -1,7 +1,7 @@
 package org.violetmoon.quark.base.network.message;
 
 import io.netty.buffer.ByteBuf;
-import net.createmod.catnip.net.base.ServerboundPacketPayload;
+import org.violetmoon.quark.catnip.net.base.ServerboundPacketPayload;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.server.level.ServerPlayer;

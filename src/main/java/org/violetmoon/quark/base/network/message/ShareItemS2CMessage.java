@@ -1,6 +1,6 @@
 package org.violetmoon.quark.base.network.message;
 
-import net.createmod.catnip.net.base.ClientboundPacketPayload;
+import org.violetmoon.quark.catnip.net.base.ClientboundPacketPayload;
 import net.minecraft.client.GuiMessageTag;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;

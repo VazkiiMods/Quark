@@ -1,8 +1,8 @@
 package org.violetmoon.quark.base.network.message;
 
 import io.netty.buffer.ByteBuf;
-import net.createmod.catnip.net.base.ServerboundPacketPayload;
-import net.createmod.catnip.platform.CatnipServices;
+import net.neoforged.neoforge.network.PacketDistributor;
+import org.violetmoon.quark.catnip.net.base.ServerboundPacketPayload;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.server.level.ServerPlayer;
@@ -16,8 +16,7 @@ public record RequestEmoteMessage(String emote) implements ServerboundPacketPayl
 	@Override
 	public void handle(ServerPlayer player) {
 		if (player != null)
-			CatnipServices.NETWORK
-					.sendToAllClients(new DoEmoteMessage(emote, player.getUUID(), ContributorRewardHandler.getTier(player)));
+			PacketDistributor.sendToAllPlayers(new DoEmoteMessage(emote, player.getUUID(), ContributorRewardHandler.getTier(player)));
 	}
 
 	@Override

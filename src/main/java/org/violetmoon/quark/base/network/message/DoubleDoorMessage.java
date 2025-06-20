@@ -8,7 +8,7 @@ import net.minecraft.world.level.Level;
 import org.violetmoon.quark.base.Quark;
 import org.violetmoon.quark.base.network.QuarkNetwork;
 import org.violetmoon.quark.content.tweaks.module.DoubleDoorOpeningModule;
-import net.createmod.catnip.net.base.ServerboundPacketPayload;
+import org.violetmoon.quark.catnip.net.base.ServerboundPacketPayload;
 
 public record DoubleDoorMessage(BlockPos pos) implements ServerboundPacketPayload {
 	public static final StreamCodec<ByteBuf, DoubleDoorMessage> STREAM_CODEC = BlockPos.STREAM_CODEC

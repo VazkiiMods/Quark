@@ -1,8 +1,6 @@
 package org.violetmoon.quark.content.experimental.module;
 
 import com.mojang.text2speech.Narrator;
-
-import net.createmod.catnip.animation.AnimationTickHolder;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
@@ -23,8 +21,8 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.neoforged.neoforge.client.settings.KeyConflictContext;
 import net.neoforged.neoforge.client.settings.KeyModifier;
-
 import org.violetmoon.quark.base.QuarkClient;
+import org.violetmoon.quark.catnip.animation.AnimationTickHolder;
 import org.violetmoon.zeta.client.event.load.ZKeyMapping;
 import org.violetmoon.zeta.client.event.play.ZInput;
 import org.violetmoon.zeta.event.bus.LoadEvent;

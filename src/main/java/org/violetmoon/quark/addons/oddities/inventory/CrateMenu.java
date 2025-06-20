@@ -1,6 +1,5 @@
 package org.violetmoon.quark.addons.oddities.inventory;
 
-import net.createmod.catnip.platform.CatnipServices;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.player.Inventory;
@@ -12,11 +11,11 @@ import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.items.IItemHandler;
 import net.neoforged.neoforge.items.SlotItemHandler;
+import net.neoforged.neoforge.network.PacketDistributor;
 import org.jetbrains.annotations.NotNull;
 import org.violetmoon.quark.addons.oddities.block.be.CrateBlockEntity;
 import org.violetmoon.quark.addons.oddities.capability.CrateItemHandler;
 import org.violetmoon.quark.addons.oddities.module.CrateModule;
-import org.violetmoon.quark.base.QuarkClient;
 import org.violetmoon.quark.base.network.message.oddities.ScrollCrateMessage;
 
 public class CrateMenu extends AbstractContainerMenu {
@@ -220,7 +219,7 @@ public class CrateMenu extends AbstractContainerMenu {
 			broadcastChanges();
 
 			if(packet)
-				CatnipServices.NETWORK.sendToServer(new ScrollCrateMessage(down));
+				PacketDistributor.sendToServer(new ScrollCrateMessage(down));
 		}
 	}
 

@@ -1,7 +1,7 @@
 package org.violetmoon.quark.base.network.message;
 
 import io.netty.buffer.ByteBuf;
-import net.createmod.catnip.net.base.ClientboundPacketPayload;
+import org.violetmoon.quark.catnip.net.base.ClientboundPacketPayload;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.core.UUIDUtil;

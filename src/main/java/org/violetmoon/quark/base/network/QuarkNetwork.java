@@ -1,7 +1,5 @@
 package org.violetmoon.quark.base.network;
 
-import net.createmod.catnip.net.base.BasePacketPayload;
-import net.createmod.catnip.net.base.CatnipPacketRegistry;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
@@ -23,6 +21,8 @@ import org.violetmoon.quark.base.network.message.experimental.PlaceVariantUpdate
 import org.violetmoon.quark.base.network.message.oddities.HandleBackpackMessage;
 import org.violetmoon.quark.base.network.message.oddities.MatrixEnchanterOperationMessage;
 import org.violetmoon.quark.base.network.message.oddities.ScrollCrateMessage;
+import org.violetmoon.quark.catnip.net.base.BasePacketPayload;
+import org.violetmoon.quark.catnip.net.base.CatnipPacketRegistry;
 
 import java.util.Locale;
 

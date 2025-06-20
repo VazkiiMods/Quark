@@ -1,7 +1,7 @@
 package org.violetmoon.quark.base.network.message;
 
-import net.createmod.catnip.net.base.ServerboundPacketPayload;
-import net.createmod.catnip.platform.CatnipServices;
+import net.neoforged.neoforge.network.PacketDistributor;
+import org.violetmoon.quark.catnip.net.base.ServerboundPacketPayload;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.codec.StreamCodec;
@@ -27,7 +27,7 @@ public record ShareItemC2SMessage(ItemStack toShare) implements ServerboundPacke
 
 		Component senderName = player.getDisplayName();
 
-		CatnipServices.NETWORK.sendToAllClients(new ShareItemS2CMessage(player.getUUID(), senderName, toShare));
+		PacketDistributor.sendToAllPlayers(new ShareItemS2CMessage(player.getUUID(), senderName, toShare));
 	}
 
 	@Override

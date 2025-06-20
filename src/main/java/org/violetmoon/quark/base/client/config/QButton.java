@@ -1,22 +1,6 @@
 package org.violetmoon.quark.base.client.config;
 
-import java.awt.Color;
-import java.io.File;
-import java.io.IOException;
-import java.time.Month;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.List;
-
-import net.createmod.catnip.animation.AnimationTickHolder;
-import org.jetbrains.annotations.NotNull;
-import org.violetmoon.quark.base.QuarkClient;
-import org.violetmoon.quark.base.client.handler.ClientUtil;
-import org.violetmoon.quark.base.config.QuarkGeneralConfig;
-import org.violetmoon.quark.base.handler.ContributorRewardHandler;
-
 import com.mojang.blaze3d.systems.RenderSystem;
-
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
@@ -25,6 +9,19 @@ import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
+import org.jetbrains.annotations.NotNull;
+import org.violetmoon.quark.base.client.handler.ClientUtil;
+import org.violetmoon.quark.base.config.QuarkGeneralConfig;
+import org.violetmoon.quark.base.handler.ContributorRewardHandler;
+import org.violetmoon.quark.catnip.animation.AnimationTickHolder;
+
+import java.awt.*;
+import java.io.File;
+import java.io.IOException;
+import java.time.Month;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.List;
 
 public class QButton extends Button {
 

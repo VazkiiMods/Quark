@@ -1,12 +1,11 @@
 package org.violetmoon.quark.content.tweaks.module;
 
+import aurelienribon.tweenengine.Tween;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Lists;
 import com.mojang.blaze3d.platform.Window;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
-
-import net.createmod.catnip.platform.CatnipServices;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
@@ -17,12 +16,16 @@ import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
-
+import net.neoforged.neoforge.network.PacketDistributor;
 import org.lwjgl.glfw.GLFW;
 import org.violetmoon.quark.base.QuarkClient;
 import org.violetmoon.quark.base.handler.ContributorRewardHandler;
 import org.violetmoon.quark.base.network.message.RequestEmoteMessage;
-import org.violetmoon.quark.content.tweaks.client.emote.*;
+import org.violetmoon.quark.content.tweaks.client.emote.CustomEmoteIconResourcePack;
+import org.violetmoon.quark.content.tweaks.client.emote.EmoteBase;
+import org.violetmoon.quark.content.tweaks.client.emote.EmoteDescriptor;
+import org.violetmoon.quark.content.tweaks.client.emote.EmoteHandler;
+import org.violetmoon.quark.content.tweaks.client.emote.ModelAccessor;
 import org.violetmoon.quark.content.tweaks.client.screen.NotButton;
 import org.violetmoon.zeta.client.event.load.ZClientSetup;
 import org.violetmoon.zeta.client.event.load.ZKeyMapping;
@@ -39,9 +42,13 @@ import org.violetmoon.zeta.module.ZetaLoadModule;
 import org.violetmoon.zeta.module.ZetaModule;
 
 import java.io.File;
-import java.util.*;
-
-import aurelienribon.tweenengine.Tween;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.TreeMap;
 
 @ZetaLoadModule(category = "tweaks")
 public class EmotesModule extends ZetaModule {
@@ -222,7 +229,7 @@ public class EmotesModule extends ZetaModule {
 								x, y,
 								EMOTE_BUTTON_WIDTH - 1, EMOTE_BUTTON_WIDTH - 1,
 								desc,
-								() -> CatnipServices.NETWORK.sendToServer(new RequestEmoteMessage(desc.getRegistryName()))
+								() -> PacketDistributor.sendToServer(new RequestEmoteMessage(desc.getRegistryName()))
 							);
 
 							emoteButtons.add(button);
@@ -261,7 +268,7 @@ public class EmotesModule extends ZetaModule {
 				for(KeyMapping key : Client.emoteKeybinds.keySet()) {
 					if(key.isDown()) {
 						String emote = Client.emoteKeybinds.get(key);
-						CatnipServices.NETWORK.sendToServer(new RequestEmoteMessage(emote));
+						PacketDistributor.sendToServer(new RequestEmoteMessage(emote));
 						return;
 					}
 				}

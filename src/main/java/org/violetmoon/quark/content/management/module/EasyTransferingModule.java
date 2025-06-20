@@ -1,12 +1,8 @@
 package org.violetmoon.quark.content.management.module;
 
-import java.util.List;
-
-import net.createmod.catnip.platform.CatnipServices;
 import net.minecraft.client.gui.screens.Screen;
-
 import net.minecraft.network.chat.Component;
-import org.violetmoon.quark.base.QuarkClient;
+import net.neoforged.neoforge.network.PacketDistributor;
 import org.violetmoon.quark.base.client.handler.InventoryButtonHandler;
 import org.violetmoon.quark.base.client.handler.InventoryButtonHandler.ButtonTargetType;
 import org.violetmoon.quark.base.network.message.InventoryTransferMessage;
@@ -16,6 +12,8 @@ import org.violetmoon.zeta.config.Config;
 import org.violetmoon.zeta.event.bus.LoadEvent;
 import org.violetmoon.zeta.module.ZetaLoadModule;
 import org.violetmoon.zeta.module.ZetaModule;
+
+import java.util.List;
 
 @ZetaLoadModule(category = "management")
 public class EasyTransferingModule extends ZetaModule {
@@ -47,10 +45,10 @@ public class EasyTransferingModule extends ZetaModule {
 
 			InventoryButtonHandler.addButtonProvider(event, this, ButtonTargetType.CONTAINER_PLAYER_INVENTORY, priority,
 					"quark.keybind.transfer_" + name,
-					(screen) -> CatnipServices.NETWORK.sendToServer(new InventoryTransferMessage(Screen.hasShiftDown(), restock)),
+					(screen) -> PacketDistributor.sendToServer(new InventoryTransferMessage(Screen.hasShiftDown(), restock)),
 					(parent, x, y) -> new MiniInventoryButton(parent, priority, x, y,
 							() -> Screen.hasShiftDown() ? shiftedTooltip : regularTooltip,
-							(b) -> CatnipServices.NETWORK.sendToServer(new InventoryTransferMessage(Screen.hasShiftDown(), restock)))
+							(b) -> PacketDistributor.sendToServer(new InventoryTransferMessage(Screen.hasShiftDown(), restock)))
 							.setTextureShift(Screen::hasShiftDown),
 					null);
 		}

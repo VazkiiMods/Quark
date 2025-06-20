@@ -1,6 +1,5 @@
 package org.violetmoon.quark.base.proxy;
 
-import net.createmod.catnip.animation.AnimationTickHolder;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.player.LocalPlayer;
@@ -23,6 +22,7 @@ import org.violetmoon.quark.base.client.handler.ModelHandler;
 import org.violetmoon.quark.base.client.handler.QuarkProgrammerArtHandler;
 import org.violetmoon.quark.base.handler.ContributorRewardHandler;
 import org.violetmoon.quark.base.handler.WoodSetHandler;
+import org.violetmoon.quark.catnip.animation.AnimationTickHolder;
 import org.violetmoon.quark.mixin.mixins.client.accessor.AccessorMultiPlayerGameMode;
 
 import java.time.LocalDateTime;

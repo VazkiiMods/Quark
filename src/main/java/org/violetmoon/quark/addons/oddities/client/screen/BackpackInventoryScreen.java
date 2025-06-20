@@ -1,8 +1,6 @@
 package org.violetmoon.quark.addons.oddities.client.screen;
 
 import com.mojang.blaze3d.systems.RenderSystem;
-
-import net.createmod.catnip.platform.CatnipServices;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.Button;
@@ -16,12 +14,11 @@ import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.InventoryMenu;
 import net.minecraft.world.item.ItemStack;
-
+import net.neoforged.neoforge.network.PacketDistributor;
 import org.violetmoon.quark.addons.oddities.inventory.BackpackMenu;
 import org.violetmoon.quark.addons.oddities.module.BackpackModule;
 import org.violetmoon.quark.api.IQuarkButtonAllowed;
 import org.violetmoon.quark.base.Quark;
-import org.violetmoon.quark.base.QuarkClient;
 import org.violetmoon.quark.base.network.message.oddities.HandleBackpackMessage;
 
 import java.util.HashMap;
@@ -78,7 +75,7 @@ public class BackpackInventoryScreen extends InventoryScreen implements IQuarkBu
 			ItemStack curr = player.containerMenu.getCarried();
 			BackpackMenu.saveCraftingInventory(player);
 			closeHack = true;
-			CatnipServices.NETWORK.sendToServer(new HandleBackpackMessage(false));
+			PacketDistributor.sendToServer(new HandleBackpackMessage(false));
 			minecraft.setScreen(new InventoryScreen(player));
 			player.inventoryMenu.setCarried(curr);
 		}

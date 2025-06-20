@@ -13,7 +13,6 @@ package org.violetmoon.quark.content.tweaks.module;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
-import net.createmod.catnip.platform.CatnipServices;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -45,6 +44,7 @@ import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.common.ItemAbility;
 import net.neoforged.neoforge.common.NeoForge;
+import net.neoforged.neoforge.network.PacketDistributor;
 import org.apache.commons.lang3.mutable.MutableBoolean;
 import org.jetbrains.annotations.Nullable;
 import org.violetmoon.quark.api.event.SimpleHarvestEvent;
@@ -330,7 +330,7 @@ public class SimpleHarvestModule extends ZetaModule {
 
 		if(level.isClientSide) {
 			if(inHand.isEmpty())
-				CatnipServices.NETWORK.sendToServer(new HarvestMessage(pos, hand));
+				PacketDistributor.sendToServer(new HarvestMessage(pos, hand));
 		} else {
 			if(harvestingCostsDurability && isHoe)
 				inHand.hurtAndBreak(1, player, Player.getSlotForHand(InteractionHand.MAIN_HAND));

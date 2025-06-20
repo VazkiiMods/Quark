@@ -2,7 +2,6 @@ package org.violetmoon.quark.content.tweaks.module;
 
 import com.google.common.base.Predicate;
 import com.google.common.base.Predicates;
-import net.createmod.catnip.platform.CatnipServices;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.registries.Registries;
@@ -25,8 +24,8 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.common.util.TriState;
+import net.neoforged.neoforge.network.PacketDistributor;
 import org.violetmoon.quark.base.Quark;
-import org.violetmoon.quark.base.QuarkClient;
 import org.violetmoon.quark.base.network.message.DoubleDoorMessage;
 import org.violetmoon.zeta.config.Config;
 import org.violetmoon.zeta.event.bus.LoadEvent;
@@ -136,7 +135,7 @@ public class DoubleDoorOpeningModule extends ZetaModule {
 			handling = false;
 
 			if(opened)
-				CatnipServices.NETWORK.sendToServer(new DoubleDoorMessage(pos));
+				PacketDistributor.sendToServer(new DoubleDoorMessage(pos));
 		}
 	}
 }

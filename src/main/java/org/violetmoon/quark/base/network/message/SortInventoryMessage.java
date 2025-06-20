@@ -1,12 +1,12 @@
 package org.violetmoon.quark.base.network.message;
 
 import io.netty.buffer.ByteBuf;
-import net.createmod.catnip.net.base.ServerboundPacketPayload;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.server.level.ServerPlayer;
 import org.violetmoon.quark.base.handler.SortingHandler;
 import org.violetmoon.quark.base.network.QuarkNetwork;
+import org.violetmoon.quark.catnip.net.base.ServerboundPacketPayload;
 
 public record SortInventoryMessage(boolean forcePlayer) implements ServerboundPacketPayload {
 	public static final StreamCodec<ByteBuf, SortInventoryMessage> STREAM_CODEC = ByteBufCodecs.BOOL
