@@ -21,6 +21,7 @@ import net.minecraft.world.level.block.entity.ShulkerBoxBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.neoforge.common.Tags;
 import net.neoforged.neoforge.items.ItemHandlerHelper;
+import org.violetmoon.quark.mixin.mixins.accessor.AccessorBaseContainerBlockEntity;
 import org.violetmoon.zeta.event.bus.PlayEvent;
 import org.violetmoon.zeta.event.play.entity.player.ZRightClickBlock;
 import org.violetmoon.zeta.module.ZetaLoadModule;
@@ -66,7 +67,7 @@ public class ShulkerPackingModule extends ZetaModule {
 						if(be instanceof Nameable nameable && nameable.hasCustomName()) {
 							Component component = nameable.getCustomName();
 							if(component != null) {
-								shulkerBoxData.name = component;
+								((AccessorBaseContainerBlockEntity)shulkerBoxData).setName(component);
 								newShulkerBox.set(DataComponents.CUSTOM_NAME, component);
 							}
 						}

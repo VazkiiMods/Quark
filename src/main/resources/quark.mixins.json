@@ -42,6 +42,7 @@
     "ItemMixin",
     "ItemStackMixin",
     "IZetaItemExtensionsMixin",
+    "IZetaItemMixin_REAL",
     "LadderBlockMixin",
     "LanternBlockMixin",
     "LightningBoltMixin",
@@ -73,6 +74,8 @@
     "WallBlockMixin",
     "accessor.AccessorAbstractArrow",
     "accessor.AccessorAbstractChestedHorse",
+    "accessor.AccessorBaseContainerBlockEntity",
+    "accessor.AccessorBlockBehavior",
     "accessor.AccessorBlockItem",
     "accessor.AccessorChunkAccess",
     "accessor.AccessorLivingEntity",
@@ -82,8 +85,7 @@
     "accessor.AccessorSinglePoolElement",
     "accessor.AccessorTemptingSensor",
     "accessor.AccessorWolf",
-    "self.IZetaBlockMixin_FAKE",
-    "self.IZetaItemMixin_FAKE"
+    "self.IZetaBlockMixin_FAKE"
   ],
   "client": [
     "client.AbstractCandleBlockMixin",

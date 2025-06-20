@@ -1,6 +1,7 @@
 package org.violetmoon.quark.content.management.module;
 
 import com.google.common.collect.Lists;
+import net.minecraft.core.Holder;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.data.registries.VanillaRegistries;
@@ -86,7 +87,7 @@ public class AutomaticToolRestockModule extends ZetaModule {
 
 	@LoadEvent
 	public final void configChanged(ZConfigChanged event) {
-		importantEnchants = RegistryUtil.massRegistryGet(enchantNames, Registries.ENCHANTMENT);
+		importantEnchants = RegistryUtil.massRegistryGet(enchantNames, Quark.proxy.hackilyGetCurrentClientLevelRegistryAccess().registry(Registries.ENCHANTMENT).get());
 		itemsToIgnore = RegistryUtil.massRegistryGet(ignoredItems, BuiltInRegistries.ITEM);
 	}
 
@@ -259,7 +260,7 @@ public class AutomaticToolRestockModule extends ZetaModule {
 	private List<Enchantment> getImportantEnchantments(ItemStack stack) {
 		List<Enchantment> enchantsOnStack = new ArrayList<>();
 		for(Enchantment ench : importantEnchants)
-			if(EnchantmentHelper.getItemEnchantmentLevel(ench, stack) > 0)
+			if(EnchantmentHelper.getItemEnchantmentLevel(Holder.direct(ench), stack) > 0)
 				enchantsOnStack.add(ench);
 
 		return enchantsOnStack;

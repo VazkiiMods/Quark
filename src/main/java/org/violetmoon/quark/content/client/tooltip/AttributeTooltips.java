@@ -160,8 +160,8 @@ public class AttributeTooltips {
 				if(!map.containsKey(Attributes.ATTACK_SPEED) && map.containsKey(Attributes.ATTACK_DAMAGE))
 					map.put(Attributes.ATTACK_SPEED.value(), new AttributeModifier(Quark.asResource("ign_id"), 0, AttributeModifier.Operation.ADD_VALUE));
 
-				if(!map.containsKey(Attributes.ATTACK_KNOCKBACK) && Quark.ZETA.itemExtensions.get(stack).getEnchantmentLevelZeta(stack, Enchantments.KNOCKBACK) > 0)
-					map.put(Attributes.ATTACK_KNOCKBACK.value(), new AttributeModifier(Quark.asResource("ign_id"), 0, AttributeModifier.Operation.ADD_VALUE));
+				/*if(!map.containsKey(Attributes.ATTACK_KNOCKBACK) && Quark.ZETA.itemExtensions.get(stack).getEnchantmentLevelZeta(stack, Enchantments.KNOCKBACK) > 0)
+					map.put(Attributes.ATTACK_KNOCKBACK.value(), new AttributeModifier(Quark.asResource("ign_id"), 0, AttributeModifier.Operation.ADD_VALUE));*/
 			}
 			return map;
 		}
@@ -286,7 +286,7 @@ public class AttributeTooltips {
 
 		if(displayType != AttributeDisplayType.PERCENTAGE) {
 			if(slot != AttributeSlot.POTION || !key.equals(Attributes.ATTACK_DAMAGE)) { // ATTACK_DAMAGE
-				AttributeInstance attribute = player.getAttribute(key);
+				AttributeInstance attribute = player.getAttribute(Holder.direct(key));
 				if(attribute != null)
 					value = attribute.getBaseValue();
 			}

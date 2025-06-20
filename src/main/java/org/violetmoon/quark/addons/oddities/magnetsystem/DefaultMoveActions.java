@@ -26,6 +26,7 @@ import net.neoforged.neoforge.common.util.FakePlayer;
 import net.neoforged.neoforge.common.util.FakePlayerFactory;
 import org.violetmoon.quark.addons.oddities.module.MagnetsModule;
 import org.violetmoon.quark.api.IMagnetMoveAction;
+import org.violetmoon.quark.mixin.mixins.accessor.AccessorBlockBehavior;
 
 import java.util.HashMap;
 import java.util.UUID;
@@ -114,7 +115,7 @@ public class DefaultMoveActions {
 									BlockPos seedPos = groundPos.above();
 									if(state.canSurvive(world, seedPos)) {
 										BlockState seedState = seedType.defaultBlockState();
-										world.playSound(null, seedPos, seedType.getSoundType(seedState).getPlaceSound(), SoundSource.BLOCKS, 1.0F, 1.0F);
+										world.playSound(null, seedPos, ((AccessorBlockBehavior)seedType).invokeGetSoundType(seedState).getPlaceSound(), SoundSource.BLOCKS, 1.0F, 1.0F);
 
 										boolean canPlace = true;
 										if(seedState.getBlock() instanceof DoublePlantBlock) {

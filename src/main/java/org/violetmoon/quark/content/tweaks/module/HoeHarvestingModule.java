@@ -119,10 +119,11 @@ public class HoeHarvestingModule extends ZetaModule {
 
 	private boolean canHarvest(Player player, LevelAccessor world, BlockPos pos, BlockState state) {
 		Block block = state.getBlock();
-		if(block instanceof SpecialPlantable plant) {
+		//todo: Needs to check if plant is a water/desert plant.
+		/*if(block instanceof SpecialPlantable plant) {
 			PlantType type = plant.getPlantType(world, pos);
 			return type != PlantType.WATER && type != PlantType.DESERT;
-		}
+		}*/
 
 		return isHarvestableMaterial(state) &&
 				state.canBeReplaced(new BlockPlaceContext(new UseOnContext(player, InteractionHand.MAIN_HAND, new BlockHitResult(new Vec3(0.5, 0.5, 0.5), Direction.DOWN, pos, false))));

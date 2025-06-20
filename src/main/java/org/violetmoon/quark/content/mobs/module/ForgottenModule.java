@@ -69,7 +69,7 @@ public class ForgottenModule extends ZetaModule {
 		if (event.getSpawnType() == MobSpawnType.SPAWNER) return;
 
 		LivingEntity entity = event.getEntity();
-		ZResult result = event.getResult();
+		ZResult result = event.getResult() ? ZResult.ALLOW : ZResult.DENY;
 		ServerLevelAccessor world = event.getLevel();
 
 		if(entity.getType() == EntityType.SKELETON && entity instanceof Mob mob && result != ZResult.DENY && entity.getY() < maxHeightForSpawn && world.getRandom().nextDouble() < forgottenSpawnRate) {

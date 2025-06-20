@@ -4,6 +4,7 @@ import com.google.common.collect.Lists;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderers;
+import net.minecraft.core.Holder;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
@@ -28,6 +29,8 @@ import org.violetmoon.quark.addons.oddities.inventory.MatrixEnchantingMenu;
 import org.violetmoon.quark.addons.oddities.util.CustomInfluence;
 import org.violetmoon.quark.addons.oddities.util.Influence;
 import org.violetmoon.quark.base.Quark;
+import org.violetmoon.quark.base.components.QuarkDataComponents;
+import org.violetmoon.quark.mixin.mixins.client.accessor.AccessorMenuScreens;
 import org.violetmoon.zeta.advancement.ManualTrigger;
 import org.violetmoon.zeta.client.event.load.ZClientSetup;
 import org.violetmoon.zeta.config.Config;
@@ -214,15 +217,15 @@ public class MatrixEnchantingModule extends ZetaModule {
 	}
 
 	private Influence parseEnchantmentList(String enchantmentList) {
-		List<Enchantment> boost = new ArrayList<>();
-		List<Enchantment> dampen = new ArrayList<>();
+		List<Holder<Enchantment>> boost = new ArrayList<>();
+		List<Holder<Enchantment>> dampen = new ArrayList<>();
 		String[] enchantments = enchantmentList.split(",");
 		for(String enchStr : enchantments) {
 			boolean damp = enchStr.startsWith("-");
 			if(damp)
 				enchStr = enchStr.substring(1);
 
-			Enchantment ench = BuiltInRegistries.ENCHANTMENT.get(ResourceLocation.parse(enchStr));
+			Holder<Enchantment> ench = Holder.direct(Quark.proxy.hackilyGetCurrentClientLevelRegistryAccess().registry(Registries.ENCHANTMENT).get().get(ResourceLocation.parse(enchStr)));
 			if(ench != null) {
 				if(damp)
 					dampen.add(ench);
@@ -273,14 +276,14 @@ public class MatrixEnchantingModule extends ZetaModule {
 
 		@LoadEvent
 		public final void clientSetup(ZClientSetup event) {
-			MenuScreens.register(menuType, MatrixEnchantingScreen::new);
+			AccessorMenuScreens.invokeRegister(menuType, MatrixEnchantingScreen::new);
 			BlockEntityRenderers.register(blockEntityType, MatrixEnchantingTableRenderer::new);
 		}
 
 		@PlayEvent
 		public void onTooltip(ZItemTooltip event) {
 			ItemStack stack = event.getItemStack();
-			if(showTooltip && ItemNBTHelper.verifyExistence(stack, MatrixEnchantingTableBlockEntity.TAG_STACK_MATRIX))
+			if(showTooltip && stack.has(QuarkDataComponents.STACK_MATRIX))
 				event.getToolTip().add(Component.translatable("quark.gui.enchanting.pending").withStyle(ChatFormatting.AQUA));
 		}
 	}
