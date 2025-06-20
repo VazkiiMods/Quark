@@ -31,6 +31,7 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import noobanidus.mods.lootr.common.api.LootrTags;
+import noobanidus.mods.lootr.common.api.data.blockentity.ILootrBlockEntity;
 import noobanidus.mods.lootr.common.block.entity.LootrChestBlockEntity;
 import noobanidus.mods.lootr.neoforge.config.ConfigManager;
 import org.jetbrains.annotations.Nullable;
@@ -128,7 +129,7 @@ public class LootrVariantChestBlock extends VariantChestBlock implements IZetaBl
 	@Override
 	@Nullable
 	public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level pLevel, BlockState pState, BlockEntityType<T> pBlockEntityType) {
-		return pLevel.isClientSide ? LootrChestBlockEntity::lidAnimateTick : null;
+		return ILootrBlockEntity::ticker;
 	}
 
 	@Override
@@ -170,7 +171,7 @@ public class LootrVariantChestBlock extends VariantChestBlock implements IZetaBl
 
 					if(state.is(key) && !state.is(block)) {
 						BlockEntity entity = level.getBlockEntity(pos);
-						CompoundTag nbt = entity == null ? null : entity.serializeNBT();
+						CompoundTag nbt = entity == null ? null : entity.serializeAttachments(context.getLevel().registryAccess());
 						level.setBlock(pos, block.withPropertiesOf(state), 18); // Same as debug stick
 						level.levelEvent(LevelEvent.PARTICLES_DESTROY_BLOCK, pos, Block.getId(state));
 						BlockEntity newEntity = level.getBlockEntity(pos);

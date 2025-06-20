@@ -1,6 +1,5 @@
 package org.violetmoon.quark.base.network.message;
 
-import io.netty.buffer.ByteBuf;
 import net.createmod.catnip.net.base.ClientboundPacketPayload;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
@@ -11,11 +10,7 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.projectile.ThrownTrident;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
-import net.neoforged.api.distmarker.Dist;
-import net.neoforged.api.distmarker.OnlyIn;
 import org.violetmoon.quark.base.network.QuarkNetwork;
-
-import java.io.Serial;
 
 public record UpdateTridentMessage(int tridentID, ItemStack stack) implements ClientboundPacketPayload {
 	public static final StreamCodec<RegistryFriendlyByteBuf, UpdateTridentMessage> STREAM_CODEC = StreamCodec.composite(
@@ -30,7 +25,7 @@ public record UpdateTridentMessage(int tridentID, ItemStack stack) implements Cl
 		if (level != null) {
 			Entity entity = level.getEntity(tridentID);
 			if (entity instanceof ThrownTrident trident) {
-				trident.tridentItem = stack;
+				trident.pickupItemStack = stack;
 			}
 		}
 	}

@@ -5,6 +5,5 @@
   "refmap": "quark.mixins.refmap.json",
   "package": "org.violetmoon.quark.integration.mixin",
   "mixins": [
-    "lootr.ConfigManagerMixin"
   ]
 }

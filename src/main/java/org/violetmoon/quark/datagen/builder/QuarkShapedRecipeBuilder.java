@@ -25,9 +25,11 @@ public class QuarkShapedRecipeBuilder extends ShapedRecipeBuilder {
         return this;
     }
 
+    /*
     @Override
     public void save(RecipeOutput recipeOutput, ResourceLocation resourceLocation) {
         ShapedRecipe shapedrecipe = new ShapedRecipe((String)Objects.requireNonNullElse(this.group, ""), RecipeBuilder.determineBookCategory(this.category), shapedrecipepattern, this.resultStack, this.showNotification);
         recipeOutput.accept(resourceLocation, shapedrecipe, null);
     }
+     */
 }

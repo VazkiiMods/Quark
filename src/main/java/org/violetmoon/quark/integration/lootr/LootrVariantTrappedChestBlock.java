@@ -2,8 +2,8 @@ package org.violetmoon.quark.integration.lootr;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.Mth;
-import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.player.Player;
@@ -12,7 +12,6 @@ import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.ChestBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityTicker;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -22,9 +21,11 @@ import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
+import noobanidus.mods.lootr.common.api.LootrAPI;
+import noobanidus.mods.lootr.common.api.data.ILootrInfoProvider;
+import noobanidus.mods.lootr.common.api.data.blockentity.ILootrBlockEntity;
 import noobanidus.mods.lootr.common.block.entity.LootrChestBlockEntity;
 import noobanidus.mods.lootr.neoforge.config.ConfigManager;
-import noobanidus.mods.lootr.util.ChestUtil;
 import org.jetbrains.annotations.Nullable;
 import org.violetmoon.quark.content.building.block.VariantTrappedChestBlock;
 import org.violetmoon.zeta.module.ZetaModule;
@@ -76,13 +77,16 @@ public class LootrVariantTrappedChestBlock extends VariantTrappedChestBlock impl
 	}
 
 	@Override
-	public InteractionResult useWithoutItem(BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand, BlockHitResult trace) {
-		if(player.isShiftKeyDown()) {
-			ChestUtil.handleLootSneak(this, world, pos, player);
-		} else if(!ChestBlock.isChestBlockedAt(world, pos)) {
-			ChestUtil.handleLootChest(this, world, pos, player);
+	protected InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos, Player player, BlockHitResult result) {
+		if (level.isClientSide() || player.isSpectator() || !(player instanceof ServerPlayer serverPlayer)) {
+			return InteractionResult.CONSUME;
 		}
-		return InteractionResult.sidedSuccess(world.isClientSide);
+		if (serverPlayer.isShiftKeyDown()) {
+			LootrAPI.handleProviderSneak(ILootrInfoProvider.of(pos, level), serverPlayer);
+		} else if (!isChestBlockedAt(level, pos)) {
+			LootrAPI.handleProviderOpen(ILootrInfoProvider.of(pos, level), serverPlayer);
+		}
+		return super.useWithoutItem(state, level, pos, player, result);
 	}
 
 	@Override
@@ -108,7 +112,7 @@ public class LootrVariantTrappedChestBlock extends VariantTrappedChestBlock impl
 	@Override
 	@Nullable
 	public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level pLevel, BlockState pState, BlockEntityType<T> pBlockEntityType) {
-		return pLevel.isClientSide ? LootrChestBlockEntity::lootrLidAnimateTick : null;
+		return ILootrBlockEntity::ticker;
 	}
 
 	// END LOOTR COPY
