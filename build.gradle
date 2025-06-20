@@ -144,24 +144,16 @@ processResources {
         exclude '**/psd/**'
         duplicatesStrategy 'include'
     }
-
-/*
-    TODO: figure out a way to bring this back while keeping
-    the standard file.version format
     
     // Formats 1.0-13.58 to 1.0-13 (removes the build number)
     String zetaVer = deps.zeta.substring(0, deps.zeta.lastIndexOf('.'))
     String curiosVer = deps.curios;
-    String versionStr = version as String;
 
-    file = new Object() {
-        String version = versionStr;
-    };
-
-    Map<String, String> properties = Map.of(
+    Map<String, ?> properties = Map.of(
             "zeta_ver", zetaVer,
             "curios_ver", curiosVer,
-            "file", file
+            // Replaces FML's magic file.jarVersion string with the correct version at build time.
+            "file", [jarVersion: project.version]
     )
 
     properties.forEach((k, v) -> inputs.property(k, v))
@@ -169,7 +161,6 @@ processResources {
     filesMatching("META-INF/mods.toml") {
         expand properties
     }
-*/
 }
 
 def parseConfig(File config) {
