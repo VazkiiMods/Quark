@@ -6,6 +6,7 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.EnchantmentTags;
 import net.minecraft.util.Mth;
@@ -314,7 +315,7 @@ public class EnchantmentMatrix {
 
 			int id = pieceTag.getInt(TAG_PIECE_ID);
 			Piece piece = new Piece();
-			piece.readFromNBT(pieceTag);
+			piece.readFromNBT(pieceTag, levelAsInWorld);
 			pieces.put(id, piece);
 			totalValue.put(piece.enchant, totalValue.getOrDefault(piece.enchant, 0) + piece.getValue());
 		}
@@ -486,10 +487,10 @@ public class EnchantmentMatrix {
 				cmp.putIntArray(TAG_BLOCK + i, blocks[i]);
 		}
 
-		public void readFromNBT(CompoundTag cmp) {
+		public void readFromNBT(CompoundTag cmp, Level levelAsInWorld) {
 			color = cmp.getInt(TAG_COLOR);
 			type = cmp.getInt(TAG_TYPE);
-			enchant = BuiltInRegistries.ENCHANTMENT.get(ResourceLocation.parse(cmp.getString(TAG_ENCHANTMENT)));
+			enchant = levelAsInWorld.registryAccess().lookupOrThrow(Registries.ENCHANTMENT).get(ResourceKey.create(Registries.ENCHANTMENT, ResourceLocation.parse(cmp.getString(TAG_ENCHANTMENT)))).get();
 			level = cmp.getInt(TAG_LEVEL);
 			x = cmp.getInt(TAG_X);
 			y = cmp.getInt(TAG_Y);

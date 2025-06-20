@@ -155,8 +155,7 @@ public class AttributeTooltips {
 		if(capturedModifiers.containsKey(slot)) {
 			var map = capturedModifiers.get(slot);
 			if(slot == AttributeSlot.MAINHAND) {
-				if(!map.containsKey(Attributes.ATTACK_DAMAGE) && (map.containsKey(Attributes.ATTACK_SPEED) || EnchantmentHelper.getDamageBonus(stack, MobType.UNDEFINED) > 0))
-					map.put(Attributes.ATTACK_DAMAGE.value(), new AttributeModifier(Quark.asResource("ign_id"), 0, AttributeModifier.Operation.ADD_VALUE));
+				// if(!map.containsKey(Attributes.ATTACK_DAMAGE) && (map.containsKey(Attributes.ATTACK_SPEED) || EnchantmentHelper.getDamageBonus(stack, MobType.UNDEFINED) > 0)) map.put(Attributes.ATTACK_DAMAGE.value(), new AttributeModifier(Quark.asResource("ign_id"), 0, AttributeModifier.Operation.ADD_VALUE));
 
 				if(!map.containsKey(Attributes.ATTACK_SPEED) && map.containsKey(Attributes.ATTACK_DAMAGE))
 					map.put(Attributes.ATTACK_SPEED.value(), new AttributeModifier(Quark.asResource("ign_id"), 0, AttributeModifier.Operation.ADD_VALUE));
@@ -310,14 +309,13 @@ public class AttributeTooltips {
 				value += value * modifier.amount();
 		}
 
-		if(key.equals(Attributes.ATTACK_DAMAGE) && slot == AttributeSlot.MAINHAND)
-			value += EnchantmentHelper.getDamageBonus(stack, MobType.UNDEFINED);
+		// if(key.equals(Attributes.ATTACK_DAMAGE) && slot == AttributeSlot.MAINHAND) value += EnchantmentHelper.getDamageBonus(stack, MobType.UNDEFINED);
 		if(key.equals(Attributes.ATTACK_KNOCKBACK) && slot == AttributeSlot.MAINHAND)
-			value += Quark.ZETA.itemExtensions.get(stack).getEnchantmentLevelZeta(stack, Enchantments.KNOCKBACK);
+			value += Quark.ZETA.itemExtensions.get(stack).getEnchantmentLevelZeta(stack, player.level().registryAccess().holderOrThrow(Enchantments.KNOCKBACK));
 
 		if(displayType == AttributeDisplayType.DIFFERENCE) {
 			if(slot != AttributeSlot.POTION || !key.equals(Attributes.ATTACK_DAMAGE)) {
-				AttributeInstance attribute = player.getAttribute(key);
+				AttributeInstance attribute = player.getAttribute(Holder.direct(key));
 				if(attribute != null)
 					value -= attribute.getBaseValue();
 			}

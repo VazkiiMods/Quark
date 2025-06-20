@@ -32,6 +32,7 @@ import org.jetbrains.annotations.Nullable;
 import org.violetmoon.quark.api.ITrowelable;
 import org.violetmoon.quark.api.IUsageTickerOverride;
 import org.violetmoon.quark.base.Quark;
+import org.violetmoon.quark.base.components.QuarkDataComponents;
 import org.violetmoon.quark.content.tools.module.SeedPouchModule;
 import org.violetmoon.zeta.item.ZetaItem;
 import org.violetmoon.zeta.module.IDisableable;
@@ -350,7 +351,7 @@ public class SeedPouchItem extends ZetaItem implements IUsageTickerOverride, ITr
 
 		public ItemStack writeToStack(ItemStack target) {
 			CompoundTag tag = new CompoundTag();
-			target.save(access, tag);
+			//target.save(access, tag);
 
 			if(isEmpty()) {
 				//If we are empty, and the target doesn't have any NBT tag, that's cool. Nothing to do.
@@ -358,24 +359,21 @@ public class SeedPouchItem extends ZetaItem implements IUsageTickerOverride, ITr
                 tag.remove(TAG_STORED_ITEM);
                 tag.remove(TAG_COUNT);
 
-                //And, if we just removed *all* the tags on the target, erase its NBT tag entirely.
-                if(tag.isEmpty())
-                    target.setTag(null);
+                //And, if we just removed *all* the tags on the target, erase its NBT tag entirely.;
             } else {
-				ItemNBTHelper.setCompound(target, TAG_STORED_ITEM, contents.save(new CompoundTag()));
-				ItemNBTHelper.setInt(target, TAG_COUNT, count);
+				target.set(QuarkDataComponents.STORED_ITEM, target);
+				target.set(QuarkDataComponents.ITEM_COUNT, count);
 			}
 
 			return target;
 		}
 
 		public static PouchContents readFromStack(ItemStack target) {
-			CompoundTag tag = target.getTag();
 			PouchContents contents = new PouchContents();
 
-			if(tag != null && tag.contains(TAG_STORED_ITEM) && tag.contains(TAG_COUNT)) {
-				contents.contents = new ItemStack(tag.getCompound(TAG_STORED_ITEM));
-				contents.count = tag.getInt(TAG_COUNT);
+			if(target.has(QuarkDataComponents.STORED_ITEM) && target.has(QuarkDataComponents.ITEM_COUNT)) {
+				contents.contents = target.get(QuarkDataComponents.STORED_ITEM);
+				contents.count = target.get(QuarkDataComponents.ITEM_COUNT);
 			}
 
 			return contents;
@@ -384,7 +382,7 @@ public class SeedPouchItem extends ZetaItem implements IUsageTickerOverride, ITr
 		//Invariant: readFromStack(target).getCount() == readCountOnlyFromStack().
 		//Reading itemstacks is expensive, often times we don't care about them.
 		public static int readCountOnlyFromStack(ItemStack target) {
-			return ItemNBTHelper.getInt(target, TAG_COUNT, 0);
+			return target.get(QuarkDataComponents.ITEM_COUNT);
 		}
 
 		//Ensures you can't read a PouchContents, mutate it, then forget to write it back to the stack.

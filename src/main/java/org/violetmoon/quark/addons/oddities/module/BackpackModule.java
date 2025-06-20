@@ -39,6 +39,7 @@ import org.violetmoon.quark.base.Quark;
 import org.violetmoon.quark.base.QuarkClient;
 import org.violetmoon.quark.base.client.handler.ModelHandler;
 import org.violetmoon.quark.base.network.message.oddities.HandleBackpackMessage;
+import org.violetmoon.quark.mixin.mixins.client.accessor.AccessorMenuScreens;
 import org.violetmoon.zeta.block.ZetaBlock;
 import org.violetmoon.zeta.client.event.load.ZAddItemColorHandlers;
 import org.violetmoon.zeta.client.event.load.ZClientSetup;
@@ -191,7 +192,7 @@ public class BackpackModule extends ZetaModule {
 		@LoadEvent
 		public void clientSetup(ZClientSetup e) {
 			e.enqueueWork(() -> {
-				MenuScreens.register(menyType, BackpackInventoryScreen::new);
+				AccessorMenuScreens.invokeRegister(menyType, BackpackInventoryScreen::new);
 
 				ItemProperties.register(backpack, Quark.asResource("has_items"),
 						(stack, world, entity, i) -> (!BackpackModule.superOpMode && BackpackItem.doesBackpackHaveItems(stack)) ? 1 : 0);

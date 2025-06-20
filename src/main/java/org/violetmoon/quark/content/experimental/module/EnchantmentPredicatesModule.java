@@ -46,16 +46,16 @@ public class EnchantmentPredicatesModule extends ZetaModule {
 				e.enqueueWork(() -> {
 
 					List<Item> items = RegistryUtil.massRegistryGet(itemsToChange, BuiltInRegistries.ITEM);
-					List<Enchantment> enchants = RegistryUtil.massRegistryGet(enchantmentsToRegister, BuiltInRegistries.ENCHANTMENT);
+					//List<Enchantment> enchants = RegistryUtil.massRegistryGet(enchantmentsToRegister, BuiltInRegistries.ENCHANTMENT);
 
-					for(Enchantment enchant : enchants) {
-						ResourceLocation enchantRes = BuiltInRegistries.ENCHANTMENT.getKey(enchant);
+					/*for(Enchantment enchant : enchants) {
+						//ResourceLocation enchantRes = BuiltInRegistries.ENCHANTMENT.getKey(enchant);
 						ResourceLocation name = ResourceLocation.parse(Quark.MOD_ID + "_has_enchant_" + enchantRes.getNamespace() + "_" + enchantRes.getPath());
 						ItemPropertyFunction fun = (stack, level, entity, i) -> EnchantmentHelper.getTagEnchantmentLevel(Holder.direct(enchant), stack);
 
 						for(Item item : items)
 							ItemProperties.register(item, name, fun);
-					}
+					}*/
 				});
 			}
 		}

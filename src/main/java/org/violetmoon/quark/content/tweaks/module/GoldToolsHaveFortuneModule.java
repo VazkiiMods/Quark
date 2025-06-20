@@ -82,8 +82,8 @@ public class GoldToolsHaveFortuneModule extends ZetaModule {
 							continue;
 						ResourceLocation enchantLoc = ResourceLocation.tryParse(split2[0]);
 						if(enchantLoc != null) {
-							Enchantment enchant = BuiltInRegistries.ENCHANTMENT.get(enchantLoc);
-							if(enchant != null) {
+							//Enchantment enchant = BuiltInRegistries.ENCHANTMENT.get(enchantLoc);
+							/*if(enchant != null) {
 								try {
 									int strength = split2.length == 1 ? 1 : Integer.parseInt(split2[1]);
 									var pastry = wellBakedEnchantments.computeIfAbsent(item, it -> new Object2IntArrayMap<>());
@@ -91,7 +91,7 @@ public class GoldToolsHaveFortuneModule extends ZetaModule {
 								} catch (NumberFormatException e) {
 									// NO-OP
 								}
-							}
+							}*/
 						}
 					}
 				}
@@ -101,9 +101,9 @@ public class GoldToolsHaveFortuneModule extends ZetaModule {
 		if(fortuneLevel > 0) {
 			for(Item item : BuiltInRegistries.ITEM) {
 				if(item instanceof TieredItem tiered && tiered.getTier() == Tiers.GOLD) {
-					Enchantment enchant = item instanceof SwordItem ? Enchantments.LOOTING : Enchantments.FORTUNE;
+					/*Enchantment enchant = item instanceof SwordItem ? Enchantments.LOOTING : Enchantments.FORTUNE;
 					var pastry = wellBakedEnchantments.computeIfAbsent(item, it -> new Object2IntArrayMap<>());
-					pastry.put(enchant, Math.max(fortuneLevel, pastry.getOrDefault(enchant, 0)));
+					pastry.put(enchant, Math.max(fortuneLevel, pastry.getOrDefault(enchant, 0)));*/
 				}
 			}
 		}
@@ -154,9 +154,8 @@ public class GoldToolsHaveFortuneModule extends ZetaModule {
 	}
 
 	public static void fakeEnchantmentTooltip(ItemStack stack, List<Component> components) {
-		if(staticEnabled && displayBakedEnchantmentsInTooltip)
-
-			for(Object2IntMap.Entry<Holder<Enchantment>> entry : Quark.ZETA.itemExtensions.get(stack).getAllEnchantmentsZeta(stack).entrySet()) {
+		//if(staticEnabled && displayBakedEnchantmentsInTooltip)
+			/*for(Object2IntMap.Entry<Holder<Enchantment>> entry : Quark.ZETA.itemExtensions.get(stack).getAllEnchantmentsZeta(stack).entrySet()) {
 				int actualLevel = EnchantmentHelper.getTagEnchantmentLevel(entry.getKey(), stack);
 				if(actualLevel != entry.getValue()) {
 					Component comp = Enchantment.getFullname(entry.getKey(), entry.getValue());
@@ -169,27 +168,27 @@ public class GoldToolsHaveFortuneModule extends ZetaModule {
 
 					components.add(comp);
 				}
-			}
+			}*/
 	}
 
 	public static ListTag hideSmallerEnchantments(ItemStack stack, ListTag tag) {
 		if(staticEnabled && displayBakedEnchantmentsInTooltip) {
 			List<ResourceLocation> toRemove = Lists.newArrayList();
-			for(Object2IntMap.Entry<Holder<Enchantment>> entry : Quark.ZETA.itemExtensions.get(stack).getAllEnchantmentsZeta(stack).entrySet()) {
+			/*for(Object2IntMap.Entry<Holder<Enchantment>> entry : Quark.ZETA.itemExtensions.get(stack).getAllEnchantmentsZeta(stack).entrySet()) {
 				int actualLevel = EnchantmentHelper.getTagEnchantmentLevel(entry.getKey(), stack);
 				if(actualLevel != entry.getIntValue() && actualLevel != 0) {
-					toRemove.add(EnchantmentHelper.getEnchantmentId(entry.getKey()));
+				//	toRemove.add(EnchantmentHelper.getEnchantmentId(entry.getKey()));
 				}
-			}
+			}*/
 
 			if(!toRemove.isEmpty()) {
 				tag = tag.copy();
 				tag.removeIf(it -> {
 					if(it instanceof CompoundTag compound) {
-						ResourceLocation loc = EnchantmentHelper.getEnchantmentId(compound);
+					/*	ResourceLocation loc = EnchantmentHelper.getEnchantmentId(compound);
 						if(loc != null) {
 							return toRemove.contains(loc);
-						}
+						}*/
 					}
 					return false;
 				});

@@ -6,6 +6,7 @@ import net.minecraft.core.Holder;
 import net.minecraft.core.NonNullList;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -22,6 +23,7 @@ import org.violetmoon.zeta.event.play.ZAnvilUpdate;
 import org.violetmoon.zeta.module.ZetaLoadModule;
 import org.violetmoon.zeta.module.ZetaModule;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Predicate;
@@ -44,9 +46,9 @@ public class EnchantmentsBegoneModule extends ZetaModule {
 		enchantments.clear();
 
 		for(String enchantKey : enchantmentsToBegone) {
-			Holder<Enchantment> enchantment = BuiltInRegistries.ENCHANTMENT.get(ResourceLocation.parse(enchantKey));
+			/*Holder<Enchantment> enchantment = BuiltInRegistries.ENCHANTMENT.get(ResourceLocation.parse(enchantKey));
 			if(enchantment != null)
-				enchantments.add(enchantment);
+				enchantments.add(enchantment);*/
 		}
 	}
 
@@ -70,6 +72,14 @@ public class EnchantmentsBegoneModule extends ZetaModule {
 			}
 			return false;
 		});
+	}
+
+	public static boolean shouldBegone(ResourceKey<Enchantment> resourceKey) {
+		List<ResourceKey<Enchantment>> evilAcursedList = new ArrayList<>();
+		for (Holder<Enchantment> enchantHeld : enchantments) {
+			evilAcursedList.add(enchantHeld.unwrapKey().get());
+		}
+		return staticEnabled && evilAcursedList.contains(resourceKey);
 	}
 
 	public static boolean shouldBegone(Holder<Enchantment> enchantment) {

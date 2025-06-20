@@ -423,20 +423,19 @@ public class AncientTomesModule extends ZetaModule {
 	public static void initializeEnchantmentList(Iterable<String> enchantNames, List<Holder<Enchantment>> enchants) {
 		enchants.clear();
 		for(String s : enchantNames) {
-			Holder<Enchantment> enchant = BuiltInRegistries.ENCHANTMENT.get(ResourceLocation.parse(s));
-			if(enchant != null && !EnchantmentsBegoneModule.shouldBegone(enchant))
-				enchants.add(enchant);
+			ResourceKey<Enchantment> realsourceKey = ResourceKey.create(Registries.ENCHANTMENT, ResourceLocation.parse(s));
+			//if(!EnchantmentsBegoneModule.shouldBegone(realsourceKey))
+			 //enchants.add(enchant);
 		}
 	}
 
 	private final List<Holder<Enchantment>> curses = new ArrayList<>();
 
 	public void setupCursesList() {
-
-		for(var e : BuiltInRegistries.ENCHANTMENT) {
+		/*for(var e : BuiltInRegistries.ENCHANTMENT) {
 			if(e.isCurse())
 				curses.add(e);
-		}
+		}*/
 	}
 
 	public static Holder<Enchantment> getTomeEnchantment(ItemStack stack) {
