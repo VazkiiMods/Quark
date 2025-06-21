@@ -31,6 +31,7 @@ import org.violetmoon.zeta.util.MiscUtil;
 
 import java.util.List;
 import java.util.Random;
+import java.util.function.Predicate;
 
 /**
  * @author WireSegal
@@ -47,7 +48,7 @@ public class FeedingTroughBlockEntity extends RandomizableContainerBlockEntity {
 		this.stacks = NonNullList.withSize(9, ItemStack.EMPTY);
 	}
 
-	public void updateFoodHolder(Animal mob, Ingredient temptations, FakePlayer foodHolder) {
+	public void updateFoodHolder(Animal mob, Predicate<ItemStack> temptations, FakePlayer foodHolder) {
 		for(int i = 0; i < getContainerSize(); i++) {
 			ItemStack stack = getItem(i);
 			if(temptations.test(stack) && mob.isFood(stack)) {

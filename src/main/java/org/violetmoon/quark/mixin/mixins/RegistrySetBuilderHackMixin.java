@@ -15,7 +15,7 @@ import java.util.List;
 // This is a terrible temporary fix until the real issue is found
 @Mixin(RegistrySetBuilder.BuildState.class)
 public class RegistrySetBuilderHackMixin {
-    @WrapOperation(method = "reportRemainingUnreferencedValues",
+    @WrapOperation(method = "reportNotCollectedHolders",
             at = @At(value = "INVOKE", target = "Ljava/util/List;add(Ljava/lang/Object;)Z", ordinal = 0)
     )
     public <E> boolean quark$preventInvalidGWBiome(List<RuntimeException> instance, E error, Operation<Boolean> original, @Local ResourceKey<Object> resourcekey) {

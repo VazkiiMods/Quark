@@ -21,9 +21,10 @@ public class ArmorTrimMixin {
 	@Final
 	private static Component UPGRADE_TITLE;
 
+	/*
 	@Inject(method = "appendUpgradeHoverText", at = @At("RETURN"))
 	private static void appendRuneText(ItemStack stack, RegistryAccess registry, List<Component> components, CallbackInfo ci) {
 		ColorRunesModule.Client.appendRuneText(stack, components, UPGRADE_TITLE);
-	}
+	}*/
 
 }

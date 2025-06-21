@@ -1,5 +1,6 @@
 package org.violetmoon.quark.mixin.mixins.client;
 
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.level.block.entity.JukeboxBlockEntity;
 
@@ -13,8 +14,8 @@ import org.violetmoon.quark.content.tools.module.AmbientDiscsModule;
 @Mixin(JukeboxBlockEntity.class)
 public class JukeboxBlockEntityMixin {
 
-	@Inject(method = "load", at = @At("TAIL"))
-	public void load(CompoundTag nbt, CallbackInfo info) {
+	@Inject(method = "loadAdditional", at = @At("TAIL"))
+	public void load(CompoundTag tag, HolderLookup.Provider provider, CallbackInfo ci) {
 		AmbientDiscsModule.Client.onJukeboxLoad((JukeboxBlockEntity) (Object) this);
 	}
 

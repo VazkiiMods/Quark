@@ -15,6 +15,7 @@ import net.minecraft.world.entity.animal.Animal;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.DispenserMenu;
 import net.minecraft.world.inventory.MenuType;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.GameRules;
@@ -48,6 +49,7 @@ import org.violetmoon.zeta.module.ZetaModule;
 import org.violetmoon.zeta.util.Hint;
 
 import java.util.*;
+import java.util.function.Predicate;
 
 /**
  * @author WireSegal
@@ -120,7 +122,7 @@ public class FeedingTroughModule extends ZetaModule {
         return modifyTempt(level, animal, (Ingredient) goal.items);
     }
 
-    private static @Nullable Player modifyTempt(ServerLevel level, Animal animal, Ingredient temptations) {
+    private static @Nullable Player modifyTempt(ServerLevel level, Animal animal, Predicate<ItemStack> temptations) {
         //early-exit conditions
         if (!Quark.ZETA.modules.isEnabled(FeedingTroughModule.class) ||
                 !animal.canFallInLove() ||
@@ -193,11 +195,11 @@ public class FeedingTroughModule extends ZetaModule {
     private static final class TroughPointer {
         private final BlockPos pos;
         private final FakePlayer fakePlayer;
-        private final Ingredient temptations;
+        private final Predicate<ItemStack> temptations;
         private int eatCooldown = 0; //Ideally cooldown should be per entity... Assuming troughs don't change much this is fine
         private int giveUpCooldown = 20 * 20; //max seconds till we give up
 
-        private TroughPointer(BlockPos pos, FakePlayer player, Ingredient temptations) {
+        private TroughPointer(BlockPos pos, FakePlayer player, Predicate<ItemStack> temptations) {
             this.pos = pos;
             this.fakePlayer = player;
             this.temptations = temptations;
@@ -266,7 +268,7 @@ public class FeedingTroughModule extends ZetaModule {
 
 
         @Nullable
-        static TroughPointer find(ServerLevel level, Animal animal, Ingredient temptations) {
+        static TroughPointer find(ServerLevel level, Animal animal, Predicate<ItemStack> temptations) {
             // this is an expensive part
             BlockPos position = animal.getOnPos();
             Optional<BlockPos> opt = level.getPoiManager().findClosest(

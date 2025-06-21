@@ -14,12 +14,13 @@ import org.violetmoon.quark.content.tweaks.module.GoldToolsHaveFortuneModule;
 public class DiggerItemMixin {
 
 	//TODO: IForgeItem
-	@ModifyExpressionValue(
+	//Todo: Yeah even moreso now.
+	/*@ModifyExpressionValue(
 		method = "isCorrectToolForDrops(Lnet/minecraft/world/item/ItemStack;Lnet/minecraft/world/level/block/state/BlockState;)Z",
 		at = @At(value = "INVOKE", target = "Lnet/minecraft/world/item/DiggerItem;getTier()Lnet/minecraft/world/item/Tier;")
 	)
 	private Tier getTier(Tier prev) {
 		return GoldToolsHaveFortuneModule.getEffectiveTier(prev);
-	}
+	}*/
 
 }
