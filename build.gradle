@@ -13,7 +13,7 @@ plugins {
     id 'maven-publish'
     id 'pmd'
     id 'com.diffplug.spotless' version '6.22.0'
-    id 'net.neoforged.gradle.userdev' version '7.0.142'
+    id 'net.neoforged.gradle.userdev' version '7.0.180'
 }
 
 jarJar.enable()
