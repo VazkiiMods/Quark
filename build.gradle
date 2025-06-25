@@ -97,7 +97,7 @@ dependencies {
 
     //implementation(jarJar("net.createmod.ponder:Ponder-NeoForge-${config.mc_version}:${deps.ponder}")) { transitive = false }
     
-    implementation files ("localjars/ZetaLocals.jar")
+    implementation files ("localjars/Zeta-1.0-30.jar")
     implementation "com.github.glitchfiend:TerraBlender-neoforge:${deps.terrablender}"
     implementation "curse.maven:jei-238222:${deps.jei}"
     // implementation fg.deobf("curse.maven:flan-forge-493246:${deps.flan}")

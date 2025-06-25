@@ -19,7 +19,7 @@ import org.violetmoon.quark.content.client.module.UsesForCursesModule;
 @Mixin(Gui.class)
 public class GuiMixin {
 
-	@ModifyExpressionValue(method = "renderArmor", at = @At(value = "CONSTANT", args = "intValue==20"), remap = false)
+	@ModifyExpressionValue(method = "renderArmor", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/player/Player;getArmorValue()I"), remap = false)
 	private static int renderArmor(int original) {
 		ElytraIndicatorModule module = Quark.ZETA.modules.get(ElytraIndicatorModule.class);
 		return module == null ? original : module.getArmorLimit(original);

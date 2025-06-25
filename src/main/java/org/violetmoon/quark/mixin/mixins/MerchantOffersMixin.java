@@ -13,7 +13,7 @@ import org.violetmoon.quark.content.experimental.hax.PseudoAccessorMerchantOffer
 @Mixin(MerchantOffers.class)
 public class MerchantOffersMixin {
 
-	@Inject(method = "<init>(Lnet/minecraft/nbt/CompoundTag;)V", at = @At("RETURN"))
+	/*@Inject(method = "<init>(Lnet/minecraft/nbt/CompoundTag;)V", at = @At("RETURN"))
 	public void setUpTiers(CompoundTag tag, CallbackInfo ci) {
 		MerchantOffers offers = (MerchantOffers) (Object) this;
 
@@ -25,6 +25,6 @@ public class MerchantOffersMixin {
 			// We infer tiers for preexisting villagers, assuming each tier has two offers.
 			// This assumption can be wrong, but usually won't be wrong enough to matter.
 		}
-	}
+	}*/
 
 }

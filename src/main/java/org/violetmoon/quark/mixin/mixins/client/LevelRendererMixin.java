@@ -24,9 +24,9 @@ public class LevelRendererMixin {
 	@Shadow @Nullable private ClientLevel level;
 
 	@Inject(
-		method = "Lnet/minecraft/client/renderer/LevelRenderer;playJukeboxSong(Lnet/minecraft/core/Holder;Lnet/minecraft/core/BlockPos;)V",
+		method = "playJukeboxSong(Lnet/minecraft/core/Holder;Lnet/minecraft/core/BlockPos;)V",
 		remap = false,
-		at = @At(value = "JUMP", ordinal = 1),
+		at = @At(value = "JUMP", ordinal = 0),
 		cancellable = true
 	)
 	public void playStreamingMusic(Holder<JukeboxSong> song, BlockPos pos, CallbackInfo ci) {
