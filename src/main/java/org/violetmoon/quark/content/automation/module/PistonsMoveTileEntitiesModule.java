@@ -87,7 +87,7 @@ public class PistonsMoveTileEntitiesModule extends ZetaModule {
 		delays.clear();
 	}
 
-	@PlayEvent
+	@LoadEvent
 	public void addAdditionalHints(ZGatherHints event) {
 		MutableComponent comp = Component.translatable("quark.jei.hint.piston_te");
 

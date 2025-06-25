@@ -64,7 +64,7 @@ public class BeaconRedirectionModule extends ZetaModule {
 		staticEnabled = isEnabled();
 	}
 
-	@PlayEvent
+	@LoadEvent
 	public void addAdditionalHints(ZGatherHints event) {
 		final String redirectHint = "beacon_redirect_item";
 		String type = "amethyst";

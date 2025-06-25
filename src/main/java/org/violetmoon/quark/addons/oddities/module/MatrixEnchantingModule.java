@@ -186,7 +186,7 @@ public class MatrixEnchantingModule extends ZetaModule {
 		influenceTrigger = event.getAdvancementModifierRegistry().registerManualTrigger("influence");
 	}
 
-	@PlayEvent
+	@LoadEvent
 	public void addAdditionalHints(ZGatherHints event) {
 		MutableComponent comp = Component.translatable("quark.jei.hint.matrix_enchanting");
 		if(allowInfluencing)

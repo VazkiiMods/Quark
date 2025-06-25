@@ -93,7 +93,7 @@ public class SpiralSpiresModule extends ZetaModule {
 		WorldGenHandler.addGenerator(this, new SpiralSpireGenerator(dimensions), Decoration.SURFACE_STRUCTURES, QuarkWorldGenWeights.SPIRAL_SPIRES);
 	}
 
-	@PlayEvent
+	@LoadEvent
 	public void addAdditionalHints(ZGatherHints event) {
 		MutableComponent comp = Component.translatable("quark.jei.hint.myalite_crystal_get");
 

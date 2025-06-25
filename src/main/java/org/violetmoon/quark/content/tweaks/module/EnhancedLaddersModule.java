@@ -76,7 +76,7 @@ public class EnhancedLaddersModule extends ZetaModule {
 		staticEnabled = isEnabled();
 	}
 
-	@PlayEvent
+	@LoadEvent
 	public void addAdditionalHints(ZGatherHints event) {
 		if(!allowFreestanding && !allowDroppingDown && !allowSliding && !allowInventorySneak)
 			return;

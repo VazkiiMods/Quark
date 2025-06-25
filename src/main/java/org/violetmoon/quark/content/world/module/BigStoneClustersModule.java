@@ -92,7 +92,7 @@ public class BigStoneClustersModule extends ZetaModule {
 		add(myalite, NewStoneTypesModule.myaliteBlock, () -> NewStoneTypesModule.enabledWithMyalite);
 	}
 
-	@PlayEvent
+	@LoadEvent
 	public void addAdditionalHints(ZGatherHints event) {
 		if(calcite.enabled)
 			event.hintItem(Items.CALCITE, zeta());

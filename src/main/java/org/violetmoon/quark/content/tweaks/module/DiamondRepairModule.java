@@ -82,7 +82,7 @@ public class DiamondRepairModule extends ZetaModule {
 		unrepairableItems = RegistryUtil.massRegistryGet(unrepairableItemsList, BuiltInRegistries.ITEM);
 	}
 
-	@PlayEvent
+	@LoadEvent
 	public void addAdditionalHints(ZGatherHints event) {
 		if(!enableJeiHints)
 			return;

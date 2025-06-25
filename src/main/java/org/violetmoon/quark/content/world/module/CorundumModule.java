@@ -114,7 +114,7 @@ public class CorundumModule extends ZetaModule {
 		);
 	}
 
-	@PlayEvent
+	@LoadEvent
 	public void addAdditionalHints(ZGatherHints event) {
 		MutableComponent comp = Component.translatable("quark.jei.hint.corundum_cluster_grow");
 

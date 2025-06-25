@@ -41,7 +41,7 @@ public class CompassesWorkEverywhereModule extends ZetaModule {
 	@Hint("clock_nerf")
 	Item clock = Items.CLOCK;
 
-	@PlayEvent
+	@LoadEvent
 	public void addAdditionalHints(ZGatherHints event) {
 		if(!enableNether && !enableEnd && !enableCompassNerf)
 			return;
