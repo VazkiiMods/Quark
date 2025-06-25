@@ -32,7 +32,7 @@ file="META-INF/accesstransformer.cfg"
 
 [[dependencies.quark]]
     modId="lootr"
-    mandatory=false
+    type="optional"
     versionRange="[1.10.34.86,)"
     ordering="AFTER"
     side="BOTH"
