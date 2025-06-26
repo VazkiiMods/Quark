@@ -28,6 +28,7 @@ import org.violetmoon.quark.addons.oddities.client.screen.MatrixEnchantingScreen
 import org.violetmoon.quark.addons.oddities.inventory.MatrixEnchantingMenu;
 import org.violetmoon.quark.addons.oddities.util.CustomInfluence;
 import org.violetmoon.quark.addons.oddities.util.Influence;
+import org.violetmoon.quark.addons.oddities.util.InfluenceLocations;
 import org.violetmoon.quark.base.Quark;
 import org.violetmoon.quark.base.components.QuarkDataComponents;
 import org.violetmoon.quark.mixin.mixins.client.accessor.AccessorMenuScreens;
@@ -166,7 +167,7 @@ public class MatrixEnchantingModule extends ZetaModule {
 	@Config(description = "If you set this to false, the vanilla Enchanting Table will no longer automatically convert to the Matrix Enchanting table. You'll have to add a recipe for the Matrix Enchanting Table to make use of this.", flag = "matrix_enchanting_autoconvert")
 	public static boolean automaticallyConvert = true;
 
-	public static Map<DyeColor, Influence> candleInfluences = new HashMap<>();
+	public static Map<DyeColor, InfluenceLocations> candleInfluences = new HashMap<>();
 	public static Map<BlockState, CustomInfluence> customInfluences = new HashMap<>();
 
 	public static Block matrixEnchanter;
@@ -216,26 +217,23 @@ public class MatrixEnchantingModule extends ZetaModule {
 		parseInfluences();
 	}
 
-	private Influence parseEnchantmentList(String enchantmentList) {
-		List<Holder<Enchantment>> boost = new ArrayList<>();
-		List<Holder<Enchantment>> dampen = new ArrayList<>();
+	private InfluenceLocations parseEnchantmentList(String enchantmentList) {
+		List<ResourceLocation> boost = new ArrayList<>();
+		List<ResourceLocation> dampen = new ArrayList<>();
 		String[] enchantments = enchantmentList.split(",");
 		for(String enchStr : enchantments) {
 			boolean damp = enchStr.startsWith("-");
 			if(damp)
 				enchStr = enchStr.substring(1);
 
-			Holder<Enchantment> ench = Holder.direct(Quark.proxy.hackilyGetCurrentClientLevelRegistryAccess().registry(Registries.ENCHANTMENT).get().get(ResourceLocation.parse(enchStr)));
-			if(ench != null) {
-				if(damp)
-					dampen.add(ench);
-				else
-					boost.add(ench);
-			} else {
-				Quark.LOG.error("Matrix Enchanting Influencing: Enchantment " + enchStr + " does not exist!");
-			}
+			if(damp)
+				dampen.add(ResourceLocation.parse(enchStr));
+			else
+				boost.add(ResourceLocation.parse(enchStr));
+
+			//Holder<Enchantment> ench = Holder.direct(Quark.proxy.hackilyGetCurrentClientLevelRegistryAccess().registry(Registries.ENCHANTMENT).get().get(ResourceLocation.parse(enchStr)));
 		}
-		return new Influence(boost, dampen);
+		return new InfluenceLocations(boost, dampen);
 	}
 
 	private void parseInfluences() {
@@ -253,7 +251,7 @@ public class MatrixEnchantingModule extends ZetaModule {
 				} catch (NumberFormatException e) {
 					continue;
 				}
-				Influence boosts = parseEnchantmentList(split[3]);
+				InfluenceLocations boosts = parseEnchantmentList(split[3]);
 
 				customInfluences.put(state, new CustomInfluence(strength, color, boosts));
 			}
@@ -276,7 +274,7 @@ public class MatrixEnchantingModule extends ZetaModule {
 
 		@LoadEvent
 		public final void clientSetup(ZClientSetup event) {
-			AccessorMenuScreens.invokeRegister(menuType, MatrixEnchantingScreen::new);
+			//AccessorMenuScreens.invokeRegister(menuType, MatrixEnchantingScreen::new);
 			BlockEntityRenderers.register(blockEntityType, MatrixEnchantingTableRenderer::new);
 		}
 

@@ -152,7 +152,7 @@ public class QuarkJeiPlugin implements IModPlugin {
         registration.addRecipes(INFLUENCING,
                 Arrays.stream(DyeColor.values()).map(color -> {
                     Block candle = MatrixEnchantingTableBlockEntity.CANDLES.get(color.getId());
-                    Influence influence = MatrixEnchantingModule.candleInfluences.get(color);
+                    Influence influence = MatrixEnchantingModule.candleInfluences.get(color).toInfluence();
 
                     return new InfluenceEntry(candle, influence);
                 }).filter(InfluenceEntry::hasAny).collect(Collectors.toList()));
@@ -160,7 +160,7 @@ public class QuarkJeiPlugin implements IModPlugin {
         registration.addRecipes(INFLUENCING,
                 MatrixEnchantingModule.customInfluences.entrySet().stream().map(entry -> {
                     Block block = entry.getKey().getBlock();
-                    Influence influence = entry.getValue().influence();
+                    Influence influence = entry.getValue().influence().toInfluence();
 
                     return new InfluenceEntry(block, influence);
                 }).filter(InfluenceEntry::hasAny).collect(Collectors.toList()));

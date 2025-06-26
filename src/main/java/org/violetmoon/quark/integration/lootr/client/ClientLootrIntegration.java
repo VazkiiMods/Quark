@@ -18,10 +18,8 @@ public class ClientLootrIntegration implements IClientLootrIntegration {
 		BlockEntityRenderers.register(real.chestTEType, ctx -> new LootrVariantChestRenderer<>(ctx, false));
 		BlockEntityRenderers.register(real.trappedChestTEType, ctx -> new LootrVariantChestRenderer<>(ctx, true));
 
-		for(Block b : real.lootrRegularChests)
-			QuarkClient.ZETA_CLIENT.setBlockEntityWithoutLevelRenderer(b.asItem(), new SimpleWithoutLevelRenderer(real.chestTEType, b.defaultBlockState()));
-		for(Block b : real.lootrTrappedChests)
-			QuarkClient.ZETA_CLIENT.setBlockEntityWithoutLevelRenderer(b.asItem(), new SimpleWithoutLevelRenderer(real.trappedChestTEType, b.defaultBlockState()));
+		//for(Block b : real.lootrRegularChests) QuarkClient.ZETA_CLIENT.setBlockEntityWithoutLevelRenderer(b.asItem(), new SimpleWithoutLevelRenderer(real.chestTEType, b.defaultBlockState()));
+		//for(Block b : real.lootrTrappedChests) QuarkClient.ZETA_CLIENT.setBlockEntityWithoutLevelRenderer(b.asItem(), new SimpleWithoutLevelRenderer(real.trappedChestTEType, b.defaultBlockState()));
 	}
 
 }

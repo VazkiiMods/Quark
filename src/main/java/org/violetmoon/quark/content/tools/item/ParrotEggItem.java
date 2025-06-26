@@ -17,6 +17,7 @@ import org.violetmoon.quark.content.tools.module.ParrotEggsModule;
 import org.violetmoon.zeta.item.ZetaItem;
 import org.violetmoon.zeta.module.ZetaModule;
 
+//Todo: I think it needs to extend ProjectileItem
 public class ParrotEggItem extends ZetaItem {
 	private final Parrot.Variant variant;
 

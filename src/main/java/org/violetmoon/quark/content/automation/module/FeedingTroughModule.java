@@ -27,6 +27,7 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.client.event.RegisterMenuScreensEvent;
 import net.neoforged.neoforge.common.extensions.IMenuTypeExtension;
@@ -308,11 +309,11 @@ public class FeedingTroughModule extends ZetaModule {
     }
 
     // TODO: Replace with Zeta event
-    @EventBusSubscriber
+    @EventBusSubscriber(bus = EventBusSubscriber.Bus.MOD)
     public static final class Client {
 
         @SubscribeEvent
-        public void clientSetup(RegisterMenuScreensEvent event) {
+        public static void clientSetup(RegisterMenuScreensEvent event) {
             event.register(menuType, TroughScreen::new);
         }
     }

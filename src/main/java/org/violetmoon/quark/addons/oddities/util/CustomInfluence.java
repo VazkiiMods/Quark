@@ -2,6 +2,7 @@ package org.violetmoon.quark.addons.oddities.util;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.FastColor;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.level.BlockGetter;
@@ -9,7 +10,7 @@ import net.minecraft.world.level.block.state.BlockState;
 
 import org.violetmoon.quark.api.IEnchantmentInfluencer;
 
-public record CustomInfluence(int strength, int color, Influence influence) implements IEnchantmentInfluencer {
+public record CustomInfluence(int strength, int color, InfluenceLocations influence) implements IEnchantmentInfluencer {
 	@Override
 	public int getEnchantmentInfluenceColor(BlockGetter world, BlockPos pos, BlockState state) {
 		int r = FastColor.ARGB32.red(color) << 16;
@@ -25,11 +26,11 @@ public record CustomInfluence(int strength, int color, Influence influence) impl
 
 	@Override
 	public boolean influencesEnchantment(BlockGetter world, BlockPos pos, BlockState state, Holder<Enchantment> enchantment) {
-		return influence.boost().contains(enchantment);
+		return influence.boost().contains(ResourceLocation.parse(enchantment.getRegisteredName()));
 	}
 
 	@Override
 	public boolean dampensEnchantment(BlockGetter world, BlockPos pos, BlockState state, Holder<Enchantment> enchantment) {
-		return influence.dampen().contains(enchantment);
+		return influence.dampen().contains(ResourceLocation.parse(enchantment.getRegisteredName()));
 	}
 }

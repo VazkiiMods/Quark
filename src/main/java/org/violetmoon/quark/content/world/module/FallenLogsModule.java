@@ -45,14 +45,14 @@ public class FallenLogsModule extends ZetaModule {
 	
 	@Config(description = "Tags that define which biomes can have which wood types")
 	public static List<String> biomeTags = Arrays.asList(
-			"quark:has_fallen_acacia=minecraft:acacia_log",
-            "quark:has_fallen_birch=minecraft:birch_log",
-            "quark:has_fallen_cherry=minecraft:cherry_log",
-            "quark:has_fallen_dark_oak=minecraft:dark_oak_log",
-            "quark:has_fallen_jungle=minecraft:jungle_log",
-            "quark:has_fallen_mangrove=minecraft:mangrove_log",
-            "quark:has_fallen_oak=minecraft:oak_log",
-            "quark:has_fallen_spruce=minecraft:spruce_log");
+			"has_fallen_acacia=minecraft:acacia_log",
+            "has_fallen_birch=minecraft:birch_log",
+            "has_fallen_cherry=minecraft:cherry_log",
+            "has_fallen_dark_oak=minecraft:dark_oak_log",
+            "has_fallen_jungle=minecraft:jungle_log",
+            "has_fallen_mangrove=minecraft:mangrove_log",
+            "has_fallen_oak=minecraft:oak_log",
+            "has_fallen_spruce=minecraft:spruce_log");
 
 	public static Map<TagKey<Biome>, Block> blocksPerTag = new HashMap<>();
 	

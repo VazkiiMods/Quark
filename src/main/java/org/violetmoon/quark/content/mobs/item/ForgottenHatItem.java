@@ -20,7 +20,7 @@ import java.util.function.BooleanSupplier;
 
 public class ForgottenHatItem extends ZetaArmorItem implements IZetaItem {
 
-	private static final ResourceLocation TEXTURE = Quark.asResource(":textures/misc/forgotten_hat_worn.png");
+	private static final ResourceLocation TEXTURE = Quark.asResource("textures/misc/forgotten_hat_worn.png");
 
 	private final ZetaModule module;
 

@@ -196,12 +196,12 @@ public class BackpackModule extends ZetaModule {
 		@LoadEvent
 		public void clientSetup(ZClientSetup e) {
 			e.enqueueWork(() -> {
-				AccessorMenuScreens.invokeRegister(menyType, BackpackInventoryScreen::new);
+				//AccessorMenuScreens.invokeRegister(menyType, BackpackInventoryScreen::new);
 
 				ItemProperties.register(backpack, Quark.asResource("has_items"),
 						(stack, world, entity, i) -> (!BackpackModule.superOpMode && BackpackItem.doesBackpackHaveItems(stack)) ? 1 : 0);
 
-				QuarkClient.ZETA_CLIENT.setHumanoidArmorModel(backpack.asItem(), (living, stack, slot, original) -> ModelHandler.armorModel(ModelHandler.backpack, slot));
+				//QuarkClient.ZETA_CLIENT.setHumanoidArmorModel(backpack.asItem(), (living, stack, slot, original) -> ModelHandler.armorModel(ModelHandler.backpack, slot));
 			});
 		}
 

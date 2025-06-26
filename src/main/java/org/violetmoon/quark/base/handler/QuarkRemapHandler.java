@@ -5,7 +5,7 @@ import net.neoforged.fml.common.EventBusSubscriber;
 import java.util.HashMap;
 import java.util.Map;
 
-@EventBusSubscriber
+//@EventBusSubscriber
 public class QuarkRemapHandler {
 	//datafixers could have also been used here but good luck figuring them out
 	// TODO: Replace with Registry#addAlias/DataFixers
@@ -30,6 +30,7 @@ public class QuarkRemapHandler {
 		REMAP.put("quark:stripped_bamboo_block", "minecraft:stripped_bamboo_block");
 		REMAP.put("quark:egg_parrot_grey", "quark:egg_parrot_gray");
 	}
+
 
 	/*
 	@SubscribeEvent

@@ -103,7 +103,8 @@ public class FoxhoundModule extends ZetaModule {
 			event.setCanceled(true);
 	}
 
-	@PlayEvent
+	//todo: How necessary is this?
+	/*@PlayEvent
 	public void onSleepCheck(ZSleepingLocationCheck event) {
 		if(event.getEntity() instanceof Foxhound) {
 			BlockPos pos = event.getSleepingLocation();
@@ -115,7 +116,7 @@ public class FoxhoundModule extends ZetaModule {
 			if(light > 2)
 				event.setResult(ZResult.ALLOW);
 		}
-	}
+	}*/
 
 	@ZetaLoadModule(clientReplacement = true)
 	public static class Client extends FoxhoundModule {

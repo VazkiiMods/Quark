@@ -101,7 +101,7 @@ public class ForgottenModule extends ZetaModule {
 			event.enqueueWork(() -> {
 				EntityRenderers.register(forgottenType, ForgottenRenderer::new);
 
-				QuarkClient.ZETA_CLIENT.setHumanoidArmorModel(forgotten_hat, (living, stack, slot, original) -> ModelHandler.armorModel(ModelHandler.forgotten_hat, slot));
+				//QuarkClient.ZETA_CLIENT.setHumanoidArmorModel(forgotten_hat, (living, stack, slot, original) -> ModelHandler.armorModel(ModelHandler.forgotten_hat, slot));
 			});
 		}
 

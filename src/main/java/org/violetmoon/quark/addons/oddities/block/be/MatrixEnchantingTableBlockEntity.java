@@ -10,6 +10,7 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.MenuProvider;
@@ -41,6 +42,7 @@ import org.violetmoon.quark.addons.oddities.inventory.EnchantmentMatrix.Piece;
 import org.violetmoon.quark.addons.oddities.inventory.MatrixEnchantingMenu;
 import org.violetmoon.quark.addons.oddities.module.MatrixEnchantingModule;
 import org.violetmoon.quark.addons.oddities.util.Influence;
+import org.violetmoon.quark.addons.oddities.util.InfluenceLocations;
 import org.violetmoon.quark.api.IEnchantmentInfluencer;
 import org.violetmoon.quark.base.Quark;
 import org.violetmoon.quark.base.components.QuarkDataComponents;
@@ -460,9 +462,9 @@ public class MatrixEnchantingTableBlockEntity extends AbstractEnchantingTableBlo
 			DyeColor color = getColor(state);
 			if(color == null)
 				return false;
-			Influence influence = MatrixEnchantingModule.candleInfluences.get(color);
-			List<Holder<Enchantment>> boosts = inverted ? influence.dampen() : influence.boost();
-			return boosts.contains(enchantment);
+			InfluenceLocations influence = MatrixEnchantingModule.candleInfluences.get(color);
+			List<ResourceLocation> boosts = inverted ? influence.dampen() : influence.boost();
+			return boosts.contains(ResourceLocation.parse(enchantment.getRegisteredName()));
 		}
 
 		@Override
@@ -470,9 +472,9 @@ public class MatrixEnchantingTableBlockEntity extends AbstractEnchantingTableBlo
 			DyeColor color = getColor(state);
 			if(color == null)
 				return false;
-			Influence influence = MatrixEnchantingModule.candleInfluences.get(color);
-			List<Holder<Enchantment>> dampens = inverted ? influence.boost() : influence.dampen();
-			return dampens.contains(enchantment);
+			InfluenceLocations influence = MatrixEnchantingModule.candleInfluences.get(color);
+			List<ResourceLocation> dampens = inverted ? influence.boost() : influence.dampen();
+			return dampens.contains(ResourceLocation.parse(enchantment.getRegisteredName()));
 		}
 	}
 

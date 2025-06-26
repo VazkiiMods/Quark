@@ -278,10 +278,8 @@ public class VariantChestsModule extends ZetaModule {
 			BlockEntityRenderers.register(chestTEType, ctx -> new VariantChestRenderer(ctx, false));
 			BlockEntityRenderers.register(trappedChestTEType, ctx -> new VariantChestRenderer(ctx, true));
 
-			for(Block b : regularChests)
-				QuarkClient.ZETA_CLIENT.setBlockEntityWithoutLevelRenderer(b.asItem(), new SimpleWithoutLevelRenderer(chestTEType, b.defaultBlockState()));
-			for(Block b : trappedChests)
-				QuarkClient.ZETA_CLIENT.setBlockEntityWithoutLevelRenderer(b.asItem(), new SimpleWithoutLevelRenderer(trappedChestTEType, b.defaultBlockState()));
+			//for(Block b : regularChests) QuarkClient.ZETA_CLIENT.setBlockEntityWithoutLevelRenderer(b.asItem(), new SimpleWithoutLevelRenderer(chestTEType, b.defaultBlockState()));
+			//for(Block b : trappedChests) QuarkClient.ZETA_CLIENT.setBlockEntityWithoutLevelRenderer(b.asItem(), new SimpleWithoutLevelRenderer(trappedChestTEType, b.defaultBlockState()));
 
 			QuarkClient.LOOTR_INTEGRATION.clientSetup(event);
 		}

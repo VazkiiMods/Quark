@@ -235,7 +235,7 @@ public class ReacharoundPlacingModule extends ZetaModule {
 		}
 
 		@PlayEvent
-		public void clientTick(ZClientTick event) {
+		public void clientTick(ZClientTick.Start event) {
 
 			currentTarget = null;
 

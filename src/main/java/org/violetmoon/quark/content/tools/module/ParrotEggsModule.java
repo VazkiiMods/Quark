@@ -84,7 +84,7 @@ public class ParrotEggsModule extends ZetaModule {
 		for(Parrot.Variant variant : Parrot.Variant.values()) {
 			Item parrotEgg = new ParrotEggItem(variant, this).setCreativeTab(CreativeModeTabs.INGREDIENTS, Items.EGG, false);
 			parrotEggs.add(parrotEgg);
-			DispenserBlock.registerBehavior(parrotEgg, new ProjectileDispenseBehavior(parrotEgg)); // TODO: Fix variant logic
+			//DispenserBlock.registerBehavior(parrotEgg, new ProjectileDispenseBehavior(parrotEgg)); // TODO: Fix variant logic
 		}
 		CreativeTabManager.endDaisyChain();
 
