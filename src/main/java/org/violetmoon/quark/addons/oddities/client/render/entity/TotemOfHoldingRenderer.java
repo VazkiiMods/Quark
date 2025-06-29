@@ -23,7 +23,7 @@ import org.violetmoon.quark.base.QuarkClient;
 
 public class TotemOfHoldingRenderer extends EntityRenderer<TotemOfHoldingEntity> {
 
-	private static final ModelResourceLocation LOCATION_MODEL = ModelResourceLocation.inventory(Quark.asResource("extra/totem_of_holding"));
+	private static final ModelResourceLocation LOCATION_MODEL = ModelResourceLocation.standalone(Quark.asResource("extra/totem_of_holding"));
 
 	public TotemOfHoldingRenderer(EntityRendererProvider.Context context) {
 		super(context);

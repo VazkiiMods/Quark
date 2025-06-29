@@ -74,7 +74,7 @@ public class GlassItemFrameModule extends ZetaModule {
 
 		@LoadEvent
 		public void registerAdditionalModels(ZAddModels event) {
-			event.register(ModelResourceLocation.inventory(Quark.asResource("extra/glass_item_frame")));
+			event.register(ModelResourceLocation.standalone(Quark.asResource("extra/glass_item_frame")));
 		}
 	}
 }

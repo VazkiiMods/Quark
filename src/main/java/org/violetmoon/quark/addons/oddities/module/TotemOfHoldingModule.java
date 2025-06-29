@@ -124,7 +124,7 @@ public class TotemOfHoldingModule extends ZetaModule {
 
 		@LoadEvent
 		public void registerAdditionalModels(ZAddModels event) {
-			event.register(ModelResourceLocation.inventory(Quark.asResource("extra/totem_of_holding")));
+			event.register(ModelResourceLocation.standalone(Quark.asResource("extra/totem_of_holding")));
 		}
 	}
 }

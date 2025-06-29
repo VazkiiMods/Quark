@@ -25,27 +25,27 @@
             "to": [ 16, 16, 16 ],
             "faces": {
                 "down":  { "uv": [ 0, 0, 16, 16 ], "texture": "#side_overlay", "cullface": "down", "rotation": 90,
-                    "forge_data": {
+                    "neoforge_data": {
                         "block_light": 10
                     }},
                 "up":    { "uv": [ 0, 16, 16, 0 ], "texture": "#side_overlay", "cullface": "up", "rotation": 270,
-                    "forge_data": {
+                    "neoforge_data": {
                         "block_light": 10
                     }},
                 "north": { "uv": [ 0, 0, 16, 16 ], "texture": "#front_overlay", "cullface": "north",
-                    "forge_data": {
+                    "neoforge_data": {
                         "block_light": 10
                     }},
                 "south": { "uv": [ 0, 0, 16, 16 ], "texture": "#bottom_overlay", "cullface": "south",
-                    "forge_data": {
+                    "neoforge_data": {
                         "block_light": 10
                     }},
                 "west":  { "uv": [ 0, 0, 16, 16 ], "texture": "#side_overlay", "cullface": "west", "rotation": 180,
-                    "forge_data": {
+                    "neoforge_data": {
                         "block_light": 10
                     }},
                 "east":  { "uv": [ 0, 0, 16, 16 ], "texture": "#side_overlay", "cullface": "east",
-                    "forge_data": {
+                    "neoforge_data": {
                         "block_light": 10
                     }}
             }

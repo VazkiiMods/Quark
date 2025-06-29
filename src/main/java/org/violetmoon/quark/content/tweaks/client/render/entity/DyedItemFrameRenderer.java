@@ -31,8 +31,8 @@ import org.violetmoon.quark.content.tweaks.entity.DyedItemFrame;
 // yes this shit again
 public class DyedItemFrameRenderer extends EntityRenderer<DyedItemFrame> {
 
-	private static final ModelResourceLocation FRAME_LOCATION = ModelResourceLocation.inventory(Quark.asResource("extra/dyed_item_frame"));
-	private static final ModelResourceLocation MAP_FRAME_LOCATION = ModelResourceLocation.inventory(Quark.asResource("extra/dyed_item_frame_map"));
+	private static final ModelResourceLocation FRAME_LOCATION = ModelResourceLocation.standalone(Quark.asResource("extra/dyed_item_frame"));
+	private static final ModelResourceLocation MAP_FRAME_LOCATION = ModelResourceLocation.standalone(Quark.asResource("extra/dyed_item_frame_map"));
 
 	public static final int GLOW_FRAME_BRIGHTNESS = 5;
 	public static final int BRIGHT_MAP_LIGHT_ADJUSTMENT = 30;

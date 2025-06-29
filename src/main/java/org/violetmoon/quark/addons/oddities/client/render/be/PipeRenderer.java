@@ -33,7 +33,7 @@ import java.util.Random;
 
 public class PipeRenderer implements BlockEntityRenderer<PipeBlockEntity> {
 
-	private static final ModelResourceLocation LOCATION_MODEL = new ModelResourceLocation(Quark.asResource("extra/pipe_flare"), "inventory");
+	private static final ModelResourceLocation LOCATION_MODEL = new ModelResourceLocation(Quark.asResource("extra/pipe_flare"), "standalone");
 
 	private final Random random = new Random();
 

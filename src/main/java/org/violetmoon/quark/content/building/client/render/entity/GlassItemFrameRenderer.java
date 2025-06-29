@@ -52,7 +52,7 @@ import java.util.List;
 
 public class GlassItemFrameRenderer extends EntityRenderer<GlassItemFrame> {
 
-	private static final ModelResourceLocation LOCATION_MODEL = new ModelResourceLocation(Quark.asResource("extra/glass_item_frame"), "inventory");
+	private static final ModelResourceLocation LOCATION_MODEL = new ModelResourceLocation(Quark.asResource("extra/glass_item_frame"), "standalone");
 
 	private static final List<Direction> SIGN_DIRECTIONS = List.of(Direction.NORTH, Direction.EAST, Direction.SOUTH, Direction.WEST);
 

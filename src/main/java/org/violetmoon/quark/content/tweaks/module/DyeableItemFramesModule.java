@@ -127,8 +127,8 @@ public class DyeableItemFramesModule extends ZetaModule {
 
 		@LoadEvent
 		public void registerAdditionalModels(ZAddModels event) {
-			event.register(ModelResourceLocation.inventory(Quark.asResource("extra/dyed_item_frame")));
-			event.register(ModelResourceLocation.inventory(Quark.asResource("extra/dyed_item_frame_map")));
+			event.register(ModelResourceLocation.standalone(Quark.asResource("extra/dyed_item_frame")));
+			event.register(ModelResourceLocation.standalone(Quark.asResource("extra/dyed_item_frame_map")));
 		}
 
 		@LoadEvent

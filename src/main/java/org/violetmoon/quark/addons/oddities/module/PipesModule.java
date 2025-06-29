@@ -83,7 +83,7 @@ public class PipesModule extends ZetaModule {
 
 		@LoadEvent
 		public void registerAdditionalModels(ZAddModels event) {
-			event.register(new ModelResourceLocation(Quark.asResource("extra/pipe_flare"), "inventory"));
+			event.register(new ModelResourceLocation(Quark.asResource("extra/pipe_flare"), "standalone"));
 		}
 	}
 }
