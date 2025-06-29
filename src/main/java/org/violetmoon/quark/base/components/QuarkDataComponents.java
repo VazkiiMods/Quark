@@ -5,6 +5,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Registry;
 import net.minecraft.core.component.DataComponentType;
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.ResourceLocation;
@@ -12,6 +13,9 @@ import net.minecraft.util.Unit;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.component.CustomData;
 import org.violetmoon.quark.base.Quark;
+import org.violetmoon.zeta.event.bus.LoadEvent;
+import org.violetmoon.zeta.event.load.ZCommonSetup;
+import org.violetmoon.zeta.event.load.ZRegister;
 
 import java.util.function.UnaryOperator;
 
@@ -160,9 +164,13 @@ public class QuarkDataComponents {
             Quark.asResource("ignore"), builder -> builder.persistent(Codec.BOOL).networkSynchronized(ByteBufCodecs.BOOL)
     );
 
-
+    //todo: Temporary until later.
+    @LoadEvent
+    public static void init(ZCommonSetup event) {}
 
     private static <T> DataComponentType<T> register(ResourceLocation id, UnaryOperator<DataComponentType.Builder<T>> builderOp) {
-        return Registry.register(BuiltInRegistries.DATA_COMPONENT_TYPE, id, builderOp.apply(DataComponentType.builder()).build());
+        DataComponentType<T> component = builderOp.apply(DataComponentType.builder()).build();
+        Quark.ZETA.registry.register(component, id, Registries.DATA_COMPONENT_TYPE);
+        return component;
     }
 }

@@ -46,26 +46,30 @@ public enum AttributeSlot {
 		return locKey;
 	}
 
-	public static AttributeSlot fromCanonicalSlot(@NotNull EquipmentSlot slot) {
-		switch(slot) {
-		case OFFHAND -> {
-			return OFFHAND;
-		}
-		case FEET -> {
-			return FEET;
-		}
-		case LEGS -> {
-			return LEGS;
-		}
-		case CHEST -> {
-			return CHEST;
-		}
-		case HEAD -> {
-			return HEAD;
-		}
-		default -> {
+	public static AttributeSlot fromCanonicalSlot(EquipmentSlot slot) {
+		if (slot == null) {
 			return MAINHAND;
 		}
+
+		switch(slot) {
+            case OFFHAND -> {
+				return OFFHAND;
+			}
+			case FEET -> {
+				return FEET;
+			}
+			case LEGS -> {
+				return LEGS;
+			}
+			case CHEST -> {
+				return CHEST;
+			}
+			case HEAD -> {
+				return HEAD;
+			}
+            default -> {
+				return MAINHAND;
+			}
 		}
 	}
 }

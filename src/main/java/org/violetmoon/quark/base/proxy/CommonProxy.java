@@ -10,6 +10,7 @@ import net.minecraft.world.phys.BlockHitResult;
 import org.jetbrains.annotations.Nullable;
 import org.violetmoon.quark.base.Quark;
 import org.violetmoon.quark.base.capability.CapabilityHandler;
+import org.violetmoon.quark.base.components.QuarkDataComponents;
 import org.violetmoon.quark.base.config.QuarkGeneralConfig;
 import org.violetmoon.quark.base.handler.ContributorRewardHandler;
 import org.violetmoon.quark.base.handler.QuarkSounds;
@@ -34,6 +35,7 @@ public class CommonProxy {
 				.subscribe(ContributorRewardHandler.class)
 				.subscribe(QuarkSounds.class)
 				.subscribe(WoodSetHandler.class)
+				.subscribe(QuarkDataComponents.class)
 				.subscribe(this);
 
 		Quark.ZETA.playBus

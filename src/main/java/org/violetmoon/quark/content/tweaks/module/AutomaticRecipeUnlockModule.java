@@ -1,7 +1,10 @@
 package org.violetmoon.quark.content.tweaks.module;
 
+import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Lists;
+import net.minecraft.advancements.Advancement;
 import net.minecraft.advancements.AdvancementHolder;
+import net.minecraft.advancements.Criterion;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.ImageButton;
 import net.minecraft.client.gui.components.events.GuiEventListener;
@@ -89,18 +92,34 @@ public class AutomaticRecipeUnlockModule extends ZetaModule {
 		}
 	}
 
-	public static void removeRecipeAdvancements(Map<ResourceLocation, AdvancementHolder> advancements) {
-		if(!staticEnabled || !filterRecipeAdvancements) return;
+	//todo: Stupid idiot Mojang made stupid idiot Siuol uglyify this please make it better
+	public static Map<ResourceLocation, AdvancementHolder> removeRecipeAdvancements(Map<ResourceLocation, AdvancementHolder> advancements) {
+		if(!staticEnabled || !filterRecipeAdvancements) return advancements;
 
+		Map<ResourceLocation, AdvancementHolder> advancementReal = new HashMap<>();
+		advancementReal.putAll(advancements);
 		int removeCount = 0;
 
-		for (Map.Entry<ResourceLocation, AdvancementHolder> advancement : advancements.entrySet()) {
+		for (Map.Entry<ResourceLocation, AdvancementHolder> advancement : advancementReal.entrySet()) {
 			if (advancement.getKey().getPath().startsWith("recipes/") && advancement.getValue().value().criteria().containsKey("has_the_recipe")) {
-				advancement.getValue().value().criteria().remove("has_the_recipe");
+				Advancement oldAdv = advancement.getValue().value();
+
+				Map<String, Criterion<?>> criteriaReal = new HashMap<>();
+				for (Map.Entry<String, Criterion<?>> oldCriteria : oldAdv.criteria().entrySet()) {
+					if (!oldCriteria.getKey().equals("has_the_recipe")) {
+						criteriaReal.put(oldCriteria.getKey(), oldCriteria.getValue());
+					}
+				}
+
+
+				Advancement replacementAdv  = new Advancement(oldAdv.parent(), oldAdv.display(), oldAdv.rewards(), criteriaReal, oldAdv.requirements(), oldAdv.sendsTelemetryEvent(), oldAdv.name());
+				AdvancementHolder realAdvancementHolder = new AdvancementHolder(advancement.getValue().id(), replacementAdv);
+				advancementReal.replace(advancement.getKey(), realAdvancementHolder);
 				removeCount++;
 			}
 		}
 		Quark.LOG.info("[Automatic Recipe Unlock] Removed {} recipe advancements", removeCount);
+		return advancementReal;
 	}
 
 	@ZetaLoadModule(clientReplacement = true)

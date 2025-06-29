@@ -20,6 +20,7 @@ import org.violetmoon.quark.base.client.handler.ClientUtil;
 import org.violetmoon.quark.base.client.handler.InventoryButtonHandler;
 import org.violetmoon.quark.base.client.handler.ModelHandler;
 import org.violetmoon.quark.base.client.handler.QuarkProgrammerArtHandler;
+import org.violetmoon.quark.base.components.QuarkDataComponents;
 import org.violetmoon.quark.base.handler.ContributorRewardHandler;
 import org.violetmoon.quark.base.handler.WoodSetHandler;
 import org.violetmoon.quark.catnip.animation.AnimationTickHolder;

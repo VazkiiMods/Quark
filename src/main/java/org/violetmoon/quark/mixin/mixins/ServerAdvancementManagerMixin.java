@@ -28,6 +28,6 @@ public class ServerAdvancementManagerMixin {
 				target = "Lnet/minecraft/advancements/AdvancementTree;<init>()V"),
 				require = 0)
 	private void removeRecipeAdvancements(Map<ResourceLocation, JsonElement> map, ResourceManager manager, ProfilerFiller filler, CallbackInfo ci, @Local ImmutableMap.Builder<ResourceLocation, AdvancementHolder> builder) {
-			AutomaticRecipeUnlockModule.removeRecipeAdvancements(this.advancements);
+		this.advancements = AutomaticRecipeUnlockModule.removeRecipeAdvancements(this.advancements);
 	}
 }

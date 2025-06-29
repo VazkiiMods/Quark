@@ -44,16 +44,16 @@ public class QuarkConfigHomeScreen extends ZetaConfigHomeScreen {
 	}
 
 	//annoyingly it's not passed to renderBackground
-	protected float partialTicks;
+	//protected float partialTicks;
 
 	@Override
 	public void renderBackground(GuiGraphics graphics, int mouseX, int mouseY, float partialTick) {
-		time += partialTicks;
+		time += partialTick;
 
 		Minecraft mc = Minecraft.getInstance();
 
 		if(mc.level == null) {
-			float spin = partialTicks * 2;
+			float spin = 1f;
 			float blur = 0.85F;
 
 			if (time < 20F && !QuarkGeneralConfig.disableQMenuEffects) {
@@ -61,7 +61,7 @@ public class QuarkConfigHomeScreen extends ZetaConfigHomeScreen {
 				blur = (time / 20F) * 0.75F + 0.1F;
 			}
 
-			PANORAMA.render(graphics, this.width, this.height, spin, blur);
+			PANORAMA.render(graphics, this.width, this.height, blur, partialTick);
 		} else {
 			super.renderBackground(graphics, mouseX, mouseY, partialTick);
 		}
@@ -74,7 +74,7 @@ public class QuarkConfigHomeScreen extends ZetaConfigHomeScreen {
 
 	@Override
 	public void render(@NotNull GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTicks) {
-		this.partialTicks = partialTicks;
+		//this.partialTicks = partialTicks;
 		super.render(guiGraphics, mouseX, mouseY, partialTicks);
 
 		guiGraphics.drawCenteredString(font, I18n.get("quark.gui.config.subheader1", ChatFormatting.LIGHT_PURPLE, ContributorRewardHandler.featuredPatron, ChatFormatting.RESET), width / 2, 28, 0x9EFFFE);
