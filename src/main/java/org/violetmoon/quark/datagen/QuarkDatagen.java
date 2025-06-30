@@ -18,7 +18,8 @@ import java.util.concurrent.CompletableFuture;
 @EventBusSubscriber(modid = Quark.MOD_ID, bus = EventBusSubscriber.Bus.MOD)
 public class QuarkDatagen {
     @SubscribeEvent
-    public static void generate(GatherDataEvent gatherDataEvent){
+    public static void gatherData(GatherDataEvent gatherDataEvent){
+        System.out.println("GENERATING QUARK DATA. PLEASE HOLD");
         DataGenerator generator = gatherDataEvent.getGenerator();
         PackOutput packOutput = generator.getPackOutput();
         ExistingFileHelper existingFileHelper = gatherDataEvent.getExistingFileHelper();
@@ -26,16 +27,20 @@ public class QuarkDatagen {
 
         //data
         generator.addProvider(gatherDataEvent.includeServer(), new QuarkRecipeProvider(packOutput, holderLookupProvider));
-        //subproviders need more boilerplate
         generator.addProvider(gatherDataEvent.includeServer(), new LootTableProvider(packOutput, Collections.emptySet(),
-                List.of(new LootTableProvider.SubProviderEntry(QuarkBlockLootTableProvider::new, LootContextParamSets.BLOCK)),
+                List.of(new LootTableProvider.SubProviderEntry(QuarkBlockLootTableProvider::new, LootContextParamSets.BLOCK),
+                        new LootTableProvider.SubProviderEntry(QuarkEntityLootTableProvider::new, LootContextParamSets.ENTITY)),
                 holderLookupProvider));
-        generator.addProvider(gatherDataEvent.includeServer(), new LootTableProvider(packOutput, Collections.emptySet(),
-                List.of(new LootTableProvider.SubProviderEntry(QuarkEntityLootTableProvider::new, LootContextParamSets.ENTITY)),
-                holderLookupProvider));
+        //tags
+        //generator.addProvider(gatherDataEvent.includeServer(), new QuarkBlockTagProvider(packOutput, holderLookupProvider, existingFileHelper));
+        //generator.addProvider(gatherDataEvent.includeServer(), new QuarkItemTagProvider(packOutput, holderLookupProvider, existingFileHelper));
+
+        //do we need datamaps?
+        //generator.addProvider(gatherDataEvent.includeServer(), new QuarkDataMapProvider(packOutput, holderLookupProvider));
 
         //assets
         generator.addProvider(gatherDataEvent.includeClient(), new QuarkItemModelProvider(packOutput, existingFileHelper));
-        generator.addProvider(gatherDataEvent.includeClient(), new QuarkItemModelProvider(packOutput, existingFileHelper));
+        generator.addProvider(gatherDataEvent.includeClient(), new QuarkBlockStateProvider(packOutput, existingFileHelper));
+        System.out.println("QUARK DATA GENERATED. YIPPEE");
     }
 }

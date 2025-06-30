@@ -1,15 +1,31 @@
 package org.violetmoon.quark.datagen;
 
+import net.minecraft.advancements.critereon.ItemPredicate;
+import net.minecraft.client.OptionInstance;
 import net.minecraft.core.HolderLookup;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.data.loot.BlockLootSubProvider;
 import net.minecraft.world.flag.FeatureFlags;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.item.enchantment.Enchantment;
+import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.storage.loot.IntRange;
 import net.minecraft.world.level.storage.loot.LootPool;
 import net.minecraft.world.level.storage.loot.LootTable;
 import net.minecraft.world.level.storage.loot.entries.LootItem;
+import net.minecraft.world.level.storage.loot.entries.LootPoolEntryContainer;
+import net.minecraft.world.level.storage.loot.entries.LootPoolSingletonContainer;
+import net.minecraft.world.level.storage.loot.functions.ApplyBonusCount;
+import net.minecraft.world.level.storage.loot.functions.LimitCount;
 import net.minecraft.world.level.storage.loot.functions.SetItemCountFunction;
+import net.minecraft.world.level.storage.loot.predicates.BonusLevelTableCondition;
+import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
+import net.minecraft.world.level.storage.loot.predicates.MatchTool;
 import net.minecraft.world.level.storage.loot.providers.number.ConstantValue;
+import net.minecraft.world.level.storage.loot.providers.number.UniformGenerator;
+import net.neoforged.neoforge.common.Tags;
 import org.violetmoon.quark.content.automation.module.ChuteModule;
 import org.violetmoon.quark.content.building.module.*;
 import org.violetmoon.quark.content.tools.module.BottledCloudModule;
@@ -21,6 +37,10 @@ import java.util.List;
 import java.util.Set;
 
 public class QuarkBlockLootTableProvider extends BlockLootSubProvider {
+
+    private static final float[] LEAVES_STICK_CHANCES = new float[]{0.02F, 0.022222223F, 0.025F, 0.033333335F, 0.1F};
+    private static final float[] LEAVES_BONUS_CHANCES = new float[]{0.005F, 0.0055555557F, 0.00625F, 0.008333334F, 0.025F};
+    protected static final LootItemCondition.Builder HAS_SHEARS = MatchTool.toolMatches(ItemPredicate.Builder.item().of(Tags.Items.TOOLS_SHEAR));
 
     protected QuarkBlockLootTableProvider(HolderLookup.Provider holderLookupProvider) {
         super(Set.of(), FeatureFlags.REGISTRY.allFlags(), holderLookupProvider);
@@ -59,7 +79,7 @@ public class QuarkBlockLootTableProvider extends BlockLootSubProvider {
         for(Block block : RawMetalBricksModule.blocks)
             dropSelf(block);
         dropSelf(RopeModule.rope);
-        dropNothing(ShearVinesModule.cut_vine);
+        this.add(ShearVinesModule.cut_vine, noDrop());
         for(Block block : ShinglesModule.blocks)
             dropSelf(block);
         for(Block block : StoolsModule.stools)
@@ -67,7 +87,7 @@ public class QuarkBlockLootTableProvider extends BlockLootSubProvider {
         dropSelf(SturdyStoneModule.sturdy_stone);
         dropSelf(ThatchModule.thatch);
         for(Block block : VariantBookshelvesModule.variantBookshelves)
-            createBookshelfDrops(block);
+            createSingleItemTableWithSilkTouch(block, Items.BOOK, ConstantValue.exactly(3.0F));
         for(Block block : VariantChestsModule.regularChests)
             dropSelf(block);
         for(Block block : VariantChestsModule.trappedChests)
@@ -83,15 +103,18 @@ public class QuarkBlockLootTableProvider extends BlockLootSubProvider {
         for(Block block : WoodenPostsModule.blocks)
             dropSelf(block);
         //Tools
-        dropNothing(BottledCloudModule.cloud);
+        this.add(BottledCloudModule.cloud, noDrop());
         //Tweaks
-        //dropShards(GlassShardModule.dirtyGlass); //TODO: implement this
+        dropDirtyShards(GlassShardModule.dirtyGlass);
         dropWhenSilkTouch(GlassShardModule.dirtyGlassPane);
         //World
-        //createLeafShearsDrops(AncientWoodModule.ancient_leaves); //TODO: implement c:tools/shears check
+        for(Block block : AncientWoodModule.woodSet.allBlocks())
+            dropSelf(block);
+        createLeavesDropWithBonusLikeHowOakLeavesDropApples(AncientWoodModule.ancient_leaves, AncientWoodModule.ancient_sapling, AncientWoodModule.ancient_fruit);
+        dropSelf(AncientWoodModule.ancient_sapling);
         //Azalea leaves are vanilla
-        //createShearsDrops(ChorusVegetationModule.chorus_weeds); //TODO: implement c:tools/shears check
-        //createShearsDrops(ChorusVegetationModule.chorus_twist);
+        createShearsDrops(ChorusVegetationModule.chorus_weeds);
+        createShearsDrops(ChorusVegetationModule.chorus_twist);
         for(Block block : CorundumModule.clusters)
             dropSelf(block);
         for(Block block : CorundumModule.waxedCrystals)
@@ -105,7 +128,7 @@ public class QuarkBlockLootTableProvider extends BlockLootSubProvider {
         //TODO GlimmeringWealdModule.glow_shroom_block. mushroom cap fullblock drops are weird
         dropWhenSilkTouch(GlimmeringWealdModule.glow_shroom_stem);
         dropSelf(GlimmeringWealdModule.glow_shroom_ring);
-        dropNothing(MonsterBoxModule.monster_box);
+        this.add(MonsterBoxModule.monster_box, noDrop());
         dropSelf(NewStoneTypesModule.limestoneBlock);
         dropSelf(NewStoneTypesModule.jasperBlock);
         dropSelf(NewStoneTypesModule.shaleBlock);
@@ -116,10 +139,10 @@ public class QuarkBlockLootTableProvider extends BlockLootSubProvider {
         dropSelf(SpiralSpiresModule.dusky_myalite);
         for(Block block : BlossomTreesModule.woodSet.allBlocks())
             dropSelf(block);
-        for(Block block : BlossomTreesModule.blossomTrees.stream().map(blossomTree -> blossomTree.leaves).toList()){
-            //createLeafShearsDrops(block);
+        for(BlossomTreesModule.BlossomTree tree : BlossomTreesModule.blossomTrees){
+            createLeavesDrops(tree.leaves, tree.sapling);
+            dropSelf(tree.sapling);
         }
-
 
     }
 
@@ -196,34 +219,68 @@ public class QuarkBlockLootTableProvider extends BlockLootSubProvider {
         ret.add(SpiralSpiresModule.dusky_myalite);
         ret.addAll(BlossomTreesModule.woodSet.allBlocks());
         ret.addAll(BlossomTreesModule.blossomTrees.stream().map(blossomTree -> blossomTree.leaves).toList());
+        ret.addAll(BlossomTreesModule.blossomTrees.stream().map(blossomTree -> blossomTree.sapling).toList());
         //Oddities
         //Experimental
 
         return ret;
     }
 
-    protected LootTable.Builder createBookshelfDrops(Block block) {
-        return LootTable.lootTable()
-                .withPool(
-                        LootPool.lootPool()
-                                .when(this.hasSilkTouch())
-                                .setRolls(ConstantValue.exactly(1.0F))
-                                .add(
-                                        LootItem.lootTableItem(block)
-                                )
-                )
-                .withPool(
-                        LootPool.lootPool()
-                                .when(this.doesNotHaveSilkTouch())
-                                .setRolls(ConstantValue.exactly(1.0F))
-                                .add(
-                                        LootItem.lootTableItem(Items.BOOK)
-                                                .apply(SetItemCountFunction.setCount(ConstantValue.exactly(3.0F)))
-                                )
-                );
+
+    //vanillacopies
+    @Override
+    protected LootTable.Builder createLeavesDrops(Block p_250088_, Block p_250731_, float... p_248949_) { //don't use last arg
+        HolderLookup.RegistryLookup<Enchantment> registrylookup = this.registries.lookupOrThrow(Registries.ENCHANTMENT);
+        return this.createSilkTouchOrShearsDispatchTable(p_250088_, ((LootPoolSingletonContainer.Builder)this.applyExplosionCondition(p_250088_, LootItem.lootTableItem(p_250731_))).when(BonusLevelTableCondition.bonusLevelFlatChance(registrylookup.getOrThrow(Enchantments.FORTUNE), p_248949_))).withPool(LootPool.lootPool().setRolls(ConstantValue.exactly(1.0F)).when(this.checkNotShearsOrSilk()).add(((LootPoolSingletonContainer.Builder)this.applyExplosionDecay(p_250088_, LootItem.lootTableItem(Items.STICK).apply(SetItemCountFunction.setCount(UniformGenerator.between(1.0F, 2.0F))))).when(BonusLevelTableCondition.bonusLevelFlatChance(registrylookup.getOrThrow(Enchantments.FORTUNE), LEAVES_STICK_CHANCES))));
     }
 
-    protected LootTable.Builder dropNothing(Block block) {
-        return LootTable.lootTable();
+    //shears only, no silk touch
+    @Override
+    protected LootTable.Builder createShearsDispatchTable(Block p_252195_, LootPoolEntryContainer.Builder<?> p_250102_) {
+        return createSelfDropDispatchTable(p_252195_, HAS_SHEARS, p_250102_);
+    }
+
+    //original table builders
+
+    protected LootTable.Builder dropDirtyShards(Block block){
+        System.out.println("GENERATING DIRTY SHARDS");
+        //TODO implement config condition
+        // "conditions": [
+        //                {
+        //                  "condition": "quark:flag",
+        //                  "flag": "glass_shard"
+        //                }
+        //              ]
+        HolderLookup.RegistryLookup<Enchantment> registrylookup = this.registries.lookupOrThrow(Registries.ENCHANTMENT);
+        return createSilkTouchDispatchTable(block, this.applyExplosionDecay(block, LootItem.lootTableItem(GlassShardModule.dirtyShard)
+                .apply(SetItemCountFunction.setCount(UniformGenerator.between(2.0F, 4.0F)))
+                .apply(ApplyBonusCount.addUniformBonusCount(registrylookup.getOrThrow(Enchantments.FORTUNE)))
+                .apply(LimitCount.limitCount(IntRange.range(1, 4)))));
+
+        /*
+        return createSilkTouchDispatchTable(block, this.applyExplosionCondition(block, LootItem.lootTableItem(GlassShardModule.dirtyShard)
+                .apply(SetItemCountFunction.setCount(UniformGenerator.between(2.0F, 4.0F)))
+                .apply(ApplyBonusCount.addUniformBonusCount(registrylookup.getOrThrow(Enchantments.FORTUNE)))
+                .apply(LimitCount.limitCount(IntRange.range(1, 4)))));
+         */
+    }
+
+    protected LootTable.Builder createShearsDrops(Block block) {
+        return createShearsDispatchTable(block, LootItem.lootTableItem(block.asItem()));
+    }
+
+    protected LootTable.Builder createLeavesDropWithBonusLikeHowOakLeavesDropApples(Block p_249535_, Block p_251505_, Item bonus) {
+        HolderLookup.RegistryLookup<Enchantment> registrylookup = this.registries.lookupOrThrow(Registries.ENCHANTMENT);
+        return this.createLeavesDrops(p_249535_, p_251505_).withPool(LootPool.lootPool().setRolls(ConstantValue.exactly(1.0F)).when(this.checkNotShearsOrSilk()).add(((LootPoolSingletonContainer.Builder)this.applyExplosionCondition(p_249535_, LootItem.lootTableItem(bonus))).when(BonusLevelTableCondition.bonusLevelFlatChance(registrylookup.getOrThrow(Enchantments.FORTUNE), LEAVES_BONUS_CHANCES))));
+    }
+
+    //original condition builders
+    //(we want to use convention shears tag)
+    private LootItemCondition.Builder checkNotShearsOrSilk() {
+        return this.checkShearsOrSilk().invert();
+    }
+
+    private LootItemCondition.Builder checkShearsOrSilk() {
+        return HAS_SHEARS.or(super.hasSilkTouch());
     }
 }
