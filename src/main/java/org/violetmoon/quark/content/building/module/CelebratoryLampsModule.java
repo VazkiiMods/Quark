@@ -21,8 +21,8 @@ public class CelebratoryLampsModule extends ZetaModule {
 
 	@LoadEvent
 	public final void register(ZRegister event) {
-		stone_lamp = new CelebratoryLampBlock("stone_lamp", this, Block.Properties.ofFullCopy(Blocks.STONE).lightLevel(s -> lightLevel)).setCreativeTab(CreativeModeTabs.BUILDING_BLOCKS);
-		stone_brick_lamp = new CelebratoryLampBlock("stone_brick_lamp", this, Block.Properties.ofFullCopy(Blocks.STONE_BRICKS).lightLevel(s -> lightLevel)).setCreativeTab(CreativeModeTabs.BUILDING_BLOCKS);
+		stone_lamp = new CelebratoryLampBlock("stone_lamp", this, Block.Properties.ofFullCopy(Blocks.STONE).lightLevel(s -> lightLevel));
+		stone_brick_lamp = new CelebratoryLampBlock("stone_brick_lamp", this, Block.Properties.ofFullCopy(Blocks.STONE_BRICKS).lightLevel(s -> lightLevel));
 	}
 
 }

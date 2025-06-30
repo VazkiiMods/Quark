@@ -120,7 +120,7 @@ public class FeedingTroughModule extends ZetaModule {
     }
 
     public static @Nullable Player modifyTemptGoal(TemptGoal goal, Animal animal, ServerLevel level) {
-        return modifyTempt(level, animal, (Ingredient) goal.items);
+        return modifyTempt(level, animal, goal.items);
     }
 
     private static @Nullable Player modifyTempt(ServerLevel level, Animal animal, Predicate<ItemStack> temptations) {

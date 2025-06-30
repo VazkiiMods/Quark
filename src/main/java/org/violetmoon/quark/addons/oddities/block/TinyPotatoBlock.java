@@ -65,7 +65,7 @@ public class TinyPotatoBlock extends ZetaBlock implements SimpleWaterloggedBlock
 	public static final String ANGRY = "angery";
 
 	public static boolean isAngry(ItemStack stack) {
-		return stack.get(QuarkDataComponents.IS_ANGRY);
+		return Boolean.TRUE.equals(stack.get(QuarkDataComponents.IS_ANGRY));
 	}
 
 	public TinyPotatoBlock(@Nullable ZetaModule module) {

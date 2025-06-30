@@ -47,9 +47,9 @@ public class TinyPotatoBlockItem extends ZetaBlockItem implements IRuneColorProv
 	}
 
 	private void updateData(ItemStack stack) {
-		CompoundTag tileTag = stack.get(DataComponents.BLOCK_ENTITY_DATA).copyTag();
 		// TODO: seems to me like this whole block isnt needed as tater never has that tag
-		if(tileTag != null) {
+		if(stack.has(DataComponents.BLOCK_ENTITY_DATA)) {
+			CompoundTag tileTag = stack.get(DataComponents.BLOCK_ENTITY_DATA).copyTag();
 			// this code seems to move angry tag out of blockEntity tag. Maybe it could be simplified
 			if(tileTag.contains(TinyPotatoBlockEntity.TAG_ANGRY, Tag.TAG_ANY_NUMERIC)) {
 				boolean angry = tileTag.getBoolean(TinyPotatoBlockEntity.TAG_ANGRY);

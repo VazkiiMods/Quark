@@ -100,7 +100,7 @@ public class VariantAnimalTexturesModule extends ZetaModule {
 
 		@PlayEvent
 		public void doShinySparkles(ZLivingTick event) {
-			if(!shinySparkles) return;
+			if(!shinySparkles || !(event.getEntity() instanceof LivingEntity)) return;
 			LivingEntity entity = (LivingEntity) event.getEntity();
 			Level level = entity.level();
 			if(level.isClientSide() && level.getGameTime() % 10 == 0) {

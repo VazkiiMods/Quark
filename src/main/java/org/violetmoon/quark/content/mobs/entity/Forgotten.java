@@ -1,6 +1,7 @@
 package org.violetmoon.quark.content.mobs.entity;
 
 import net.minecraft.core.RegistryAccess;
+import net.minecraft.core.particles.ColorParticleOption;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.core.registries.Registries;
@@ -96,7 +97,7 @@ public class Forgotten extends Skeleton {
 
 		double w = getBbWidth() * 2;
 		double h = getBbHeight();
-		level().addParticle((ParticleOptions) ParticleTypes.ENTITY_EFFECT, getX() + Math.random() * w - w / 2, getY() + Math.random() * h, getZ() + Math.random() * w - w / 2, 0, 0, 0);
+		level().addParticle(ColorParticleOption.create(ParticleTypes.ENTITY_EFFECT, 0xffffff), getX() + Math.random() * w - w / 2, getY() + Math.random() * h, getZ() + Math.random() * w - w / 2, 0, 0, 0);
 	}
 
 	private void swap() {

@@ -41,8 +41,8 @@ public class Quark {
 		proxy = Env.unsafeRunForDist(() -> ClientProxy::new, () -> CommonProxy::new);
 		proxy.start();
 
-		if (!ZETA.isProduction) // force all mixins to load in dev
-			MixinEnvironment.getCurrentEnvironment().audit();
+		//zif (!ZETA.isProduction) // force all mixins to load in dev
+		//	MixinEnvironment.getCurrentEnvironment().audit();
 	}
 
 	/*
