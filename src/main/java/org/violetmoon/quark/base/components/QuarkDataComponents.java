@@ -2,9 +2,7 @@ package org.violetmoon.quark.base.components;
 
 import com.mojang.serialization.Codec;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Registry;
 import net.minecraft.core.component.DataComponentType;
-import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
@@ -15,7 +13,6 @@ import net.minecraft.world.item.component.CustomData;
 import org.violetmoon.quark.base.Quark;
 import org.violetmoon.zeta.event.bus.LoadEvent;
 import org.violetmoon.zeta.event.load.ZCommonSetup;
-import org.violetmoon.zeta.event.load.ZRegister;
 
 import java.util.function.UnaryOperator;
 
@@ -41,16 +38,16 @@ public class QuarkDataComponents {
     );
 
     // Runes
-    public static final DataComponentType<String> TAG_RUNE_COLOR = register(
+    public static final DataComponentType<String> RUNE_COLOR = register(
             Quark.asResource("rune_color"), builder -> builder.persistent(Codec.STRING).networkSynchronized(ByteBufCodecs.STRING_UTF8)
     );
 
     // Trowel
-    public static final DataComponentType<Long> TAG_PLACING_SEED = register(
+    public static final DataComponentType<Long> PLACING_SEED = register(
             Quark.asResource("placing_seed"), builder -> builder.persistent(Codec.LONG).networkSynchronized(ByteBufCodecs.VAR_LONG)
     );
 
-    public static final DataComponentType<ItemStack> TAG_LAST_STACK = register(
+    public static final DataComponentType<ItemStack> LAST_STACK = register(
             Quark.asResource("last_stack"), builder -> builder.persistent(ItemStack.CODEC).networkSynchronized(ItemStack.STREAM_CODEC)
     );
 
@@ -59,11 +56,11 @@ public class QuarkDataComponents {
             Quark.asResource("is_pathfinder"), builder -> builder.persistent(Codec.BOOL).networkSynchronized(ByteBufCodecs.BOOL)
     );
 
-    public static final DataComponentType<String> TAG_BIOME = register(
+    public static final DataComponentType<String> TARGET_BIOME = register(
             Quark.asResource("target_biome"), builder -> builder.persistent(Codec.STRING).networkSynchronized(ByteBufCodecs.STRING_UTF8)
     );
 
-    public static final DataComponentType<Integer> TAG_COLOR = register(
+    public static final DataComponentType<Integer> BIOME_COLOR = register(
             Quark.asResource("target_biome_color"), builder -> builder.persistent(Codec.INT).networkSynchronized(ByteBufCodecs.INT)
     );
 

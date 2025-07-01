@@ -75,12 +75,12 @@ public class PathfindersQuillItem extends ZetaItem implements CreativeTabManager
 	}
 
 	public static ResourceLocation getTargetBiome(ItemStack stack) {
-		String str = Optional.ofNullable(stack.get(QuarkDataComponents.TAG_BIOME)).orElse("");
+		String str = Optional.ofNullable(stack.get(QuarkDataComponents.TARGET_BIOME)).orElse("");
 		return str.isEmpty() ? null : ResourceLocation.parse(str);
 	}
 
 	public static int getOverlayColor(ItemStack stack) {
-		return Optional.ofNullable(stack.get(QuarkDataComponents.TAG_COLOR)).orElse(0xFFFFFF);
+		return Optional.ofNullable(stack.get(QuarkDataComponents.BIOME_COLOR)).orElse(0xFFFFFF);
 	}
 
 	public static ItemStack forBiome(String biome, int color) {
@@ -90,8 +90,8 @@ public class PathfindersQuillItem extends ZetaItem implements CreativeTabManager
 	}
 
 	public static void setBiome(ItemStack stack, String biome, int color, boolean underground) {
-		stack.set(QuarkDataComponents.TAG_BIOME, biome);
-		stack.set(QuarkDataComponents.TAG_COLOR, color);
+		stack.set(QuarkDataComponents.TARGET_BIOME, biome);
+		stack.set(QuarkDataComponents.BIOME_COLOR, color);
 		stack.set(QuarkDataComponents.IS_UNDERGROUND, underground);
 	}
 

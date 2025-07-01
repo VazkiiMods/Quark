@@ -8,7 +8,6 @@ import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.TextColor;
-import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.Mth;
@@ -23,7 +22,6 @@ import net.minecraft.world.level.storage.loot.entries.LootItem;
 import net.minecraft.world.level.storage.loot.entries.LootPoolEntryContainer;
 import org.jetbrains.annotations.Nullable;
 import org.violetmoon.quark.api.IRuneColorProvider;
-import org.violetmoon.quark.api.QuarkCapabilities;
 import org.violetmoon.quark.base.Quark;
 import org.violetmoon.quark.base.components.QuarkDataComponents;
 import org.violetmoon.quark.base.network.message.UpdateTridentMessage;
@@ -96,17 +94,14 @@ public class ColorRunesModule extends ZetaModule {
 		if (manualColor != null)
 			return manualColor;
 
-		@Nullable
-		IRuneColorProvider cap = get(target);
-
-		return cap != null ? cap.getRuneColor(target) : null;
+		return RuneColor.byName(target.get(QuarkDataComponents.RUNE_COLOR));
 
 	}
 
 	@Nullable
 	public static RuneColor getAppliedStackColor(ItemStack target) {
 		if(target == null) return null;
-		return RuneColor.byName(target.get(QuarkDataComponents.TAG_RUNE_COLOR));
+		return RuneColor.byName(target.get(QuarkDataComponents.RUNE_COLOR));
 	}
 
 	private static final Map<ThrownTrident, ItemStack> TRIDENT_STACK_REFERENCES = new WeakHashMap<>();
@@ -122,7 +117,7 @@ public class ColorRunesModule extends ZetaModule {
 
 	public static ItemStack withRune(ItemStack stack, @Nullable RuneColor color) {
 		if (color != null) {
-			stack.set(QuarkDataComponents.TAG_RUNE_COLOR, color.getSerializedName());
+			stack.set(QuarkDataComponents.RUNE_COLOR, color.getSerializedName());
 		}
 		return stack;
 	}
@@ -219,19 +214,8 @@ public class ColorRunesModule extends ZetaModule {
 				components.add(CommonComponents.space().append(extremeRainbow(baseComponent)));
 			else
 				components.add(CommonComponents.space().append(baseComponent
-					.withStyle((style) -> style.withColor(color.getTextColor()))));
+						.withStyle((style) -> style.withColor(color.getTextColor()))));
 		}
-	}
-
-	private static @Nullable IRuneColorProvider get(ItemStack stack) {
-
-		return new IRuneColorProvider() {
-			@Override
-			public RuneColor getRuneColor(ItemStack stack) {
-				//todo: Change this!
-				return RuneColor.WHITE;
-			}
-		}; /*Quark.ZETA.capabilityManager.getCapability(QuarkCapabilities.RUNE_COLOR, stack);*/
 	}
 
 	@ZetaLoadModule(clientReplacement = true)

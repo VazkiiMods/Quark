@@ -15,6 +15,7 @@ import java.util.HashMap;
  * Created at 10:00 AM on 12/23/23.
  */
 public class RuneColor implements StringRepresentable {
+	
 
 	private static final HashMap<String, RuneColor> BY_NAME = new HashMap<>();
 	private static final HashMap<DyeColor, RuneColor> BY_COLOR = new HashMap<>();

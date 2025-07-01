@@ -382,7 +382,9 @@ public class SeedPouchItem extends ZetaItem implements IUsageTickerOverride, ITr
 		//Invariant: readFromStack(target).getCount() == readCountOnlyFromStack().
 		//Reading itemstacks is expensive, often times we don't care about them.
 		public static int readCountOnlyFromStack(ItemStack target) {
-			return target.get(QuarkDataComponents.ITEM_COUNT);
+			if (target.has(QuarkDataComponents.ITEM_COUNT))
+				return target.get(QuarkDataComponents.ITEM_COUNT);
+			else return 0;
 		}
 
 		//Ensures you can't read a PouchContents, mutate it, then forget to write it back to the stack.

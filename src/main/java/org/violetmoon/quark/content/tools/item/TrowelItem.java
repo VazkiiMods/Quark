@@ -52,9 +52,9 @@ public class TrowelItem extends ZetaItem implements IUsageTickerOverride {
 
 		ItemStack trowel = player.getItemInHand(hand);
 
-		long seed = Optional.ofNullable(trowel.get(QuarkDataComponents.TAG_PLACING_SEED)).orElse(0L);
+		long seed = Optional.ofNullable(trowel.get(QuarkDataComponents.PLACING_SEED)).orElse(0L);
 		Random rand = new Random(seed);
-		trowel.set(QuarkDataComponents.TAG_PLACING_SEED, rand.nextLong());
+		trowel.set(QuarkDataComponents.PLACING_SEED, rand.nextLong());
 
 		int targetSlot = targets.get(rand.nextInt(targets.size()));
 		ItemStack toPlaceStack = inventory.getItem(targetSlot);
@@ -69,7 +69,7 @@ public class TrowelItem extends ZetaItem implements IUsageTickerOverride {
 		inventory.setItem(targetSlot, newHandItem);
 
 		if (result.consumesAction()) {
-			trowel.set(QuarkDataComponents.TAG_LAST_STACK, toPlaceStack);
+			trowel.set(QuarkDataComponents.LAST_STACK, toPlaceStack);
 
 			if (TrowelModule.maxDamage > 0)
 				MiscUtil.damageStack(context.getItemInHand(), 1, player, hand == InteractionHand.MAIN_HAND ? EquipmentSlot.MAINHAND : EquipmentSlot.OFFHAND);
@@ -88,7 +88,7 @@ public class TrowelItem extends ZetaItem implements IUsageTickerOverride {
 	}
 
 	public static ItemStack getLastStack(ItemStack stack) {
-		return stack.get(QuarkDataComponents.TAG_LAST_STACK);
+		return stack.get(QuarkDataComponents.LAST_STACK);
 	}
 
 	@Override

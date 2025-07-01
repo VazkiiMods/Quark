@@ -42,7 +42,7 @@ public class ShulkerBoxTooltips {
 
 	public static void makeTooltip(ZGatherTooltipComponents event) {
 		ItemStack stack = event.getItemStack();
-		if(SimilarBlockTypeHandler.isShulkerBox(stack)) {
+		if(SimilarBlockTypeHandler.isShulkerBox(stack) && stack.has(DataComponents.BLOCK_ENTITY_DATA)) {
 			CompoundTag cmp = stack.get(DataComponents.BLOCK_ENTITY_DATA).copyTag();
 
 			if(cmp.contains("LootTable"))

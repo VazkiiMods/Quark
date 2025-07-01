@@ -84,7 +84,7 @@ public class BucketsShowInhabitantsModule extends ZetaModule {
 
 			@Override
 			public float call(@NotNull ItemStack stack, @Nullable ClientLevel level, @Nullable LivingEntity entity, int id) {
-				if(!isEnabled() || !featureEnabled.getAsBoolean())
+				if(!isEnabled() || !featureEnabled.getAsBoolean() || !stack.has(DataComponents.BUCKET_ENTITY_DATA))
 					return 0;
 
 				return stack.get(DataComponents.BUCKET_ENTITY_DATA).copyTag().getInt(Axolotl.VARIANT_TAG) % maxVariants;
@@ -101,7 +101,7 @@ public class BucketsShowInhabitantsModule extends ZetaModule {
 
 			@Override
 			public float call(@NotNull ItemStack stack, @Nullable ClientLevel level, @Nullable LivingEntity entity, int id) {
-				if(!isEnabled() || !featureEnabled.getAsBoolean())
+				if(!isEnabled() || !featureEnabled.getAsBoolean() || !stack.has(DataComponents.BUCKET_ENTITY_DATA))
 					return 0;
 
 				CompoundTag data = stack.get(DataComponents.BUCKET_ENTITY_DATA).copyTag();
@@ -153,7 +153,7 @@ public class BucketsShowInhabitantsModule extends ZetaModule {
 
 			@Override
 			public int getColor(@NotNull ItemStack stack, int layer) {
-		 		if(isEnabled() && featureEnabled.getAsBoolean() && (layer == 1 || layer == 2)) {
+		 		if(isEnabled() && featureEnabled.getAsBoolean() && (layer == 1 || layer == 2) && stack.has(DataComponents.BUCKET_ENTITY_DATA)) {
 					CompoundTag tag = stack.get(DataComponents.BUCKET_ENTITY_DATA).copyTag();
 
 					if(tag != null && tag.contains(TropicalFish.BUCKET_VARIANT_TAG, Tag.TAG_INT)) {
