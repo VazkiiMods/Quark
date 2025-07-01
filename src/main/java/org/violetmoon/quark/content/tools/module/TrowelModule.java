@@ -24,7 +24,7 @@ public class TrowelModule extends ZetaModule {
 	public static int maxDamage = 0;
 
 	@Hint
-	Item trowel;
+	public static Item trowel;
 
 	@LoadEvent
 	public final void register(ZRegister event) {

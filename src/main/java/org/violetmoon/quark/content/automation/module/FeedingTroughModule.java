@@ -71,7 +71,7 @@ public class FeedingTroughModule extends ZetaModule {
     public static BlockEntityType<FeedingTroughBlockEntity> blockEntityType;
     public static MenuType<DispenserMenu> menuType;
     @Hint
-    Block feeding_trough;
+    public static Block feeding_trough;
 
     @Config(description = "How long, in game ticks, between animals being able to eat from the trough")
     @Config.Min(1)

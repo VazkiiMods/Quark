@@ -242,7 +242,7 @@ public class QuarkBlockLootTableProvider extends BlockLootSubProvider {
 
     //original table builders
 
-    protected LootTable.Builder dropDirtyShards(Block block){
+    protected LootTable.Builder dropDirtyShards(Block block){ //TODO test output
         System.out.println("GENERATING DIRTY SHARDS");
         //TODO implement config condition
         // "conditions": [
@@ -256,13 +256,6 @@ public class QuarkBlockLootTableProvider extends BlockLootSubProvider {
                 .apply(SetItemCountFunction.setCount(UniformGenerator.between(2.0F, 4.0F)))
                 .apply(ApplyBonusCount.addUniformBonusCount(registrylookup.getOrThrow(Enchantments.FORTUNE)))
                 .apply(LimitCount.limitCount(IntRange.range(1, 4)))));
-
-        /*
-        return createSilkTouchDispatchTable(block, this.applyExplosionCondition(block, LootItem.lootTableItem(GlassShardModule.dirtyShard)
-                .apply(SetItemCountFunction.setCount(UniformGenerator.between(2.0F, 4.0F)))
-                .apply(ApplyBonusCount.addUniformBonusCount(registrylookup.getOrThrow(Enchantments.FORTUNE)))
-                .apply(LimitCount.limitCount(IntRange.range(1, 4)))));
-         */
     }
 
     protected LootTable.Builder createShearsDrops(Block block) {

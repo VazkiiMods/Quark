@@ -19,9 +19,9 @@ public class MetalButtonsModule extends ZetaModule {
 	public static boolean enableGold = true;
 
 	@Hint("iron_metal_button")
-	Block iron_button;
+	public static Block iron_button;
 	@Hint("gold_metal_button")
-	Block gold_button;
+	public static Block gold_button;
 
 	@LoadEvent
 	public final void register(ZRegister event) {
