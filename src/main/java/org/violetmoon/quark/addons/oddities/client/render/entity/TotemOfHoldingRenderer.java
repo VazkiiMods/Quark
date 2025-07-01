@@ -19,7 +19,6 @@ import net.minecraft.world.phys.HitResult;
 import org.jetbrains.annotations.NotNull;
 import org.violetmoon.quark.addons.oddities.entity.TotemOfHoldingEntity;
 import org.violetmoon.quark.base.Quark;
-import org.violetmoon.quark.base.QuarkClient;
 
 public class TotemOfHoldingRenderer extends EntityRenderer<TotemOfHoldingEntity> {
 
