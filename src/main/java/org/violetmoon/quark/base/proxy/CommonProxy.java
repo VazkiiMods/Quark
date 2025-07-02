@@ -13,6 +13,7 @@ import org.violetmoon.quark.base.capability.CapabilityHandler;
 import org.violetmoon.quark.base.components.QuarkDataComponents;
 import org.violetmoon.quark.base.config.QuarkGeneralConfig;
 import org.violetmoon.quark.base.handler.ContributorRewardHandler;
+import org.violetmoon.quark.base.handler.QuarkRemapHandler;
 import org.violetmoon.quark.base.handler.QuarkSounds;
 import org.violetmoon.quark.base.handler.WoodSetHandler;
 import org.violetmoon.quark.base.network.QuarkNetwork;
@@ -36,6 +37,7 @@ public class CommonProxy {
 				.subscribe(QuarkSounds.class)
 				.subscribe(WoodSetHandler.class)
 				.subscribe(QuarkDataComponents.class)
+				.subscribe(QuarkRemapHandler.class)
 				.subscribe(this);
 
 		Quark.ZETA.playBus

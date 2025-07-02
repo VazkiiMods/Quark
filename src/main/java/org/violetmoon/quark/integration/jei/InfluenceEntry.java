@@ -54,7 +54,7 @@ public class InfluenceEntry implements IRecipeCategoryExtension {
 		ItemStack stack = ItemStack.EMPTY;
 
 		for(Holder<Enchantment> enchantment : enchantments) {
-			if(!EnchantmentsBegoneModule.shouldBegone(enchantment)) {
+			if(enchantment.value() != null && !EnchantmentsBegoneModule.shouldBegone(enchantment)) {
 				if(stack.isEmpty()) {
 					stack = ColorRunesModule.withRune(new ItemStack(Items.ENCHANTED_BOOK), runeColor);
 					stack.set(DataComponents.CUSTOM_NAME, Component.translatable(locKey).withStyle(chatColor));

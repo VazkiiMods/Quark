@@ -57,10 +57,13 @@ public class AbacusItem extends ZetaItem {
 	}
 
 	public static BlockPos getBlockPos(ItemStack stack) {
-		BlockPos pos = stack.get(QuarkDataComponents.BOUNDS_POS);
-		if (pos.getY() == DEFAULT_Y)
-			return null;
-		return pos;
+		if (stack.has(QuarkDataComponents.BOUNDS_POS)) {
+			BlockPos pos = stack.get(QuarkDataComponents.BOUNDS_POS);
+			if (pos.getY() == DEFAULT_Y)
+				return null;
+			return pos;
+		}
+		return null;
 	}
 
 	public static int getCount(ItemStack stack, BlockPos target, Level world) {

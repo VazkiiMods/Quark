@@ -72,7 +72,7 @@ public class EnchantedBookTooltips {
 				for(; tooltipIndex < tooltip.size(); tooltipIndex++) {
 					Either<FormattedText, TooltipComponent> elmAt = tooltip.get(tooltipIndex);
 					if(elmAt.left().isPresent() && elmAt.left().get().equals(match)) {
-						boolean tableOnly = stack.get(QuarkDataComponents.TABLE_ONLY_ENCHANTS);
+						boolean tableOnly = Boolean.TRUE.equals(stack.get(QuarkDataComponents.TABLE_ONLY_ENCHANTS));
 						List<ItemStack> items = getItemsForEnchantment(ed.enchantment.value(), tableOnly);
 						int itemCount = items.size();
 						int lines = (int) Math.ceil((double) itemCount / 10.0);

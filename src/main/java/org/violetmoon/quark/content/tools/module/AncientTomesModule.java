@@ -17,6 +17,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.tags.EnchantmentTags;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
@@ -52,6 +53,7 @@ import org.violetmoon.zeta.advancement.ManualTrigger;
 import org.violetmoon.zeta.config.Config;
 import org.violetmoon.zeta.event.bus.LoadEvent;
 import org.violetmoon.zeta.event.bus.PlayEvent;
+import org.violetmoon.zeta.event.load.ZAddReloadListener;
 import org.violetmoon.zeta.event.load.ZCommonSetup;
 import org.violetmoon.zeta.event.load.ZConfigChanged;
 import org.violetmoon.zeta.event.load.ZRegister;
@@ -171,16 +173,11 @@ public class AncientTomesModule extends ZetaModule {
 					lootTableWeights.put(loc, weight);
 			}
 		}
-
-		if(initialized)
-			setupEnchantList();
 	}
 
 	@LoadEvent
 	public void setup(ZCommonSetup event) {
-		setupEnchantList();
-		setupCursesList();
-		initialized = true;
+
 	}
 
 	@PlayEvent
@@ -201,6 +198,31 @@ public class AncientTomesModule extends ZetaModule {
 
 	public static boolean isInitialized() {
 		return initialized;
+	}
+
+	@PlayEvent
+	public void onDataLoad(ZAddReloadListener event) {
+		Registry<Enchantment> enchRegistry = event.getServerResources().fullRegistries().get().registryOrThrow(Registries.ENCHANTMENT);
+		validEnchants.clear();
+		for(String s : enchantNames) {
+			ResourceKey<Enchantment> realsourceKey = ResourceKey.create(Registries.ENCHANTMENT, ResourceLocation.parse(s));
+			Optional<Holder.Reference<Enchantment>> optHeld = enchRegistry.getHolder(realsourceKey);
+			if (optHeld.isEmpty()) {
+				Quark.LOG.error("Unknown enchantment found for Tomes!");
+				continue;
+			} else if (!EnchantmentsBegoneModule.shouldBegone(realsourceKey)) {
+				continue;
+			}
+			validEnchants.add(optHeld.get());
+		}
+
+		if(sanityCheck)
+			validEnchants.removeIf((ench) -> ench.value().getMaxLevel() == 1);
+
+		for(Holder<Enchantment> e : enchRegistry.asHolderIdMap()) {
+			if (e.is(EnchantmentTags.CURSE))
+				curses.add(e);
+		}
 	}
 
 	@PlayEvent
@@ -412,12 +434,6 @@ public class AncientTomesModule extends ZetaModule {
 		}
 
 		return strings;
-	}
-
-	private void setupEnchantList() {
-		initializeEnchantmentList(enchantNames, validEnchants);
-		if(sanityCheck)
-			validEnchants.removeIf((ench) -> ench.value().getMaxLevel() == 1);
 	}
 	
 	public static void initializeEnchantmentList(Iterable<String> enchantNames, List<Holder<Enchantment>> enchants) {
