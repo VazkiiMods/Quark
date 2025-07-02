@@ -26,7 +26,7 @@ public class ToretoiseOreLayer extends RenderLayer<Toretoise, ToretoiseModel> {
 		int ore = entity.getOreType();
 		if(ore != 0 && ore <= Toretoise.ORE_TYPES) {
 			ResourceLocation res = ResourceLocation.parse(String.format(ORE_BASE, ore));
-			renderColoredCutoutModel(getParentModel(), res, matrix, buffer, light, entity, 1);
+			renderColoredCutoutModel(getParentModel(), res, matrix, buffer, light, entity, -1);
 		}
 	}
 }

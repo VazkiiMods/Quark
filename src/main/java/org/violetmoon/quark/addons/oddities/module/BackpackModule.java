@@ -41,6 +41,7 @@ import org.violetmoon.quark.addons.oddities.inventory.BackpackMenu;
 import org.violetmoon.quark.addons.oddities.item.BackpackItem;
 import org.violetmoon.quark.base.Quark;
 import org.violetmoon.quark.base.network.message.oddities.HandleBackpackMessage;
+import org.violetmoon.quark.mixin.mixins.client.accessor.AccessorMenuScreens;
 import org.violetmoon.zeta.block.ZetaBlock;
 import org.violetmoon.zeta.client.event.load.ZAddItemColorHandlers;
 import org.violetmoon.zeta.client.event.load.ZClientSetup;
@@ -193,7 +194,7 @@ public class BackpackModule extends ZetaModule {
 		@LoadEvent
 		public void clientSetup(ZClientSetup e) {
 			e.enqueueWork(() -> {
-				//AccessorMenuScreens.invokeRegister(menyType, BackpackInventoryScreen::new);
+				AccessorMenuScreens.invokeRegister(menyType, BackpackInventoryScreen::new);
 
 				ItemProperties.register(backpack, Quark.asResource("has_items"),
 						(stack, world, entity, i) -> (!BackpackModule.superOpMode && BackpackItem.doesBackpackHaveItems(stack)) ? 1 : 0);
@@ -205,7 +206,7 @@ public class BackpackModule extends ZetaModule {
 		@PlayEvent
 		public void onOpenGUI(ZScreen.Opening event) {
 			Player player = Minecraft.getInstance().player;
-			if(player != null && isInventoryGUI(event.getScreen()) && !player.getAbilities().instabuild && isEntityWearingBackpack(player) && !player.portalProcess.isInsidePortalThisTick()) {
+			if(player != null && isInventoryGUI(event.getScreen()) && !player.getAbilities().instabuild && isEntityWearingBackpack(player)) {
 				requestBackpack();
 				event.setCanceled(true);
 			}

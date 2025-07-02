@@ -378,7 +378,7 @@ public class ExpandedItemInteractionsModule extends ZetaModule {
 		@LoadEvent
 		public final void clientSetup(ZClientSetup event) {
 
-			//AccessorMenuScreens.invokeRegister(heldShulkerBoxMenuType, HeldShulkerBoxScreen::new);
+			AccessorMenuScreens.invokeRegister(heldShulkerBoxMenuType, HeldShulkerBoxScreen::new);
 		}
 
 		@PlayEvent

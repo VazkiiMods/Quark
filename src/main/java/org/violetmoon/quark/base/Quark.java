@@ -28,7 +28,7 @@ public class Quark {
 	public static final Logger LOG = LogManager.getLogger(MOD_ID);
 
 	public static final Zeta ZETA = new ForgeZeta(MOD_ID, LogManager.getLogger("quark-zeta"));
-	public static final String ODDITIES_ID = ZETA.isProduction ? "quarkoddities" : "quarkoddities";
+	public static final String ODDITIES_ID = ZETA.isProduction ? "quarkoddities" : "quark";
 
 	public static Quark instance;
 	public static CommonProxy proxy;

@@ -29,7 +29,7 @@ import org.violetmoon.zeta.module.ZetaModule;
 
 @ZetaLoadModule(category = "management")
 public class HotbarChangerModule extends ZetaModule {
-	private static final ResourceLocation WIDGETS = ResourceLocation.withDefaultNamespace("textures/gui/widgets.png"); //TODO this file no longer exists
+	private static final ResourceLocation HOTBAR = ResourceLocation.withDefaultNamespace("textures/gui/sprites/hud/hotbar.png");
 
 	private static final int MAX_HEIGHT = 90;
 
@@ -114,9 +114,9 @@ public class HotbarChangerModule extends ZetaModule {
 			RenderSystem.setShader(GameRenderer::getPositionTexShader);
 			for(int i = 0; i < 3; i++) {
 				matrix.pushPose();
-				RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 0.75F);
+				RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 0.05f);
 				matrix.translate(xStart, yStart + i * 21, 0);
-				guiGraphics.blit(WIDGETS, 0, 0, 0, 0, 182, 22);
+				guiGraphics.blit(HOTBAR, 0, 0, 0, 0, 182, 22, 182, 22);
 				matrix.popPose();
 			}
 

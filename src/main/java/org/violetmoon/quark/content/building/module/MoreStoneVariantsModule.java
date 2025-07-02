@@ -48,7 +48,7 @@ public class MoreStoneVariantsModule extends ZetaModule {
 		add(event, "andesite", MapColor.STONE, SoundType.STONE, Blocks.POLISHED_ANDESITE, BooleanSuppliers.TRUE);
 		add(event, "calcite", MapColor.TERRACOTTA_WHITE, SoundType.CALCITE, polishedCalcite, BooleanSuppliers.TRUE);
 		add(event, "dripstone", MapColor.TERRACOTTA_BROWN, SoundType.DRIPSTONE_BLOCK, polishedDripstone, BooleanSuppliers.TRUE);
-		add(event, "tuff", MapColor.TERRACOTTA_GRAY, SoundType.TUFF, polishedTuff, BooleanSuppliers.TRUE);
+		add(event, "tuff", MapColor.TERRACOTTA_GRAY, SoundType.TUFF, polishedTuff, BooleanSuppliers.TRUE); //todo: Polished/Bricks for Tuff have been added in 1.21.
 
 		add(event, "limestone", MapColor.STONE, SoundType.STONE, NewStoneTypesModule.polishedBlocks.get(NewStoneTypesModule.limestoneBlock), () -> NewStoneTypesModule.enableLimestone);
 		add(event, "jasper", MapColor.TERRACOTTA_RED, SoundType.STONE, NewStoneTypesModule.polishedBlocks.get(NewStoneTypesModule.jasperBlock), () -> NewStoneTypesModule.enableJasper);
@@ -103,6 +103,20 @@ public class MoreStoneVariantsModule extends ZetaModule {
 		event.getVariantRegistry().addSlabStairsWall(bricks, null);
 		CreativeTabManager.endDaisyChain();
 
+
+	}
+
+	private void addPillar(ZRegister event, String name, MapColor color, SoundType sound, Block parentBlock, BooleanSupplier cond, ZetaBlock.Constructor<ZetaPillarBlock> pillarConstr) {
+		Block.Properties props = Block.Properties.of()
+				.requiresCorrectToolForDrops()
+				.instrument(NoteBlockInstrument.BASEDRUM)
+				.mapColor(color)
+				.sound(sound)
+				.strength(1.5F, 6.0F);
+
+		pillarConstr.make(name + "_pillar", this, props)
+				.setCondition(() -> cond.getAsBoolean() && enablePillar)
+				.setCreativeTab(CreativeModeTabs.BUILDING_BLOCKS, parentBlock, false);
 
 	}
 

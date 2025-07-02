@@ -409,7 +409,7 @@ public class Stoneling extends PathfinderMob {
 	@Override
 	public void addAdditionalSaveData(@NotNull CompoundTag compound) {
 		super.addAdditionalSaveData(compound);
-		compound.put(TAG_CARRYING_ITEM, getCarryingItem().save(level().registryAccess()));
+		if (!getCarryingItem().is(Items.AIR)) compound.put(TAG_CARRYING_ITEM, getCarryingItem().save(level().registryAccess()));
 		compound.putByte(TAG_VARIANT, getVariant().getIndex());
 		compound.putFloat(TAG_HOLD_ANGLE, getItemAngle());
 		compound.putBoolean(TAG_PLAYER_MADE, isPlayerMade());

@@ -59,8 +59,7 @@ public class TinyPotatoModule extends ZetaModule {
 		public void modelBake(ZModel.ModifyBakingResult event) {
 			ModelResourceLocation tinyPotato = ModelResourceLocation.standalone(Quark.asResource("tiny_potato"));
 			Map<ModelResourceLocation, BakedModel> map = event.getModels();
-			BakedModel originalPotato = map.get(tinyPotato);
-			map.put(tinyPotato, new TinyPotatoModel(originalPotato));
+            map.compute(tinyPotato, (k, originalPotato) -> new TinyPotatoModel(originalPotato));
 		}
 
 		@LoadEvent

@@ -26,12 +26,12 @@ import java.util.List;
 
 public class FoodTooltips {
 	//Grabbed from client.Gui.
-	public static final ResourceLocation FOOD_EMPTY_HUNGER_SPRITE = ResourceLocation.withDefaultNamespace("gui/sprites/hud/food_empty_hunger");
-	public static final ResourceLocation FOOD_HALF_HUNGER_SPRITE = ResourceLocation.withDefaultNamespace("gui/sprites/hud/food_half_hunger");
-	public static final ResourceLocation FOOD_FULL_HUNGER_SPRITE = ResourceLocation.withDefaultNamespace("gui/sprites/hud/food_full_hunger");
-	public static final ResourceLocation FOOD_EMPTY_SPRITE = ResourceLocation.withDefaultNamespace("gui/sprites/hud/food_empty");
-	public static final ResourceLocation FOOD_HALF_SPRITE = ResourceLocation.withDefaultNamespace("gui/sprites/hud/food_half");
-	public static final ResourceLocation FOOD_FULL_SPRITE = ResourceLocation.withDefaultNamespace("gui/sprites/hud/food_full");
+	public static final ResourceLocation FOOD_EMPTY_HUNGER_SPRITE = ResourceLocation.withDefaultNamespace("textures/gui/sprites/hud/food_empty_hunger.png");
+	public static final ResourceLocation FOOD_HALF_HUNGER_SPRITE = ResourceLocation.withDefaultNamespace("textures/gui/sprites/hud/food_half_hunger.png");
+	public static final ResourceLocation FOOD_FULL_HUNGER_SPRITE = ResourceLocation.withDefaultNamespace("textures/gui/sprites/hud/food_full_hunger.png");
+	public static final ResourceLocation FOOD_EMPTY_SPRITE = ResourceLocation.withDefaultNamespace("textures/gui/sprites/hud/food_empty.png");
+	public static final ResourceLocation FOOD_HALF_SPRITE = ResourceLocation.withDefaultNamespace("textures/gui/sprites/hud/food_half.png");
+	public static final ResourceLocation FOOD_FULL_SPRITE = ResourceLocation.withDefaultNamespace("textures/gui/sprites/hud/food_full.png");
 
 	private static boolean isPoison(FoodProperties food) {
 		for(FoodProperties.PossibleEffect effect : food.effects()) {

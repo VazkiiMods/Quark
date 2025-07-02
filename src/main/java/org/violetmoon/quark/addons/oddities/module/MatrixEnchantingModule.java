@@ -274,7 +274,7 @@ public class MatrixEnchantingModule extends ZetaModule {
 
 		@LoadEvent
 		public final void clientSetup(ZClientSetup event) {
-			//AccessorMenuScreens.invokeRegister(menuType, MatrixEnchantingScreen::new);
+			AccessorMenuScreens.invokeRegister(menuType, MatrixEnchantingScreen::new);
 			BlockEntityRenderers.register(blockEntityType, MatrixEnchantingTableRenderer::new);
 		}
 

@@ -47,7 +47,7 @@ public class CrateModule extends ZetaModule {
 	public static class Client extends CrateModule {
 		@LoadEvent
 		public final void clientSetup(ZClientSetup event) {
-		//	AccessorMenuScreens.invokeRegister(menuType, CrateScreen::new);
+			AccessorMenuScreens.invokeRegister(menuType, CrateScreen::new);
 		}
 	}
 }

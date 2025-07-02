@@ -107,12 +107,12 @@ public class VariantChestsModule extends ZetaModule {
 
 		CreativeTabManager.daisyChain();
 		for(Block regularChest : regularChests)
-			CreativeTabManager.addToCreativeTabNextTo(CreativeModeTabs.FUNCTIONAL_BLOCKS, regularChest, Blocks.CHEST, false);
+			CreativeTabManager.addToCreativeTabNextTo(CreativeModeTabs.FUNCTIONAL_BLOCKS, regularChest, Blocks.CHEST, true);
 		CreativeTabManager.endDaisyChain();
 
 		CreativeTabManager.daisyChain();
 		for(Block trappedChest : trappedChests)
-			CreativeTabManager.addToCreativeTabNextTo(CreativeModeTabs.REDSTONE_BLOCKS, trappedChest, Blocks.TRAPPED_CHEST, false);
+			CreativeTabManager.addToCreativeTabNextTo(CreativeModeTabs.REDSTONE_BLOCKS, trappedChest, Blocks.TRAPPED_CHEST, true);
 		CreativeTabManager.endDaisyChain();
 
 		StructureBlockReplacementHandler.addReplacement(this::getGenerationChestBlockState);
@@ -278,8 +278,8 @@ public class VariantChestsModule extends ZetaModule {
 			BlockEntityRenderers.register(chestTEType, ctx -> new VariantChestRenderer(ctx, false));
 			BlockEntityRenderers.register(trappedChestTEType, ctx -> new VariantChestRenderer(ctx, true));
 
-			//for(Block b : regularChests) QuarkClient.ZETA_CLIENT.setBlockEntityWithoutLevelRenderer(b.asItem(), new SimpleWithoutLevelRenderer(chestTEType, b.defaultBlockState()));
-			//for(Block b : trappedChests) QuarkClient.ZETA_CLIENT.setBlockEntityWithoutLevelRenderer(b.asItem(), new SimpleWithoutLevelRenderer(trappedChestTEType, b.defaultBlockState()));
+			for(Block b : regularChests) QuarkClient.ZETA_CLIENT.setBlockEntityWithoutLevelRenderer(b.asItem(), new SimpleWithoutLevelRenderer(chestTEType, b.defaultBlockState()));
+			for(Block b : trappedChests) QuarkClient.ZETA_CLIENT.setBlockEntityWithoutLevelRenderer(b.asItem(), new SimpleWithoutLevelRenderer(trappedChestTEType, b.defaultBlockState()));
 
 			QuarkClient.LOOTR_INTEGRATION.clientSetup(event);
 		}
