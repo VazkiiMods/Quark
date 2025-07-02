@@ -65,7 +65,7 @@ public class VariantAnimalTexturesModule extends ZetaModule {
 	protected static final List<String> BEE_VARIANTS = List.of(
 			"acebee", "agenbee", "arobee", "beefluid", "beesexual",
 			"beequeer", "enbee", "gaybee", "interbee", "lesbeean",
-			"panbee", "polysexbee", "transbee", "helen");
+			"panbee", "polysexbee", "transbee", "helen", "mlbeem");
 
 	@Config(description = "The chance for an animal to have a special \"Shiny\" skin, like a shiny pokemon. This is 1 in X. Set to 0 to disable.")
 	public static int shinyAnimalChance = 2048;

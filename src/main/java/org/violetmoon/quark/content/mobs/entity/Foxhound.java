@@ -80,6 +80,7 @@ public class Foxhound extends Wolf implements Enemy {
 	private static final EntityDataAccessor<Boolean> TEMPTATION = SynchedEntityData.defineId(Foxhound.class, EntityDataSerializers.BOOLEAN);
 	private static final EntityDataAccessor<Boolean> IS_BLUE = SynchedEntityData.defineId(Foxhound.class, EntityDataSerializers.BOOLEAN);
 	private static final EntityDataAccessor<Boolean> TATERING = SynchedEntityData.defineId(Foxhound.class, EntityDataSerializers.BOOLEAN);
+	private static final EntityDataAccessor<Integer> COLLAR_COLOR = SynchedEntityData.defineId(Foxhound.class, EntityDataSerializers.INT);
 
 	private int timeUntilPotatoEmerges = 0;
 
@@ -97,7 +98,7 @@ public class Foxhound extends Wolf implements Enemy {
 
 		//todo: Mixin accessor or accesswidener
 
-		((AccessorWolf)this).invokeSetCollarColor(DyeColor.ORANGE);
+		builder.define(COLLAR_COLOR, DyeColor.ORANGE.getId());
 		builder.define(TEMPTATION, false);
 		builder.define(IS_BLUE, false);
 		builder.define(TATERING, false);
