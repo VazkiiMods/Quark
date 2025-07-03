@@ -213,6 +213,10 @@ public class WoodSetHandler {
 			return List.of(log, wood, planks, strippedLog, strippedWood, slab, stairs, fence, fenceGate, door, trapdoor, button, pressurePlate, sign, wallSign, ceilingHangingSign, wallHangingSign, bookshelf, ladder, post, strippedPost, verticalPlanks, hollowLog);
 		}
 
+		public List<Block> allLogs() {
+			return List.of(log, wood, strippedLog, strippedWood);
+		}
+
 	}
 
 	public static class Client {

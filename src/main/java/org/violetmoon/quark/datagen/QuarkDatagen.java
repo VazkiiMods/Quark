@@ -35,8 +35,9 @@ public class QuarkDatagen {
             // I would prefer these be implemented differently
 
         //tags
-        //generator.addProvider(gatherDataEvent.includeServer(), new QuarkBlockTagProvider(packOutput, holderLookupProvider, existingFileHelper));
-        //generator.addProvider(gatherDataEvent.includeServer(), new QuarkItemTagProvider(packOutput, holderLookupProvider, existingFileHelper));
+        QuarkBlockTagProvider qbtp = new QuarkBlockTagProvider(packOutput, holderLookupProvider, null, existingFileHelper);
+        generator.addProvider(gatherDataEvent.includeServer(), qbtp);
+        generator.addProvider(gatherDataEvent.includeServer(), new QuarkItemTagProvider(packOutput, holderLookupProvider, qbtp.contentsGetter(), null, existingFileHelper));
 
         //things like modded tags can be done manually
 
