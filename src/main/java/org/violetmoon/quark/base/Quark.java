@@ -8,7 +8,7 @@ import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.common.Mod;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.spongepowered.asm.mixin.MixinEnvironment;
+import org.violetmoon.quark.base.proxy.ClientProxy;
 import org.violetmoon.quark.base.proxy.CommonProxy;
 import org.violetmoon.quark.integration.lootr.ILootrIntegration;
 import org.violetmoon.quark.integration.lootr.LootrIntegration;
@@ -40,6 +40,7 @@ public class Quark {
 		proxy = Env.unsafeRunForDist(() -> ClientProxy::new, () -> CommonProxy::new);
 		proxy.start();
 
+		// Causes issues for now, will see about re-enabling later
 		//zif (!ZETA.isProduction) // force all mixins to load in dev
 		//	MixinEnvironment.getCurrentEnvironment().audit();
 	}

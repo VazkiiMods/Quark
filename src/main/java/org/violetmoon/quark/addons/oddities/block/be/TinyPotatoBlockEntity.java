@@ -28,6 +28,7 @@ import org.violetmoon.zeta.util.MiscUtil;
 import org.violetmoon.zeta.util.SimpleInventoryBlockEntity;
 
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 
 public class TinyPotatoBlockEntity extends SimpleInventoryBlockEntity implements Nameable {

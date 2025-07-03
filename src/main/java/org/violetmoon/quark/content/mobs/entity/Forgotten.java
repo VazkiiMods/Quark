@@ -125,7 +125,7 @@ public class Forgotten extends Skeleton {
 		super.addAdditionalSaveData(compound);
 
 		CompoundTag sheathed = new CompoundTag();
-		if (entityData.get(SHEATHED_ITEM) != null) entityData.get(SHEATHED_ITEM).save(level().registryAccess(), sheathed);
+		if (entityData.get(SHEATHED_ITEM) != ItemStack.EMPTY) entityData.get(SHEATHED_ITEM).save(level().registryAccess(), sheathed);
 		compound.put("sheathed", sheathed);
 	}
 

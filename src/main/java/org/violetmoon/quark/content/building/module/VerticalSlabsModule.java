@@ -29,6 +29,7 @@ import org.violetmoon.zeta.util.handler.ToolInteractionHandler;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Optional;
 
 @ZetaLoadModule(category = "building")
@@ -165,7 +166,5 @@ public class VerticalSlabsModule extends ZetaModule {
 
 	public interface IVerticalSlabProvider {
 		QuarkVerticalSlabBlock getVerticalSlab(Block block, ZetaModule module);
-
 	}
-
 }
