@@ -31,16 +31,24 @@ public class QuarkDatagen {
                 List.of(new LootTableProvider.SubProviderEntry(QuarkBlockLootTableProvider::new, LootContextParamSets.BLOCK),
                         new LootTableProvider.SubProviderEntry(QuarkEntityLootTableProvider::new, LootContextParamSets.ENTITY)),
                 holderLookupProvider));
+        //do we need to generate vanilla data overrides (dye any wool, nether wart block, stone tools)?
+            // I would prefer these be implemented differently
+
         //tags
         //generator.addProvider(gatherDataEvent.includeServer(), new QuarkBlockTagProvider(packOutput, holderLookupProvider, existingFileHelper));
         //generator.addProvider(gatherDataEvent.includeServer(), new QuarkItemTagProvider(packOutput, holderLookupProvider, existingFileHelper));
 
+        //things like modded tags can be done manually
+
         //do we need datamaps?
         //generator.addProvider(gatherDataEvent.includeServer(), new QuarkDataMapProvider(packOutput, holderLookupProvider));
+        //do we need advancements?
+        //generator.addProvider(gatherDataEvent.includeServer(), new QuarkAdvancementProvider(packOutput, holderLookupProvider));
 
         //assets
-        generator.addProvider(gatherDataEvent.includeClient(), new QuarkItemModelProvider(packOutput, existingFileHelper));
-        generator.addProvider(gatherDataEvent.includeClient(), new QuarkBlockStateProvider(packOutput, existingFileHelper));
+        //The existing models seem to work in 1.21.1 so these aren't high priority
+        //generator.addProvider(gatherDataEvent.includeClient(), new QuarkItemModelProvider(packOutput, existingFileHelper));
+        //generator.addProvider(gatherDataEvent.includeClient(), new QuarkBlockStateProvider(packOutput, existingFileHelper));
         System.out.println("QUARK DATA GENERATED. YIPPEE");
     }
 }
