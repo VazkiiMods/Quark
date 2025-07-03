@@ -1,5 +1,7 @@
 package org.violetmoon.quark.content.client.tooltip;
 
+import java.util.Locale;
+
 import org.jetbrains.annotations.NotNull;
 import org.violetmoon.quark.base.Quark;
 import org.violetmoon.quark.base.client.handler.ClientUtil;
@@ -41,7 +43,7 @@ public class FuelTooltips {
 
 	private static String getDisplayString(int count) {
 		float items = (float) count / (float) Math.max(1, ImprovedTooltipsModule.fuelTimeDivisor);
-		String time = String.format(((items - (int) items) == 0) ? "x%.0f" : "x%.1f", items);
+		String time = String.format(Locale.ROOT, ((items - (int) items) == 0) ? "x%.0f" : "x%.1f", items);
 		return time;
 	}
 

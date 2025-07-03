@@ -127,7 +127,7 @@ public class BackpackItem extends ArmorItem implements IZetaItem, IZetaItemExten
 		RegistryLookup<Enchantment> enchantmentLookup = worldIn.registryAccess().lookupOrThrow(Registries.ENCHANTMENT);
 
 		Reference<Enchantment> bindingCurse = enchantmentLookup.getOrThrow(Enchantments.BINDING_CURSE);
-		
+
 		boolean hasItems = !BackpackModule.superOpMode && doesBackpackHaveItems(stack);
 		ItemEnchantments.Mutable enchants = new ItemEnchantments.Mutable(stack.getOrDefault(DataComponents.ENCHANTMENTS, ItemEnchantments.EMPTY));
 		boolean isCursed = enchants.getLevel(bindingCurse) == 1;

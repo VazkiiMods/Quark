@@ -112,7 +112,7 @@ public class TinyPotatoBlockEntity extends SimpleInventoryBlockEntity implements
 			if(hasCustomName()) {
 				TinyPotatoInfo info = TinyPotatoInfo.fromComponent(name);
 
-				String checkName = info.name().toLowerCase().trim();
+				String checkName = info.name().toLowerCase(Locale.ROOT).trim();
 				if(SOUNDS.containsKey(checkName) && soundCd == 0) {
 					SoundEvent playSound = SOUNDS.get(checkName);
 					soundCd = 20;
@@ -175,7 +175,6 @@ public class TinyPotatoBlockEntity extends SimpleInventoryBlockEntity implements
 			}
 		}
 	}
-
 
 	@Override
 	public void inventoryChanged(int i) {

@@ -121,7 +121,7 @@ public class FallenLogGenerator extends Generator {
             BlockPos belowPos = testPos.below();
             BlockState belowState = level.getBlockState(belowPos);
 
-            if(canSpawnOnWater && belowState.is(Blocks.WATER)){
+            if (canSpawnOnWater && belowState.is(Blocks.WATER)){
                 continue;
             }
             if (!belowState.is(FallenLogsModule.canSpawnOnTag)) {

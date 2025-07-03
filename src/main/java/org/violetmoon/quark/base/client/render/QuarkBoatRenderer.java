@@ -69,7 +69,8 @@ public class QuarkBoatRenderer extends EntityRenderer<Boat> {
 
 		float f2 = boat.getBubbleAngle(partialTicks);
 		if(!Mth.equal(f2, 0.0F)) {
-			matrix.mulPose(new Quaternionf(1.0F, 0.0F, 1.0F, boat.getBubbleAngle(partialTicks) * ((float) Math.PI / 180F)));
+			matrix.mulPose((new Quaternionf()).setAngleAxis(boat.getBubbleAngle(partialTicks) * 0.017453292F, 1.0F,
+					0.0F, 1.0F));
 		}
 
 		BoatModelTuple tuple = getModelWithLocation(boat);

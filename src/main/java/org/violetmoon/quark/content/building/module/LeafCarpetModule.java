@@ -73,7 +73,7 @@ public class LeafCarpetModule extends ZetaModule {
 
 		@LoadEvent
 		public void blockColorHandlers(ZAddBlockColorHandlers event) {
-			event.registerNamed(zeta(),b -> new AlikeColorHandler((LeafCarpetBlock) b, LeafCarpetBlock::getBaseState), "leaf_carpet");
+			event.registerNamed(zeta(), b -> new AlikeColorHandler((LeafCarpetBlock) b, LeafCarpetBlock::getBaseState), "leaf_carpet");
 		}
 
 		@LoadEvent

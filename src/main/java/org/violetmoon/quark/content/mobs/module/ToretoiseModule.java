@@ -53,10 +53,13 @@ public class ToretoiseModule extends ZetaModule {
 	public static DimensionConfig dimensions = DimensionConfig.overworld(false);
 
 	@Config
-	public static EntitySpawnConfig spawnConfig = new EntitySpawnConfig(120, 2, 4, CompoundBiomeConfig.fromBiomeTags(true, Tags.Biomes.IS_VOID, BiomeTags.IS_NETHER, BiomeTags.IS_END));
+	public static EntitySpawnConfig spawnConfig = new EntitySpawnConfig(120, 2, 4,
+			CompoundBiomeConfig.fromBiomeTags(true, Tags.Biomes.IS_VOID, BiomeTags.IS_NETHER, BiomeTags.IS_END));
 
 	public static ManualTrigger mineToretoiseTrigger;
 	public static ManualTrigger mineFedToretoiseTrigger;
+
+	public static final TagKey<EntityType<?>> toretoiseWhitelist = TagKey.create( Registries.ENTITY_TYPE, Quark.asResource("toretoise_whitelist"));
 
 	@LoadEvent
 	public final void register(ZRegister event) {

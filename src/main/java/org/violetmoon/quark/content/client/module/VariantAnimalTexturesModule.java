@@ -203,7 +203,7 @@ public class VariantAnimalTexturesModule extends ZetaModule {
 					else if(nectar)
 						type = "nectar";
 
-					String path = String.format("textures/model/entity/variants/bees/%s/%s.png", name, type);
+					String path = String.format(Locale.ROOT, "textures/model/entity/variants/bees/%s/%s.png", name, type);
 					return Quark.asResource(path);
 				}
 			}
@@ -252,7 +252,7 @@ public class VariantAnimalTexturesModule extends ZetaModule {
 		private static void registerTextures(VariantTextureType type, int count, ResourceLocation vanilla) {
 			String name = type.name().toLowerCase(Locale.ROOT);
 			for(int i = 1; i < count + 1; i++)
-				textures.put(type, Quark.asResource(String.format("textures/model/entity/variants/%s%d.png", name, i)));
+				textures.put(type, Quark.asResource(String.format(Locale.ROOT, "textures/model/entity/variants/%s%d.png", name, i)));
 
 			if(vanilla != null)
 				textures.put(type, vanilla);
@@ -260,7 +260,7 @@ public class VariantAnimalTexturesModule extends ZetaModule {
 		}
 
 		private static void registerShiny(VariantTextureType type) {
-			shinyTextures.put(type, Quark.asResource(String.format("textures/model/entity/variants/%s_shiny.png", type.name().toLowerCase(Locale.ROOT))));
+			shinyTextures.put(type, Quark.asResource(String.format(Locale.ROOT, "textures/model/entity/variants/%s_shiny.png", type.name().toLowerCase(Locale.ROOT))));
 		}
 
 	}

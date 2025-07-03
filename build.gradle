@@ -69,10 +69,22 @@ runs {
 
 repositories {
     mavenLocal()
-    maven { url = "https://maven.blamejared.com" }
-    maven { url = "https://maven.terraformersmc.com" }
     maven {
-        url = "https://www.cursemaven.com"
+        // for Zeta and JEI
+        name "blamejared"
+        url "https://maven.blamejared.com"
+        content {
+            includeGroup("org.violetmoon.zeta")
+            includeGroup("mezz.jei")
+        }
+    }
+    maven {
+        name "TerraformersMC"
+        url "https://maven.terraformersmc.com"
+    }
+    maven {
+        name "cursemaven"
+        url "https://www.cursemaven.com"
         content {
             includeGroup "curse.maven"
         }
@@ -96,7 +108,7 @@ dependencies {
     runtimeOnly "maven.modrinth:spark:${deps.spark}"
 
     //implementation(jarJar("net.createmod.ponder:Ponder-NeoForge-${config.mc_version}:${deps.ponder}")) { transitive = false }
-    
+
     implementation files ("localjars/Zeta-1.0-30.jar")
     implementation "com.github.glitchfiend:TerraBlender-neoforge:${deps.terrablender}"
     // compile against the JEI API but do not include it at runtime

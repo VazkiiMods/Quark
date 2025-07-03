@@ -24,6 +24,7 @@ import org.violetmoon.zeta.config.SectionDefinition;
 import org.violetmoon.zeta.config.ValueDefinition;
 
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
@@ -56,7 +57,7 @@ public class ConvulsionMatrixClientDefinition implements ClientDefinitionExt<Sec
 
 		return Stream.of(r_, g_, b_)
 			.flatMap(List::stream)
-			.map(d -> String.format("%.1f", d))
+			.map(d -> String.format(Locale.ROOT, "%.1f", d))
 			.collect(Collectors.joining(", ", "[", "]"));
 	}
 
@@ -137,7 +138,7 @@ public class ConvulsionMatrixClientDefinition implements ClientDefinitionExt<Sec
 					Minecraft mc = Minecraft.getInstance();
 					super.renderWidget(guiGraphics, mouseX, mouseY, partialTicks);
 
-					String displayVal = String.format("%.2f", getValue());
+					String displayVal = String.format(Locale.ROOT, "%.2f", getValue());
 					int valueColor = changes.isDirty(binding) ? ChatFormatting.GOLD.getColor() : 0xFFFFFF;
 					guiGraphics.drawString(mc.font, displayVal, x + (getWidth() / 2 - font.width(displayVal) / 2), y + 6, valueColor);
 				}

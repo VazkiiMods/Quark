@@ -106,8 +106,8 @@ public class QuarkSounds {
 	@LoadEvent
 	public static void start(ZRegister e) {
 		for(SoundEvent event : REGISTRY_DEFERENCE)
-			Quark.ZETA.registry.register(event, event.getLocation(), Registries.SOUND_EVENT);
-		REGISTRY_DEFERENCE.clear();
+			e.getRegistry().register(event, event.getLocation(), Registries.SOUND_EVENT);
+		//REGISTRY_DEFERENCE.clear(); //Maybe this will fix https://github.com/VazkiiMods/Quark/issues/4854 ??????
 	}
 
 	public static SoundEvent register(String name) {

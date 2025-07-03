@@ -116,8 +116,6 @@
 	"quark.camera.filter.pencil": "연필",
 	"quark.camera.filter.watercolor": "네거티브",
 	"quark.camera.filter.sobel": "소벨 윤곽선",
-	"quark.camera.filter.sobel": "소벨 윤곽선",
-	"quark.camera.filter.sobel": "소벨 윤곽선",
 	"quark.camera.filter.deuteranopia": "모의 녹색맹",
 	"quark.camera.filter.protanopia": "모의 적색맹",
 	"quark.camera.filter.tritanopia": "모의 청색맹",
@@ -949,7 +947,6 @@
 	"block.quark.tuff_wall": "응회암 담장",
 	"block.quark.tuff_bricks_wall": "윤나는 응회암 벽돌 담장",
 	"block.quark.iron_pillar": "철 기둥",
-	"block.quark.iron_ladder": "철 사다리",
 	"block.quark.deepslate_furnace": "심층암 화로",
 	"block.quark.blackstone_furnace": "흑암 화로",
 

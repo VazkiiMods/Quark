@@ -57,7 +57,6 @@ public class IndustrialPaletteModule extends ZetaModule {
 		CreativeTabManager.endDaisyChain();
 
 		new VariantLadderBlock("iron", this, Block.Properties.of()
-				.noCollission()
 				.strength(0.8F)
 				.sound(IRON_LADDER_SOUND_TYPE)
 				.noOcclusion()

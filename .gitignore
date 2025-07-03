@@ -29,6 +29,9 @@ Thumbs.db
 /classes
 /fileTemplates
 
+## vscode
+/.vscode
+
 ## Private Stuffs
 /private.properties
 

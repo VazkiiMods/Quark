@@ -13,6 +13,7 @@ import net.minecraft.world.entity.EquipmentSlot.Type;
 import net.minecraft.world.entity.HumanoidArm;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.ProjectileWeaponItem;
 import net.minecraft.world.item.enchantment.Enchantment;
@@ -202,7 +203,8 @@ public class UsageTickerModule extends ZetaModule {
 				}
 
 				if(!logicLock) {
-					if(!stack.isStackable() && slot.getType() == Type.HAND)
+					//We always show BlockItems even if they are unstackable - added in https://github.com/VazkiiMods/Quark/pull/5189
+					if(!stack.isStackable() && !(stack.getItem() instanceof BlockItem) && slot.getType() == Type.HAND)
 						returnStack = ItemStack.EMPTY;
 					else if(verifySize && stack.isStackable() && count == stack.getCount())
 						returnStack = ItemStack.EMPTY;
@@ -217,7 +219,7 @@ public class UsageTickerModule extends ZetaModule {
 			public int getStackCount(Player player, ItemStack displayStack, ItemStack original, boolean renderPass) {
 				int val = 1;
 
-				if(displayStack.isStackable()) {
+				if(displayStack.isStackable() || (displayStack.getItem() instanceof BlockItem)) {
 					Predicate<ItemStack> predicate = (stackAt) -> ItemStack.isSameItemSameComponents(stackAt, displayStack);
 
 					int total = 0;

@@ -37,9 +37,9 @@ public class FallenLogsModule extends ZetaModule {
 	@Config
 	public static int rarity = 5;
 
-	@Config(description = "chance for logs to spawn on water")
+	@Config(description = "Chance for logs to spawn on water")
 	public static double onWaterChance = 0.1;
-	
+
 	@Config
 	public static int sparseBiomeRarity = 12;
 	

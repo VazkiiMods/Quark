@@ -6,20 +6,14 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v4
     - name: Set up JDK
-      uses: actions/setup-java@v2
+      uses: actions/setup-java@v4
       with:
         distribution: 'temurin'
         java-version: '21'
-    - name: Validate gradlew integrity
-      uses: gradle/wrapper-validation-action@v1
-    - name: Cache
-      uses: actions/cache@v2
-      with:
-        path: |
-          ~/.gradle/caches
-        key: ${{ runner.os }}-gradle-${{ hashFiles('**/build.gradle', '**/gradle-wrapper.properties') }}
+    - name: Validate wrapper and restore Gradle cache
+      uses: gradle/actions/setup-gradle@v4
     - name: Build with Gradle
       run: ./gradlew pmdMain build
     - name: PMD report
@@ -45,7 +39,7 @@ jobs:
         gpg --local-user "Violet Moon Signing Key" --armor \
           --detach-sign ${{ steps.calculate_artifact_names.outputs.forge }}
     - name: Archive Forge Artifacts
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v4
       with:
         name: Forge
         path: |
