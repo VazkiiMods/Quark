@@ -41,7 +41,7 @@ public class Quark {
 		proxy.start();
 
 		// Causes issues for now, will see about re-enabling later
-		//zif (!ZETA.isProduction) // force all mixins to load in dev
+		//if (!ZETA.isProduction) // force all mixins to load in dev
 		//	MixinEnvironment.getCurrentEnvironment().audit();
 	}
 

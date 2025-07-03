@@ -1,0 +1,23 @@
+{
+  "replace": false,
+  "values": [
+    "quark:soul_sandstone",
+    "quark:soul_sandstone_slab",
+    "quark:soul_sandstone_stairs",
+    "quark:chiseled_soul_sandstone",
+    "quark:cut_soul_sandstone",
+    "quark:cut_soul_sandstone_slab",
+    "quark:smooth_soul_sandstone",
+    "quark:smooth_soul_sandstone_slab",
+    "quark:smooth_soul_sandstone_stairs",
+    "quark:soul_sandstone_bricks",
+    "quark:soul_sandstone_bricks_slab",
+    "quark:soul_sandstone_bricks_stairs",
+    "quark:soul_sandstone_vertical_slab",
+    "quark:cut_soul_sandstone_vertical_slab",
+    "quark:smooth_soul_sandstone_vertical_slab",
+    "quark:soul_sandstone_bricks_vertical_slab",
+    "quark:soul_sandstone_wall",
+    "quark:soul_sandstone_bricks_wall"
+  ]
+}

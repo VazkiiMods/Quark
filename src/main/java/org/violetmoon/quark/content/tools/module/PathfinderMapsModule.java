@@ -182,7 +182,7 @@ public class PathfinderMapsModule extends ZetaModule {
 
 	@PlayEvent
 	public void livingTick(ZLivingTick event) {
-		if(event.getEntity() instanceof WanderingTrader wt && addToWanderingTraderForced && !wt.getPersistentData().getBoolean(TAG_CHECKED_FOR_PATHFINDER)) {
+		if(event.getEntity() instanceof WanderingTrader wt && addToWanderingTraderForced && !wt.getPersistentData().getBoolean(TAG_CHECKED_FOR_PATHFINDER) && !event.getEntity().level().isClientSide) {
 			boolean hasPathfinder = false;
 			MerchantOffers offers = wt.getOffers();
 
