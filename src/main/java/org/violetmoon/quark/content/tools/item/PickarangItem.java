@@ -90,7 +90,7 @@ public class PickarangItem extends ZetaItem {
 	public InteractionResultHolder<ItemStack> use(Level worldIn, Player playerIn, @NotNull InteractionHand handIn) {
 		ItemStack itemstack = playerIn.getItemInHand(handIn);
 		playerIn.setItemInHand(handIn, ItemStack.EMPTY);
-		Holder<Enchantment> enchantment = playerIn.level().registryAccess().holderOrThrow(Registries.ENCHANTMENT).value().getHolderOrThrow(Enchantments.EFFICIENCY);
+		Holder<Enchantment> enchantment = playerIn.level().registryAccess().registry(Registries.ENCHANTMENT).get().getHolderOrThrow(Enchantments.EFFICIENCY);
 		int eff = Quark.ZETA.itemExtensions.get(itemstack).getEnchantmentLevelZeta(itemstack, enchantment);
 		Vec3 pos = playerIn.position();
 		worldIn.playSound(null, pos.x, pos.y, pos.z, QuarkSounds.ENTITY_PICKARANG_THROW, SoundSource.NEUTRAL, 0.5F + eff * 0.14F, 0.4F / (worldIn.random.nextFloat() * 0.4F + 0.8F));

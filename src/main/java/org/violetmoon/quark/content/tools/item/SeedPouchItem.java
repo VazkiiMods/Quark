@@ -32,6 +32,7 @@ import org.jetbrains.annotations.Nullable;
 import org.violetmoon.quark.api.ITrowelable;
 import org.violetmoon.quark.api.IUsageTickerOverride;
 import org.violetmoon.quark.base.Quark;
+import org.violetmoon.quark.base.components.ItemWrapperComponent;
 import org.violetmoon.quark.base.components.QuarkDataComponents;
 import org.violetmoon.quark.content.tools.module.SeedPouchModule;
 import org.violetmoon.zeta.item.ZetaItem;
@@ -356,23 +357,28 @@ public class SeedPouchItem extends ZetaItem implements IUsageTickerOverride, ITr
 			if(isEmpty()) {
 				//If we are empty, and the target doesn't have any NBT tag, that's cool. Nothing to do.
 				//If the target *does* have an NBT tag, ensure we remove our tags.
-                tag.remove(TAG_STORED_ITEM);
-                tag.remove(TAG_COUNT);
+                target.remove(QuarkDataComponents.STORED_ITEM);
+                target.remove(QuarkDataComponents.ITEM_COUNT);
 
                 //And, if we just removed *all* the tags on the target, erase its NBT tag entirely.;
             } else {
-				target.set(QuarkDataComponents.STORED_ITEM, target);
+				target.set(QuarkDataComponents.STORED_ITEM, new ItemWrapperComponent(contents));
 				target.set(QuarkDataComponents.ITEM_COUNT, count);
 			}
 
 			return target;
 		}
 
+		/**
+		 * Reads the target's components and spits out the content
+		 * @param target What is hopefully a seed pouch
+		 * @return The contents of the pouch
+		 */
 		public static PouchContents readFromStack(ItemStack target) {
 			PouchContents contents = new PouchContents();
 
-			if(target.has(QuarkDataComponents.STORED_ITEM) && target.has(QuarkDataComponents.ITEM_COUNT)) {
-				contents.contents = target.get(QuarkDataComponents.STORED_ITEM);
+			if (target.has(QuarkDataComponents.STORED_ITEM) && target.has(QuarkDataComponents.ITEM_COUNT)) {
+				contents.contents = target.get(QuarkDataComponents.STORED_ITEM).stack();
 				contents.count = target.get(QuarkDataComponents.ITEM_COUNT);
 			}
 

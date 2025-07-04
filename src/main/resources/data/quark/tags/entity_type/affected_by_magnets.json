@@ -10,7 +10,7 @@
     "minecraft:hopper_minecart",
     "minecraft:command_block_minecart",
     "minecraft:spawner_minecart",
-    {"id":"forge:minecarts","required":false},
+    {"id":"c:minecarts","required":false},
     {"id":"minecraft:minecarts","required":false},
     {"id":"alexscaves:moving_metal_block","required":false},
     {"id":"alexscaves:teletor","required":false},

@@ -13,6 +13,7 @@ import net.minecraft.world.phys.BlockHitResult;
 import org.jetbrains.annotations.NotNull;
 import org.violetmoon.quark.api.ITrowelable;
 import org.violetmoon.quark.api.IUsageTickerOverride;
+import org.violetmoon.quark.base.components.ItemWrapperComponent;
 import org.violetmoon.quark.base.components.QuarkDataComponents;
 import org.violetmoon.quark.content.tools.module.TrowelModule;
 import org.violetmoon.zeta.item.ZetaItem;
@@ -69,7 +70,7 @@ public class TrowelItem extends ZetaItem implements IUsageTickerOverride {
 		inventory.setItem(targetSlot, newHandItem);
 
 		if (result.consumesAction()) {
-			trowel.set(QuarkDataComponents.LAST_STACK, toPlaceStack);
+			trowel.set(QuarkDataComponents.LAST_STACK, new ItemWrapperComponent(toPlaceStack));
 
 			if (TrowelModule.maxDamage > 0)
 				MiscUtil.damageStack(context.getItemInHand(), 1, player, hand == InteractionHand.MAIN_HAND ? EquipmentSlot.MAINHAND : EquipmentSlot.OFFHAND);
@@ -88,7 +89,7 @@ public class TrowelItem extends ZetaItem implements IUsageTickerOverride {
 	}
 
 	public static ItemStack getLastStack(ItemStack stack) {
-		return stack.get(QuarkDataComponents.LAST_STACK);
+		return stack.get(QuarkDataComponents.LAST_STACK).stack();
 	}
 
 	@Override

@@ -2,6 +2,7 @@ package org.violetmoon.quark.mixin.mixins.client.accessor;
 
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.client.resources.model.ModelManager;
+import net.minecraft.client.resources.model.ModelResourceLocation;
 import net.minecraft.resources.ResourceLocation;
 
 import org.spongepowered.asm.mixin.Mixin;
@@ -13,5 +14,5 @@ import java.util.Map;
 public interface AccessorModelManager {
 
 	@Accessor
-	Map<ResourceLocation, BakedModel> getBakedRegistry();
+	Map<ModelResourceLocation, BakedModel> getBakedRegistry();
 }

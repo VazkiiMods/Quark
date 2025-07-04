@@ -48,8 +48,8 @@ public class QuarkDataComponents {
             Quark.asResource("placing_seed"), builder -> builder.persistent(Codec.LONG).networkSynchronized(ByteBufCodecs.VAR_LONG)
     );
 
-    public static DataComponentType<ItemStack> LAST_STACK = register(
-            Quark.asResource("last_stack"), builder -> builder.persistent(ItemStack.CODEC).networkSynchronized(ItemStack.STREAM_CODEC)
+    public static DataComponentType<ItemWrapperComponent> LAST_STACK = register(
+            Quark.asResource("last_stack"), builder -> builder.persistent(ItemWrapperComponent.CODEC).networkSynchronized(ItemWrapperComponent.STREAM_CODEC)
     );
 
     // Pathfinder Quill
@@ -102,8 +102,8 @@ public class QuarkDataComponents {
     );
 
     // Seed pouch
-    public static DataComponentType<ItemStack> STORED_ITEM = register(
-            Quark.asResource("stored_item"), builder -> builder.persistent(ItemStack.CODEC).networkSynchronized(ItemStack.STREAM_CODEC)
+    public static DataComponentType<ItemWrapperComponent> STORED_ITEM = register(
+            Quark.asResource("stored_item"), builder -> builder.persistent(ItemWrapperComponent.CODEC).networkSynchronized(ItemWrapperComponent.STREAM_CODEC)
     );
 
     public static DataComponentType<Integer> ITEM_COUNT = register(

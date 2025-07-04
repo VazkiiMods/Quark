@@ -13,6 +13,7 @@ import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.client.renderer.entity.ItemRenderer;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.client.resources.model.ModelManager;
+import net.minecraft.client.resources.model.ModelResourceLocation;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
 import net.minecraft.core.component.DataComponents;
@@ -62,17 +63,17 @@ public class TinyPotatoRenderer implements BlockEntityRenderer<TinyPotatoBlockEn
 
 	private static BakedModel getModel(String name, boolean angry) {
 		ModelManager bmm = Minecraft.getInstance().getModelManager();
-		Map<ResourceLocation, BakedModel> mm = ((AccessorModelManager) bmm).getBakedRegistry();
+		Map<ModelResourceLocation, BakedModel> mm = ((AccessorModelManager) bmm).getBakedRegistry();
 		BakedModel missing = bmm.getMissingModel();
-		ResourceLocation location = taterLocation(name);
+		ModelResourceLocation location = ModelResourceLocation.standalone(taterLocation(name));
 		BakedModel model = mm.get(location);
 		if(model == null) {
 			if(isTheSpookDay()) {
-				return mm.getOrDefault(taterLocation(HALLOWEEN), missing);
+				return mm.getOrDefault(ModelResourceLocation.standalone(taterLocation(HALLOWEEN)), missing);
 			} else if(angry) {
-				return mm.getOrDefault(taterLocation(ANGRY), missing);
+				return mm.getOrDefault(ModelResourceLocation.standalone(taterLocation(ANGRY)), missing);
 			} else {
-				return mm.getOrDefault(taterLocation(DEFAULT), missing);
+				return mm.getOrDefault(ModelResourceLocation.standalone(taterLocation(DEFAULT)), missing);
 			}
 		}
 		return model;

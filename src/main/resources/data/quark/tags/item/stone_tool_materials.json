@@ -1,8 +1,8 @@
 {
   "replace": false,
   "values": [
-    "#forge:stone",
-    "#forge:cobblestone",
+    "#c:stone",
+    "#c:cobblestone",
     "minecraft:flint",
     "minecraft:sandstone",
     "quark:limestone",
