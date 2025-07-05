@@ -58,6 +58,7 @@
     "RegistrySetBuilderHackMixin",
     "ServerAdvancementManagerMixin",
     "ServerEntityMixin",
+    "ServerLevelMixin",
     "ShearsItemMixin",
     "SlimeMixin",
     "SpawnerBlockEntityMixin",

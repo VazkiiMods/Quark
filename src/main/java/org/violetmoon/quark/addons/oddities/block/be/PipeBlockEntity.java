@@ -550,7 +550,7 @@ public class PipeBlockEntity extends SimpleInventoryBlockEntity {
 		}
 
 		public void writeToNBT(CompoundTag cmp, HolderLookup.Provider provider) {
-			stack.save(provider, cmp);
+			if (!stack.isEmpty()) stack.save(provider, cmp);
 			cmp.putInt(TAG_TICKS, ticksInPipe);
 			cmp.putInt(TAG_INCOMING, incomingFace.ordinal());
 			cmp.putInt(TAG_OUTGOING, outgoingFace.ordinal());
@@ -560,7 +560,10 @@ public class PipeBlockEntity extends SimpleInventoryBlockEntity {
 		}
 
 		public static PipeItem readFromNBT(CompoundTag cmp, HolderLookup.Provider provider) {
-			ItemStack stack = ItemStack.parseOptional(provider, cmp);
+			ItemStack stack = ItemStack.EMPTY;
+			if (cmp.contains("id")) {
+				 stack = ItemStack.parseOptional(provider, cmp);
+			}
 			Direction inFace = Direction.values()[cmp.getInt(TAG_INCOMING)];
 			long rngSeed = cmp.getLong(TAG_RNG_SEED);
 

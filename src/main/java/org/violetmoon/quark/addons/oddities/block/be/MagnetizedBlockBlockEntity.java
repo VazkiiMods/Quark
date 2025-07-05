@@ -323,6 +323,9 @@ public class MagnetizedBlockBlockEntity extends BlockEntity {
 	}
 
 	private CompoundTag writeNBTData(CompoundTag compound, boolean includeSubTile) {
+		if (compound == null) {
+			compound = new CompoundTag();
+		}
 		compound.put("blockState", NbtUtils.writeBlockState(this.magnetState));
 		if(includeSubTile)
 			compound.put("subTile", subTile);

@@ -49,19 +49,22 @@ public class MagnetSystem {
 
 	public static @Nullable IMagnetTracker getTracker(Level level) {
 		//Todo: Replaced capability, check if it works.
-		return new MagnetTracker(level);
+
+		return ((MagnetWorldInterface)(level)).getTracker();
 	}
 
 	public static void tick(boolean start, Level level) {
-		IMagnetTracker tracker = getTracker(level);
-		if(tracker == null)
-			return;
+		if (!level.isClientSide()) {
+			IMagnetTracker tracker = getTracker(level);
+			if (tracker == null)
+				return;
 
-		if(!start) {
-			for(BlockPos pos : tracker.getTrackedPositions())
-				tracker.actOnForces(pos);
+			if (!start) {
+				for (BlockPos pos : tracker.getTrackedPositions())
+					tracker.actOnForces(pos);
+			}
+			tracker.clear();
 		}
-		tracker.clear();
 	}
 
 	public static void onRecipeReset() {
@@ -93,9 +96,11 @@ public class MagnetSystem {
 	}
 
 	public static void applyForce(Level world, BlockPos pos, int magnitude, boolean pushing, Direction dir, int distance, BlockPos origin) {
-		IMagnetTracker tracker = getTracker(world);
-		if(tracker != null)
-			tracker.applyForce(pos, magnitude, pushing, dir, distance, origin);
+		if (!world.isClientSide) {
+			IMagnetTracker tracker = getTracker(world);
+			if (tracker != null)
+				tracker.applyForce(pos, magnitude, pushing, dir, distance, origin);
+		}
 	}
 
 	public static ICollateralMover.MoveResult getPushAction(MagnetBlockEntity magnet, BlockPos pos, BlockState state, Direction moveDir) {
