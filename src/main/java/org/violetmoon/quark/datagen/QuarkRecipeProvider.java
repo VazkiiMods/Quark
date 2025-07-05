@@ -8,9 +8,9 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.DyeColor;
+import net.minecraft.world.item.DyeItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
-import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
@@ -19,13 +19,15 @@ import net.neoforged.neoforge.common.Tags;
 import net.neoforged.neoforge.common.conditions.IConditionBuilder;
 import org.violetmoon.quark.addons.oddities.module.*;
 import org.violetmoon.quark.content.automation.module.*;
+import org.violetmoon.quark.content.building.module.CompressedBlocksModule;
+import org.violetmoon.quark.content.building.module.FramedGlassModule;
 import org.violetmoon.quark.content.building.module.NetherBrickFenceGateModule;
 import org.violetmoon.quark.content.building.module.VariantChestsModule;
-import org.violetmoon.quark.content.experimental.item.HammerItem;
 import org.violetmoon.quark.content.experimental.module.VariantSelectorModule;
 import org.violetmoon.quark.content.mobs.module.StonelingsModule;
 import org.violetmoon.quark.content.tools.module.*;
 import org.violetmoon.quark.content.tweaks.module.GlassShardModule;
+import org.violetmoon.zeta.block.ZetaGlassBlock;
 
 import java.util.concurrent.CompletableFuture;
 
@@ -106,17 +108,48 @@ public class QuarkRecipeProvider extends RecipeProvider implements IConditionBui
             //trappedChestRecipe(chest.asItem(), chest.originalChest).save(recipeOutput, "quark:building/chests/" + "");
         }
             //compressed
-
+        compressUncompress(Items.APPLE, CompressedBlocksModule.apple, recipeOutput, null, "apple_crate");
+        compressUncompress(Items.BEETROOT, CompressedBlocksModule.beetroot, recipeOutput, null, "beetroot_crate");
+        compressUncompress(Items.SWEET_BERRIES, CompressedBlocksModule.berry, recipeOutput, null, "berry_sack");
+        compressUncompress(Items.LEATHER, CompressedBlocksModule.leather, recipeOutput, null, "bonded_leather");
+        compressUncompress(Items.RABBIT_HIDE, CompressedBlocksModule.hide, recipeOutput, null, "bonded_rabbit_hide");
+        compressUncompress(Items.CACTUS, CompressedBlocksModule.cactus, recipeOutput, null, "cactus_block");
+        compressUncompress(Items.CARROT, CompressedBlocksModule.carrot, recipeOutput, null, "carrot_crate");
+        compressUncompress(Items.CHARCOAL, CompressedBlocksModule.charcoal_block, recipeOutput, null, "charcoal_block");
+        compressUncompress(Items.CHORUS_FRUIT, CompressedBlocksModule.chorus, recipeOutput, null, "chorus_fruit_block");
+        compressUncompress(Items.COCOA_BEANS, CompressedBlocksModule.cocoa, recipeOutput, null, "cocoa_beans_sack");
+        compressUncompress(Items.GLOW_BERRIES, CompressedBlocksModule.glowberry, recipeOutput, null, "glowberry_sack");
+        compressUncompress(Items.GOLDEN_APPLE, CompressedBlocksModule.golden_apple_crate, recipeOutput, null, "golden_apple_crate");
+        compressUncompress(Items.GOLDEN_CARROT, CompressedBlocksModule.golden_carrot, recipeOutput, null, "golden_carrot_crate");
+        compressUncompress(Items.GUNPOWDER, CompressedBlocksModule.gunpowder, recipeOutput, null, "gunpowder_sack");
+        //TODO vanilla nether wart block override?
+        compressUncompress(Items.NETHER_WART, CompressedBlocksModule.wart, recipeOutput, null, "nether_wart_sack");
+        compressUncompress(Items.POTATO, CompressedBlocksModule.potato, recipeOutput, null, "potato_crate");
+        compressUncompress(Items.STICK, CompressedBlocksModule.stick_block, recipeOutput, null, "stick_block");
+        compressUncompress(Items.SUGAR_CANE, CompressedBlocksModule.sugarCane, recipeOutput, null, "sugar_cane_block");
             //furnaces
 
             //glass
-
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, FramedGlassModule.framed_glass, 8)
+                .pattern("IGI")
+                .pattern("G G")
+                .pattern("IGI")
+                .define('G', Tags.Items.GLASS_BLOCKS_COLORLESS)
+                .define('I', Tags.Items.INGOTS_IRON)
+                .save(recipeOutput, "quark:building/crafting/glass/framed_glass"); //1.21 moved from quark:building/crafting/framed_glass.json
+        for(DyeColor dyeColor : FramedGlassModule.blockMap.keySet()){
+            dyedFramedGlassRecipe(FramedGlassModule.blockMap.get(dyeColor).getBlock(), dyeColor)
+                    .save(recipeOutput, "quark:building/glass/" + dyeColor.getName() + "_framed_glass");
+        }
             //hollowlogs
 
             //lamps
 
             //panes
-
+        for(DyeColor dyeColor : FramedGlassModule.paneMap.keySet()){
+            paneRecipe(FramedGlassModule.blockMap.get(dyeColor).getBlock(), FramedGlassModule.blockMap.get(dyeColor).getBlock())
+                    .save(recipeOutput, "quark:building/panes/" + dyeColor.getName() + "_framed_glass_pane");
+        }
             //shingles
 
             //slabs
@@ -143,7 +176,7 @@ public class QuarkRecipeProvider extends RecipeProvider implements IConditionBui
 
             //stools (new 1.21 folder)
 
-        //misc building blocks (duskbound, soul sandstone, grate, midori, raw metal bricks, rope, ironplate, paperwall/lantern, thatch)
+            //misc building blocks (duskbound, soul sandstone, grate, midori, raw metal bricks, rope, ironplate, paperwall/lantern, thatch)
 
         //Experimental
         ShapedRecipeBuilder.shaped(RecipeCategory.TOOLS, VariantSelectorModule.hammer)
@@ -414,6 +447,39 @@ public class QuarkRecipeProvider extends RecipeProvider implements IConditionBui
                 .pattern("##")
                 .pattern("##")
                 .define('#', shard);
+    }
+
+    public static ShapelessRecipeBuilder dyedFramedGlassRecipe(ItemLike output, DyeColor dye){
+        return ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, output, 8)
+                .requires(FramedGlassModule.framed_glass)
+                .requires(FramedGlassModule.framed_glass)
+                .requires(FramedGlassModule.framed_glass)
+                .requires(FramedGlassModule.framed_glass)
+                .requires(FramedGlassModule.framed_glass)
+                .requires(FramedGlassModule.framed_glass)
+                .requires(FramedGlassModule.framed_glass)
+                .requires(FramedGlassModule.framed_glass)
+                .requires(DyeItem.byColor(dye));
+    }
+
+    public static ShapedRecipeBuilder paneRecipe(ItemLike output, ItemLike glass) {
+        return ShapedRecipeBuilder.shaped(RecipeCategory.MISC, output, 16)
+                .pattern("###")
+                .pattern("###")
+                .define('#', glass);
+    }
+
+    public static void compressUncompress(ItemLike item, ItemLike block, RecipeOutput recipeOutput, String configFlag, String blockName){
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, block)
+                .pattern("###")
+                .pattern("###")
+                .pattern("###")
+                .define('#', item)
+                .save(recipeOutput, "quark:building/crafting/compressed/" + blockName);
+
+        ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, item, 9)
+                .requires(block)
+                .save(recipeOutput, "quark:oddities/crafting/" + blockName + "uncompress");
     }
 
 
