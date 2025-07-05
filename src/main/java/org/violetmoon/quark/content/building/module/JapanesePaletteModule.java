@@ -40,29 +40,32 @@ public class JapanesePaletteModule extends ZetaModule {
 	@Config(flag = "bamboo_mat")
 	public static boolean enableBambooMats = true;
 
+	public static IZetaBlock paperLantern, paperLanternSakura; //datagen only
+	public static Block paperWall, paperWallBig, paperWallSakura, bambooMat, bambooMatCarpet;
+
 	@LoadEvent
 	public final void register(ZRegister event) {
 		BooleanSupplier paperBlockCond = () -> enablePaperBlocks;
 		BooleanSupplier bambooMatCond = () -> enableBambooMats;
 
-		IZetaBlock paperLantern = new PaperLanternBlock("paper_lantern", this).setCondition(paperBlockCond);
+		paperLantern = new PaperLanternBlock("paper_lantern", this).setCondition(paperBlockCond);
 		blocks.add(paperLantern.getBlock());
-		IZetaBlock paperLanternSakura = new PaperLanternBlock("paper_lantern_sakura", this).setCondition(paperBlockCond);
+		paperLanternSakura = new PaperLanternBlock("paper_lantern_sakura", this).setCondition(paperBlockCond);
 		blocks.add(paperLanternSakura.getBlock());
 
 		CreativeTabManager.daisyChain();
-		Block paperWall = new PaperWallBlock(paperLantern, "paper_wall").setCondition(paperBlockCond).setCreativeTab(CreativeModeTabs.BUILDING_BLOCKS, paperLantern.getBlock(), false);
+		paperWall = new PaperWallBlock(paperLantern, "paper_wall").setCondition(paperBlockCond).setCreativeTab(CreativeModeTabs.BUILDING_BLOCKS, paperLantern.getBlock(), false);
 		blocks.add(paperWall);
-		Block paperWallBig = new PaperWallBlock(paperLantern, "paper_wall_big").setCondition(paperBlockCond).setCreativeTab(CreativeModeTabs.BUILDING_BLOCKS, paperLantern.getBlock(), false);
+		paperWallBig = new PaperWallBlock(paperLantern, "paper_wall_big").setCondition(paperBlockCond).setCreativeTab(CreativeModeTabs.BUILDING_BLOCKS, paperLantern.getBlock(), false);
 		blocks.add(paperWallBig);
 		CreativeTabManager.endDaisyChain();
 
-		Block paperWallSakura = new PaperWallBlock(paperLantern, "paper_wall_sakura").setCondition(paperBlockCond).setCreativeTab(CreativeModeTabs.BUILDING_BLOCKS, paperLanternSakura.getBlock(), false);
+		paperWallSakura = new PaperWallBlock(paperLantern, "paper_wall_sakura").setCondition(paperBlockCond).setCreativeTab(CreativeModeTabs.BUILDING_BLOCKS, paperLanternSakura.getBlock(), false);
 		blocks.add(paperWallSakura);
 
-		Block bambooMat = new BambooMatBlock("bamboo_mat", this).setCondition(bambooMatCond);
+		bambooMat = new BambooMatBlock("bamboo_mat", this).setCondition(bambooMatCond);
 		blocks.add(bambooMat);
-		Block bambooMatCarpet = new BambooMatCarpetBlock("bamboo_mat_carpet", this).setCondition(bambooMatCond);
+		bambooMatCarpet = new BambooMatCarpetBlock("bamboo_mat_carpet", this).setCondition(bambooMatCond);
 		blocks.add(bambooMatCarpet);
 	}
 

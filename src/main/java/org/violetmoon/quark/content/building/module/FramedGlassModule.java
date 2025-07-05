@@ -20,11 +20,18 @@ import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.SoundType;
+import org.violetmoon.zeta.util.Utils;
 
 @ZetaLoadModule(category = "building")
 public class FramedGlassModule extends ZetaModule {
 
 	public static List<Block> glassBlocks = new ArrayList<>();
+
+	public static Map<DyeColor, IZetaBlock> blockMap = new HashMap<>(); //datagen only
+	public static Map<DyeColor, IZetaBlock> paneMap = new HashMap<>();
+
+	public static ZetaGlassBlock framed_glass;
+	public static ZetaInheritedPaneBlock framed_glass_pane;
 
 	@LoadEvent
 	public final void register(ZRegister event) {
@@ -32,20 +39,23 @@ public class FramedGlassModule extends ZetaModule {
 				.strength(3F, 10F)
 				.sound(SoundType.GLASS);
 
-		new ZetaInheritedPaneBlock((IZetaBlock) new ZetaGlassBlock("framed_glass", this, false, props).setCreativeTab(CreativeModeTabs.COLORED_BLOCKS, Blocks.GLASS, false))
-				.setCreativeTab(CreativeModeTabs.COLORED_BLOCKS, Blocks.GLASS_PANE, false);
+		framed_glass = (ZetaGlassBlock) new ZetaGlassBlock("framed_glass", this, false, props).setCreativeTab(CreativeModeTabs.COLORED_BLOCKS, Blocks.GLASS, false);
+		framed_glass_pane = (ZetaInheritedPaneBlock) new ZetaInheritedPaneBlock((IZetaBlock) framed_glass).setCreativeTab(CreativeModeTabs.COLORED_BLOCKS, Blocks.GLASS_PANE, false);
 
-		Map<DyeColor, IZetaBlock> blocks = new HashMap<>();
 		CreativeTabManager.daisyChain();
 		for(DyeColor dye : MiscUtil.CREATIVE_COLOR_ORDER){
-			blocks.put(dye, (IZetaBlock) new ZetaGlassBlock(dye.getName() + "_framed_glass", this, true, props).setCreativeTab(CreativeModeTabs.COLORED_BLOCKS, Blocks.PINK_STAINED_GLASS, false));
-			glassBlocks.add((Block) blocks.get(dye));
+			Block block = new ZetaGlassBlock(dye.getName() + "_framed_glass", this, true, props).setCreativeTab(CreativeModeTabs.COLORED_BLOCKS, Blocks.PINK_STAINED_GLASS, false);
+			if(Utils.isDevEnv())
+				blockMap.put(dye, (IZetaBlock) block);
+			glassBlocks.add((Block) blockMap.get(dye));
 		}
 		CreativeTabManager.endDaisyChain();
 
 		CreativeTabManager.daisyChain();
 		for(DyeColor dye : MiscUtil.CREATIVE_COLOR_ORDER){
-			Block block = new ZetaInheritedPaneBlock(blocks.get(dye)).setCreativeTab(CreativeModeTabs.COLORED_BLOCKS, Blocks.PINK_STAINED_GLASS_PANE, false);
+			Block block = new ZetaInheritedPaneBlock(blockMap.get(dye)).setCreativeTab(CreativeModeTabs.COLORED_BLOCKS, Blocks.PINK_STAINED_GLASS_PANE, false);
+			if(Utils.isDevEnv())
+				paneMap.put(dye, (IZetaBlock) block);
 			glassBlocks.add(block);
 		}
 
