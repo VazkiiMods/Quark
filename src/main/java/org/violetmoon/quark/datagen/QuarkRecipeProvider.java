@@ -19,15 +19,12 @@ import net.neoforged.neoforge.common.Tags;
 import net.neoforged.neoforge.common.conditions.IConditionBuilder;
 import org.violetmoon.quark.addons.oddities.module.*;
 import org.violetmoon.quark.content.automation.module.*;
-import org.violetmoon.quark.content.building.module.CompressedBlocksModule;
-import org.violetmoon.quark.content.building.module.FramedGlassModule;
-import org.violetmoon.quark.content.building.module.NetherBrickFenceGateModule;
-import org.violetmoon.quark.content.building.module.VariantChestsModule;
+import org.violetmoon.quark.content.building.module.*;
 import org.violetmoon.quark.content.experimental.module.VariantSelectorModule;
 import org.violetmoon.quark.content.mobs.module.StonelingsModule;
 import org.violetmoon.quark.content.tools.module.*;
 import org.violetmoon.quark.content.tweaks.module.GlassShardModule;
-import org.violetmoon.zeta.block.ZetaGlassBlock;
+import org.violetmoon.zeta.block.IZetaBlock;
 
 import java.util.concurrent.CompletableFuture;
 
@@ -128,7 +125,9 @@ public class QuarkRecipeProvider extends RecipeProvider implements IConditionBui
         compressUncompress(Items.STICK, CompressedBlocksModule.stick_block, recipeOutput, null, "stick_block");
         compressUncompress(Items.SUGAR_CANE, CompressedBlocksModule.sugarCane, recipeOutput, null, "sugar_cane_block");
             //furnaces
-
+        variantFurnace(Blocks.BLACKSTONE, VariantFurnacesModule.blackstoneFurnace, recipeOutput, "blackstone");
+        variantFurnace(Blocks.BLACKSTONE, VariantFurnacesModule.deepslateFurnace, recipeOutput, "deepslate");
+        //TODO mixed furnace recipe
             //glass
         ShapedRecipeBuilder.shaped(RecipeCategory.MISC, FramedGlassModule.framed_glass, 8)
                 .pattern("IGI")
@@ -150,10 +149,28 @@ public class QuarkRecipeProvider extends RecipeProvider implements IConditionBui
             paneRecipe(FramedGlassModule.blockMap.get(dyeColor).getBlock(), FramedGlassModule.blockMap.get(dyeColor).getBlock())
                     .save(recipeOutput, "quark:building/panes/" + dyeColor.getName() + "_framed_glass_pane");
         }
+        ShapedRecipeBuilder.shaped(RecipeCategory.BUILDING_BLOCKS, JapanesePaletteModule.paperWall, 6)
+                .pattern("###")
+                .pattern("PPP")
+                .pattern("###")
+                .define('#', Items.BAMBOO)
+                .define('P', Items.PAPER)
+                .save(recipeOutput, "quark:building/crafting/panes/paper_wall");
+        ShapedRecipeBuilder.shaped(RecipeCategory.BUILDING_BLOCKS, JapanesePaletteModule.paperWallBig, 4)
+                .pattern("##")
+                .pattern("##")
+                .define('#', JapanesePaletteModule.paperWall)
+                .save(recipeOutput, "quark:tweaks/crafting/panes/paper_wall_big");
             //shingles
-
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, ShinglesModule.blocks.getFirst(), 2)
+                .pattern("##")
+                .define('#', Blocks.TERRACOTTA)
+                .save(recipeOutput, "quark:building/crafting/shingles/shingles");
+        for(DyeColor dyeColor : ShinglesModule.blockMap.keySet()){
+            colorShingles(ShinglesModule.blockMap.get(dyeColor).getBlock(), dyeColor, recipeOutput);
+        }
             //slabs
-
+        //need variant registry access
             //stairs
 
             //stonevariants
@@ -469,6 +486,16 @@ public class QuarkRecipeProvider extends RecipeProvider implements IConditionBui
                 .define('#', glass);
     }
 
+    public static ShapedRecipeBuilder hollowLogRecipe(ItemLike output, ItemLike solidLog) {
+        //TODO some logs, like ancient, need hollow_logs AND their respective wood type enabled config conditions
+        return ShapedRecipeBuilder.shaped(RecipeCategory.MISC, output, 4)
+                .pattern(" L ")
+                .pattern("L L")
+                .pattern(" L ")
+                .define('#', solidLog);
+    }
+
+    //multi-recipe methods
     public static void compressUncompress(ItemLike item, ItemLike block, RecipeOutput recipeOutput, String configFlag, String blockName){
         ShapedRecipeBuilder.shaped(RecipeCategory.MISC, block)
                 .pattern("###")
@@ -479,7 +506,80 @@ public class QuarkRecipeProvider extends RecipeProvider implements IConditionBui
 
         ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, item, 9)
                 .requires(block)
-                .save(recipeOutput, "quark:oddities/crafting/" + blockName + "uncompress");
+                .save(recipeOutput, "quark:building/crafting/compressed/" + blockName + "uncompress");
+    }
+
+    public static void variantFurnace(ItemLike baseBlock, Block furnaceBlock, RecipeOutput recipeOutput, String blockName){
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, furnaceBlock)
+                .pattern("###")
+                .pattern("# #")
+                .pattern("###")
+                .define('#', baseBlock)
+                .save(recipeOutput, "quark:building/crafting/furnaces/" + blockName + "_furnace");
+
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, Blocks.SMOKER)
+                .pattern(" # ")
+                .pattern("#X#")
+                .pattern(" # ")
+                .define('#', ItemTags.LOGS)
+                .define('#', furnaceBlock)
+                .save(recipeOutput, "quark:building/crafting/furnaces/" + blockName + "_smoker");
+
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, furnaceBlock)
+                .pattern("III")
+                .pattern("IXI")
+                .pattern("###")
+                .define('#', Blocks.SMOOTH_STONE)
+                .define('X', furnaceBlock)
+                .define('I', Tags.Items.INGOTS_IRON)
+                .save(recipeOutput, "quark:building/crafting/furnaces/" + blockName + "_blast_furnace");
+
+        ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, Items.FURNACE_MINECART)
+                .requires(furnaceBlock)
+                .requires(Items.MINECART)
+                .save(recipeOutput, "quark:building/crafting/furnaces/" + blockName + "minecart"); //these weren't shapeless in 1.20
+
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, furnaceBlock)
+                .pattern("#X#")
+                .pattern("###")
+                .define('#', Tags.Items.INGOTS_IRON)
+                .define('#', furnaceBlock)
+                .save(recipeOutput, "quark:building/crafting/furnaces/" + blockName + "_minecarft_tweaked");
+    }
+
+    public static void colorShingles(ItemLike output, DyeColor color, RecipeOutput recipeOutput) {
+        //please excuse disgusting switch table
+        ItemLike terracotta = switch (color) {
+            case BLACK -> Blocks.BLACK_TERRACOTTA;
+            case BLUE -> Blocks.BLUE_TERRACOTTA;
+            case BROWN -> Blocks.BROWN_TERRACOTTA;
+            case YELLOW -> Blocks.YELLOW_TERRACOTTA;
+            case CYAN -> Blocks.CYAN_TERRACOTTA;
+            case GRAY -> Blocks.GRAY_TERRACOTTA;
+            case GREEN -> Blocks.GREEN_TERRACOTTA;
+            case WHITE -> Blocks.WHITE_TERRACOTTA;
+            case ORANGE -> Blocks.ORANGE_TERRACOTTA;
+            case MAGENTA -> Blocks.MAGENTA_TERRACOTTA;
+            case LIGHT_BLUE -> Blocks.LIGHT_BLUE_TERRACOTTA;
+            case LIME -> Blocks.LIME_TERRACOTTA;
+            case PINK -> Blocks.PINK_TERRACOTTA;
+            case LIGHT_GRAY -> Blocks.LIGHT_GRAY_TERRACOTTA;
+            case PURPLE -> Blocks.PURPLE_TERRACOTTA;
+            case RED -> Blocks.RED_TERRACOTTA;
+        };
+
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, output, 2)
+                .pattern("##")
+                .define('#', terracotta)
+                .save(recipeOutput, "quark:building/crafting/shingles/" + color.getName() + "shingles");
+
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, output, 8)
+                .pattern("SSS")
+                .pattern("SDS")
+                .pattern("SSS")
+                .define('S', ShinglesModule.blocks.getFirst())
+                .define('D', DyeItem.byColor(color))
+                .save(recipeOutput, "quark:building/crafting/shingles/" + color.getName() + "shingles_dye");
     }
 
 
