@@ -12,15 +12,7 @@ import org.violetmoon.quark.content.tweaks.module.ArmedArmorStandsModule;
 public class ArmorStandMixin {
 	@ModifyExpressionValue(method = "defineSynchedData", at = @At(value = "CONSTANT", args = "intValue=0"))
 	private int quark$armedArmorStands(int original) {
-		if(!ArmedArmorStandsModule.staticEnabled)
-			return original;
-
-		// try to be careful - this is a kinda scary looking mixin, lol
 		SynchedEntityData data = ((Entity) (Object) this).getEntityData();
-		if (data.get(ArmorStand.DATA_CLIENT_FLAGS) != null) {
-			return original; //it's already been defined
-		} else {
-			return original | ArmorStand.CLIENT_FLAG_SHOW_ARMS; // | 4
-		}
+		return !ArmedArmorStandsModule.staticEnabled || (data != null && data.get(ArmorStand.DATA_CLIENT_FLAGS) != null) ? original : original | ArmorStand.CLIENT_FLAG_SHOW_ARMS;
 	}
 }
