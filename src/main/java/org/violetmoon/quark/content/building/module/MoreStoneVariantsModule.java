@@ -37,11 +37,15 @@ public class MoreStoneVariantsModule extends ZetaModule {
 
 	public static MoreStoneVariantsModule instance;
 
+	public static Block polishedCalcite;
+	public static Block polishedDripstone;
+	public static Block polishedTuff;
+
 	@LoadEvent
 	public final void register(ZRegister event) {
-		Block polishedCalcite = expandVanillaStone(event, this, Blocks.CALCITE, "calcite");
-		Block polishedDripstone = expandVanillaStone(event, this, Blocks.DRIPSTONE_BLOCK, "dripstone");
-		Block polishedTuff = expandVanillaStone(event, this, Blocks.TUFF, "tuff");
+		polishedCalcite = expandVanillaStone(event, this, Blocks.CALCITE, "calcite");
+		polishedDripstone = expandVanillaStone(event, this, Blocks.DRIPSTONE_BLOCK, "dripstone");
+		polishedTuff = expandVanillaStone(event, this, Blocks.TUFF, "tuff");
 
 		add(event, "granite", MapColor.DIRT, SoundType.STONE, Blocks.POLISHED_GRANITE, BooleanSuppliers.TRUE);
 		add(event, "diorite", MapColor.QUARTZ, SoundType.STONE, Blocks.POLISHED_DIORITE, BooleanSuppliers.TRUE);

@@ -164,4 +164,8 @@ public class CorundumModule extends ZetaModule {
 
 	}
 
+	public static Block getCrystal(CorundumColor corundumColor){
+		return CorundumModule.crystals.get(corundumColor.ordinal());
+	}
+
 }
