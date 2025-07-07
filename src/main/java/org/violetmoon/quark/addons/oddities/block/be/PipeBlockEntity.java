@@ -581,7 +581,6 @@ public class PipeBlockEntity extends SimpleInventoryBlockEntity {
 	}
 
 	public enum ConnectionType {
-
 		NONE(false, false, false, 0),
 		PIPE(true, true, false, 0),
 		OPENING(false, true, true, -0.125, 0.1875),
