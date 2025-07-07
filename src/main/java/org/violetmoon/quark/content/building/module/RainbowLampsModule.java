@@ -17,12 +17,16 @@ import org.violetmoon.zeta.module.ZetaModule;
 import org.violetmoon.zeta.util.Hint;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @ZetaLoadModule(category = "building")
 public class RainbowLampsModule extends ZetaModule {
 
 	public static List<RainbowLampBlock> lamps = new ArrayList<>();
+
+	public static Map<RainbowLampBlock, CorundumColor> lampMap = new HashMap<>();
 
 	@Config
 	public static int lightLevel = 15;
@@ -47,6 +51,7 @@ public class RainbowLampsModule extends ZetaModule {
 		for(CorundumColor color : CorundumColor.values()){
 			RainbowLampBlock lamp = new RainbowLampBlock(color.name + "_crystal_lamp", color.beaconColor, this, color.mapColor);
 			lamps.add(lamp);
+			lampMap.put(lamp, color);
 		}
 
 	}

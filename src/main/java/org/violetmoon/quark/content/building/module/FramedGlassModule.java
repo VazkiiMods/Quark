@@ -1,10 +1,10 @@
 package org.violetmoon.quark.content.building.module;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
+import net.minecraft.world.item.CreativeModeTabs;
+import net.minecraft.world.item.DyeColor;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.SoundType;
 import org.violetmoon.zeta.block.IZetaBlock;
 import org.violetmoon.zeta.block.ZetaGlassBlock;
 import org.violetmoon.zeta.block.ZetaInheritedPaneBlock;
@@ -15,12 +15,10 @@ import org.violetmoon.zeta.module.ZetaModule;
 import org.violetmoon.zeta.registry.CreativeTabManager;
 import org.violetmoon.zeta.util.MiscUtil;
 
-import net.minecraft.world.item.CreativeModeTabs;
-import net.minecraft.world.item.DyeColor;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.SoundType;
-import org.violetmoon.zeta.util.Utils;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @ZetaLoadModule(category = "building")
 public class FramedGlassModule extends ZetaModule {
@@ -45,8 +43,7 @@ public class FramedGlassModule extends ZetaModule {
 		CreativeTabManager.daisyChain();
 		for(DyeColor dye : MiscUtil.CREATIVE_COLOR_ORDER){
 			Block block = new ZetaGlassBlock(dye.getName() + "_framed_glass", this, true, props).setCreativeTab(CreativeModeTabs.COLORED_BLOCKS, Blocks.PINK_STAINED_GLASS, false);
-			if(Utils.isDevEnv())
-				blockMap.put(dye, (IZetaBlock) block);
+			blockMap.put(dye, (IZetaBlock) block);
 			glassBlocks.add((Block) blockMap.get(dye));
 		}
 		CreativeTabManager.endDaisyChain();
@@ -54,8 +51,7 @@ public class FramedGlassModule extends ZetaModule {
 		CreativeTabManager.daisyChain();
 		for(DyeColor dye : MiscUtil.CREATIVE_COLOR_ORDER){
 			Block block = new ZetaInheritedPaneBlock(blockMap.get(dye)).setCreativeTab(CreativeModeTabs.COLORED_BLOCKS, Blocks.PINK_STAINED_GLASS_PANE, false);
-			if(Utils.isDevEnv())
-				paneMap.put(dye, (IZetaBlock) block);
+			paneMap.put(dye, (IZetaBlock) block);
 			glassBlocks.add(block);
 		}
 

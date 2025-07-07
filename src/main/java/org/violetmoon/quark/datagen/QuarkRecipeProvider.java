@@ -18,15 +18,20 @@ import net.minecraft.world.level.block.StainedGlassBlock;
 import net.neoforged.neoforge.common.Tags;
 import net.neoforged.neoforge.common.conditions.IConditionBuilder;
 import org.violetmoon.quark.addons.oddities.module.*;
+import org.violetmoon.quark.base.util.CorundumColor;
 import org.violetmoon.quark.content.automation.module.*;
+import org.violetmoon.quark.content.building.block.RainbowLampBlock;
 import org.violetmoon.quark.content.building.module.*;
 import org.violetmoon.quark.content.experimental.module.VariantSelectorModule;
 import org.violetmoon.quark.content.mobs.module.StonelingsModule;
 import org.violetmoon.quark.content.tools.module.*;
 import org.violetmoon.quark.content.tweaks.module.GlassShardModule;
+import org.violetmoon.quark.content.world.module.CorundumModule;
 import org.violetmoon.zeta.block.IZetaBlock;
 
+import javax.annotation.RegEx;
 import java.util.concurrent.CompletableFuture;
+import java.util.regex.Pattern;
 
 public class QuarkRecipeProvider extends RecipeProvider implements IConditionBuilder {
     public QuarkRecipeProvider(PackOutput packOutput, CompletableFuture<HolderLookup.Provider> holderLookupProvider) {
@@ -74,7 +79,19 @@ public class QuarkRecipeProvider extends RecipeProvider implements IConditionBui
                 .requires(ItemTags.WOODEN_BUTTONS)
                 .requires(Tags.Items.INGOTS_IRON)
                 .save(recipeOutput, "quark:automation/crafting/iron_button");
-        //TODO 2 iron rod recipes depending on config: pre-end
+        ShapedRecipeBuilder.shaped(RecipeCategory.REDSTONE, IronRodModule.iron_rod)
+                .pattern("I")
+                .pattern("I")
+                .pattern("R")
+                .define('S', Tags.Items.INGOTS_IRON)
+                .define('R', Blocks.END_ROD)
+                .save(recipeOutput, "quark:automation/crafting/iron_rod");
+        ShapedRecipeBuilder.shaped(RecipeCategory.REDSTONE, IronRodModule.iron_rod)
+                .pattern("I")
+                .pattern("I")
+                .pattern("I")
+                .define('S', Tags.Items.INGOTS_IRON)
+                .save(recipeOutput, "quark:automation/crafting/iron_rod_pre_end");
         ShapedRecipeBuilder.shaped(RecipeCategory.REDSTONE, NetherBrickFenceGateModule.netherBrickFenceGate)
                 .pattern("#W#")
                 .pattern("#W#")
@@ -141,9 +158,15 @@ public class QuarkRecipeProvider extends RecipeProvider implements IConditionBui
                     .save(recipeOutput, "quark:building/glass/" + dyeColor.getName() + "_framed_glass");
         }
             //hollowlogs
-
+        for(Block sourceLog : HollowLogsModule.logMap.keySet()){
+            hollowLogRecipe(HollowLogsModule.logMap.get(sourceLog), sourceLog).save(recipeOutput, "quark:building/crafting/hollowlogs/hollow_" + sourceLog.getDescriptionId().replaceAll("block..*.[.]", ""));
+        }
             //lamps
-
+        for(RainbowLampBlock rbl : RainbowLampsModule.lamps){
+            CorundumColor color = RainbowLampsModule.lampMap.get(rbl);
+            corundomLampRecipe(rbl, color).save(recipeOutput, "quark:building/crafting/lamps/" + color.name + "_corundum_lamp");
+            crystalLampRecipe(rbl, color).save(recipeOutput, "quark:building/crafting/lamps/" + color.name + "_crsytal_lamp");
+        }
             //panes
         for(DyeColor dyeColor : FramedGlassModule.paneMap.keySet()){
             paneRecipe(FramedGlassModule.blockMap.get(dyeColor).getBlock(), FramedGlassModule.blockMap.get(dyeColor).getBlock())
@@ -173,7 +196,19 @@ public class QuarkRecipeProvider extends RecipeProvider implements IConditionBui
         //need variant registry access
             //stairs
 
-            //stonevariants
+            //stonevariants (vanilla folder removed 1.21, it was inconsistently used)
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, MoreStoneVariantsModule.polishedCalcite)
+                .pattern("##")
+                .pattern("##")
+                .define('#', Blocks.CALCITE)
+                .save(recipeOutput, "quark:building/crafting/stonevariants/polished_calcite");
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, MoreStoneVariantsModule.polishedDripstone)
+                .pattern("##")
+                .pattern("##")
+                .define('#', Blocks.DRIPSTONE_BLOCK)
+                .save(recipeOutput, "quark:building/crafting/stonevariants/polished_dripstone");
+        //no polished tuff/tuff bricks, they are vanilla now
+
 
             //vertplanks
 
@@ -202,11 +237,27 @@ public class QuarkRecipeProvider extends RecipeProvider implements IConditionBui
                 .pattern(" S ")
                 .define('I', Tags.Items.INGOTS_IRON)
                 .define('S', Tags.Items.RODS_WOODEN)
-                .save(recipeOutput , "quark:experimental/crafting/hammer");
+                .save(recipeOutput , "quark:experimental/crafting/hammer"); //this recipe is called "trowel" in 1.20
         //Mobs
             //  RecipeProvider does not seem to have campfire recipes ??
         //Oddities
-        //TODO 2 backpack recipes dependant on config
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, BackpackModule.backpack)
+                .pattern("LRL")
+                .pattern("LCL")
+                .pattern("LIL")
+                .define('L', Tags.Items.LEATHERS)
+                .define('R', BackpackModule.ravager_hide)
+                .define('C', Tags.Items.CHESTS_WOODEN)
+                .define('I', Tags.Items.INGOTS_IRON)
+                .save(recipeOutput, "quark:oddities/crafting/backpack");
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, BackpackModule.backpack)
+                .pattern("LIL")
+                .pattern("LCL")
+                .pattern("LIL")
+                .define('L', Tags.Items.LEATHERS)
+                .define('C', Tags.Items.CHESTS_WOODEN)
+                .define('I', Tags.Items.INGOTS_IRON)
+                .save(recipeOutput, "quark:oddities/crafting/backpack_no_hide");
         ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, BackpackModule.ravager_hide, 9)
                 .requires(BackpackModule.bonded_ravager_hide)
                 .save(recipeOutput, "quark:oddities/crafting/bonded_ravager_hide_uncompress");
@@ -484,6 +535,42 @@ public class QuarkRecipeProvider extends RecipeProvider implements IConditionBui
                 .pattern("###")
                 .pattern("###")
                 .define('#', glass);
+    }
+
+    public static ShapedRecipeBuilder corundomLampRecipe(ItemLike output, CorundumColor corundumColor) {
+        Block corundum = CorundumModule.getCrystal(corundumColor);
+
+        //todo conditions: rainbow_lamps, corundum, rainbow_lamp_corundum
+        return ShapedRecipeBuilder.shaped(RecipeCategory.REDSTONE, output)
+                .pattern(" R ")
+                .pattern("RCR")
+                .pattern(" R ")
+                .define('R', Tags.Items.DUSTS_REDSTONE)
+                .define('C', corundum);
+    }
+
+    public static ShapedRecipeBuilder crystalLampRecipe(ItemLike output, CorundumColor corundumColor) {
+        Item dye = switch (corundumColor){
+            case RED -> Items.RED_DYE;
+            case ORANGE -> Items.ORANGE_DYE;
+            case YELLOW -> Items.YELLOW_DYE;
+            case GREEN -> Items.GREEN_DYE;
+            case BLUE -> Items.LIGHT_BLUE_DYE;
+            case INDIGO -> Items.BLUE_DYE;
+            case VIOLET -> Items.PINK_DYE;
+            case WHITE -> Items.WHITE_DYE;
+            case BLACK -> Items.BLACK_DYE;
+        };
+
+        //todo conditions: rainbow_lamps && ( ! corundum || ! rainbow_lamp_corundum)
+        return ShapedRecipeBuilder.shaped(RecipeCategory.REDSTONE, output)
+                .pattern(" D ")
+                .pattern("RAR")
+                .pattern(" G ")
+                .define('D', dye)
+                .define('R', Tags.Items.DUSTS_REDSTONE)
+                .define('R', Blocks.AMETHYST_BLOCK)
+                .define('G', Tags.Items.DUSTS_GLOWSTONE);
     }
 
     public static ShapedRecipeBuilder hollowLogRecipe(ItemLike output, ItemLike solidLog) {
