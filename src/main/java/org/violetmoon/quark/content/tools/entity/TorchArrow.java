@@ -3,9 +3,9 @@ package org.violetmoon.quark.content.tools.entity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.AbstractArrow;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -17,6 +17,7 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.violetmoon.quark.content.tools.module.TorchArrowModule;
 
 public class TorchArrow extends AbstractArrow {
@@ -25,8 +26,17 @@ public class TorchArrow extends AbstractArrow {
 		super(type, level);
 	}
 
-	public TorchArrow(Level level, LivingEntity shooter) {
-		super(TorchArrowModule.torchArrowType, level);
+	public TorchArrow(Level level, LivingEntity owner, ItemStack pickupStack, @Nullable ItemStack weapon) {
+		super(TorchArrowModule.torchArrowType, owner, level, pickupStack, weapon);
+	}
+
+	public TorchArrow(Level level, double x, double y, double z, ItemStack pickupStack, @Nullable ItemStack weapon) {
+		super(TorchArrowModule.torchArrowType, x, y, z, level, pickupStack, weapon);
+	}
+
+	@Override
+	protected void defineSynchedData(SynchedEntityData.Builder builder) {
+		super.defineSynchedData(builder);
 	}
 
 	@Override
@@ -56,30 +66,27 @@ public class TorchArrow extends AbstractArrow {
 
 	@Override
 	protected void onHitBlock(BlockHitResult result) {
-		if(!level().isClientSide) {
-			BlockPos pos = result.getBlockPos();
-			Direction direction = result.getDirection();
-			BlockPos finalPos = pos.relative(direction);
-			BlockState state = level().getBlockState(finalPos);
+		if (level().isClientSide) return;
 
-			if((state.isAir() || state.canBeReplaced()) && direction != Direction.DOWN) {
+		BlockPos pos = result.getBlockPos();
+		Direction direction = result.getDirection();
+		BlockPos finalPos = pos.relative(direction);
+		BlockState state = level().getBlockState(finalPos);
 
-				if(this.getOwner() instanceof Player /*p && !Quark.FLAN_INTEGRATION.canPlace(p, finalPos)*/) // TODO: Wait for Neoforge Flan or remove
-					return;
+		if ((state.isAir() || state.canBeReplaced()) && direction != Direction.DOWN) {
+			// if(this.getOwner() instanceof Player p && !Quark.FLAN_INTEGRATION.canPlace(p, finalPos)) return;
 
-				BlockState setState = direction == Direction.UP
-						? Blocks.TORCH.defaultBlockState()
-						: Blocks.WALL_TORCH.defaultBlockState().setValue(WallTorchBlock.FACING, direction);
+			BlockState setState = direction == Direction.UP
+					? Blocks.TORCH.defaultBlockState()
+					: Blocks.WALL_TORCH.defaultBlockState().setValue(WallTorchBlock.FACING, direction);
 
-				if(setState.canSurvive(level(), finalPos)) {
-					level().setBlock(finalPos, setState, 2);
-					playSound(setState.getSoundType().getPlaceSound());
-					discard();
-					return;
-				}
+			if (setState.canSurvive(level(), finalPos)) {
+				level().setBlock(finalPos, setState, 2);
+				playSound(setState.getSoundType().getPlaceSound());
+				discard();
+				return;
 			}
 		}
-
 		super.onHitBlock(result);
 	}
 
@@ -97,8 +104,7 @@ public class TorchArrow extends AbstractArrow {
 	}
 
 	@Override
-	protected ItemStack getDefaultPickupItem() {
+	protected @NotNull ItemStack getDefaultPickupItem() {
 		return new ItemStack(TorchArrowModule.extinguishOnMiss ? Items.ARROW : TorchArrowModule.torch_arrow);
 	}
-
 }
