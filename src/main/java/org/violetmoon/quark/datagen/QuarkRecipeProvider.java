@@ -11,6 +11,7 @@ import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.DyeItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
@@ -386,7 +387,29 @@ public class QuarkRecipeProvider extends RecipeProvider implements IConditionBui
                 .pattern("# ")
                 .define('#', Items.SUGAR_CANE)
                 .save(recipeOutput, "quark:tweaks/crafting/utility/bent/paper");
-        //TODO direct chest boat, 8 logs to chest (including mixed exclusion recipe type), coral
+        //TODO direct chest boat, 8 logs to chest (including mixed exclusion recipe type)
+
+            //utility/coral
+        ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, Items.PINK_DYE)
+                .requires(Ingredient.of(Items.BRAIN_CORAL, Items.BRAIN_CORAL_FAN))
+                .group("pink_dye")
+                .save(recipeOutput, "quark:tweaks/crafting/utility/coral/brain_to_pink");
+        ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, Items.MAGENTA_DYE)
+                .requires(Ingredient.of(Items.BUBBLE_CORAL, Items.BUBBLE_CORAL_FAN))
+                .group("magenta_dye")
+                .save(recipeOutput, "quark:tweaks/crafting/utility/coral/bubble_to_magenta");
+        ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, Items.RED_DYE)
+                .requires(Ingredient.of(Items.FIRE_CORAL, Items.FIRE_CORAL_FAN))
+                .group("red_dye")
+                .save(recipeOutput, "quark:tweaks/crafting/utility/coral/fire_to_red");
+        ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, Items.YELLOW_DYE)
+                .requires(Ingredient.of(Items.HORN_CORAL, Items.HORN_CORAL_FAN))
+                .group("yellow_dye")
+                .save(recipeOutput, "quark:tweaks/crafting/utility/coral/horn_to_yellow");
+        ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, Items.BLUE_DYE)
+                .requires(Ingredient.of(Items.TUBE_CORAL, Items.TUBE_CORAL_FAN))
+                .group("blue_dye")
+                .save(recipeOutput, "quark:tweaks/crafting/utility/coral/tube_to_blue");
             //utility/misc
         ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, Items.BLACK_DYE)
                 .requires(Items.CHARCOAL)
@@ -458,7 +481,6 @@ public class QuarkRecipeProvider extends RecipeProvider implements IConditionBui
             //utility/wool
 
             //glass (new 1.21)
-
         shardGlassRecipe(Items.BLACK_STAINED_GLASS).save(recipeOutput, "quark:tweaks/crafting/utility/glass/black_glass");
         shardGlassRecipe(Items.BLUE_STAINED_GLASS).save(recipeOutput, "quark:tweaks/crafting/utility/glass/blue_glass");
         shardGlassRecipe(Items.BROWN_STAINED_GLASS).save(recipeOutput, "quark:tweaks/crafting/utility/glass/brown_glass");
