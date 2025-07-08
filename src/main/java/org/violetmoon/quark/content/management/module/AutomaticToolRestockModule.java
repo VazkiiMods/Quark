@@ -1,12 +1,11 @@
 package org.violetmoon.quark.content.management.module;
 
 import com.google.common.collect.Lists;
-import net.minecraft.client.Minecraft;
 import net.minecraft.core.Holder;
+import net.minecraft.core.RegistryAccess;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.data.registries.VanillaRegistries;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
@@ -85,7 +84,7 @@ public class AutomaticToolRestockModule extends ZetaModule {
 	@Config(description = "Any items you place in this list will be ignored by the restock feature")
 	private List<String> ignoredItems = Lists.newArrayList("botania:exchange_rod", "botania:dirt_rod", "botania:skydirt_rod", "botania:cobble_rod");
 
-	private Object mutex = new Object();
+	private final Object MUTEX = new Object();
 
 	@LoadEvent
 	public final void configChanged(ZConfigChanged event) {
@@ -112,12 +111,12 @@ public class AutomaticToolRestockModule extends ZetaModule {
 				if(event.getHand() == InteractionHand.OFF_HAND)
 					currSlot = player.getInventory().getContainerSize() - 1;
 
-				List<Enchantment> enchantmentsOnStack = getImportantEnchantments(stack);
+				List<Enchantment> enchantmentsOnStack = getImportantEnchantments(stack, serverPlayer.level().registryAccess());
 				Predicate<ItemStack> itemPredicate = (other) -> other.getItem() == item;
 				if(!stack.isDamageableItem())
 					itemPredicate = itemPredicate.and((other) -> other.getDamageValue() == stack.getDamageValue());
 
-				Predicate<ItemStack> enchantmentPredicate = (other) -> !(new ArrayList<>(enchantmentsOnStack)).retainAll(getImportantEnchantments(other));
+				Predicate<ItemStack> enchantmentPredicate = (other) -> !(new ArrayList<>(enchantmentsOnStack)).retainAll(getImportantEnchantments(other, serverPlayer.level().registryAccess()));
 
 				Set<String> classes = getItemClasses(stack);
 				Optional<Predicate<ItemStack>> toolPredicate = Optional.empty();
@@ -178,7 +177,7 @@ public class AutomaticToolRestockModule extends ZetaModule {
 	public void onPlayerTick(ZPlayerTick.End event) {
 		if(!event.getPlayer().level().isClientSide && replacements.containsKey(event.getPlayer())) {
 			Stack<QueuedRestock> replacementStack = replacements.get(event.getPlayer());
-			synchronized (mutex) {
+			synchronized (MUTEX) {
 				while(!replacementStack.isEmpty()) {
 					QueuedRestock restock = replacementStack.pop();
 					switchItems(event.getPlayer(), restock);
@@ -209,7 +208,7 @@ public class AutomaticToolRestockModule extends ZetaModule {
 	}
 
 	private boolean findReplacement(IItemHandler inv, Player player, int lowerBound, int upperBound, int currSlot, Predicate<ItemStack> match) {
-		synchronized (mutex) {
+		synchronized (MUTEX) {
 			for(int i = lowerBound; i < upperBound; i++) {
 				if(i == currSlot)
 					continue;
@@ -258,31 +257,36 @@ public class AutomaticToolRestockModule extends ZetaModule {
 		return stack != null && !stack.is(Items.AIR) && itemsToIgnore.contains(stack.getItem());
 	}
 
-	private List<Enchantment> getImportantEnchantments(ItemStack stack) {
+	private List<Enchantment> getImportantEnchantments(ItemStack stack, RegistryAccess access) {
 		List<Enchantment> enchantsOnStack = new ArrayList<>();
-		importantEnchants = RegistryUtil.massRegistryGet(enchantNames, Minecraft.getInstance().getConnection().registryAccess().registry(Registries.ENCHANTMENT).get());
+		importantEnchants = RegistryUtil.massRegistryGet(enchantNames, access.registryOrThrow(Registries.ENCHANTMENT));
 		for(Enchantment ench : importantEnchants)
 			if(stack.has(DataComponents.ENCHANTMENTS) && stack.get(DataComponents.ENCHANTMENTS).getLevel(Holder.direct(ench)) > 0)
 				enchantsOnStack.add(ench);
 
+		for (Enchantment ench : importantEnchants) {
+			if (EnchantmentHelper.getItemEnchantmentLevel(Holder.direct(ench), stack) > 0) {
+				enchantsOnStack.add(ench);
+			}
+		}
 		return enchantsOnStack;
 	}
 
 	private static List<String> generateDefaultEnchantmentList() {
-		ResourceKey<Enchantment>[] enchants = new ResourceKey[]{
+        ResourceKey<Enchantment>[] enchants = new ResourceKey[]{
 				Enchantments.SILK_TOUCH,
-				Enchantments.FORTUNE,
-				Enchantments.INFINITY,
-				Enchantments.LUCK_OF_THE_SEA,
-				Enchantments.LOOTING
-		};
+                Enchantments.FORTUNE,
+                Enchantments.INFINITY,
+                Enchantments.LUCK_OF_THE_SEA,
+                Enchantments.LOOTING
+        };
 
-		List<String> strings = new ArrayList<>();
-		for(ResourceKey<Enchantment> e : enchants)
-			strings.add(e.location().toString());
-
-		return strings;
-	}
+        List<String> enchantments = new ArrayList<>();
+        for (ResourceKey<Enchantment> e : enchants) {
+            enchantments.add(e.location().toString());
+        }
+        return enchantments;
+    }
 
 	private record RestockContext(ServerPlayer player, int currSlot,
 			List<Enchantment> enchantmentsOnStack,
