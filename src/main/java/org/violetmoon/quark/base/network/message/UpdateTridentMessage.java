@@ -1,5 +1,7 @@
 package org.violetmoon.quark.base.network.message;
 
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 import org.violetmoon.quark.catnip.net.base.ClientboundPacketPayload;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
@@ -20,6 +22,7 @@ public record UpdateTridentMessage(int tridentID, ItemStack stack) implements Cl
 	);
 
 	@Override
+	@OnlyIn(Dist.CLIENT)
 	public void handle(LocalPlayer player) {
 		Level level = Minecraft.getInstance().level;
 		if (level != null) {

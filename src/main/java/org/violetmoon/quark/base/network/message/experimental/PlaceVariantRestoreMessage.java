@@ -1,6 +1,8 @@
 package org.violetmoon.quark.base.network.message.experimental;
 
 import io.netty.buffer.ByteBuf;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 import org.violetmoon.quark.catnip.net.base.ClientboundPacketPayload;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.network.codec.ByteBufCodecs;
@@ -13,6 +15,7 @@ public record PlaceVariantRestoreMessage(String variant) implements ClientboundP
 			.map(PlaceVariantRestoreMessage::new, PlaceVariantRestoreMessage::variant);
 
 	@Override
+	@OnlyIn(Dist.CLIENT)
 	public void handle(LocalPlayer player) {
 		VariantSelectorModule.Client.setClientVariant(variant, false);
 	}
