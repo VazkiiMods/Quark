@@ -3,6 +3,7 @@ package org.violetmoon.quark.content.management.module;
 import com.google.common.collect.Lists;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.Holder;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.data.registries.VanillaRegistries;
@@ -261,7 +262,7 @@ public class AutomaticToolRestockModule extends ZetaModule {
 		List<Enchantment> enchantsOnStack = new ArrayList<>();
 		importantEnchants = RegistryUtil.massRegistryGet(enchantNames, Minecraft.getInstance().getConnection().registryAccess().registry(Registries.ENCHANTMENT).get());
 		for(Enchantment ench : importantEnchants)
-			if(EnchantmentHelper.getItemEnchantmentLevel(Holder.direct(ench), stack) > 0)
+			if(stack.has(DataComponents.ENCHANTMENTS) && stack.get(DataComponents.ENCHANTMENTS).getLevel(Holder.direct(ench)) > 0)
 				enchantsOnStack.add(ench);
 
 		return enchantsOnStack;
@@ -278,7 +279,7 @@ public class AutomaticToolRestockModule extends ZetaModule {
 
 		List<String> strings = new ArrayList<>();
 		for(ResourceKey<Enchantment> e : enchants)
-			strings.add(e.toString());
+			strings.add(e.location().toString());
 
 		return strings;
 	}

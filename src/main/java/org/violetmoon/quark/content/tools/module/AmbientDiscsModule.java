@@ -11,10 +11,7 @@ import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.monster.Skeleton;
 import net.minecraft.world.entity.monster.Spider;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.JukeboxSongs;
-import net.minecraft.world.item.Rarity;
+import net.minecraft.world.item.*;
 import net.minecraft.world.level.block.entity.JukeboxBlockEntity;
 import org.violetmoon.quark.base.handler.QuarkSounds;
 import org.violetmoon.quark.base.item.QuarkMusicDiscItem;
@@ -59,7 +56,7 @@ public class AmbientDiscsModule extends ZetaModule {
 		String name = sound.getLocation().getPath().replaceAll(".+\\.", "");
 		// discs.add(new QuarkMusicDiscItem(15, () -> sound, name, this, Integer.MAX_VALUE));
 		// TODO: JukeboxSongs.XXXXXX requires datagen with above parameters
-		discs.add(new ZetaItem(name, this, new Item.Properties().rarity(Rarity.RARE).jukeboxPlayable(JukeboxSongs.THIRTEEN)));
+		discs.add(new ZetaItem("music_disc_" + name, this, new Item.Properties().rarity(Rarity.RARE).jukeboxPlayable(JukeboxSongs.THIRTEEN).stacksTo(1)).setCreativeTab(CreativeModeTabs.TOOLS_AND_UTILITIES));
 	}
 
 	@PlayEvent

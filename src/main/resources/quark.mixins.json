@@ -39,7 +39,6 @@
     "IronBarsBlockMixin",
     "ItemMixin",
     "ItemStackMixin",
-    "IZetaItemMixin_REAL",
     "LadderBlockMixin",
     "LanternBlockMixin",
     "LightningBoltMixin",
@@ -82,8 +81,7 @@
     "accessor.AccessorServerGamePacketListener",
     "accessor.AccessorSinglePoolElement",
     "accessor.AccessorTemptingSensor",
-    "accessor.AccessorWolf",
-    "self.IZetaBlockMixin_FAKE"
+    "accessor.AccessorWolf"
   ],
   "client": [
     "client.AbstractCandleBlockMixin",

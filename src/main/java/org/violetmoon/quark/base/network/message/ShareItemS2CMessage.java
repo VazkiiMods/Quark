@@ -1,5 +1,7 @@
 package org.violetmoon.quark.base.network.message;
 
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 import org.violetmoon.quark.catnip.net.base.ClientboundPacketPayload;
 import net.minecraft.client.GuiMessageTag;
 import net.minecraft.client.Minecraft;
@@ -24,6 +26,7 @@ public record ShareItemS2CMessage(UUID senderUuid, Component senderName, ItemSta
 	);
 
 	@Override
+	@OnlyIn(Dist.CLIENT)
 	public void handle(LocalPlayer player) {
 		if (Minecraft.getInstance().isBlocked(senderUuid))
 			return;

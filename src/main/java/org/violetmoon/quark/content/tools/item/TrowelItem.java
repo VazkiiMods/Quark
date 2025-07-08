@@ -89,7 +89,10 @@ public class TrowelItem extends ZetaItem implements IUsageTickerOverride {
 	}
 
 	public static ItemStack getLastStack(ItemStack stack) {
-		return stack.get(QuarkDataComponents.LAST_STACK).stack();
+		if (stack.has(QuarkDataComponents.LAST_STACK))
+			return stack.get(QuarkDataComponents.LAST_STACK).stack();
+		else
+			return ItemStack.EMPTY;
 	}
 
 	@Override

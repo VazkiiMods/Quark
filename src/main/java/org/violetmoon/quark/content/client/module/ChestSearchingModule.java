@@ -271,19 +271,22 @@ public class ChestSearchingModule extends ZetaModule {
 			}
 
 			List<Component> potionNames = new ArrayList<>();
-			PotionContents.addPotionTooltip(stack.get(DataComponents.POTION_CONTENTS).getAllEffects(), (component) -> potionNames.add(component), 1F, Item.TooltipContext.EMPTY.tickRate());
-			for(Component s : potionNames) {
-				if(matcher.test(ChatFormatting.stripFormatting(s.toString().trim().toLowerCase(Locale.ROOT)), search))
-					return true;
+			if (stack.has(DataComponents.POTION_CONTENTS)) {
+				PotionContents.addPotionTooltip(stack.get(DataComponents.POTION_CONTENTS).getAllEffects(), (component) -> potionNames.add(component), 1F, Item.TooltipContext.EMPTY.tickRate());
+				for (Component s : potionNames) {
+					if (matcher.test(ChatFormatting.stripFormatting(s.toString().trim().toLowerCase(Locale.ROOT)), search))
+						return true;
+				}
 			}
 
-			//todo: Check if this is even necessary
-			/*for(Map.Entry<Enchantment, Integer> entry : EnchantmentHelper.getEnchantments(stack).entrySet()) {
-				int lvl = entry.getValue();
-				Enchantment e = entry.getKey();
-				if(e != null && matcher.test(e.getFullname(lvl).toString().toLowerCase(Locale.ROOT), search))
-					return true;
-			}*/
+			if (stack.has(DataComponents.STORED_ENCHANTMENTS)) {
+				ItemEnchantments enchantments = stack.get(DataComponents.STORED_ENCHANTMENTS);
+				for (Holder<Enchantment> e : enchantments.keySet()) {
+					int lvl = enchantments.getLevel(e);
+					if (matcher.test(Enchantment.getFullname(e, lvl).toString().toLowerCase(Locale.ROOT), search))
+						return true;
+				}
+			}
 
 			for(String tabDisplayName : BuiltInRegistries.CREATIVE_MODE_TAB.stream()
 				.filter(tab -> tab.contains(stack))

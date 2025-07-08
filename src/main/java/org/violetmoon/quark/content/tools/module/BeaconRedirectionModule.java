@@ -95,8 +95,9 @@ public class BeaconRedirectionModule extends ZetaModule {
 
 		beacon.checkingBeamSections.clear();
 
-		int currColor = 16777215; // (255 << 16) + (255 << 8) + 255
-		float alpha = 1F;
+		int currColor = 0xffffff; // (255 << 16) + (255 << 8) + 255
+		int alpha = 255;
+
 
 		Direction lastDir = null;
 		ExtendedBeamSegment currSegment = new ExtendedBeamSegment(Direction.UP, Vec3i.ZERO, currColor, alpha);
@@ -125,11 +126,11 @@ public class BeaconRedirectionModule extends ZetaModule {
 			BlockState blockstate = world.getBlockState(currPos);
 			Block block = blockstate.getBlock();
 			Integer targetColor = blockstate.getBeaconColorMultiplier(world, currPos, beaconPos);
-			float targetAlpha = -1;
+			int targetAlpha = -256;
 
 			if(allowTintedGlassTransparency) {
 				if(block == Blocks.TINTED_GLASS)
-					targetAlpha = (alpha < 0.3F ? 0F : (alpha / 2F));
+					targetAlpha = (alpha < 77 ? 0 : (alpha / 2));
 			}
 
 			if(isRedirectingBlock(block)) {
@@ -144,14 +145,15 @@ public class BeaconRedirectionModule extends ZetaModule {
 					if(targetColor >> 16 == 255 && targetColor >> 8 == 255 && targetColor == 255)
 						targetColor = currColor;
 
-                    currColor = (((currColor >> 16) + (targetColor >> 16) * 3) / 4) + (((currColor >> 8) + (targetColor >> 8) * 3) / 4) + ((currColor + targetColor * 3) / 4);
-					alpha = 1F;
+					int mixedColor = (((((currColor >> 16) & 255) + (((targetColor >> 16) & 255) * 3)) / 4) << 16) + (((((currColor >> 8) & 255) + (((targetColor >> 8) & 255) * 3)) / 4) << 8) + ((((currColor & 255) + ((targetColor & 255) * 3)) / 4));
+					targetColor = mixedColor;
+					alpha = 255;
 					didRedirection = true;
 					lastDir = currSegment.dir;
-					currSegment = new ExtendedBeamSegment(dir, currPos.subtract(beaconPos), currColor, alpha);
+					currSegment = new ExtendedBeamSegment(dir, currPos.subtract(beaconPos), targetColor, alpha);
 				}
-			} else if(targetColor != null || targetAlpha != -1) {
-				if (targetColor.equals(currColor) && targetAlpha == alpha)
+			} else if (targetColor != null || targetAlpha != -256) {
+                if (targetColor == currColor && targetAlpha == alpha)
 					currSegment.increaseHeight();
 				else {
 					check = true;
@@ -159,7 +161,7 @@ public class BeaconRedirectionModule extends ZetaModule {
 
 					int mixedColor = currColor;
 					if(targetColor != null) {
-						mixedColor = (((currColor >> 16) + (targetColor >> 16)) / 2) + (((currColor >> 8) + (targetColor >> 8)) / 2) + ((currColor + targetColor) / 2);
+						mixedColor = (((((currColor >> 16) & 255) + ((targetColor >> 16) & 255)) / 2) << 16) + (((((currColor >> 8) & 255) + ((targetColor >> 8) & 255)) / 2) << 8) + (((currColor & 255) + (targetColor & 255)) / 2);
 
 						if(!hardColorSet) {
 							mixedColor = targetColor;
@@ -169,7 +171,7 @@ public class BeaconRedirectionModule extends ZetaModule {
 						currColor = mixedColor;
 					}
 
-					if(targetAlpha != -1)
+					if(targetAlpha != -256)
 						alpha = targetAlpha;
 
 					lastDir = currSegment.dir;
@@ -239,11 +241,11 @@ public class BeaconRedirectionModule extends ZetaModule {
 
 		public final Direction dir;
 		public final Vec3i offset;
-		public final float alpha;
+		public final int alpha;
 
 		private boolean isTurn = false;
 
-		public ExtendedBeamSegment(Direction dir, Vec3i offset, int colorsIn, float alpha) {
+		public ExtendedBeamSegment(Direction dir, Vec3i offset, int colorsIn, int alpha) {
 			super(colorsIn);
 			this.offset = offset;
 			this.dir = dir;

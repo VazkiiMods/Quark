@@ -6,6 +6,7 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobCategory;
+import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.DispenserBlock;
 import org.violetmoon.quark.base.Quark;
@@ -35,15 +36,15 @@ public class TorchArrowModule extends ZetaModule {
 
 	@LoadEvent
 	public final void register(ZRegister event) {
-		torch_arrow = new ZetaArrowItem.Impl("torch_arrow", this, (level, ammo, shooter, weapon) -> new TorchArrow(level, shooter));
+		torch_arrow = new ZetaArrowItem.Impl("torch_arrow", this, TorchArrow::new, TorchArrow::new);
 
 		torchArrowType = EntityType.Builder.<TorchArrow>of(TorchArrow::new, MobCategory.MISC)
 				.sized(0.5F, 0.5F)
 				.clientTrackingRange(4)
-				.updateInterval(20) // update interval
+				.updateInterval(20)
 				.build("torch_arrow");
-		event.getRegistry().register(torchArrowType, "torch_arrow", Registries.ENTITY_TYPE);
 
+		event.getRegistry().register(torchArrowType, "torch_arrow", Registries.ENTITY_TYPE);
 		DispenserBlock.registerBehavior(torch_arrow, new ProjectileDispenseBehavior(torch_arrow));
 	}
 
@@ -54,7 +55,5 @@ public class TorchArrowModule extends ZetaModule {
 		public final void clientSetup(ZClientSetup event) {
 			EntityRenderers.register(torchArrowType, TorchArrowRenderer::new);
 		}
-
 	}
-
 }

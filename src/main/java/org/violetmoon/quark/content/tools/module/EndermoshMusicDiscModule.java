@@ -3,6 +3,7 @@ package org.violetmoon.quark.content.tools.module;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.sounds.SimpleSoundInstance;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.CreativeModeTabs;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.JukeboxSongs;
 import net.minecraft.world.item.Rarity;
@@ -42,7 +43,7 @@ public class EndermoshMusicDiscModule extends ZetaModule {
 	public final void register(ZRegister event) {
 		// endermosh = new QuarkMusicDiscItem(14, () -> QuarkSounds.MUSIC_ENDERMOSH, "endermosh", this, 3783); // Tick length calculated from endermosh.ogg - 3:09.150
 		// TODO: JukeboxSongs.XXXXXX requires datagen with above parameters
-		endermosh = new ZetaItem("music_disc_endermosh", this, new Item.Properties().rarity(Rarity.RARE).jukeboxPlayable(JukeboxSongs.THIRTEEN));
+		endermosh = new ZetaItem("music_disc_endermosh", this, new Item.Properties().rarity(Rarity.RARE).jukeboxPlayable(JukeboxSongs.THIRTEEN).stacksTo(1)).setCreativeTab(CreativeModeTabs.TOOLS_AND_UTILITIES);
 	}
 
 	@PlayEvent

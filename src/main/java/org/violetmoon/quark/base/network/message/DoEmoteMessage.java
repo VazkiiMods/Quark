@@ -1,6 +1,8 @@
 package org.violetmoon.quark.base.network.message;
 
 import io.netty.buffer.ByteBuf;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 import org.violetmoon.quark.catnip.net.base.ClientboundPacketPayload;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
@@ -23,6 +25,7 @@ public record DoEmoteMessage(String emote, UUID playerUUID, int tier) implements
 	);
 
 	@Override
+	@OnlyIn(Dist.CLIENT)
 	public void handle(LocalPlayer localPlayer) {
 		Level world = Minecraft.getInstance().level;
 		Player player = world.getPlayerByUUID(playerUUID);

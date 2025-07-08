@@ -45,6 +45,7 @@ public enum QuarkNetwork implements BasePacketPayload.PacketTypeProvider {
 
 	// Experimental
 	PLACE_VARIANT_UPDATE_MESSAGE(PlaceVariantUpdateMessage.class, PlaceVariantUpdateMessage.STREAM_CODEC),
+
 	PLACE_VARIANT_RESTORE_MESSAGE(PlaceVariantRestoreMessage.class, PlaceVariantRestoreMessage.STREAM_CODEC),
 
 	// Clientbound
