@@ -16,7 +16,7 @@
     "item": "quark:green_stool",
     "count": 1
   },
-  "conditions": [
+  "neoforge:conditions": [
     {
       "type": "quark:flag",
       "flag": "stools"

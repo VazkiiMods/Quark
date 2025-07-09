@@ -5,13 +5,13 @@
       "tag": "minecraft:wooden_buttons"
     },
     {
-      "tag": "forge:ingots/iron"
+      "tag": "c:ingots/iron"
     }
   ],
   "result": {
     "item": "quark:iron_button"
   },
-  "conditions": [
+  "neoforge:conditions": [
     {
       "type": "quark:flag",
       "flag": "iron_metal_button"

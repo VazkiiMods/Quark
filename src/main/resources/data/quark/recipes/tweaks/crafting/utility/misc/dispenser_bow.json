@@ -12,7 +12,7 @@
   "result": {
     "item": "minecraft:dispenser"
   },
-  "conditions": [
+  "neoforge:conditions": [
     {
       "type": "quark:flag",
       "flag": "dropper_upgrade"

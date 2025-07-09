@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "L": {
+      "item": "minecraft:crimson_stem"
+    }
+  },
+  "pattern": [
+    " L ",
+    "L L",
+    " L "
+  ],
+  "result": {
+    "count": 4,
+    "id": "quark:hollow_crimson_stem"
+  }
+}

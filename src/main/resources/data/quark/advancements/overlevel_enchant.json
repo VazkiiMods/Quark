@@ -25,7 +25,7 @@
       "overlevel_enchant"
     ]
   ],
-  "conditions": [
+  "neoforge:conditions": [
     {
       "type": "quark:advancement_flag",
       "flag": "ancient_tomes"

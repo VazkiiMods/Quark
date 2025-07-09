@@ -9,7 +9,7 @@
           "name": "quark:purple_shingles_stairs"
         }
       ],
-      "conditions": [
+      "neoforge:conditions": [
         {
           "condition": "minecraft:survives_explosion"
         }

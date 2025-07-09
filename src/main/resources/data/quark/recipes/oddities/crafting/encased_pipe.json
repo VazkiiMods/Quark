@@ -12,7 +12,7 @@
     "item": "quark:encased_pipe",
     "count": 1
   },
-  "conditions": [
+  "neoforge:conditions": [
     {
       "type": "quark:flag",
       "flag": "encased_pipes"

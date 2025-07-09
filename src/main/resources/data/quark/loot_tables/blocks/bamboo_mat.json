@@ -9,7 +9,7 @@
           "name": "quark:bamboo_mat"
         }
       ],
-      "conditions": [
+      "neoforge:conditions": [
         {
           "condition": "minecraft:survives_explosion"
         }

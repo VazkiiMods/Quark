@@ -5,7 +5,7 @@
   },
   "result": "quark:duskbound_block_stairs",
   "count": 1,
-  "conditions": [
+  "neoforge:conditions": [
     {
       "type": "quark:flag",
       "flag": "duskbound_blocks"

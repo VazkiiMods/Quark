@@ -13,7 +13,7 @@
   "result": {
     "item": "minecraft:bread"
   },
-  "conditions": [
+  "neoforge:conditions": [
     {
       "type": "quark:flag",
       "flag": "bent_recipes"

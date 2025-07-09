@@ -9,7 +9,7 @@
           "name": "minecraft:grass"
         }
       ],
-      "conditions": [
+      "neoforge:conditions": [
         {
           "condition": "minecraft:survives_explosion"
         }
@@ -23,7 +23,7 @@
           "name": "minecraft:flower_pot"
         }
       ],
-      "conditions": [
+      "neoforge:conditions": [
         {
           "condition": "minecraft:survives_explosion"
         }

@@ -5,7 +5,7 @@
   },
   "result": "quark:raw_gold_bricks_vertical_slab",
   "count": 2,
-  "conditions": [
+  "neoforge:conditions": [
     {
       "type": "quark:flag",
       "flag": "vertical_slabs"

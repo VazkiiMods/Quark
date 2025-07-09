@@ -13,7 +13,7 @@
     "item": "quark:thatch",
     "count": 4
   },
-  "conditions": [
+  "neoforge:conditions": [
     {
       "type": "quark:flag",
       "flag": "thatch"

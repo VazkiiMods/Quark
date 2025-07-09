@@ -5,7 +5,7 @@
   },
   "result": "quark:polished_limestone",
   "count": 1,
-  "conditions": [
+  "neoforge:conditions": [
     {
       "type": "quark:flag",
       "flag": "limestone"

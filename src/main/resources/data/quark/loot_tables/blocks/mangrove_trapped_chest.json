@@ -15,7 +15,7 @@
           "name": "quark:mangrove_trapped_chest"
         }
       ],
-      "conditions": [
+      "neoforge:conditions": [
         {
           "condition": "minecraft:survives_explosion"
         }

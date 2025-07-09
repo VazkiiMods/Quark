@@ -15,16 +15,16 @@
     "item": "minecraft:chest",
     "count": 4
   },
-  "conditions": [
+  "neoforge:conditions": [
     {
-      "type": "forge:and",
+      "type": "neoforge:and",
       "values": [
         {
           "type": "quark:flag",
           "flag": "wood_to_chest_recipes"
         },
         {
-          "type": "forge:not",
+          "type": "neoforge:not",
           "value": {
             "type": "quark:flag",
             "flag": "variant_chests"

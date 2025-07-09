@@ -17,7 +17,7 @@
     "item": "quark:blossom_fence",
     "count": 3
   },
-  "conditions": [
+  "neoforge:conditions": [
     {
       "type": "quark:flag",
       "flag": "blossom_trees"

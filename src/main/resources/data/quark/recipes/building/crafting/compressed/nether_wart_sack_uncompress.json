@@ -9,7 +9,7 @@
     "item": "minecraft:nether_wart",
     "count": 9
   },
-  "conditions": [
+  "neoforge:conditions": [
     {
       "type": "quark:flag",
         "flag": "nether_wart_sack"

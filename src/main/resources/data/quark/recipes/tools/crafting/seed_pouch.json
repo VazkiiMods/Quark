@@ -7,19 +7,19 @@
   ],
   "key": {
     "S": {
-      "tag": "forge:string"
+      "tag": "c:string"
     },
     "X": {
       "tag": "quark:seed_pouch_holdable"
     },
     "H": {
-      "tag": "forge:leather"
+      "tag": "c:leather"
     }
   },
   "result": {
     "item": "quark:seed_pouch"
   },
-  "conditions": [
+  "neoforge:conditions": [
     {
       "type": "quark:flag",
       "flag": "seed_pouch"

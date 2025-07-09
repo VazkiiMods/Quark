@@ -9,7 +9,7 @@
           "name": "quark:andesite_bricks"
         }
       ],
-      "conditions": [
+      "neoforge:conditions": [
         {
           "condition": "minecraft:survives_explosion"
         }

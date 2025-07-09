@@ -1,0 +1,24 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "key": {
+    "H": {
+      "tag": "quark:seed_pouch_holdable"
+    },
+    "S": {
+      "item": "minecraft:string"
+    },
+    "X": {
+      "item": "quark:smithing_template_rune"
+    }
+  },
+  "pattern": [
+    " S ",
+    "HXH",
+    " H "
+  ],
+  "result": {
+    "count": 1,
+    "id": "quark:seed_pouch"
+  }
+}

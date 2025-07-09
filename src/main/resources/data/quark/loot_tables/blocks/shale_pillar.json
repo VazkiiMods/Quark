@@ -9,7 +9,7 @@
           "name": "quark:shale_pillar"
         }
       ],
-      "conditions": [
+      "neoforge:conditions": [
         {
           "condition": "minecraft:survives_explosion"
         }

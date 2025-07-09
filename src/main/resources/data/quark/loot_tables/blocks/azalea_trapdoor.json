@@ -9,7 +9,7 @@
           "name": "quark:azalea_trapdoor"
         }
       ],
-      "conditions": [
+      "neoforge:conditions": [
         {
           "condition": "minecraft:survives_explosion"
         }

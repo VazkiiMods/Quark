@@ -25,7 +25,7 @@
       "watcher_center"
     ]
   ],
-  "conditions": [
+  "neoforge:conditions": [
     {
       "type": "quark:advancement_flag",
       "flag": "ender_watcher"

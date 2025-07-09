@@ -26,16 +26,16 @@
       "item": "quark:framed_glass"
     },
     {
-      "tag": "forge:dyes/light_blue"
+      "tag": "c:dyes/light_blue"
     }
   ],
   "result": {
     "item": "quark:light_blue_framed_glass",
     "count": 8
   },
-  "conditions": [
+  "neoforge:conditions": [
     {
-      "type": "forge:and",
+      "type": "neoforge:and",
       "values": [
         {
           "type": "quark:flag",

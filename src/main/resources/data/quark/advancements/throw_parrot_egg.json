@@ -25,7 +25,7 @@
       "throw_parrot_egg"
     ]
   ],
-  "conditions": [
+  "neoforge:conditions": [
     {
       "type": "quark:advancement_flag",
       "flag": "parrot_eggs"

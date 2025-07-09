@@ -7,7 +7,7 @@
   ],
   "key": {
     "D": {
-      "tag": "forge:dyes/light_blue"
+      "tag": "c:dyes/light_blue"
     },
     "S": {
       "item": "quark:shingles"
@@ -17,7 +17,7 @@
     "item": "quark:light_blue_shingles",
     "count": 8
   },
-  "conditions": [
+  "neoforge:conditions": [
     {
       "type": "quark:flag",
       "flag": "shingles"

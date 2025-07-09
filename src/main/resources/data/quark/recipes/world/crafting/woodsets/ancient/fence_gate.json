@@ -16,7 +16,7 @@
   "result": {
     "item": "quark:ancient_fence_gate"
   },
-  "conditions": [
+  "neoforge:conditions": [
     {
       "type": "quark:flag",
       "flag": "ancient_wood"

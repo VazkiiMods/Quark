@@ -11,7 +11,7 @@
   "result": {
     "item": "quark:waxed_yellow_corundum"
   },
-  "conditions": [
+  "neoforge:conditions": [
     {
       "type": "quark:flag",
       "flag": "corundum"

@@ -7,16 +7,16 @@
   ],
   "key": {
     "C": {
-      "tag": "forge:cobblestone"
+      "tag": "c:cobblestone"
     },
     "I": {
-      "tag": "forge:ingots/iron"
+      "tag": "c:ingots/iron"
     },
     "B": {
-      "tag": "forge:dyes/blue"
+      "tag": "c:dyes/blue"
     },
     "R": {
-      "tag": "forge:dusts/redstone"
+      "tag": "c:dusts/redstone"
     },
     "F": {
       "item": "minecraft:chorus_fruit"
@@ -25,16 +25,16 @@
   "result": {
     "item": "quark:magnet"
   },
-  "conditions": [
+  "neoforge:conditions": [
     {
-      "type": "forge:and",
+      "type": "neoforge:and",
       "values": [
         {
           "type": "quark:flag",
           "flag": "magnets"
         },
         {
-          "type": "forge:not",
+          "type": "neoforge:not",
           "value": {
             "type": "quark:flag",
             "flag": "magnet_pre_end"

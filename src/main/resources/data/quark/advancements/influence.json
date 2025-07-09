@@ -25,7 +25,7 @@
       "influence"
     ]
   ],
-  "conditions": [
+  "neoforge:conditions": [
     {
       "type": "quark:advancement_flag",
       "flag": "candle_influencing"

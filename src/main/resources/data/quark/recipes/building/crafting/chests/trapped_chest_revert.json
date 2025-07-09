@@ -8,7 +8,7 @@
   "result": {
     "item": "minecraft:trapped_chest"
   },
-  "conditions": [
+  "neoforge:conditions": [
     {
       "type": "quark:flag",
       "flag": "chest_reversion"

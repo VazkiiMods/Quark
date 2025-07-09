@@ -14,7 +14,7 @@
     "count": 16
   },
   "group": "quark:corundum_sheet",
-  "conditions": [
+  "neoforge:conditions": [
     {
       "type": "quark:flag",
       "flag": "corundum"

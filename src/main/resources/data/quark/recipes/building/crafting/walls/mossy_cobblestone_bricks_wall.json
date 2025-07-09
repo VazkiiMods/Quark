@@ -13,7 +13,7 @@
     "item": "quark:mossy_cobblestone_bricks_wall",
     "count": 6
   },
-  "conditions": [
+  "neoforge:conditions": [
     {
       "type": "quark:flag",
       "flag": "cobblestone_bricks"

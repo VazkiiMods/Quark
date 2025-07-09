@@ -7,7 +7,7 @@
   ],
   "key": {
     "D": {
-      "tag": "forge:dyes/gray"
+      "tag": "c:dyes/gray"
     },
     "S": {
       "item": "quark:shingles"
@@ -17,7 +17,7 @@
     "item": "quark:gray_shingles",
     "count": 8
   },
-  "conditions": [
+  "neoforge:conditions": [
     {
       "type": "quark:flag",
       "flag": "shingles"

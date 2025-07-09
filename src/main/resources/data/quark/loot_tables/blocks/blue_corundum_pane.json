@@ -9,7 +9,7 @@
           "name": "quark:blue_corundum_pane"
         }
       ],
-      "conditions": [
+      "neoforge:conditions": [
         {
           "condition": "minecraft:survives_explosion"
         }

@@ -13,7 +13,7 @@
   "result": {
     "item": "quark:gunpowder_sack"
   },
-  "conditions": [
+  "neoforge:conditions": [
     {
       "type": "quark:flag",
       "flag": "gunpowder_sack"

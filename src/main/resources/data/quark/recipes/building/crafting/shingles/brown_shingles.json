@@ -12,7 +12,7 @@
     "item": "quark:brown_shingles",
     "count": 2
   },
-  "conditions": [
+  "neoforge:conditions": [
     {
       "type": "quark:flag",
       "flag": "shingles"

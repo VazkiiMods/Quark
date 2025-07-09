@@ -12,7 +12,7 @@
     "item": "quark:paper_wall_sakura",
     "count": 1
   },
-  "conditions": [
+  "neoforge:conditions": [
     {
       "type": "quark:flag",
       "flag": "paper_decor"

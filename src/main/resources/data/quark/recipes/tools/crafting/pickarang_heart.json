@@ -10,7 +10,7 @@
       "tag": "minecraft:planks"
     },
     "D": {
-      "tag": "forge:gems/diamond"
+      "tag": "c:gems/diamond"
     },
     "H": {
       "item": "quark:diamond_heart"
@@ -19,9 +19,9 @@
   "result": {
     "item": "quark:pickarang"
   },
-  "conditions": [
+  "neoforge:conditions": [
     {
-      "type": "forge:and",
+      "type": "neoforge:and",
       "values": [
         {
           "type": "quark:flag",
@@ -32,7 +32,7 @@
           "flag": "stonelings"
         },
         {
-          "type": "forge:not",
+          "type": "neoforge:not",
           "value": {
             "type": "quark:flag",
             "flag": "pickarang_never_uses_heart"

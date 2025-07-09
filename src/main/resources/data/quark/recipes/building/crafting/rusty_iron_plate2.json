@@ -17,7 +17,7 @@
     "item": "quark:rusty_iron_plate",
     "count": 8
   },
-  "conditions": [
+  "neoforge:conditions": [
     {
       "type": "quark:flag",
       "flag": "iron_plates"

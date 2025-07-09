@@ -17,7 +17,7 @@
     "item": "quark:bamboo_mat",
     "count": 2
   },
-  "conditions": [
+  "neoforge:conditions": [
     {
       "type": "quark:flag",
       "flag": "bamboo_mat"

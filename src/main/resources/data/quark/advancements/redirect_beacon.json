@@ -25,7 +25,7 @@
       "redirect_beacon"
     ]
   ],
-  "conditions": [
+  "neoforge:conditions": [
     {
       "type": "quark:advancement_flag",
       "flag": "beacon_redirection"

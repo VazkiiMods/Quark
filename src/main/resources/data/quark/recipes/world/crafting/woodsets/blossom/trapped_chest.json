@@ -11,9 +11,9 @@
   "result": {
     "item": "quark:blossom_trapped_chest"
   },
-  "conditions": [
+  "neoforge:conditions": [
     {
-      "type": "forge:and",
+      "type": "neoforge:and",
       "values": [
         {
           "type": "quark:flag",

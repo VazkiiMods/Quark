@@ -15,9 +15,9 @@
     "item": "quark:bamboo_chest",
     "count": 2
   },
-  "conditions": [
+  "neoforge:conditions": [
     {
-      "type": "forge:and",
+      "type": "neoforge:and",
       "values": [
         {
           "type": "quark:flag",

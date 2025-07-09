@@ -14,7 +14,7 @@
     "item": "quark:azalea_trapdoor",
     "count": 2
   },
-  "conditions": [
+  "neoforge:conditions": [
     {
       "type": "quark:flag",
       "flag": "azalea_wood"

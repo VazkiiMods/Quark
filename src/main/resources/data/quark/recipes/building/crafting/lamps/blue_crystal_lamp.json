@@ -23,26 +23,26 @@
     "item": "quark:blue_crystal_lamp",
     "count": 1
   },
-  "conditions": [
+  "neoforge:conditions": [
     {
-      "type": "forge:and",
+      "type": "neoforge:and",
       "values": [
         {
           "type": "quark:flag",
           "flag": "rainbow_lamps"
         },
         {
-          "type": "forge:or",
+          "type": "neoforge:or",
           "values": [
             {
-              "type": "forge:not",
+              "type": "neoforge:not",
               "value": {
                 "type": "quark:flag",
                 "flag": "corundum"
               }
             },
             {
-              "type": "forge:not",
+              "type": "neoforge:not",
               "value": {
                 "type": "quark:flag",
                 "flag": "rainbow_lamp_corundum"

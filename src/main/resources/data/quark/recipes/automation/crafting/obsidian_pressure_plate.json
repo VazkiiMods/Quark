@@ -5,13 +5,13 @@
   ],
   "key": {
     "O": {
-      "tag": "forge:obsidian"
+      "tag": "c:obsidian"
     }
   },
   "result": {
     "item": "quark:obsidian_pressure_plate"
   },
-  "conditions": [
+  "neoforge:conditions": [
     {
       "type": "quark:flag",
       "flag": "obsidian_plate"

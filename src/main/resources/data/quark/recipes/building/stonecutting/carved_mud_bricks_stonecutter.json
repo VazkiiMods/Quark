@@ -5,7 +5,7 @@
   },
   "result": "quark:carved_mud_bricks",
   "count": 1,
-  "conditions": [
+  "neoforge:conditions": [
     {
       "type": "quark:flag",
       "flag": "more_mud_blocks"

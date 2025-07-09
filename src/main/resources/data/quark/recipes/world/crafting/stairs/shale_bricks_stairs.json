@@ -14,7 +14,7 @@
     "item": "quark:shale_bricks_stairs",
     "count": 4
   },
-  "conditions": [
+  "neoforge:conditions": [
     {
       "type": "quark:flag",
       "flag": "more_stone_variants"

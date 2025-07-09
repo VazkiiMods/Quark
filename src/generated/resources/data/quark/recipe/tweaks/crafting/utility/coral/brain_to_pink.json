@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "group": "pink_dye",
+  "ingredients": [
+    [
+      {
+        "item": "minecraft:brain_coral"
+      },
+      {
+        "item": "minecraft:brain_coral_fan"
+      }
+    ]
+  ],
+  "result": {
+    "count": 1,
+    "id": "minecraft:pink_dye"
+  }
+}

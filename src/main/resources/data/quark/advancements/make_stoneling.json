@@ -25,7 +25,7 @@
       "make_stoneling"
     ]
   ],
-  "conditions": [
+  "neoforge:conditions": [
     {
       "type": "quark:advancement_flag",
       "flag": "stoneling_drop_diamond_heart"

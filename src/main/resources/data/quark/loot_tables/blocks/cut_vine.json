@@ -4,7 +4,7 @@
     {
       "rolls": 0,
       "entries": [],
-      "conditions": []
+      "neoforge:conditions": []
     }
   ]
 }

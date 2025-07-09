@@ -12,7 +12,7 @@
     "item": "quark:waxed_weathered_cut_copper_vertical_slab",
     "count": 1
   },
-  "conditions": [
+  "neoforge:conditions": [
     {
       "type": "quark:flag",
         "flag": "vertical_slabs"

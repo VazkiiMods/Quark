@@ -9,7 +9,7 @@
     "item": "minecraft:beetroot",
     "count": 9
   },
-  "conditions": [
+  "neoforge:conditions": [
     {
       "type": "quark:flag",
         "flag": "beetroot_crate"

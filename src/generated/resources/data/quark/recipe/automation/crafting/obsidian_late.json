@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "redstone",
+  "key": {
+    "O": {
+      "tag": "c:obsidians"
+    }
+  },
+  "pattern": [
+    "OO"
+  ],
+  "result": {
+    "count": 1,
+    "id": "quark:obsidian_pressure_plate"
+  }
+}

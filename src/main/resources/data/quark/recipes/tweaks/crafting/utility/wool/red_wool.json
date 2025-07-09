@@ -12,7 +12,7 @@
   "result": {
     "item": "minecraft:red_wool"
   },
-  "conditions": [
+  "neoforge:conditions": [
     {
       "type": "quark:flag",
       "flag": "dye_any_wool"

@@ -12,7 +12,7 @@
     "item": "quark:lime_shingles_slab",
     "count": 6
   },
-  "conditions": [
+  "neoforge:conditions": [
     {
       "type": "quark:flag",
       "flag": "shingles"

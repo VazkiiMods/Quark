@@ -6,7 +6,7 @@
   "result": "minecraft:copper_block",
   "experience": 6.3,
   "cookingtime": 900,
-  "conditions": [
+  "neoforge:conditions": [
     {
       "type": "quark:flag",
       "flag": "smelt_ore_blocks"

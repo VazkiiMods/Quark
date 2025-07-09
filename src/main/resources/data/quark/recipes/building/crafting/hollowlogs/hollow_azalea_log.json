@@ -14,9 +14,9 @@
     "item": "quark:hollow_azalea_log",
     "count": 4
   },
-  "conditions": [
+  "neoforge:conditions": [
     {
-      "type": "forge:and",
+      "type": "neoforge:and",
       "values": [
         {
           "type": "quark:flag",

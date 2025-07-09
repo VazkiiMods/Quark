@@ -9,7 +9,7 @@
     "item": "minecraft:glow_berries",
     "count": 9
   },
-  "conditions": [
+  "neoforge:conditions": [
     {
       "type": "quark:flag",
         "flag": "glowberry_sack"

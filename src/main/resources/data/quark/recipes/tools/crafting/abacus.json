@@ -7,10 +7,10 @@
   ],
   "key": {
     "S": {
-      "tag": "forge:rods/wooden"
+      "tag": "c:rods/wooden"
     },
     "I": {
-      "tag": "forge:ingots/iron"
+      "tag": "c:ingots/iron"
     },
     "W": {
       "tag": "minecraft:planks"
@@ -19,7 +19,7 @@
   "result": {
     "item": "quark:abacus"
   },
-  "conditions": [
+  "neoforge:conditions": [
     {
       "type": "quark:flag",
       "flag": "abacus"

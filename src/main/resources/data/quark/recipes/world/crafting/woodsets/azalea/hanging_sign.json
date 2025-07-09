@@ -18,7 +18,7 @@
     "item": "quark:azalea_hanging_sign",
     "count": 6
   },
-  "conditions": [
+  "neoforge:conditions": [
     {
       "type": "quark:flag",
       "flag": "azalea_wood"

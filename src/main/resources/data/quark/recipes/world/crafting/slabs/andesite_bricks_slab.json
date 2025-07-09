@@ -12,7 +12,7 @@
     "item": "quark:andesite_bricks_slab",
     "count": 6
   },
-  "conditions": [
+  "neoforge:conditions": [
     {
       "type": "quark:flag",
       "flag": "more_stone_variants"

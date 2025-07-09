@@ -9,7 +9,7 @@
           "name": "quark:blaze_lantern"
         }
       ],
-      "conditions": [
+      "neoforge:conditions": [
         {
           "condition": "minecraft:survives_explosion"
         }

@@ -6,14 +6,14 @@
   ],
   "key": {
     "#": {
-      "tag": "forge:ingots/gold"
+      "tag": "c:ingots/gold"
     }
   },
   "result": {
     "item": "quark:gold_bars",
     "count": 16
   },
-  "conditions": [
+  "neoforge:conditions": [
     {
       "type": "quark:flag",
       "flag": "gold_bars"

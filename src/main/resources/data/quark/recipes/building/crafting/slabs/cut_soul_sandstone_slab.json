@@ -12,7 +12,7 @@
     "item": "quark:cut_soul_sandstone_slab",
     "count": 6
   },
-  "conditions": [
+  "neoforge:conditions": [
     {
       "type": "quark:flag",
       "flag": "soul_sandstone"

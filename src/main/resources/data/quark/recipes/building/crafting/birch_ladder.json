@@ -7,7 +7,7 @@
   ],
   "key": {
     "#": {
-      "tag": "forge:rods/wooden"
+      "tag": "c:rods/wooden"
     },
     "W": {
       "item": "minecraft:birch_planks"
@@ -17,7 +17,7 @@
     "item": "quark:birch_ladder",
     "count": 4
   },
-  "conditions": [
+  "neoforge:conditions": [
     {
       "type": "quark:flag",
       "flag": "variant_ladders"

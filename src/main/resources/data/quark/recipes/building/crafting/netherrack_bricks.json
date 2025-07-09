@@ -16,7 +16,7 @@
     "item": "quark:netherrack_bricks",
     "count": 4
   },
-  "conditions": [
+  "neoforge:conditions": [
     {
       "type": "quark:flag",
       "flag": "netherrack_bricks"

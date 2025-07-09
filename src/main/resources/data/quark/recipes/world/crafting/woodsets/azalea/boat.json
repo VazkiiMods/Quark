@@ -13,7 +13,7 @@
   "result": {
     "item": "quark:azalea_boat"
   },
-  "conditions": [
+  "neoforge:conditions": [
     {
       "type": "quark:flag",
       "flag": "azalea_wood"

@@ -9,7 +9,7 @@
           "functions": [
             {
               "function": "minecraft:set_count",
-              "conditions": [
+              "neoforge:conditions": [
                 {
                   "condition": "minecraft:block_state_property",
                   "block": "quark:blackstone_bricks_vertical_slab",

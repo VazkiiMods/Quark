@@ -9,7 +9,7 @@
           "name": "quark:red_corundum_cluster"
         }
       ],
-      "conditions": [
+      "neoforge:conditions": [
         {
           "condition": "minecraft:survives_explosion"
         }

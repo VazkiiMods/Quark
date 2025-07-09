@@ -5,7 +5,7 @@
   },
   "result": "quark:raw_iron_bricks_wall",
   "count": 1,
-  "conditions": [
+  "neoforge:conditions": [
     {
       "type": "quark:flag",
       "flag": "raw_metal_bricks"

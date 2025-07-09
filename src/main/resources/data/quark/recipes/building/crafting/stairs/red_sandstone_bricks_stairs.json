@@ -14,7 +14,7 @@
     "item": "quark:red_sandstone_bricks_stairs",
     "count": 4
   },
-  "conditions": [
+  "neoforge:conditions": [
     {
       "type": "quark:flag",
       "flag": "sandstone_bricks"

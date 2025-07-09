@@ -5,9 +5,9 @@
   },
   "result": "quark:purple_shingles_vertical_slab",
   "count": 2,
-  "conditions": [
+  "neoforge:conditions": [
     {
-      "type": "forge:and",
+      "type": "neoforge:and",
       "values": [
         {
           "type": "quark:flag",

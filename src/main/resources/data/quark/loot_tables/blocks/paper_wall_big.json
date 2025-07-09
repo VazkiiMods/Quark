@@ -9,7 +9,7 @@
           "name": "quark:paper_wall_big"
         }
       ],
-      "conditions": [
+      "neoforge:conditions": [
         {
           "condition": "minecraft:survives_explosion"
         }

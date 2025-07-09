@@ -25,7 +25,7 @@
       "shiba_help"
     ]
   ],
-  "conditions": [
+  "neoforge:conditions": [
     {
       "type": "quark:advancement_flag",
       "flag": "shiba"

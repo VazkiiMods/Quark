@@ -9,7 +9,7 @@
           "name": "quark:orange_blossom_sapling"
         }
       ],
-      "conditions": [
+      "neoforge:conditions": [
         {
           "condition": "minecraft:survives_explosion"
         }

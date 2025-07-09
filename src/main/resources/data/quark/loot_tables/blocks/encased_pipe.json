@@ -9,7 +9,7 @@
           "name": "quark:encased_pipe"
         }
       ],
-      "conditions": [
+      "neoforge:conditions": [
         {
           "condition": "minecraft:survives_explosion"
         }

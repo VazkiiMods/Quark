@@ -5,7 +5,7 @@
   },
   "result": "quark:midori_pillar",
   "count": 1,
-  "conditions": [
+  "neoforge:conditions": [
     {
       "type": "quark:flag",
       "flag": "midori"

@@ -13,7 +13,7 @@
     "item": "quark:permafrost_bricks",
     "count": 4
   },
-  "conditions": [
+  "neoforge:conditions": [
     {
       "type": "quark:flag",
       "flag": "permafrost"

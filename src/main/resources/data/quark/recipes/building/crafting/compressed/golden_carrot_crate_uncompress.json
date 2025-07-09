@@ -9,7 +9,7 @@
     "item": "minecraft:golden_carrot",
     "count": 9
   },
-  "conditions": [
+  "neoforge:conditions": [
     {
       "type": "quark:flag",
         "flag": "golden_carrot_crate"

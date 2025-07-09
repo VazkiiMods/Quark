@@ -1,0 +1,25 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "quark:automation/crafting/nether_brick_fence_gate"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    },
+    "test": {
+      "trigger": "minecraft:tick"
+    }
+  },
+  "requirements": [
+    [
+      "has_the_recipe",
+      "test"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "quark:automation/crafting/nether_brick_fence_gate"
+    ]
+  }
+}

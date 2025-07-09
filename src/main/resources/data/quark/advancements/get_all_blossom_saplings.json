@@ -2,7 +2,7 @@
   "parent": "minecraft:husbandry/plant_seed",
   "criteria": {
     "blue": {
-      "conditions": {
+      "neoforge:conditions": {
         "items": [
           {
             "items": [
@@ -14,7 +14,7 @@
       "trigger": "minecraft:inventory_changed"
     },
     "lavender": {
-      "conditions": {
+      "neoforge:conditions": {
         "items": [
           {
             "items": [
@@ -26,7 +26,7 @@
       "trigger": "minecraft:inventory_changed"
     },
     "orange": {
-      "conditions": {
+      "neoforge:conditions": {
         "items": [
           {
             "items": [
@@ -38,7 +38,7 @@
       "trigger": "minecraft:inventory_changed"
     },
     "yellow": {
-      "conditions": {
+      "neoforge:conditions": {
         "items": [
           {
             "items": [
@@ -50,7 +50,7 @@
       "trigger": "minecraft:inventory_changed"
     },
     "red": {
-      "conditions": {
+      "neoforge:conditions": {
         "items": [
           {
             "items": [
@@ -87,7 +87,7 @@
     [ "yellow" ],
     [ "red" ]
   ],
-  "conditions": [
+  "neoforge:conditions": [
     {
       "type": "quark:advancement_flag",
       "flag": "blossom_trees"

@@ -6,9 +6,9 @@
   "result": "minecraft:copper_block",
   "experience": 6.3,
   "cookingtime": 1800,
-  "conditions": [
+  "neoforge:conditions": [
     {
-      "type": "forge:and",
+      "type": "neoforge:and",
       "values": [
         {
           "type": "quark:flag",

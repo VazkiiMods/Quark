@@ -9,7 +9,7 @@
           "name": "quark:jungle_post"
         }
       ],
-      "conditions": [
+      "neoforge:conditions": [
         {
           "condition": "minecraft:survives_explosion"
         }

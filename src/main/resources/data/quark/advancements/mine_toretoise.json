@@ -25,7 +25,7 @@
       "mine_toretoise"
     ]
   ],
-  "conditions": [
+  "neoforge:conditions": [
     {
       "type": "quark:advancement_flag",
       "flag": "toretoise"

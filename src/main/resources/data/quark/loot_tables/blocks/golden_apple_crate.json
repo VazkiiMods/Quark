@@ -9,7 +9,7 @@
           "name": "quark:golden_apple_crate"
         }
       ],
-      "conditions": [
+      "neoforge:conditions": [
         {
           "condition": "minecraft:survives_explosion"
         }

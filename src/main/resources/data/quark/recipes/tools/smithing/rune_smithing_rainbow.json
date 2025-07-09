@@ -7,7 +7,7 @@
     "item": "minecraft:blaze_powder"
   },
   "color": "rainbow",
-  "conditions": [
+  "neoforge:conditions": [
     {
       "type": "quark:flag",
       "flag": "color_runes"

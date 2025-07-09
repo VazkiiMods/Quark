@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "redstone",
+  "ingredients": [
+    {
+      "item": "quark:encased_pipe"
+    }
+  ],
+  "result": {
+    "count": 1,
+    "id": "quark:pipe"
+  }
+}

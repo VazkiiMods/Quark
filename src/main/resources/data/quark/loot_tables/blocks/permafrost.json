@@ -9,7 +9,7 @@
           "name": "quark:permafrost"
         }
       ],
-      "conditions": [
+      "neoforge:conditions": [
         {
           "condition": "minecraft:survives_explosion"
         }

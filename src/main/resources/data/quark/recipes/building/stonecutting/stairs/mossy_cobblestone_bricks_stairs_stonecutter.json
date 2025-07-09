@@ -5,7 +5,7 @@
   },
   "result": "quark:mossy_cobblestone_bricks_stairs",
   "count": 1,
-  "conditions": [
+  "neoforge:conditions": [
     {
       "type": "quark:flag",
       "flag": "cobblestone_bricks"

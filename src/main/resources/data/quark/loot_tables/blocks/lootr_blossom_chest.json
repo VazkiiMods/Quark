@@ -15,7 +15,7 @@
           "name": "quark:blossom_chest"
         }
       ],
-      "conditions": [
+      "neoforge:conditions": [
         {
           "condition": "minecraft:survives_explosion"
         }

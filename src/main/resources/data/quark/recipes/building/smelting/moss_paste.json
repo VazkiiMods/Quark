@@ -6,7 +6,7 @@
   "result": "quark:moss_paste",
   "experience": 1.0,
   "cookingtime": 200,
-  "conditions": [
+  "neoforge:conditions": [
     {
       "type": "quark:flag",
       "flag": "midori"

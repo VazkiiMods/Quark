@@ -8,7 +8,7 @@
     "item": "minecraft:raw_copper",
     "count": 9
   },
-  "conditions": [
+  "neoforge:conditions": [
     {
       "type": "quark:flag",
       "flag": "raw_metal_bricks"

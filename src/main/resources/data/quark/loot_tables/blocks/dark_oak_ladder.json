@@ -9,7 +9,7 @@
           "name": "quark:dark_oak_ladder"
         }
       ],
-      "conditions": [
+      "neoforge:conditions": [
         {
           "condition": "minecraft:survives_explosion"
         }

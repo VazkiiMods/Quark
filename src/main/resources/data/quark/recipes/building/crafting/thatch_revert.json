@@ -8,7 +8,7 @@
     "item": "minecraft:wheat",
     "count": 1
   },
-  "conditions": [
+  "neoforge:conditions": [
     {
       "type": "quark:flag",
       "flag": "thatch"

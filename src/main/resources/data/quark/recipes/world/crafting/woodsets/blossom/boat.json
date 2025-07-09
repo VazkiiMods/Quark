@@ -13,7 +13,7 @@
   "result": {
     "item": "quark:blossom_boat"
   },
-  "conditions": [
+  "neoforge:conditions": [
     {
       "type": "quark:flag",
       "flag": "blossom_trees"

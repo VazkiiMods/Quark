@@ -5,7 +5,7 @@
   },
   "result": "quark:orange_shingles",
   "count": 1,
-  "conditions": [
+  "neoforge:conditions": [
     {
       "type": "quark:flag",
       "flag": "shingles"

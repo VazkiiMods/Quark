@@ -16,7 +16,7 @@
     "item": "quark:dirt_bricks",
     "count": 4
   },
-  "conditions": [
+  "neoforge:conditions": [
     {
       "type": "quark:flag",
       "flag": "dirt_bricks"

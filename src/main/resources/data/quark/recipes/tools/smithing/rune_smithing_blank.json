@@ -5,7 +5,7 @@
   },
   "addition": null,
   "color": "blank",
-  "conditions": [
+  "neoforge:conditions": [
     {
       "type": "quark:flag",
       "flag": "color_runes"

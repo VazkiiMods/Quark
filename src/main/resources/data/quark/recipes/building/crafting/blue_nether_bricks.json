@@ -12,7 +12,7 @@
     "item": "quark:blue_nether_bricks",
     "count": 2
   },
-  "conditions": [
+  "neoforge:conditions": [
     {
       "type": "quark:flag",
       "flag": "blue_nether_bricks"

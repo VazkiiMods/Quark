@@ -9,7 +9,7 @@
           "name": "quark:sugar_cane_block"
         }
       ],
-      "conditions": [
+      "neoforge:conditions": [
         {
           "condition": "minecraft:survives_explosion"
         }

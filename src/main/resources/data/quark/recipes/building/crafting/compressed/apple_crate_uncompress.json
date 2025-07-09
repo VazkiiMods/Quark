@@ -9,7 +9,7 @@
     "item": "minecraft:apple",
     "count": 9
   },
-  "conditions": [
+  "neoforge:conditions": [
     {
       "type": "quark:flag",
         "flag": "apple_crate"

@@ -7,7 +7,7 @@
   ],
   "key": {
     "D": {
-      "tag": "forge:dyes/orange"
+      "tag": "c:dyes/orange"
     },
     "S": {
       "item": "quark:shingles"
@@ -17,7 +17,7 @@
     "item": "quark:orange_shingles",
     "count": 8
   },
-  "conditions": [
+  "neoforge:conditions": [
     {
       "type": "quark:flag",
       "flag": "shingles"

@@ -9,7 +9,7 @@
           "name": "quark:sturdy_stone"
         }
       ],
-      "conditions": [
+      "neoforge:conditions": [
         {
           "condition": "minecraft:survives_explosion"
         }

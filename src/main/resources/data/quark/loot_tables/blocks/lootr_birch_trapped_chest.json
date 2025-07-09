@@ -15,7 +15,7 @@
           "name": "quark:birch_trapped_chest"
         }
       ],
-      "conditions": [
+      "neoforge:conditions": [
         {
           "condition": "minecraft:survives_explosion"
         }

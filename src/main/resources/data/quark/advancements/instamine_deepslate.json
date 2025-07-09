@@ -28,7 +28,7 @@
       "instamine_deepslate"
     ]
   ],
-  "conditions": [
+  "neoforge:conditions": [
     {
       "type": "quark:advancement_flag",
       "flag": "deepslate_tweak"

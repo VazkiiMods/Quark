@@ -9,7 +9,7 @@
           "name": "quark:rusty_iron_plate"
         }
       ],
-      "conditions": [
+      "neoforge:conditions": [
         {
           "condition": "minecraft:survives_explosion"
         }

@@ -5,9 +5,9 @@
   },
   "result": "quark:andesite_bricks_stairs",
   "count": 1,
-  "conditions": [
+  "neoforge:conditions": [
     {
-      "type": "forge:and",
+      "type": "neoforge:and",
       "values": [
         {
           "type": "quark:flag",

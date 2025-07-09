@@ -5,7 +5,7 @@
   },
   "result": "quark:light_gray_shingles_stairs",
   "count": 1,
-  "conditions": [
+  "neoforge:conditions": [
     {
       "type": "quark:flag",
       "flag": "shingles"

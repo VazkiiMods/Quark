@@ -12,9 +12,9 @@
     "item": "quark:blue_blossom_leaf_carpet",
     "count": 3
   },
-  "conditions": [
+  "neoforge:conditions": [
     {
-      "type": "forge:and",
+      "type": "neoforge:and",
       "values": [
         {
           "type": "quark:flag",

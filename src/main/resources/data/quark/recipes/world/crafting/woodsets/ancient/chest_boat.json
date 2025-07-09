@@ -3,7 +3,7 @@
   "group": "chest_boat",
   "ingredients": [
     {
-      "tag": "forge:chests/wooden"
+      "tag": "c:chests/wooden"
     },
     {
       "item": "quark:ancient_boat"
@@ -12,7 +12,7 @@
   "result": {
     "item": "quark:ancient_chest_boat"
   },
-  "conditions": [
+  "neoforge:conditions": [
     {
       "type": "quark:flag",
       "flag": "ancient_wood"

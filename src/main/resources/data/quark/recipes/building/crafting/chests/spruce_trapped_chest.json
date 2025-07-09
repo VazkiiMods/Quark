@@ -11,7 +11,7 @@
   "result": {
     "item": "quark:spruce_trapped_chest"
   },
-  "conditions": [
+  "neoforge:conditions": [
     {
       "type": "quark:flag",
       "flag": "variant_chests"

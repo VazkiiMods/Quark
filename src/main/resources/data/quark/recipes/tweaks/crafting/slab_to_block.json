@@ -1,6 +1,6 @@
 {
   "type": "quark:slab_to_block",
-  "conditions": [
+  "neoforge:conditions": [
     {
       "type": "quark:flag",
       "flag": "slabs_to_blocks"

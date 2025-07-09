@@ -1,0 +1,30 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "redstone",
+  "key": {
+    "B": {
+      "tag": "c:dyes/blue"
+    },
+    "C": {
+      "tag": "c:cobblestones"
+    },
+    "F": {
+      "item": "minecraft:chorus_fruit"
+    },
+    "I": {
+      "tag": "c:ingots/iron"
+    },
+    "R": {
+      "tag": "c:dusts/redstone"
+    }
+  },
+  "pattern": [
+    "CIC",
+    "BFR",
+    "CIC"
+  ],
+  "result": {
+    "count": 1,
+    "id": "quark:magnet"
+  }
+}

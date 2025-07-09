@@ -9,7 +9,7 @@
     "item": "quark:ancient_planks",
     "count": 1
   },
-  "conditions": [
+  "neoforge:conditions": [
     {
       "type": "quark:flag",
         "flag": "vertical_planks"

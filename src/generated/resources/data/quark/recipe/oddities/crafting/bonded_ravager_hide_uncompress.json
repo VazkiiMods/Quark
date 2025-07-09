@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    {
+      "item": "quark:bonded_ravager_hide"
+    }
+  ],
+  "result": {
+    "count": 9,
+    "id": "quark:ravager_hide"
+  }
+}

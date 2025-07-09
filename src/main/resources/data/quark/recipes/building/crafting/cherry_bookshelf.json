@@ -17,7 +17,7 @@
     "item": "quark:cherry_bookshelf",
     "count": 1
   },
-  "conditions": [
+  "neoforge:conditions": [
     {
       "type": "quark:flag",
       "flag": "variant_bookshelves"

@@ -13,7 +13,7 @@
   "result": {
     "item": "quark:cactus_block"
   },
-  "conditions": [
+  "neoforge:conditions": [
     {
       "type": "quark:flag",
       "flag": "cactus_block"

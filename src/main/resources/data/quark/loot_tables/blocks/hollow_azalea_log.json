@@ -9,7 +9,7 @@
           "name": "quark:hollow_azalea_log"
         }
       ],
-      "conditions": [
+      "neoforge:conditions": [
         {
           "condition": "minecraft:survives_explosion"
         }

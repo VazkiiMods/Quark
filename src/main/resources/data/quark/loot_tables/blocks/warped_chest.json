@@ -15,7 +15,7 @@
           "name": "quark:warped_chest"
         }
       ],
-      "conditions": [
+      "neoforge:conditions": [
         {
           "condition": "minecraft:survives_explosion"
         }

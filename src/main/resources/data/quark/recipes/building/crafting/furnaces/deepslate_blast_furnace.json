@@ -19,7 +19,7 @@
   "result": {
     "item": "minecraft:blast_furnace"
   },
-  "conditions": [
+  "neoforge:conditions": [
     {
       "type": "quark:flag",
       "flag": "variant_furnaces"

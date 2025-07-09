@@ -9,7 +9,7 @@
           "name": "quark:red_sandstone_bricks"
         }
       ],
-      "conditions": [
+      "neoforge:conditions": [
         {
           "condition": "minecraft:survives_explosion"
         }

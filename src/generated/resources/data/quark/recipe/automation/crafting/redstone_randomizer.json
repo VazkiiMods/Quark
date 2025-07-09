@@ -1,0 +1,24 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "redstone",
+  "key": {
+    "B": {
+      "item": "minecraft:prismarine_crystals"
+    },
+    "I": {
+      "item": "minecraft:stone"
+    },
+    "X": {
+      "item": "minecraft:redstone_torch"
+    }
+  },
+  "pattern": [
+    " X ",
+    "XBX",
+    "III"
+  ],
+  "result": {
+    "count": 1,
+    "id": "quark:redstone_randomizer"
+  }
+}

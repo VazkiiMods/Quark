@@ -13,7 +13,7 @@
   "result": {
     "item": "quark:berry_sack"
   },
-  "conditions": [
+  "neoforge:conditions": [
     {
       "type": "quark:flag",
       "flag": "berry_sack"

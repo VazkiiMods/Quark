@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "redstone",
+  "key": {
+    "E": {
+      "tag": "c:ender_pearls"
+    },
+    "S": {
+      "tag": "c:sands/colorless"
+    }
+  },
+  "pattern": [
+    "SSS",
+    "SES",
+    "SSS"
+  ],
+  "result": {
+    "count": 1,
+    "id": "quark:gravisand"
+  }
+}

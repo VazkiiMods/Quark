@@ -9,7 +9,7 @@
     "item": "quark:permafrost_bricks_slab",
     "count": 1
   },
-  "conditions": [
+  "neoforge:conditions": [
     {
       "type": "quark:flag",
         "flag": "vertical_slabs"

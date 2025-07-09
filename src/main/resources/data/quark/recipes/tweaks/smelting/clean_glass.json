@@ -6,7 +6,7 @@
   "result": "minecraft:glass",
   "experience": 0.1,
   "cookingtime": 200,
-  "conditions": [
+  "neoforge:conditions": [
     {
       "type": "quark:flag",
       "flag": "glass_shard"

@@ -7,13 +7,13 @@
   ],
   "key": {
     "#": {
-      "tag": "forge:cobblestone"
+      "tag": "c:cobblestone"
     }
   },
   "result": {
     "item": "minecraft:furnace"
   },
-  "conditions": [
+  "neoforge:conditions": [
       {
         "type": "quark:flag",
         "flag": "variant_furnaces"

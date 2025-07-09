@@ -28,7 +28,7 @@
       "wear_full_rainbow"
     ]
   ],
-  "conditions": [
+  "neoforge:conditions": [
     {
       "type": "quark:advancement_flag",
       "flag": "color_runes"

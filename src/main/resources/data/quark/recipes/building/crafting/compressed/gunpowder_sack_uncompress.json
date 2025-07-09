@@ -9,7 +9,7 @@
     "item": "minecraft:gunpowder",
     "count": 9
   },
-  "conditions": [
+  "neoforge:conditions": [
     {
       "type": "quark:flag",
         "flag": "gunpowder_sack"

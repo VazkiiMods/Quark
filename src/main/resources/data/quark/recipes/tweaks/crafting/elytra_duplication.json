@@ -1,6 +1,6 @@
 {
   "type": "quark:elytra_duplication",
-  "conditions": [
+  "neoforge:conditions": [
     {
       "type": "quark:flag",
       "flag": "dragon_scales"

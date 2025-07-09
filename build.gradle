@@ -65,6 +65,13 @@ runs {
         workingDirectory project.file('runServer')
         programArgument '--nogui'
     }
+
+    data {
+        workingDirectory project.file('runs/data')
+        programArguments '--mod', 'quark', // insert your own mod id
+                '--output', file('src/generated/resources').getAbsolutePath(),
+                '--all'
+    }
 }
 
 repositories {

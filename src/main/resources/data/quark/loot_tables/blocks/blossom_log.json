@@ -9,7 +9,7 @@
           "name": "quark:blossom_log"
         }
       ],
-      "conditions": [
+      "neoforge:conditions": [
         {
           "condition": "minecraft:survives_explosion"
         }

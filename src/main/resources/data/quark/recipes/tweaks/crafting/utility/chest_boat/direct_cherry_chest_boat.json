@@ -10,13 +10,13 @@
       "item": "minecraft:cherry_planks"
     },
     "X": {
-      "tag": "forge:chests/wooden"
+      "tag": "c:chests/wooden"
     }
   },
   "result": {
     "item": "minecraft:cherry_chest_boat"
   },
-  "conditions": [
+  "neoforge:conditions": [
     {
       "type": "quark:flag",
       "flag": "direct_chest_boat"

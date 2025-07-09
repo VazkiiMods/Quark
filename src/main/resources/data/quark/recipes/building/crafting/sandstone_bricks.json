@@ -13,7 +13,7 @@
     "item": "quark:sandstone_bricks",
     "count": 4
   },
-  "conditions": [
+  "neoforge:conditions": [
     {
       "type": "quark:flag",
       "flag": "sandstone_bricks"

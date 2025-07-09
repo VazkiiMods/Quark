@@ -16,7 +16,7 @@
   "result": {
     "item": "quark:blossom_fence_gate"
   },
-  "conditions": [
+  "neoforge:conditions": [
     {
       "type": "quark:flag",
       "flag": "blossom_trees"

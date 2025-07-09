@@ -9,7 +9,7 @@
   },
   "experience": 0.05,
   "cookingtime": 200,
-  "conditions": [
+  "neoforge:conditions": [
     {
       "type": "quark:flag",
       "flag": "bone_meal_utility"

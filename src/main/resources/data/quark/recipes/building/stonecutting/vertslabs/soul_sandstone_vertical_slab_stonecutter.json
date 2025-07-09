@@ -5,7 +5,7 @@
   },
   "result": "quark:soul_sandstone_vertical_slab",
   "count": 2,
-  "conditions": [
+  "neoforge:conditions": [
     {
       "type": "quark:flag",
       "flag": "vertical_slabs"

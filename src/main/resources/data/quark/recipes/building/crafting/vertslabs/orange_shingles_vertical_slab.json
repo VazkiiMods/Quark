@@ -14,7 +14,7 @@
     "item": "quark:orange_shingles_vertical_slab",
     "count": 3
   },
-  "conditions": [
+  "neoforge:conditions": [
     {
       "type": "quark:flag",
       "flag": "vertical_slabs"

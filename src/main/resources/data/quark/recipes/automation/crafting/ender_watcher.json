@@ -7,7 +7,7 @@
   ],
   "key": {
     "R": {
-      "tag": "forge:dusts/redstone"
+      "tag": "minecraft:redstone"
     },
     "B": {
       "item": "minecraft:obsidian"
@@ -19,9 +19,9 @@
   "result": {
     "item": "quark:ender_watcher"
   },
-  "conditions": [
+  "neoforge:conditions": [
     {
-      "type": "quark:flag",
+      "type": "zeta:flag",
       "flag": "ender_watcher"
     }
   ]

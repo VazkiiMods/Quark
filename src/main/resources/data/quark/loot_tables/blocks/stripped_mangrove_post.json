@@ -9,7 +9,7 @@
           "name": "quark:stripped_mangrove_post"
         }
       ],
-      "conditions": [
+      "neoforge:conditions": [
         {
           "condition": "minecraft:survives_explosion"
         }

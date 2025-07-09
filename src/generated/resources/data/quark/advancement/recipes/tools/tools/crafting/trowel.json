@@ -1,0 +1,25 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "quark:tools/crafting/trowel"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    },
+    "test": {
+      "trigger": "minecraft:tick"
+    }
+  },
+  "requirements": [
+    [
+      "has_the_recipe",
+      "test"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "quark:tools/crafting/trowel"
+    ]
+  }
+}

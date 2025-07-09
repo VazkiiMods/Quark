@@ -14,7 +14,7 @@
     "item": "minecraft:paper",
     "count": 3
   },
-  "conditions": [
+  "neoforge:conditions": [
     {
       "type": "quark:flag",
       "flag": "bent_recipes"

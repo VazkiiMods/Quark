@@ -25,7 +25,7 @@
       "use_viaduct"
     ]
   ],
-  "conditions": [
+  "neoforge:conditions": [
     {
       "type": "quark:advancement_flag",
       "flag": "myalite_viaduct"

@@ -14,7 +14,7 @@
     "item": "quark:soul_sandstone_stairs",
     "count": 4
   },
-  "conditions": [
+  "neoforge:conditions": [
     {
       "type": "quark:flag",
       "flag": "soul_sandstone"

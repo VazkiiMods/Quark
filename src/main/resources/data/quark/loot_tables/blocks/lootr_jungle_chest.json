@@ -15,7 +15,7 @@
           "name": "quark:jungle_chest"
         }
       ],
-      "conditions": [
+      "neoforge:conditions": [
         {
           "condition": "minecraft:survives_explosion"
         }

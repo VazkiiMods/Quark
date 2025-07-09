@@ -9,7 +9,7 @@
           "functions": [
             {
               "function": "minecraft:set_count",
-              "conditions": [
+              "neoforge:conditions": [
                 {
                   "condition": "minecraft:block_state_property",
                   "block": "quark:waxed_oxidized_cut_copper_vertical_slab",

@@ -28,7 +28,7 @@
       "ancient_apple_overlevel"
     ]
   ],
-  "conditions": [
+  "neoforge:conditions": [
     {
       "type": "quark:advancement_flag",
       "flag": "ancient_fruit_xp"

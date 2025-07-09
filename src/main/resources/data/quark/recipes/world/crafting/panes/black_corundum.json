@@ -15,7 +15,7 @@
     "count": 3
   },
   "group": "quark:corundum",
-  "conditions": [
+  "neoforge:conditions": [
     {
       "type": "quark:flag",
       "flag": "corundum"

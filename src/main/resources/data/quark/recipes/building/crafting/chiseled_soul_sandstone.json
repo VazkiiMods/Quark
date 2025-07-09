@@ -13,7 +13,7 @@
     "item": "quark:chiseled_soul_sandstone",
     "count": 1
   },
-  "conditions": [
+  "neoforge:conditions": [
     {
       "type": "quark:flag",
       "flag": "soul_sandstone"

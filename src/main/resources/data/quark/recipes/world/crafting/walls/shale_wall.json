@@ -13,7 +13,7 @@
     "item": "quark:shale_wall",
     "count": 6
   },
-  "conditions": [
+  "neoforge:conditions": [
     {
       "type": "quark:flag",
       "flag": "shale"

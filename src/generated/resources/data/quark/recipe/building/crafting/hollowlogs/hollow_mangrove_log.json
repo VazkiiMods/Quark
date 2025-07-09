@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "L": {
+      "item": "minecraft:mangrove_log"
+    }
+  },
+  "pattern": [
+    " L ",
+    "L L",
+    " L "
+  ],
+  "result": {
+    "count": 4,
+    "id": "quark:hollow_mangrove_log"
+  }
+}

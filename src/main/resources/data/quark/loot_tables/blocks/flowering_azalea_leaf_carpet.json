@@ -9,7 +9,7 @@
           "name": "quark:flowering_azalea_leaf_carpet"
         }
       ],
-      "conditions": [
+      "neoforge:conditions": [
         {
           "condition": "minecraft:survives_explosion"
         }

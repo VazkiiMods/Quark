@@ -9,7 +9,7 @@
           "name": "quark:glow_lichen_growth"
         }
       ],
-      "conditions": [
+      "neoforge:conditions": [
         {
           "condition": "minecraft:survives_explosion"
         }

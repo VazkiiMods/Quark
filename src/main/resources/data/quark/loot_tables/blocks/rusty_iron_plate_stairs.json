@@ -9,7 +9,7 @@
           "name": "quark:rusty_iron_plate_stairs"
         }
       ],
-      "conditions": [
+      "neoforge:conditions": [
         {
           "condition": "minecraft:survives_explosion"
         }

@@ -9,7 +9,7 @@
     "item": "minecraft:cobbled_deepslate_slab",
     "count": 1
   },
-  "conditions": [
+  "neoforge:conditions": [
     {
       "type": "quark:flag",
         "flag": "vertical_slabs"

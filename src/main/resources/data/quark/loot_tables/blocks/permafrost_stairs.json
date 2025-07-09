@@ -9,7 +9,7 @@
           "name": "quark:permafrost_stairs"
         }
       ],
-      "conditions": [
+      "neoforge:conditions": [
         {
           "condition": "minecraft:survives_explosion"
         }

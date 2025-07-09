@@ -12,7 +12,7 @@
     "item": "quark:azalea_leaf_carpet",
     "count": 3
   },
-  "conditions": [
+  "neoforge:conditions": [
     {
       "type": "quark:flag",
       "flag": "leaf_carpet"

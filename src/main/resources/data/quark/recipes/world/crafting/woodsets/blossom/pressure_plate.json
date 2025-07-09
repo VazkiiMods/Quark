@@ -12,7 +12,7 @@
   "result": {
     "item": "quark:blossom_pressure_plate"
   },
-  "conditions": [
+  "neoforge:conditions": [
     {
       "type": "quark:flag",
       "flag": "blossom_trees"

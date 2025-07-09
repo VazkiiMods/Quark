@@ -9,7 +9,7 @@
           "name": "quark:stone_lamp"
         }
       ],
-      "conditions": [
+      "neoforge:conditions": [
         {
           "condition": "minecraft:survives_explosion"
         }

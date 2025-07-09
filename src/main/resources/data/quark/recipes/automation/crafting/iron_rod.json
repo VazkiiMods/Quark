@@ -10,22 +10,22 @@
       "item": "minecraft:end_rod"
     },
     "I": {
-      "tag": "forge:ingots/iron"
+      "tag": "c:ingots/iron"
     }
   },
   "result": {
     "item": "quark:iron_rod"
   },
-  "conditions": [
+  "neoforge:conditions": [
     {
-      "type": "forge:and",
+      "type": "neoforge:and",
       "values": [
         {
           "type": "quark:flag",
           "flag": "iron_rod"
         },
         {
-          "type": "forge:not",
+          "type": "neoforge:not",
           "value": {
             "type": "quark:flag",
             "flag": "iron_rod_pre_end"

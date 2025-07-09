@@ -9,7 +9,7 @@
   "result": {
     "item": "quark:ancient_button"
   },
-  "conditions": [
+  "neoforge:conditions": [
     {
       "type": "quark:flag",
       "flag": "ancient_wood"

@@ -1,0 +1,24 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "key": {
+    "#": {
+      "tag": "quark:corundum"
+    },
+    "C": {
+      "item": "quark:smithing_template_rune"
+    },
+    "S": {
+      "tag": "c:cobblestones"
+    }
+  },
+  "pattern": [
+    "#S#",
+    "#C#",
+    "###"
+  ],
+  "result": {
+    "count": 1,
+    "id": "quark:smithing_template_rune"
+  }
+}

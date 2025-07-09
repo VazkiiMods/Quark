@@ -9,7 +9,7 @@
     "item": "quark:ravager_hide",
     "count": 9
   },
-  "conditions": [
+  "neoforge:conditions": [
     {
       "type": "quark:flag",
         "flag": "ravager_hide"

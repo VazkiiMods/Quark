@@ -13,7 +13,7 @@
   "result": {
     "item": "quark:ancient_boat"
   },
-  "conditions": [
+  "neoforge:conditions": [
     {
       "type": "quark:flag",
       "flag": "ancient_wood"

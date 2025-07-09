@@ -9,7 +9,7 @@
     "item": "minecraft:sugar_cane",
     "count": 9
   },
-  "conditions": [
+  "neoforge:conditions": [
     {
       "type": "quark:flag",
         "flag": "sugar_cane_block"

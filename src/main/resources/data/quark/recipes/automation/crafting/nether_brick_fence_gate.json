@@ -6,7 +6,7 @@
   ],
   "key": {
     "#": {
-      "tag": "forge:ingots/nether_brick"
+      "tag": "c:ingots/nether_brick"
     },
     "W": {
       "item": "minecraft:nether_bricks"
@@ -15,7 +15,7 @@
   "result": {
     "item": "quark:nether_brick_fence_gate"
   },
-  "conditions": [
+  "neoforge:conditions": [
     {
       "type": "quark:flag",
       "flag": "nether_brick_fence_gate"

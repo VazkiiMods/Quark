@@ -13,7 +13,7 @@
     "item": "quark:gray_framed_glass_pane",
     "count": 16
   },
-  "conditions": [
+  "neoforge:conditions": [
     {
       "type": "quark:flag",
       "flag": "framed_glass"

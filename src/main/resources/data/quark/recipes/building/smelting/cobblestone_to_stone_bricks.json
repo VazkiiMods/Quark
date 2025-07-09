@@ -6,7 +6,7 @@
   "result": "minecraft:stone_bricks",
   "experience": 0.1,
   "cookingtime": 200,
-  "conditions": [
+  "neoforge:conditions": [
     {
       "type": "quark:flag",
       "flag": "cobblestone_bricks"

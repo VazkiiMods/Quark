@@ -8,7 +8,7 @@
   ],
   "key": {
     "#": {
-      "tag": "forge:rods/wooden"
+      "tag": "c:rods/wooden"
     },
     "X": {
       "item": "minecraft:string"
@@ -20,7 +20,7 @@
   "result": {
     "item": "minecraft:dispenser"
   },
-  "conditions": [
+  "neoforge:conditions": [
     {
       "type": "quark:flag",
       "flag": "dropper_upgrade"

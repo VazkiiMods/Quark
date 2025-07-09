@@ -7,13 +7,13 @@
   ],
   "key": {
     "#": {
-      "tag": "forge:leather"
+      "tag": "c:leather"
     }
   },
   "result": {
     "item": "quark:bonded_leather"
   },
-  "conditions": [
+  "neoforge:conditions": [
     {
       "type": "quark:flag",
       "flag": "bonded_leather"

@@ -9,7 +9,7 @@
           "name": "quark:vertical_mangrove_planks"
         }
       ],
-      "conditions": [
+      "neoforge:conditions": [
         {
           "condition": "minecraft:survives_explosion"
         }

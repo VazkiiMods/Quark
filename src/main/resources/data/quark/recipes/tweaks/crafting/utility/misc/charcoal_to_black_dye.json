@@ -9,7 +9,7 @@
   "result": {
     "item": "minecraft:black_dye"
   },
-  "conditions": [
+  "neoforge:conditions": [
     {
       "type": "quark:flag",
       "flag": "charcoal_to_dye"

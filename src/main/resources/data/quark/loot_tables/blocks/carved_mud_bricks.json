@@ -9,7 +9,7 @@
           "name": "quark:carved_mud_bricks"
         }
       ],
-      "conditions": [
+      "neoforge:conditions": [
         {
           "condition": "minecraft:survives_explosion"
         }

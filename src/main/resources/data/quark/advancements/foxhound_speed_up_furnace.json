@@ -25,7 +25,7 @@
       "foxhound_speed_up_furnace"
     ]
   ],
-  "conditions": [
+  "neoforge:conditions": [
     {
       "type": "quark:advancement_flag",
       "flag": "foxhound_furnace"

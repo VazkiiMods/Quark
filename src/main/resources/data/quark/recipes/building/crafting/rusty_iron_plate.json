@@ -7,7 +7,7 @@
   ],
   "key": {
     "#": {
-      "tag": "forge:ingots/iron"
+      "tag": "c:ingots/iron"
     },
     "W": {
       "item": "minecraft:water_bucket"
@@ -17,7 +17,7 @@
     "item": "quark:rusty_iron_plate",
     "count": 24
   },
-  "conditions": [
+  "neoforge:conditions": [
     {
       "type": "quark:flag",
       "flag": "iron_plates"

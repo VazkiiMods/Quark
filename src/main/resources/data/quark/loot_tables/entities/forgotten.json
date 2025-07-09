@@ -61,7 +61,7 @@
           "name": "quark:forgotten_hat"
         }
       ],
-      "conditions": [
+      "neoforge:conditions": [
         {
           "condition": "minecraft:killed_by_player"
         }

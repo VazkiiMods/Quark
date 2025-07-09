@@ -9,7 +9,7 @@
   "result": {
     "item": "quark:blossom_button"
   },
-  "conditions": [
+  "neoforge:conditions": [
     {
       "type": "quark:flag",
       "flag": "blossom_trees"

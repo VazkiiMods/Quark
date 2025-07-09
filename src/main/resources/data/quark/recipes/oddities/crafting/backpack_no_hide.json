@@ -7,25 +7,25 @@
   ],
   "key": {
     "L": {
-      "tag": "forge:leather"
+      "tag": "c:leather"
     },
     "C": {
-      "tag": "forge:chests/wooden"
+      "tag": "c:chests/wooden"
     },
     "I": {
-      "tag": "forge:ingots/iron"
+      "tag": "c:ingots/iron"
     }
   },
   "result": {
     "item": "quark:backpack",
     "count": 1
   },
-  "conditions": [
+  "neoforge:conditions": [
     {
-        "type": "forge:and",
+        "type": "neoforge:and",
         "values": [
           {
-            "type": "forge:not",
+            "type": "neoforge:not",
             "value": {
               "type": "quark:flag",
               "flag": "ravager_hide"

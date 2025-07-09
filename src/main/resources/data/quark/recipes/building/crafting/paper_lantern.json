@@ -13,13 +13,13 @@
       "item": "minecraft:paper"
     },
     "G": {
-      "tag": "forge:dusts/glowstone"
+      "tag": "c:dusts/glowstone"
     }
   },
   "result": {
     "item": "quark:paper_lantern"
   },
-  "conditions": [
+  "neoforge:conditions": [
     {
       "type": "quark:flag",
       "flag": "paper_decor"

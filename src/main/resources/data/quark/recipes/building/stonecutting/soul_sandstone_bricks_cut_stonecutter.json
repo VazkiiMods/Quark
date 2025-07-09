@@ -5,9 +5,9 @@
   },
   "result": "quark:soul_sandstone_bricks",
   "count": 1,
-  "conditions": [
+  "neoforge:conditions": [
     {
-      "type": "forge:and",
+      "type": "neoforge:and",
       "values": [
         {
           "type": "quark:flag",

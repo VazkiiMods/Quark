@@ -13,7 +13,7 @@
   "result": {
     "item": "quark:chorus_fruit_block"
   },
-  "conditions": [
+  "neoforge:conditions": [
     {
       "type": "quark:flag",
       "flag": "chorus_fruit_block"

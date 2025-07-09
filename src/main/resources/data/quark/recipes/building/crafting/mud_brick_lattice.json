@@ -14,7 +14,7 @@
     "item": "quark:mud_brick_lattice",
     "count": 4
   },
-  "conditions": [
+  "neoforge:conditions": [
     {
       "type": "quark:flag",
       "flag": "more_mud_blocks"

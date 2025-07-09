@@ -13,7 +13,7 @@
     "item": "minecraft:orange_stained_glass"
   },
   "group": "quark:glass_shard",
-  "conditions": [
+  "neoforge:conditions": [
     {
       "type": "quark:flag",
       "flag": "glass_shard"

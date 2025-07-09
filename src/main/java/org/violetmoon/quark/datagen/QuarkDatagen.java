@@ -26,6 +26,14 @@ public class QuarkDatagen {
         CompletableFuture<HolderLookup.Provider> holderLookupProvider = gatherDataEvent.getLookupProvider();
 
         //data
+        if (gatherDataEvent.includeServer()) {
+            System.out.println("It does server!");
+        }
+
+        if (gatherDataEvent.includeClient()) {
+            System.out.println("It does client!");
+        }
+
         generator.addProvider(gatherDataEvent.includeServer(), new QuarkRecipeProvider(packOutput, holderLookupProvider));
         generator.addProvider(gatherDataEvent.includeServer(), new LootTableProvider(packOutput, Collections.emptySet(),
                 List.of(new LootTableProvider.SubProviderEntry(QuarkBlockLootTableProvider::new, LootContextParamSets.BLOCK),
@@ -36,7 +44,7 @@ public class QuarkDatagen {
 
         //tags
         /*
-        for 1.21.1 sioul already manually converted the forge tags to c
+        for 1.21.1 Siuol already manually converted the forge tags to c
         QuarkBlockTagProvider qbtp = new QuarkBlockTagProvider(packOutput, holderLookupProvider, null, existingFileHelper);
         generator.addProvider(gatherDataEvent.includeServer(), qbtp);
         generator.addProvider(gatherDataEvent.includeServer(), new QuarkItemTagProvider(packOutput, holderLookupProvider, qbtp.contentsGetter(), null, existingFileHelper));

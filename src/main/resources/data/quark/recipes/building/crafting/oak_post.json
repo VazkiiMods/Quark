@@ -14,7 +14,7 @@
     "item": "quark:oak_post",
     "count": 8
   },
-  "conditions": [
+  "neoforge:conditions": [
     {
       "type": "quark:flag",
       "flag": "wooden_posts"

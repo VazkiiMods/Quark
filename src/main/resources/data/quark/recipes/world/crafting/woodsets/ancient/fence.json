@@ -17,7 +17,7 @@
     "item": "quark:ancient_fence",
     "count": 3
   },
-  "conditions": [
+  "neoforge:conditions": [
     {
       "type": "quark:flag",
       "flag": "ancient_wood"

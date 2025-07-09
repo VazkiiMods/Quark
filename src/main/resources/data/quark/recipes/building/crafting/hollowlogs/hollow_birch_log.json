@@ -14,7 +14,7 @@
     "item": "quark:hollow_birch_log",
     "count": 4
   },
-  "conditions": [
+  "neoforge:conditions": [
     {
       "type": "quark:flag",
       "flag": "hollow_logs"

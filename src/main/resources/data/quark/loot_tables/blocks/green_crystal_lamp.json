@@ -9,7 +9,7 @@
           "name": "quark:green_crystal_lamp"
         }
       ],
-      "conditions": [
+      "neoforge:conditions": [
         {
           "condition": "minecraft:survives_explosion"
         }

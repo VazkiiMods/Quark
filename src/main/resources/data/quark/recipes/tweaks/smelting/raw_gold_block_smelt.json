@@ -6,7 +6,7 @@
   "result": "minecraft:gold_block",
   "experience": 9,
   "cookingtime": 1800,
-  "conditions": [
+  "neoforge:conditions": [
     {
       "type": "quark:flag",
       "flag": "smelt_ore_blocks"

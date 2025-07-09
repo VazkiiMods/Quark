@@ -17,7 +17,7 @@
     "item": "quark:duskbound_lantern",
     "count": 4
   },
-  "conditions": [
+  "neoforge:conditions": [
     {
       "type": "quark:flag",
       "flag": "duskbound_blocks"

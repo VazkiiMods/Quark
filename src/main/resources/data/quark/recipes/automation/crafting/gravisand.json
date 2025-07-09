@@ -7,17 +7,17 @@
   ],
   "key": {
     "S": {
-      "tag": "forge:sand/colorless"
+      "tag": "c:sand/colorless"
     },
     "E": {
-      "tag": "forge:ender_pearls"
+      "tag": "c:ender_pearls"
     }
   },
   "result": {
     "item": "quark:gravisand",
     "count": 8
   },
-  "conditions": [
+  "neoforge:conditions": [
     {
       "type": "quark:flag",
       "flag": "gravisand"

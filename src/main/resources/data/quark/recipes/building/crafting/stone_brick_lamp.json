@@ -20,7 +20,7 @@
     "item": "quark:stone_brick_lamp",
     "count": 3
   },
-  "conditions": [
+  "neoforge:conditions": [
     {
       "type": "quark:flag",
       "flag": "celebratory_lamps"

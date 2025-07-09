@@ -16,7 +16,7 @@
   "result": {
     "item": "quark:blaze_lantern"
   },
-  "conditions": [
+  "neoforge:conditions": [
     {
       "type": "quark:flag",
       "flag": "blaze_lantern"

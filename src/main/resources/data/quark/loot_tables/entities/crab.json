@@ -3,7 +3,7 @@
   "pools": [
     {
       "name": "shell",
-      "conditions": [
+      "neoforge:conditions": [
         {
           "condition": "quark:flag",
           "flag": "crab_brewing"
@@ -44,7 +44,7 @@
             },
             {
               "function": "minecraft:furnace_smelt",
-              "conditions": [
+              "neoforge:conditions": [
                 {
                   "condition": "minecraft:entity_properties",
                   "predicate": {

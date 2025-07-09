@@ -4,10 +4,10 @@
     "item": "quark:smithing_template_rune"
   },
   "addition": {
-    "tag": "forge:dyes/light_blue"
+    "tag": "c:dyes/light_blue"
   },
   "color": "light_blue",
-  "conditions": [
+  "neoforge:conditions": [
     {
       "type": "quark:flag",
       "flag": "color_runes"

@@ -27,7 +27,7 @@
           "name": "quark:tiny_potato"
         }
       ],
-      "conditions": [
+      "neoforge:conditions": [
         {
           "condition": "minecraft:survives_explosion"
         }

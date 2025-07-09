@@ -13,7 +13,7 @@
     "item": "quark:polished_myalite",
     "count": 4
   },
-  "conditions": [
+  "neoforge:conditions": [
     {
       "type": "quark:flag",
       "flag": "myalite"

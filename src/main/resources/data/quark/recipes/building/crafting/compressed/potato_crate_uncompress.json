@@ -9,7 +9,7 @@
     "item": "minecraft:potato",
     "count": 9
   },
-  "conditions": [
+  "neoforge:conditions": [
     {
       "type": "quark:flag",
         "flag": "potato_crate"

@@ -8,7 +8,7 @@
   ],
   "key": {
     "I": {
-      "tag": "forge:ingots/iron"
+      "tag": "c:ingots/iron"
     },
     "W": {
       "tag": "minecraft:logs"
@@ -17,7 +17,7 @@
   "result": {
     "item": "minecraft:hopper"
   },
-  "conditions": [
+  "neoforge:conditions": [
     {
       "type": "quark:flag",
       "flag": "easy_hopper"

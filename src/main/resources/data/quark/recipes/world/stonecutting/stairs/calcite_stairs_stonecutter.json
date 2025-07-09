@@ -5,7 +5,7 @@
   },
   "result": "quark:calcite_stairs",
   "count": 1,
-  "conditions": [
+  "neoforge:conditions": [
     {
       "type": "quark:flag",
       "flag": "calcite"

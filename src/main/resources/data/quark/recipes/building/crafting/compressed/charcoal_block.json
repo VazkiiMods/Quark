@@ -13,7 +13,7 @@
   "result": {
     "item": "quark:charcoal_block"
   },
-  "conditions": [
+  "neoforge:conditions": [
     {
       "type": "quark:flag",
       "flag": "charcoal_block"

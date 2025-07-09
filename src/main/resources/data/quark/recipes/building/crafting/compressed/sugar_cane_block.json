@@ -13,7 +13,7 @@
   "result": {
     "item": "quark:sugar_cane_block"
   },
-  "conditions": [
+  "neoforge:conditions": [
     {
       "type": "quark:flag",
       "flag": "sugar_cane_block"

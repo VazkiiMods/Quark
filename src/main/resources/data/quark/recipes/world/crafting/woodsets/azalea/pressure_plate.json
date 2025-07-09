@@ -12,7 +12,7 @@
   "result": {
     "item": "quark:azalea_pressure_plate"
   },
-  "conditions": [
+  "neoforge:conditions": [
     {
       "type": "quark:flag",
       "flag": "azalea_wood"

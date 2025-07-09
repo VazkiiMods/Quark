@@ -16,7 +16,7 @@
   "result": {
     "item": "minecraft:smoker"
   },
-  "conditions": [
+  "neoforge:conditions": [
     {
       "type": "quark:flag",
       "flag": "variant_furnaces"

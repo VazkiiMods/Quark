@@ -14,7 +14,7 @@
     "item": "quark:tuff_stairs",
     "count": 4
   },
-  "conditions": [
+  "neoforge:conditions": [
     {
       "type": "quark:flag",
       "flag": "tuff"

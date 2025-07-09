@@ -17,7 +17,7 @@
     "item": "minecraft:cookie",
     "count": 8
   },
-  "conditions": [
+  "neoforge:conditions": [
     {
       "type": "quark:flag",
       "flag": "bent_recipes"

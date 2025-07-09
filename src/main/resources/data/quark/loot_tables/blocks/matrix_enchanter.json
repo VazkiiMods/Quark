@@ -13,7 +13,7 @@
             }
           ],
           "name": "minecraft:enchanting_table",
-          "conditions": [
+          "neoforge:conditions": [
             {
               "condition": "quark:flag",
               "flag": "matrix_enchanting_autoconvert"
@@ -29,7 +29,7 @@
             }
           ],
           "name": "quark:matrix_enchanter",
-          "conditions": [
+          "neoforge:conditions": [
             {
               "condition": "minecraft:inverted",
               "term": {
@@ -40,7 +40,7 @@
           ]
         }
       ],
-      "conditions": [
+      "neoforge:conditions": [
         {
           "condition": "minecraft:survives_explosion"
         }

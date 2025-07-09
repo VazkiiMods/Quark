@@ -2,7 +2,7 @@
   "parent": "minecraft:nether/brew_potion",
   "criteria": {
     "tame_foxhound": {
-      "conditions": {
+      "neoforge:conditions": {
         "entity": {
           "type": "quark:foxhound"
         }
@@ -30,7 +30,7 @@
       "tame_foxhound"
     ]
   ],
-  "conditions": [
+  "neoforge:conditions": [
     {
       "type": "quark:advancement_flag",
       "flag": "foxhound"

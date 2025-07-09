@@ -9,7 +9,7 @@
           "name": "quark:framed_glass_pane"
         }
       ],
-      "conditions": [
+      "neoforge:conditions": [
         {
           "condition": "minecraft:survives_explosion"
         }

@@ -6,7 +6,7 @@
       "entries": [
         {
           "type": "minecraft:item",
-          "conditions": [
+          "neoforge:conditions": [
             {
               "condition": "minecraft:block_state_property",
               "block": "quark:azalea_door",
@@ -18,7 +18,7 @@
           "name": "quark:azalea_door"
         }
       ],
-      "conditions": [
+      "neoforge:conditions": [
         {
           "condition": "minecraft:survives_explosion"
         }

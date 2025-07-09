@@ -13,7 +13,7 @@
   "result": {
     "item": "quark:nether_wart_sack"
   },
-  "conditions": [
+  "neoforge:conditions": [
     {
       "type": "quark:flag",
       "flag": "nether_wart_sack"

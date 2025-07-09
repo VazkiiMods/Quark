@@ -12,7 +12,7 @@
     "item": "quark:torch_arrow",
     "count": 1
   },
-  "conditions": [
+  "neoforge:conditions": [
     {
       "type": "quark:flag",
       "flag": "torch_arrow"

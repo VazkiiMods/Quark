@@ -25,7 +25,7 @@
       "pathfinder_map_center"
     ]
   ],
-  "conditions": [
+  "neoforge:conditions": [
     {
       "type": "quark:advancement_flag",
       "flag": "pathfinder_maps"

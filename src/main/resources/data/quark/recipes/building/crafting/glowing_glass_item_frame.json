@@ -11,7 +11,7 @@
   "result": {
     "item": "quark:glowing_glass_item_frame"
   },
-  "conditions": [
+  "neoforge:conditions": [
     {
       "type": "quark:flag",
       "flag": "glass_item_frame"

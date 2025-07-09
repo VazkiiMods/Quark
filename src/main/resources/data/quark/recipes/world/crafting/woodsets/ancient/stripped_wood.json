@@ -14,7 +14,7 @@
     "item": "quark:stripped_ancient_wood",
     "count": 3
   },
-  "conditions": [
+  "neoforge:conditions": [
     {
       "type": "quark:flag",
       "flag": "ancient_wood"

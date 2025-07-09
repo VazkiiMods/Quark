@@ -14,7 +14,7 @@
     "item": "quark:ancient_planks_stairs",
     "count": 4
   },
-  "conditions": [
+  "neoforge:conditions": [
     {
       "type": "quark:flag",
       "flag": "ancient_wood"

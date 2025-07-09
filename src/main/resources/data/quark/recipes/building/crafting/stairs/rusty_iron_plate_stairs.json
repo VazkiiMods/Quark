@@ -14,7 +14,7 @@
     "item": "quark:rusty_iron_plate_stairs",
     "count": 4
   },
-  "conditions": [
+  "neoforge:conditions": [
     {
       "type": "quark:flag",
       "flag": "iron_plates"

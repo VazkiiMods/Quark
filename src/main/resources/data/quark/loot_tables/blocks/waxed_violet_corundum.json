@@ -9,7 +9,7 @@
           "name": "quark:waxed_violet_corundum"
         }
       ],
-      "conditions": [
+      "neoforge:conditions": [
         {
           "condition": "minecraft:survives_explosion"
         }

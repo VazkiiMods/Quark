@@ -10,7 +10,7 @@
     "item": "quark:blossom_planks",
     "count": 4
   },
-  "conditions": [
+  "neoforge:conditions": [
     {
       "type": "quark:flag",
       "flag": "blossom_trees"

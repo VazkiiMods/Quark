@@ -15,7 +15,7 @@
           "name": "quark:feeding_trough"
         }
       ],
-      "conditions": [
+      "neoforge:conditions": [
         {
           "condition": "minecraft:survives_explosion"
         }

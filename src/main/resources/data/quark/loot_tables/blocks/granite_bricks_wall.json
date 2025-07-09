@@ -9,7 +9,7 @@
           "name": "quark:granite_bricks_wall"
         }
       ],
-      "conditions": [
+      "neoforge:conditions": [
         {
           "condition": "minecraft:survives_explosion"
         }

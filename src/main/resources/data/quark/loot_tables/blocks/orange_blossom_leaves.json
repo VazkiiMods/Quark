@@ -9,14 +9,14 @@
           "children": [
             {
               "type": "minecraft:item",
-              "conditions": [
+              "neoforge:conditions": [
                 {
                   "condition": "minecraft:any_of",
                   "terms": [
                     {
                       "condition": "minecraft:match_tool",
                       "predicate": {
-                        "tag": "forge:shears"
+                        "tag": "neoforge:shears"
                       }
                     },
                     {
@@ -39,7 +39,7 @@
             },
             {
               "type": "minecraft:item",
-              "conditions": [
+              "neoforge:conditions": [
                 {
                   "condition": "minecraft:survives_explosion"
                 },

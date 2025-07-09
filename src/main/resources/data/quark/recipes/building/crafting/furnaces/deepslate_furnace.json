@@ -13,7 +13,7 @@
   "result": {
     "item": "quark:deepslate_furnace"
   },
-  "conditions": [
+  "neoforge:conditions": [
       {
         "type": "quark:flag",
         "flag": "variant_furnaces"

@@ -15,7 +15,7 @@
           "name": "quark:deepslate_furnace"
         }
       ],
-      "conditions": [
+      "neoforge:conditions": [
         {
           "condition": "minecraft:survives_explosion"
         }

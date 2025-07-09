@@ -13,7 +13,7 @@
     "item": "quark:cobblestone_bricks",
     "count": 4
   },
-  "conditions": [
+  "neoforge:conditions": [
     {
       "type": "quark:flag",
       "flag": "cobblestone_bricks"

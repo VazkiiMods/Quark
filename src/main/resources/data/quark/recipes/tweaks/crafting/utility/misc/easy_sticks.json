@@ -13,7 +13,7 @@
     "item": "minecraft:stick",
     "count": 16
   },
-  "conditions": [
+  "neoforge:conditions": [
     {
       "type": "quark:flag",
       "flag": "easy_sticks"

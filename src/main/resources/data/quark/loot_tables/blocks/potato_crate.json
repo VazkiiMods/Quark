@@ -9,7 +9,7 @@
           "name": "quark:potato_crate"
         }
       ],
-      "conditions": [
+      "neoforge:conditions": [
         {
           "condition": "minecraft:survives_explosion"
         }

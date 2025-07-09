@@ -28,7 +28,7 @@
       "get_own_head"
     ]
   ],
-  "conditions": [
+  "neoforge:conditions": [
     {
       "type": "quark:advancement_flag",
       "flag": "snow_golem_player_heads"

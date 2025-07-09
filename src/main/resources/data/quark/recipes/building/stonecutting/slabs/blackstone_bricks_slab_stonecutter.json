@@ -5,7 +5,7 @@
   },
   "result": "quark:blackstone_bricks_slab",
   "count": 2,
-  "conditions": [
+  "neoforge:conditions": [
     {
       "type": "quark:flag",
       "flag": "blackstone_bricks"

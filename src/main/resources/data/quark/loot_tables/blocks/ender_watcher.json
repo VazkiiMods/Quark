@@ -9,7 +9,7 @@
           "name": "quark:ender_watcher"
         }
       ],
-      "conditions": [
+      "neoforge:conditions": [
         {
           "condition": "minecraft:survives_explosion"
         }

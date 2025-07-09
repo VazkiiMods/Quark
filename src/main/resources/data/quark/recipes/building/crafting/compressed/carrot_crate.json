@@ -13,7 +13,7 @@
   "result": {
     "item": "quark:carrot_crate"
   },
-  "conditions": [
+  "neoforge:conditions": [
     {
       "type": "quark:flag",
       "flag": "carrot_crate"

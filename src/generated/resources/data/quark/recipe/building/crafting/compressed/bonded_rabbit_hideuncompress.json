@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    {
+      "item": "quark:bonded_rabbit_hide"
+    }
+  ],
+  "result": {
+    "count": 9,
+    "id": "minecraft:rabbit_hide"
+  }
+}

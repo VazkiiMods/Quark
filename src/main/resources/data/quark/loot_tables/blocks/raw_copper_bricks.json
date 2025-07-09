@@ -9,7 +9,7 @@
           "name": "quark:raw_copper_bricks"
         }
       ],
-      "conditions": [
+      "neoforge:conditions": [
         {
           "condition": "minecraft:survives_explosion"
         }

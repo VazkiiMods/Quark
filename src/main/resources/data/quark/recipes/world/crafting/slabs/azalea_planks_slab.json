@@ -12,7 +12,7 @@
     "item": "quark:azalea_planks_slab",
     "count": 6
   },
-  "conditions": [
+  "neoforge:conditions": [
     {
       "type": "quark:flag",
       "flag": "azalea_wood"

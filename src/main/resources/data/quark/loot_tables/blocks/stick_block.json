@@ -9,7 +9,7 @@
           "name": "quark:stick_block"
         }
       ],
-      "conditions": [
+      "neoforge:conditions": [
         {
           "condition": "minecraft:survives_explosion"
         }

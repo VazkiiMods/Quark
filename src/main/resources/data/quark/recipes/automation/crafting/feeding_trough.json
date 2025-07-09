@@ -15,7 +15,7 @@
   "result": {
     "item": "quark:feeding_trough"
   },
-  "conditions": [
+  "neoforge:conditions": [
     {
       "type": "quark:flag",
       "flag": "feeding_trough"

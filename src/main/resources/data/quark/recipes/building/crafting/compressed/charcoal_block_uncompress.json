@@ -9,7 +9,7 @@
     "item": "minecraft:charcoal",
     "count": 9
   },
-  "conditions": [
+  "neoforge:conditions": [
     {
       "type": "quark:flag",
         "flag": "charcoal_block"

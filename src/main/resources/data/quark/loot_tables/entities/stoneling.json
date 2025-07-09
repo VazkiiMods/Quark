@@ -8,7 +8,7 @@
           "type": "minecraft:item",
           "weight": 1,
           "name": "quark:diamond_heart",
-          "conditions": [
+          "neoforge:conditions": [
             {
               "condition": "quark:flag",
               "flag": "stoneling_drop_diamond_heart"
@@ -31,7 +31,7 @@
               "tag": "{\"targetBiome\":\"quark:glimmering_weald\",\"targetBiomeColor\":-13535930}"
             }
           ],
-          "conditions": [
+          "neoforge:conditions": [
             {
               "condition": "quark:flag",
               "flag": "pathfinder_maps"

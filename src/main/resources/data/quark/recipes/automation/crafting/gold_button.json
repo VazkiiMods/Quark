@@ -5,13 +5,13 @@
       "tag": "minecraft:wooden_buttons"
     },
     {
-      "tag": "forge:ingots/gold"
+      "tag": "c:ingots/gold"
     }
   ],
   "result": {
     "item": "quark:gold_button"
   },
-  "conditions": [
+  "neoforge:conditions": [
     {
       "type": "quark:flag",
       "flag": "gold_metal_button"

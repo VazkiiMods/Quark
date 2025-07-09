@@ -14,7 +14,7 @@
   "result": {
     "item": "minecraft:red_dye"
   },
-  "conditions": [
+  "neoforge:conditions": [
     {
       "type": "quark:flag",
       "flag": "coral_to_dye"

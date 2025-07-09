@@ -9,7 +9,7 @@
           "name": "quark:tuff_bricks"
         }
       ],
-      "conditions": [
+      "neoforge:conditions": [
         {
           "condition": "minecraft:survives_explosion"
         }

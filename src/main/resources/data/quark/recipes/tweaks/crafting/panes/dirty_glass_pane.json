@@ -13,7 +13,7 @@
     "item": "quark:dirty_glass_pane",
     "count": 16
   },
-  "conditions": [
+  "neoforge:conditions": [
     {
       "type": "quark:flag",
       "flag": "glass_shard"

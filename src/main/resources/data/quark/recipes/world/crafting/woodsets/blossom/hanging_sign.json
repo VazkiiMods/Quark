@@ -18,7 +18,7 @@
     "item": "quark:blossom_hanging_sign",
     "count": 6
   },
-  "conditions": [
+  "neoforge:conditions": [
     {
       "type": "quark:flag",
       "flag": "blossom_trees"

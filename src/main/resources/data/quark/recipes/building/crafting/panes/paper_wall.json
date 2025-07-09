@@ -17,7 +17,7 @@
     "item": "quark:paper_wall",
     "count": 6
   },
-  "conditions": [
+  "neoforge:conditions": [
     {
       "type": "quark:flag",
       "flag": "paper_decor"

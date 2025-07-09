@@ -9,7 +9,7 @@
           "functions": [
             {
               "add": false,
-              "conditions": [
+              "neoforge:conditions": [
                 {
                   "block": "quark:water_pink_petals",
                   "condition": "minecraft:block_state_property",
@@ -23,7 +23,7 @@
             },
             {
               "add": false,
-              "conditions": [
+              "neoforge:conditions": [
                 {
                   "block": "quark:water_pink_petals",
                   "condition": "minecraft:block_state_property",
@@ -37,7 +37,7 @@
             },
             {
               "add": false,
-              "conditions": [
+              "neoforge:conditions": [
                 {
                   "block": "quark:water_pink_petals",
                   "condition": "minecraft:block_state_property",
@@ -51,7 +51,7 @@
             },
             {
               "add": false,
-              "conditions": [
+              "neoforge:conditions": [
                 {
                   "block": "quark:water_pink_petals",
                   "condition": "minecraft:block_state_property",

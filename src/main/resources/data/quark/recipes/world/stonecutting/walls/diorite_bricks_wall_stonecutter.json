@@ -5,7 +5,7 @@
   },
   "result": "quark:diorite_bricks_wall",
   "count": 1,
-  "conditions": [
+  "neoforge:conditions": [
     {
       "type": "quark:flag",
       "flag": "more_stone_variants"

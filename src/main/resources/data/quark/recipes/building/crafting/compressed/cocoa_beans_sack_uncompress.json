@@ -9,7 +9,7 @@
     "item": "minecraft:cocoa_beans",
     "count": 9
   },
-  "conditions": [
+  "neoforge:conditions": [
     {
       "type": "quark:flag",
         "flag": "cocoa_beans_sack"

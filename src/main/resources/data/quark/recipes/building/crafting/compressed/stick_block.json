@@ -13,7 +13,7 @@
   "result": {
     "item": "quark:stick_block"
   },
-  "conditions": [
+  "neoforge:conditions": [
     {
       "type": "quark:flag",
       "flag": "stick_block"

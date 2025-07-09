@@ -13,7 +13,7 @@
   "result": {
     "item": "quark:golden_apple_crate"
   },
-  "conditions": [
+  "neoforge:conditions": [
     {
       "type": "quark:flag",
       "flag": "golden_apple_crate"

@@ -13,7 +13,7 @@
     "item": "quark:grate",
     "count": 1
   },
-  "conditions": [
+  "neoforge:conditions": [
     {
       "type": "quark:flag",
       "flag": "grate"

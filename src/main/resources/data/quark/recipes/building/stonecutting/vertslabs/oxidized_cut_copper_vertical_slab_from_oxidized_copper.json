@@ -5,7 +5,7 @@
   },
   "result": "quark:oxidized_cut_copper_vertical_slab",
   "count": 8,
-  "conditions": [
+  "neoforge:conditions": [
     {
       "type": "quark:flag",
       "flag": "vertical_slabs"

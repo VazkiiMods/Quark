@@ -1,0 +1,27 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "redstone",
+  "key": {
+    "A": {
+      "item": "minecraft:amethyst_block"
+    },
+    "D": {
+      "item": "minecraft:blue_dye"
+    },
+    "G": {
+      "tag": "c:dusts/glowstone"
+    },
+    "R": {
+      "tag": "c:dusts/redstone"
+    }
+  },
+  "pattern": [
+    " D ",
+    "RAR",
+    " G "
+  ],
+  "result": {
+    "count": 1,
+    "id": "quark:indigo_crystal_lamp"
+  }
+}

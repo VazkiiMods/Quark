@@ -9,7 +9,7 @@
     "item": "minecraft:chorus_fruit",
     "count": 9
   },
-  "conditions": [
+  "neoforge:conditions": [
     {
       "type": "quark:flag",
         "flag": "chorus_fruit_block"

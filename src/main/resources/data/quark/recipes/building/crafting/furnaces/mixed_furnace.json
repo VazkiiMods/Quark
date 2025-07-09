@@ -1,7 +1,7 @@
 {
   "type": "quark:mixed_exclusion",
   "subtype": "furnace",
-  "conditions": [
+  "neoforge:conditions": [
     {
       "type": "quark:flag",
       "flag": "variant_chests"

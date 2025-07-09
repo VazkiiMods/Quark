@@ -8,7 +8,7 @@
   ],
   "key": {
     "#": {
-      "tag": "forge:rods/wooden"
+      "tag": "c:rods/wooden"
     },
     "X": {
       "item": "minecraft:redstone"
@@ -20,7 +20,7 @@
   "result": {
     "item": "minecraft:repeater"
   },
-  "conditions": [
+  "neoforge:conditions": [
     {
       "type": "quark:flag",
       "flag": "repeater_and_torches"

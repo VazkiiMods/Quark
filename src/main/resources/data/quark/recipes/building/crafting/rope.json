@@ -14,7 +14,7 @@
     "item": "quark:rope",
     "count": 3
   },
-  "conditions": [
+  "neoforge:conditions": [
     {
       "type": "quark:flag",
       "flag": "rope"

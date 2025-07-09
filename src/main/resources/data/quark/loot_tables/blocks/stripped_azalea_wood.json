@@ -9,7 +9,7 @@
           "name": "quark:stripped_azalea_wood"
         }
       ],
-      "conditions": [
+      "neoforge:conditions": [
         {
           "condition": "minecraft:survives_explosion"
         }

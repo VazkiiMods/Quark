@@ -7,7 +7,7 @@
   ],
   "key": {
     "#": {
-      "tag": "forge:rods/wooden"
+      "tag": "c:rods/wooden"
     },
     "X": {
       "tag": "quark:stone_tool_materials"
@@ -16,7 +16,7 @@
   "result": {
     "item": "minecraft:stone_shovel"
   },
-  "conditions": [
+  "neoforge:conditions": [
     {
       "type": "quark:flag",
       "flag": "better_stone_tools"

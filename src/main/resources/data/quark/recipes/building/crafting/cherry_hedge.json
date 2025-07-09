@@ -16,7 +16,7 @@
     "item": "quark:cherry_hedge",
     "count": 2
   },
-  "conditions": [
+  "neoforge:conditions": [
     {
       "type": "quark:flag",
       "flag": "hedges"

@@ -25,7 +25,7 @@
       "retreive_flamerang"
     ]
   ],
-  "conditions": [
+  "neoforge:conditions": [
     {
       "type": "quark:advancement_flag",
       "flag": "flamerang"

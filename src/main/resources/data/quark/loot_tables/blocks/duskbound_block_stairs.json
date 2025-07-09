@@ -9,7 +9,7 @@
           "name": "quark:duskbound_block_stairs"
         }
       ],
-      "conditions": [
+      "neoforge:conditions": [
         {
           "condition": "minecraft:survives_explosion"
         }
