@@ -224,10 +224,11 @@ public abstract class AbstractPickarang<T extends AbstractPickarang<T>> extends 
 				&& equivalentHardness >= 0
 				&& !isBlockBlackListead(state)) || player.getAbilities().instabuild) {
 
-				if(player.gameMode.destroyBlock(hit))
+				if(player.gameMode.destroyBlock(hit)) {
 					level().levelEvent(null, LevelEvent.PARTICLES_DESTROY_BLOCK, hit, Block.getId(state));
-				else
+				} else {
 					clank(result);
+				}
 
 				setStack(player.getInventory().getSelected());
 
