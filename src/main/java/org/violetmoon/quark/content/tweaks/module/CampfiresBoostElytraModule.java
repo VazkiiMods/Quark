@@ -12,6 +12,7 @@ import net.minecraft.world.level.block.CampfireBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
 
+import org.violetmoon.quark.content.building.module.GrateModule;
 import org.violetmoon.zeta.config.Config;
 import org.violetmoon.zeta.event.bus.PlayEvent;
 import org.violetmoon.zeta.event.play.entity.player.ZPlayerTick;
@@ -43,7 +44,7 @@ public class CampfiresBoostElytraModule extends ZetaModule {
 				Level world = player.level();
 
 				int moves = 0;
-				while(world.isEmptyBlock(pos) && world.isInWorldBounds(pos) && moves < 20) {
+				while((world.isEmptyBlock(pos) || world.getBlockState(pos).getBlock().equals(GrateModule.grate)) && world.isInWorldBounds(pos) && moves < 20) {
 					pos = pos.below();
 					moves++;
 				}
@@ -57,7 +58,7 @@ public class CampfiresBoostElytraModule extends ZetaModule {
 						force -= (force * (1.0 - ((double) moves - 16.0) / 4.0));
 
 					if(block == Blocks.SOUL_CAMPFIRE)
-						force *= -1.5;
+						force *= -1.5; // Hey, maybe we consider a less violent multiplier?
 
 					player.setDeltaMovement(motion.x(), Math.min(maxSpeed, motion.y() + force), motion.z());
 				}
