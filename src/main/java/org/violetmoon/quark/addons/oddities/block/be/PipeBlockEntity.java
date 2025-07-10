@@ -7,6 +7,7 @@ import net.minecraft.core.HolderLookup;
 import net.minecraft.core.particles.DustParticleOptions;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
+import net.minecraft.nbt.Tag;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
@@ -31,6 +32,7 @@ import org.jetbrains.annotations.NotNull;
 import org.joml.Vector3f;
 import org.violetmoon.quark.addons.oddities.block.pipe.BasePipeBlock;
 import org.violetmoon.quark.addons.oddities.module.PipesModule;
+import org.violetmoon.quark.base.Quark;
 import org.violetmoon.quark.base.handler.QuarkSounds;
 import org.violetmoon.zeta.util.MiscUtil;
 import org.violetmoon.zeta.util.SimpleInventoryBlockEntity;
@@ -148,12 +150,14 @@ public class PipeBlockEntity extends SimpleInventoryBlockEntity {
 			}
 			iterating = false;
 
-			pipeItems.addAll(queuedItems);
-			if(!queuedItems.isEmpty())
+			if(!queuedItems.isEmpty()) {
 				sync();
-
-			queuedItems.clear();
+				pipeItems.addAll(queuedItems);
+				queuedItems.clear();
+			}
 		}
+
+
 
 		if(getComparatorOutput() != currentOut)
 			level.updateNeighbourForOutputSignal(getBlockPos(), getBlockState().getBlock());
@@ -550,7 +554,8 @@ public class PipeBlockEntity extends SimpleInventoryBlockEntity {
 		}
 
 		public void writeToNBT(CompoundTag cmp, HolderLookup.Provider provider) {
-			if (!stack.isEmpty()) stack.save(provider, cmp);
+			if (!stack.isEmpty()) cmp.merge((CompoundTag) stack.save(provider));
+			stack.save(provider, cmp);
 			cmp.putInt(TAG_TICKS, ticksInPipe);
 			cmp.putInt(TAG_INCOMING, incomingFace.ordinal());
 			cmp.putInt(TAG_OUTGOING, outgoingFace.ordinal());
@@ -560,10 +565,7 @@ public class PipeBlockEntity extends SimpleInventoryBlockEntity {
 		}
 
 		public static PipeItem readFromNBT(CompoundTag cmp, HolderLookup.Provider provider) {
-			ItemStack stack = ItemStack.EMPTY;
-			if (cmp.contains("id")) {
-				 stack = ItemStack.parseOptional(provider, cmp);
-			}
+			ItemStack stack = ItemStack.parseOptional(provider, cmp);
 			Direction inFace = Direction.values()[cmp.getInt(TAG_INCOMING)];
 			long rngSeed = cmp.getLong(TAG_RNG_SEED);
 
