@@ -52,7 +52,7 @@ public class GoldToolsHaveFortuneModule extends ZetaModule {
 	@Config(description = "Enchantments other than Gold's Fortune/Looting to bake into items. Format is \"item+enchant@level\", such as \"minecraft:stick+minecraft:sharpness@10\".")
 	public static List<String> itemEnchantments = Lists.newArrayList();
 
-	public static final Map<Item, Object2IntMap<String>> BUILTIN_ENCHANTMENTS = new HashMap<>();
+	public static final Map<Item, Object2IntMap<ResourceKey<Enchantment>>> BUILTIN_ENCHANTMENTS = new HashMap<>();
 
 	@Hint(key = "gold_tool_fortune", content = "fortuneLevel")
 	List<Item> gold_tools = Arrays.asList(Items.GOLDEN_AXE, Items.GOLDEN_HOE, Items.GOLDEN_PICKAXE, Items.GOLDEN_SHOVEL, Items.GOLDEN_SWORD);
@@ -81,17 +81,17 @@ public class GoldToolsHaveFortuneModule extends ZetaModule {
 				String[] enchantment = configPair[1].split("@");
 				if (enchantment.length != 2) continue;
 
-				Object2IntMap<String> entry = BUILTIN_ENCHANTMENTS.computeIfAbsent(item, it -> new Object2IntArrayMap<>());
-				entry.computeIfAbsent(enchantment[0], ench -> Integer.parseInt(enchantment[1]));
+				ResourceKey<Enchantment> enchantmentKey = ResourceKey.create(Registries.ENCHANTMENT, ResourceLocation.parse(enchantment[0]));
+				Object2IntMap<ResourceKey<Enchantment>> entry = BUILTIN_ENCHANTMENTS.computeIfAbsent(item, it -> new Object2IntArrayMap<>());
+				entry.computeIfAbsent(enchantmentKey, ench -> Integer.parseInt(enchantment[1]));
 			}
 		}
 
 		if (fortuneLevel > 0) {
 			for (Item item : BuiltInRegistries.ITEM) {
 				if (item instanceof TieredItem tiered && tiered.getTier() == Tiers.GOLD) {
-					String enchantment = item instanceof SwordItem ? Enchantments.LOOTING.location().toString() : Enchantments.FORTUNE.location().toString();
-					Object2IntMap<String> entry = BUILTIN_ENCHANTMENTS.computeIfAbsent(item, it -> new Object2IntArrayMap<>());
-					entry.computeIfAbsent(enchantment, ench -> fortuneLevel);
+					Object2IntMap<ResourceKey<Enchantment>> entry = BUILTIN_ENCHANTMENTS.computeIfAbsent(item, it -> new Object2IntArrayMap<>());
+					entry.computeIfAbsent(item instanceof SwordItem ? Enchantments.LOOTING : Enchantments.FORTUNE, ench -> fortuneLevel);
 				}
 			}
 		}
@@ -112,11 +112,11 @@ public class GoldToolsHaveFortuneModule extends ZetaModule {
 	public static int getActualEnchantmentLevel(Holder<Enchantment> holder, ItemStack stack, int original) {
 		if (!staticEnabled) return original;
 
-		if (GoldToolsHaveFortuneModule.BUILTIN_ENCHANTMENTS.containsKey(stack.getItem())) {
-			Object2IntMap<String> enchantmentList = BUILTIN_ENCHANTMENTS.get(stack.getItem());
+		if (BUILTIN_ENCHANTMENTS.containsKey(stack.getItem())) {
+			Object2IntMap<ResourceKey<Enchantment>> enchantmentList = BUILTIN_ENCHANTMENTS.get(stack.getItem());
 
-			if (enchantmentList.containsKey(holder.getRegisteredName())) {
-				int level = enchantmentList.getOrDefault(holder.getRegisteredName(), 0);
+			if (enchantmentList.containsKey(holder.getKey())) {
+				int level = enchantmentList.getOrDefault(holder.getKey(), 0);
 				return Math.max(level, original);
 			}
 		}
@@ -126,15 +126,15 @@ public class GoldToolsHaveFortuneModule extends ZetaModule {
 	public static ItemStack createTooltipStack(ItemStack stack, DataComponentType<?> componentType, HolderLookup.Provider provider) {
 		if (!staticEnabled || !displayBakedEnchantmentsInTooltip || componentType != DataComponents.ENCHANTMENTS) return stack;
 
-		if (GoldToolsHaveFortuneModule.BUILTIN_ENCHANTMENTS.containsKey(stack.getItem())) {
+		if (BUILTIN_ENCHANTMENTS.containsKey(stack.getItem())) {
 			ItemStack copy = stack.copy();
-			Object2IntMap<String> builtInEnchantments = GoldToolsHaveFortuneModule.BUILTIN_ENCHANTMENTS.get(stack.getItem());
+			Object2IntMap<ResourceKey<Enchantment>> builtInEnchantments = BUILTIN_ENCHANTMENTS.get(stack.getItem());
 			ItemEnchantments itemEnchantments = Optional.ofNullable(copy.get(DataComponents.ENCHANTMENTS)).orElse(ItemEnchantments.EMPTY);
 			ItemEnchantments.Mutable newEnchantments = new ItemEnchantments.Mutable(itemEnchantments);
 
-			for (String enchantmentName : builtInEnchantments.keySet()) {
-				Holder<Enchantment> holder = provider.lookupOrThrow(Registries.ENCHANTMENT).getOrThrow(ResourceKey.create(Registries.ENCHANTMENT, ResourceLocation.parse(enchantmentName)));
-				newEnchantments.set(holder, Math.max(newEnchantments.getLevel(holder), builtInEnchantments.getOrDefault(enchantmentName, 0)));
+			for (ResourceKey<Enchantment> enchantmentKey : builtInEnchantments.keySet()) {
+				Holder<Enchantment> holder = provider.lookupOrThrow(Registries.ENCHANTMENT).getOrThrow(enchantmentKey);
+				newEnchantments.set(holder, Math.max(newEnchantments.getLevel(holder), builtInEnchantments.getOrDefault(enchantmentKey, 0)));
 			}
 
 			copy.set(DataComponents.ENCHANTMENTS, newEnchantments.toImmutable());
@@ -146,12 +146,12 @@ public class GoldToolsHaveFortuneModule extends ZetaModule {
 	public static void modifyTooltip(ItemStack stack, List<Component> list, HolderLookup.Provider provider) {
 		if (!displayBakedEnchantmentsInTooltip || !italicTooltip) return;
 
-		if (GoldToolsHaveFortuneModule.BUILTIN_ENCHANTMENTS.containsKey(stack.getItem())) {
-			Object2IntMap<String> builtInEnchantments = GoldToolsHaveFortuneModule.BUILTIN_ENCHANTMENTS.get(stack.getItem());
+		if (BUILTIN_ENCHANTMENTS.containsKey(stack.getItem())) {
+			Object2IntMap<ResourceKey<Enchantment>> builtInEnchantments = BUILTIN_ENCHANTMENTS.get(stack.getItem());
 
-			for (String enchantmentName : builtInEnchantments.keySet()) {
-				Holder<Enchantment> holder = provider.lookupOrThrow(Registries.ENCHANTMENT).getOrThrow(ResourceKey.create(Registries.ENCHANTMENT, ResourceLocation.parse(enchantmentName)));
-				int level = builtInEnchantments.getInt(enchantmentName);
+			for (ResourceKey<Enchantment> enchantmentKey : builtInEnchantments.keySet()) {
+				Holder<Enchantment> holder = provider.lookupOrThrow(Registries.ENCHANTMENT).getOrThrow(enchantmentKey);
+				int level = builtInEnchantments.getInt(enchantmentKey);
 				Component enchantmentEntry = Enchantment.getFullname(holder, level);
 				if (list.contains(enchantmentEntry)) {
 					int index = list.indexOf(enchantmentEntry);
