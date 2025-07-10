@@ -1,5 +1,6 @@
 package org.violetmoon.quark.content.building.module;
 
+import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderers;
 import net.minecraft.core.Holder;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -36,6 +37,8 @@ import org.violetmoon.quark.content.building.client.render.be.VariantChestRender
 import org.violetmoon.quark.mixin.mixins.accessor.AccessorAbstractChestedHorse;
 import org.violetmoon.zeta.client.SimpleWithoutLevelRenderer;
 import org.violetmoon.zeta.client.event.load.ZClientSetup;
+import org.violetmoon.zeta.client.event.load.ZRegisterClientExtension;
+import org.violetmoon.zeta.client.extensions.IZetaClientItemExtensions;
 import org.violetmoon.zeta.config.Config;
 import org.violetmoon.zeta.event.bus.LoadEvent;
 import org.violetmoon.zeta.event.bus.PlayEvent;
@@ -278,11 +281,28 @@ public class VariantChestsModule extends ZetaModule {
 			BlockEntityRenderers.register(chestTEType, ctx -> new VariantChestRenderer(ctx, false));
 			BlockEntityRenderers.register(trappedChestTEType, ctx -> new VariantChestRenderer(ctx, true));
 
-			for(Block b : regularChests) QuarkClient.ZETA_CLIENT.setBlockEntityWithoutLevelRenderer(b.asItem(), new SimpleWithoutLevelRenderer(chestTEType, b.defaultBlockState()));
-			for(Block b : trappedChests) QuarkClient.ZETA_CLIENT.setBlockEntityWithoutLevelRenderer(b.asItem(), new SimpleWithoutLevelRenderer(trappedChestTEType, b.defaultBlockState()));
-
 			QuarkClient.LOOTR_INTEGRATION.clientSetup(event);
 		}
 
+		@LoadEvent
+		public void setItemExtensions(ZRegisterClientExtension event) {
+			for (Block b : regularChests) {
+				event.registerItem(new IZetaClientItemExtensions() {
+					@Override
+					public BlockEntityWithoutLevelRenderer getBEWLR() {
+						return new SimpleWithoutLevelRenderer(chestTEType, b.defaultBlockState());
+					}
+				}, b.asItem());
+			}
+
+			for (Block b : trappedChests) {
+				event.registerItem(new IZetaClientItemExtensions() {
+					@Override
+					public BlockEntityWithoutLevelRenderer getBEWLR() {
+						return new SimpleWithoutLevelRenderer(trappedChestTEType, b.defaultBlockState());
+					}
+				}, b.asItem());
+			}
+		}
 	}
 }

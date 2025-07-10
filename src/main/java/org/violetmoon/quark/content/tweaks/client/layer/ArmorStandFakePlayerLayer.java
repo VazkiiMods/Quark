@@ -46,7 +46,7 @@ public class ArmorStandFakePlayerLayer<M extends EntityModel<ArmorStand>> extend
 		if(!UsesForCursesModule.staticEnabled || !UsesForCursesModule.bindArmorStandsWithPlayerHeads) return;
 
 		ItemStack head = armor.getItemBySlot(EquipmentSlot.HEAD);
-		if(head.is(Items.PLAYER_HEAD) && EnchantmentHelper.has(head, EnchantmentEffectComponents.PREVENT_ARMOR_CHANGE)) {
+		if(head.is(Items.PLAYER_HEAD) && EnchantmentHelper.has(head, EnchantmentEffectComponents.PREVENT_ARMOR_CHANGE) && head.has(DataComponents.PROFILE)) {
 
 			GameProfile profile = head.get(DataComponents.PROFILE).gameProfile();
 			RenderType rendertype = SkullBlockRenderer.getRenderType(SkullBlock.Types.PLAYER, new ResolvableProfile(profile));
@@ -92,7 +92,6 @@ public class ArmorStandFakePlayerLayer<M extends EntityModel<ArmorStand>> extend
 
 				pose.popPose();
 			}
-
 		}
 	}
 

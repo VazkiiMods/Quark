@@ -368,14 +368,16 @@ public class AncientTomesModule extends ZetaModule {
 	}
 
 	private static boolean isOverlevel(ItemStack stack) {
-		ItemEnchantments enchantments = stack.get(DataComponents.ENCHANTMENTS);
-		for(Holder<Enchantment> enchant : enchantments.keySet()) {
-			if(enchant == null)
-				continue;
+		if (stack.has(DataComponents.ENCHANTMENTS)) {
+			ItemEnchantments enchantments = stack.get(DataComponents.ENCHANTMENTS);
+			for (Holder<Enchantment> enchant : enchantments.keySet()) {
+				if (enchant == null)
+					continue;
 
-			int level = enchantments.getLevel(enchant);
-			if(level > enchant.value().getMaxLevel()) {
-				return true;
+				int level = enchantments.getLevel(enchant);
+				if (level > enchant.value().getMaxLevel()) {
+					return true;
+				}
 			}
 		}
 
@@ -495,7 +497,7 @@ public class AncientTomesModule extends ZetaModule {
 				ItemStack currentStack = container.getItem(tradeSlot);
 
 				if(!ItemStack.isSameItemSameComponents(inSlot, offer.getResult()) &&
-						!inSlot.isEmpty() && (currentStack.isEmpty() ? offer.satisfiedBy(inSlot, targetStack) : ItemStack.isSameItemSameComponents(targetStack, inSlot))) {
+						!inSlot.isEmpty() && (currentStack.isEmpty() ? offer.satisfiedBy(inSlot, targetStack) : net.minecraft.world.item.ItemStack.isSameItemSameComponents(targetStack, inSlot))) {
 					int currentCount = currentStack.isEmpty() ? 0 : currentStack.getCount();
 					int amountToTake = Math.min(targetStack.getMaxStackSize() - currentCount, inSlot.getCount());
 					ItemStack newStack = inSlot.copy();

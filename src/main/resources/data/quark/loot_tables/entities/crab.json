@@ -5,7 +5,7 @@
       "name": "shell",
       "neoforge:conditions": [
         {
-          "condition": "quark:flag",
+          "condition": "zeta:flag",
           "flag": "crab_brewing"
         },
         {

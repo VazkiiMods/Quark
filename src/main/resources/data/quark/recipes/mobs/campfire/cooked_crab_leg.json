@@ -1,9 +1,0 @@
-{
-  "type": "minecraft:campfire_cooking",
-  "ingredient": {
-    "item": "quark:crab_leg"
-  },
-  "result": "quark:cooked_crab_leg",
-  "experience": 0.35,
-  "cookingtime": 600
-}

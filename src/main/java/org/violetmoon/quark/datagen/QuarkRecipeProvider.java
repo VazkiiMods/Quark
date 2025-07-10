@@ -47,14 +47,14 @@ public class QuarkRecipeProvider extends RecipeProvider implements IConditionBui
     @Override
     protected void buildRecipes(RecipeOutput recipeOutput){
         //Automation
-        /*ShapedRecipeBuilder.shaped(RecipeCategory.REDSTONE, ChuteModule.chute)
+        ShapedRecipeBuilder.shaped(RecipeCategory.REDSTONE, ChuteModule.chute)
                 .pattern("WWW")
                 .pattern("SWS")
                 .pattern(" S ")
                 .define('W', ItemTags.PLANKS)
                 .define('S', Tags.Items.RODS_WOODEN)
                 .unlockedBy("test", PlayerTrigger.TriggerInstance.tick())
-                .save(recipeOutput, "quark:automation/crafting/chute");*/
+                .save(recipeOutput.withConditions(new FlagCondition("chute", Optional.empty())), "quark:automation/crafting/chute");
         //crafter is vanilla now :)
         ShapedRecipeBuilder.shaped(RecipeCategory.REDSTONE, EnderWatcherModule.ender_watcher)
                 .pattern("BRB")

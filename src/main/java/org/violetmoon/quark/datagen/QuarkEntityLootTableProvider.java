@@ -5,6 +5,7 @@ import net.minecraft.advancements.critereon.NbtPredicate;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.loot.EntityLootSubProvider;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.flag.FeatureFlags;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.storage.loot.LootContext;
@@ -17,12 +18,16 @@ import net.minecraft.world.level.storage.loot.functions.SmeltItemFunction;
 import net.minecraft.world.level.storage.loot.predicates.*;
 import net.minecraft.world.level.storage.loot.providers.number.ConstantValue;
 import net.minecraft.world.level.storage.loot.providers.number.UniformGenerator;
+import org.jetbrains.annotations.NotNull;
 import org.violetmoon.quark.content.mobs.client.model.StonelingModel;
 import org.violetmoon.quark.content.mobs.client.model.ToretoiseModel;
 import org.violetmoon.quark.content.mobs.entity.Stoneling;
 import org.violetmoon.quark.content.mobs.entity.Toretoise;
 import org.violetmoon.quark.content.mobs.module.*;
 import org.violetmoon.quark.content.tools.module.PathfinderMapsModule;
+
+import java.util.List;
+import java.util.stream.Stream;
 
 public class QuarkEntityLootTableProvider extends EntityLootSubProvider {
     //TODO config conditions
@@ -32,9 +37,9 @@ public class QuarkEntityLootTableProvider extends EntityLootSubProvider {
     static {
         stonelingNotMade.putBoolean(Stoneling.TAG_PLAYER_MADE, false);
     }
+
     protected QuarkEntityLootTableProvider(HolderLookup.Provider registries) {
         super(FeatureFlags.REGISTRY.allFlags(), FeatureFlags.REGISTRY.allFlags(), registries);
-        //I'm not sure why this constructor takes two FeatureFlagSets - Partonetrain
     }
 
 
@@ -117,7 +122,11 @@ public class QuarkEntityLootTableProvider extends EntityLootSubProvider {
                                 .apply(EnchantedCountIncreaseFunction.lootingMultiplier(this.registries, UniformGenerator.between(0F, 1F)))
                 )
         );
+    }
 
-
+    @Override
+    protected @NotNull Stream<EntityType<?>> getKnownEntityTypes() {
+        List<EntityType<?>> list = List.of(CrabsModule.crabType, ForgottenModule.forgottenType, FoxhoundModule.foxhoundType, StonelingsModule.stonelingType, ToretoiseModule.toretoiseType, WraithModule.wraithType);
+        return list.stream();
     }
 }

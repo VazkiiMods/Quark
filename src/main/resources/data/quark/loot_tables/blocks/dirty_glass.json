@@ -30,7 +30,7 @@
               "type": "minecraft:item",
               "neoforge:conditions": [
                 {
-                  "condition": "quark:flag",
+                  "condition": "zeta:flag",
                   "flag": "glass_shard"
                 }
               ],

@@ -10,7 +10,7 @@
           "name": "quark:diamond_heart",
           "neoforge:conditions": [
             {
-              "condition": "quark:flag",
+              "condition": "zeta:flag",
               "flag": "stoneling_drop_diamond_heart"
             }
           ]
@@ -33,15 +33,15 @@
           ],
           "neoforge:conditions": [
             {
-              "condition": "quark:flag",
+              "condition": "zeta:flag",
               "flag": "pathfinder_maps"
             },
             {
-              "condition": "quark:flag",
+              "condition": "zeta:flag",
               "flag": "glimmering_weald"
             },
             {
-              "condition": "quark:flag",
+              "condition": "zeta:flag",
               "flag": "stoneling_weald_pathfinder"
             },
             {

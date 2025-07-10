@@ -17,7 +17,10 @@ import org.violetmoon.quark.content.mobs.client.render.entity.ForgottenRenderer;
 import org.violetmoon.quark.content.mobs.entity.Forgotten;
 import org.violetmoon.quark.content.mobs.item.ForgottenHatItem;
 import org.violetmoon.zeta.advancement.modifier.MonsterHunterModifier;
+import org.violetmoon.zeta.client.HumanoidArmorModelGetter;
 import org.violetmoon.zeta.client.event.load.ZClientSetup;
+import org.violetmoon.zeta.client.event.load.ZRegisterClientExtension;
+import org.violetmoon.zeta.client.extensions.IZetaClientItemExtensions;
 import org.violetmoon.zeta.config.Config;
 import org.violetmoon.zeta.event.bus.LoadEvent;
 import org.violetmoon.zeta.event.bus.PlayEvent;
@@ -100,11 +103,17 @@ public class ForgottenModule extends ZetaModule {
 		public final void clientSetup(ZClientSetup event) {
 			event.enqueueWork(() -> {
 				EntityRenderers.register(forgottenType, ForgottenRenderer::new);
-
-				//QuarkClient.ZETA_CLIENT.setHumanoidArmorModel(forgotten_hat, (living, stack, slot, original) -> ModelHandler.armorModel(ModelHandler.forgotten_hat, slot));
 			});
 		}
 
+		@LoadEvent
+		public void setItemExtensions(ZRegisterClientExtension event) {
+			event.registerItem(new IZetaClientItemExtensions() {
+				@Override
+				public HumanoidArmorModelGetter getHumanoidArmorModel() {
+					return (living, stack, slot, original) -> ModelHandler.armorModel(ModelHandler.forgotten_hat, slot);
+				}
+			}, forgotten_hat);
+		}
 	}
-
 }
