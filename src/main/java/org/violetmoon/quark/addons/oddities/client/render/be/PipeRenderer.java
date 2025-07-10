@@ -26,6 +26,7 @@ import org.violetmoon.quark.addons.oddities.block.be.PipeBlockEntity;
 import org.violetmoon.quark.addons.oddities.block.be.PipeBlockEntity.ConnectionType;
 import org.violetmoon.quark.addons.oddities.block.be.PipeBlockEntity.PipeItem;
 import org.violetmoon.quark.addons.oddities.module.PipesModule;
+import org.violetmoon.quark.addons.oddities.module.TinyPotatoModule;
 import org.violetmoon.quark.base.Quark;
 
 import java.util.Iterator;
@@ -84,6 +85,8 @@ public class PipeRenderer implements BlockEntityRenderer<PipeBlockEntity> {
 	private void renderItem(PipeItem item, ItemRenderer render, PoseStack matrix, MultiBufferSource buffer, float partial, int light, int overlay, Level level) {
 		matrix.pushPose();
 
+		boolean taterFlag = item.stack.getItem().equals(TinyPotatoModule.tiny_potato.asItem());
+
 		float scale = 0.4F;
 		float fract = item.getTimeFract(partial);
 		float shiftFract = fract - 0.5F;
@@ -96,8 +99,12 @@ public class PipeRenderer implements BlockEntityRenderer<PipeBlockEntity> {
 		float offZ = (face.getStepZ() * 1F);
 		matrix.translate(offX * shiftFract, offY * shiftFract, offZ * shiftFract);
 
+		if (taterFlag) {
+			matrix.translate(0, 0.225, 0);
+			scale = 1.5f;
+		}
 		matrix.scale(scale, scale, scale);
-
+		
 		float speed = 4F;
 		matrix.mulPose(Axis.YP.rotationDegrees((item.timeInWorld + partial) * speed));
 

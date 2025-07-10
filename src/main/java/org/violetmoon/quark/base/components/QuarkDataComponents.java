@@ -147,7 +147,7 @@ public class QuarkDataComponents {
 
     //todo: Probably should transfer this to an actual specialized thing.
     public static DataComponentType<CustomData> STACK_MATRIX = register(
-            Quark.asResource("enchanting_matrix"), builder -> builder.persistent(CustomData.CODEC_WITH_ID).networkSynchronized(CustomData.STREAM_CODEC)
+            Quark.asResource("enchanting_matrix"), builder -> builder.persistent(CustomData.CODEC).networkSynchronized(CustomData.STREAM_CODEC)
     );
 
     public static DataComponentType<Boolean> EXCITED = register(

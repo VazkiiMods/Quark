@@ -3,6 +3,7 @@ package org.violetmoon.quark.addons.oddities.client.screen;
 import com.mojang.blaze3d.platform.Window;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
+import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.ObjectSelectionList;
 import net.minecraft.client.renderer.GameRenderer;
@@ -45,8 +46,8 @@ public class MatrixEnchantingPieceList extends ObjectSelectionList<MatrixEnchant
 
 	@Override
 	public void renderWidget(@NotNull GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTicks) {
-		int i = this.getScrollbarPosition();
-		int j = i + 6;
+		int scrollbarStartX = this.getScrollbarPosition();
+		int scrollbarEndX = scrollbarStartX + 6;
 
 		guiGraphics.fill(getX(), getY(), getX() + getWidth() + 1, getY() + getHeight(), 0xFF2B2B2B);
 
@@ -55,26 +56,42 @@ public class MatrixEnchantingPieceList extends ObjectSelectionList<MatrixEnchant
 		RenderSystem.enableScissor(getX() * res, (main.getGuiScaledHeight() - getBottom()) * res, getWidth() * res, getHeight() * res);
 		renderListItems(guiGraphics, mouseX, mouseY, partialTicks);
 		RenderSystem.disableScissor();
-		renderScroll(guiGraphics, i, j);
+		renderScroll(guiGraphics, scrollbarStartX, scrollbarEndX);
 	}
 
 	protected int getMaxScroll2() {
 		return Math.max(0, this.getMaxPosition() - (this.getHeight() - this.getY() - 4));
 	}
 
-	private void renderScroll(GuiGraphics guiGraphics, int i, int j) {
-		int j1 = this.getMaxScroll2();
-		if(j1 > 0) {
-			int k1 = (int) ((float) ((this.getHeight() - this.getY()) * (this.getHeight() - this.getY())) / (float) this.getMaxPosition());
-			k1 = Mth.clamp(k1, 32, this.getHeight() - this.getY() - 8);
-			int l1 = (int) this.getScrollAmount() * (this.getHeight() -  this.getY() - k1) / j1 + this.getY();
-			if(l1 < this.getY()) {
-				l1 = this.getY();
+	/**
+	 * The method that renders the scrollbar. Note that you do NOT send in the y-pos or the height of the scrollbar. Thats all calculated here.
+	 * @param guiGraphics GuiGraphics object, needed to actually render stuff.
+	 * @param scrollbarStartX The starting x-pos of the scrollbar.
+	 * @param scrollbarEndX The ending x-pos of the scrollbar.
+	 */
+	private void renderScroll(GuiGraphics guiGraphics, int scrollbarStartX, int scrollbarEndX) {
+		int maxScrollHeight = this.getMaxScroll2(); //?
+		if(maxScrollHeight > 0) {
+			int diff = (this.getY() - this.getHeight());
+			int scrollbarSize = (int) ((float) (diff * diff) / (float) this.getMaxPosition());
+			scrollbarSize = Math.clamp(scrollbarSize, 32, this.getHeight() - 8);
+			// Lerping function. The (getScrollAmount/getMaxScroll()) is equivalent to T
+            int scrollbarYPos = (int) ((this.getY() + scrollbarSize) + (this.getHeight() - scrollbarSize) * (this.getScrollAmount() / getMaxScroll()));
+			if(scrollbarYPos < this.getY()) {
+			//	scrollbarYPos = this.getY();
 			}
 
-			guiGraphics.fill(i, getHeight(), j, getY(), 0xFF000000);
-			guiGraphics.fill(i, (l1 + k1), j, l1, 0xFF818181);
-			guiGraphics.fill(i, (l1 + k1 - 1), j - 1, l1, 0xFFc0c0c0);
+			guiGraphics.drawString(this.parent.getMinecraft().font, "getY: " + this.getY(),4,4,0xFFFFFF);
+			guiGraphics.drawString(this.parent.getMinecraft().font, "getHeight: " + this.getHeight(),4,16,0xFFFFFF);
+			guiGraphics.drawString(this.parent.getMinecraft().font, "maxScrollHeight: " + maxScrollHeight,4,28,0xFFFFFF);
+			guiGraphics.drawString(this.parent.getMinecraft().font, "scrollbarStartX: " + scrollbarStartX,4,40,0xFFFFFF);
+			guiGraphics.drawString(this.parent.getMinecraft().font, "scrollbarEndX: " + scrollbarEndX,4,52,0xFFFFFF);
+			guiGraphics.drawString(this.parent.getMinecraft().font, "scrollbarSize: " + scrollbarSize,4,64,0xFFFFFF);
+			guiGraphics.drawString(this.parent.getMinecraft().font, "scrollbarYPos: " + scrollbarYPos,4,76,0xFFFFFF);
+
+			//guiGraphics.fill(scrollbarStartX, getHeight(), scrollbarEndX, getY(), 0xFF000000);
+			guiGraphics.fill(scrollbarStartX, (scrollbarYPos - scrollbarSize), scrollbarEndX, scrollbarYPos, 0xFF818181);
+			guiGraphics.fill(scrollbarStartX, (scrollbarYPos - scrollbarSize - 1), scrollbarEndX - 1, scrollbarYPos, 0xFFc0c0c0);
 		}
 	}
 
