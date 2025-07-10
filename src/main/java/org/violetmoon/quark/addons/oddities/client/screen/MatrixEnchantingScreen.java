@@ -115,7 +115,7 @@ public class MatrixEnchantingScreen extends AbstractContainerScreen<MatrixEnchan
 		if(enchanter.bookshelfPower > 0) {
 			pose.pushPose();
 			guiGraphics.renderItem(new ItemStack(Items.BOOK), x, y);
-			pose.translate(0, 0, 1000);
+			pose.translate(0, 0, 200);
 	
 			x -= font.width(text) / 2;
 	

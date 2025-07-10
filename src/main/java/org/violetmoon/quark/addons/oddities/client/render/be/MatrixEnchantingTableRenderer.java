@@ -96,7 +96,7 @@ public class MatrixEnchantingTableRenderer implements BlockEntityRenderer<Matrix
 		float f6 = Mth.lerp(partialTicks, tileEntityIn.bookSpreadPrev, tileEntityIn.bookSpread);
 		this.modelBook.setupAnim(f, Mth.clamp(f4, 0.0F, 1.0F), Mth.clamp(f5, 0.0F, 1.0F), f6);
 		VertexConsumer ivertexbuilder = TEXTURE_BOOK.buffer(bufferIn, RenderType::entitySolid);
-		this.modelBook.renderToBuffer(matrixStackIn, ivertexbuilder, combinedLightIn, combinedOverlayIn, 1);
+		this.modelBook.render(matrixStackIn, ivertexbuilder, combinedLightIn, combinedOverlayIn, -1);
 		matrixStackIn.popPose();
 	}
 }

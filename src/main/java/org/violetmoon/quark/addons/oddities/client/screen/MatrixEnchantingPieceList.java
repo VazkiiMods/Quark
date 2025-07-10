@@ -18,7 +18,7 @@ public class MatrixEnchantingPieceList extends ObjectSelectionList<MatrixEnchant
 	private final int listWidth;
 
 	public MatrixEnchantingPieceList(MatrixEnchantingScreen parent, int listWidth, int listHeight, int top, int bottom, int entryHeight) {
-		super(parent.getMinecraft(), listWidth, listHeight, top, bottom);
+		super(parent.getMinecraft(), listWidth, listHeight, top, entryHeight);
 		this.listWidth = listWidth;
 		this.parent = parent;
 	}
@@ -70,28 +70,25 @@ public class MatrixEnchantingPieceList extends ObjectSelectionList<MatrixEnchant
 	 * @param scrollbarEndX The ending x-pos of the scrollbar.
 	 */
 	private void renderScroll(GuiGraphics guiGraphics, int scrollbarStartX, int scrollbarEndX) {
-		int maxScrollHeight = this.getMaxScroll2(); //?
+		int maxScrollHeight = this.getMaxScroll2();
 		if(maxScrollHeight > 0) {
 			int diff = (this.getY() - this.getHeight());
 			int scrollbarSize = (int) ((float) (diff * diff) / (float) this.getMaxPosition());
 			scrollbarSize = Math.clamp(scrollbarSize, 32, this.getHeight() - 8);
 			// Lerping function. The (getScrollAmount/getMaxScroll()) is equivalent to T
             int scrollbarYPos = (int) ((this.getY() + scrollbarSize) + (this.getHeight() - scrollbarSize) * (this.getScrollAmount() / getMaxScroll()));
-			if(scrollbarYPos < this.getY()) {
-			//	scrollbarYPos = this.getY();
-			}
 
-			guiGraphics.drawString(this.parent.getMinecraft().font, "getY: " + this.getY(),4,4,0xFFFFFF);
+			/*guiGraphics.drawString(this.parent.getMinecraft().font, "getY: " + this.getY(),4,4,0xFFFFFF);
 			guiGraphics.drawString(this.parent.getMinecraft().font, "getHeight: " + this.getHeight(),4,16,0xFFFFFF);
 			guiGraphics.drawString(this.parent.getMinecraft().font, "maxScrollHeight: " + maxScrollHeight,4,28,0xFFFFFF);
 			guiGraphics.drawString(this.parent.getMinecraft().font, "scrollbarStartX: " + scrollbarStartX,4,40,0xFFFFFF);
 			guiGraphics.drawString(this.parent.getMinecraft().font, "scrollbarEndX: " + scrollbarEndX,4,52,0xFFFFFF);
 			guiGraphics.drawString(this.parent.getMinecraft().font, "scrollbarSize: " + scrollbarSize,4,64,0xFFFFFF);
-			guiGraphics.drawString(this.parent.getMinecraft().font, "scrollbarYPos: " + scrollbarYPos,4,76,0xFFFFFF);
+			guiGraphics.drawString(this.parent.getMinecraft().font, "scrollbarYPos: " + scrollbarYPos,4,76,0xFFFFFF);*/
 
-			//guiGraphics.fill(scrollbarStartX, getHeight(), scrollbarEndX, getY(), 0xFF000000);
+			guiGraphics.fill(scrollbarStartX, this.getY()+getHeight(), scrollbarEndX, getY(), 0xFF000000);
 			guiGraphics.fill(scrollbarStartX, (scrollbarYPos - scrollbarSize), scrollbarEndX, scrollbarYPos, 0xFF818181);
-			guiGraphics.fill(scrollbarStartX, (scrollbarYPos - scrollbarSize - 1), scrollbarEndX - 1, scrollbarYPos, 0xFFc0c0c0);
+			guiGraphics.fill(scrollbarStartX, (scrollbarYPos - scrollbarSize), scrollbarEndX - 1, scrollbarYPos, 0xFFc0c0c0);
 		}
 	}
 
