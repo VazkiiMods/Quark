@@ -1,7 +1,6 @@
 package org.violetmoon.quark.content.management.client.screen;
 
 import com.mojang.blaze3d.systems.RenderSystem;
-
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
@@ -14,10 +13,8 @@ import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-
 import org.jetbrains.annotations.NotNull;
 import org.lwjgl.glfw.GLFW;
-
 import org.violetmoon.quark.addons.oddities.module.BackpackModule;
 import org.violetmoon.quark.api.IQuarkButtonAllowed;
 import org.violetmoon.quark.content.management.inventory.HeldShulkerBoxMenu;
@@ -26,8 +23,8 @@ public class HeldShulkerBoxScreen extends AbstractContainerScreen<HeldShulkerBox
 
 	private static final ResourceLocation CONTAINER_TEXTURE = ResourceLocation.withDefaultNamespace("textures/gui/container/shulker_box.png");
 
-	public HeldShulkerBoxScreen(HeldShulkerBoxMenu p_99240_, Inventory p_99241_, Component p_99242_) {
-		super(p_99240_, p_99241_, p_99242_);
+	public HeldShulkerBoxScreen(HeldShulkerBoxMenu menu, Inventory playerInventory, Component component) {
+		super(menu, playerInventory, component);
 	}
 
 	@Override
