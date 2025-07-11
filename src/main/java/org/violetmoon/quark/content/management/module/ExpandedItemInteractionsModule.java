@@ -23,12 +23,7 @@ import net.minecraft.world.inventory.ClickAction;
 import net.minecraft.world.inventory.InventoryMenu;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.inventory.Slot;
-import net.minecraft.world.item.ArmorItem;
-import net.minecraft.world.item.BlockItem;
-import net.minecraft.world.item.ElytraItem;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
+import net.minecraft.world.item.*;
 import net.minecraft.world.item.component.BundleContents;
 import net.minecraft.world.item.component.CustomData;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
@@ -96,7 +91,7 @@ public class ExpandedItemInteractionsModule extends ZetaModule {
 
 	@LoadEvent
 	public final void register(ZRegister event) {
-		heldShulkerBoxMenuType = IMenuTypeExtension.create(HeldShulkerBoxMenu::fromNetwork);
+		heldShulkerBoxMenuType = IMenuTypeExtension.create(HeldShulkerBoxMenu::new);
 		Quark.ZETA.registry.register(heldShulkerBoxMenuType, "held_shulker_box", Registries.MENU);
 	}
 
@@ -267,7 +262,7 @@ public class ExpandedItemInteractionsModule extends ZetaModule {
 			int lockedSlot = slot.getSlotIndex();
 			if(player instanceof ServerPlayer splayer) {
 				HeldShulkerBoxContainer container = new HeldShulkerBoxContainer(splayer, lockedSlot);
-				player.openMenu(container);
+				player.openMenu(container, packet -> packet.writeInt(lockedSlot));
 			} else
 				player.playSound(SoundEvents.SHULKER_BOX_OPEN, 1F, 1F);
 
@@ -380,7 +375,6 @@ public class ExpandedItemInteractionsModule extends ZetaModule {
 
 		@LoadEvent
 		public final void clientSetup(ZClientSetup event) {
-
 			AccessorMenuScreens.invokeRegister(heldShulkerBoxMenuType, HeldShulkerBoxScreen::new);
 		}
 
