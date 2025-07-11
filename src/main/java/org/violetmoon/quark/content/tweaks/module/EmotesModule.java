@@ -16,6 +16,7 @@ import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
+import net.neoforged.neoforge.client.gui.VanillaGuiLayers;
 import net.neoforged.neoforge.network.PacketDistributor;
 import org.lwjgl.glfw.GLFW;
 import org.violetmoon.quark.base.QuarkClient;
@@ -276,37 +277,39 @@ public class EmotesModule extends ZetaModule {
 		}
 
 		@PlayEvent
-		public void drawCrosshair(ZRenderGuiOverlay.Crosshair.Post event) {
-			Minecraft mc = Minecraft.getInstance();
-			Window res = event.getWindow();
-			GuiGraphics guiGraphics = event.getGuiGraphics();
-			PoseStack stack = guiGraphics.pose();
-			EmoteBase emote = EmoteHandler.getPlayerEmote(mc.player);
-			if(emote != null && emote.timeDone < emote.totalTime) {
-				ResourceLocation resource = emote.desc.texture;
-				int x = res.getGuiScaledWidth() / 2 - 16;
-				int y = res.getGuiScaledHeight() / 2 - 60;
-				float transparency = 1F;
-				float tween = 5F;
+		public void drawCrosshair(ZRenderGuiOverlay.Post event) {
+			if (event.getLayerName().equals(VanillaGuiLayers.CROSSHAIR)) {
+				Minecraft mc = Minecraft.getInstance();
+				Window res = event.getWindow();
+				GuiGraphics guiGraphics = event.getGuiGraphics();
+				PoseStack stack = guiGraphics.pose();
+				EmoteBase emote = EmoteHandler.getPlayerEmote(mc.player);
+				if (emote != null && emote.timeDone < emote.totalTime) {
+					ResourceLocation resource = emote.desc.texture;
+					int x = res.getGuiScaledWidth() / 2 - 16;
+					int y = res.getGuiScaledHeight() / 2 - 60;
+					float transparency = 1F;
+					float tween = 5F;
 
-				if(emote.timeDone < tween)
-					transparency = emote.timeDone / tween;
-				else if(emote.timeDone > emote.totalTime - tween)
-					transparency = (emote.totalTime - emote.timeDone) / tween;
+					if (emote.timeDone < tween)
+						transparency = emote.timeDone / tween;
+					else if (emote.timeDone > emote.totalTime - tween)
+						transparency = (emote.totalTime - emote.timeDone) / tween;
 
-				stack.pushPose();
-				RenderSystem.setShader(GameRenderer::getPositionTexShader);
-				RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, transparency);
+					stack.pushPose();
+					RenderSystem.setShader(GameRenderer::getPositionTexShader);
+					RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, transparency);
 
-				RenderSystem.enableBlend();
-				RenderSystem.defaultBlendFunc();
+					RenderSystem.enableBlend();
+					RenderSystem.defaultBlendFunc();
 
-				guiGraphics.blit(resource, x, y, 0, 0, 32, 32, 32, 32);
-				RenderSystem.enableBlend();
+					guiGraphics.blit(resource, x, y, 0, 0, 32, 32, 32, 32);
+					RenderSystem.enableBlend();
 
-				String name = I18n.get(emote.desc.getTranslationKey());
-				guiGraphics.drawString(mc.font, name, res.getGuiScaledWidth() / 2f - mc.font.width(name) / 2f, y + 34, 0xFFFFFF + (((int) (transparency * 255F)) << 24), true);
-				stack.popPose();
+					String name = I18n.get(emote.desc.getTranslationKey());
+					guiGraphics.drawString(mc.font, name, res.getGuiScaledWidth() / 2f - mc.font.width(name) / 2f, y + 34, 0xFFFFFF + (((int) (transparency * 255F)) << 24), true);
+					stack.popPose();
+				}
 			}
 		}
 

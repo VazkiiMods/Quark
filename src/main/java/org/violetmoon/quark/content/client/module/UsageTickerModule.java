@@ -18,6 +18,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.ProjectileWeaponItem;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.Enchantments;
+import net.neoforged.neoforge.client.gui.VanillaGuiLayers;
 import net.neoforged.neoforge.common.NeoForge;
 import org.violetmoon.quark.api.IUsageTickerOverride;
 import org.violetmoon.quark.api.event.UsageTickerEvent;
@@ -84,16 +85,18 @@ public class UsageTickerModule extends ZetaModule {
 		}
 
 		@PlayEvent
-		public void renderHUD(ZRenderGuiOverlay.Hotbar.Post event) {
-			Window window = event.getWindow();
-			LocalPlayer player = Minecraft.getInstance().player;
-			float partial = event.getPartialTick().getGameTimeDeltaTicks();
+		public void renderHUD(ZRenderGuiOverlay.Post event) {
+			if (event.getLayerName().equals(VanillaGuiLayers.HOTBAR)) {
+				Window window = event.getWindow();
+				LocalPlayer player = Minecraft.getInstance().player;
+				float partial = event.getPartialTick().getGameTimeDeltaTicks();
 
-			GuiGraphics guiGraphics = event.getGuiGraphics();
+				GuiGraphics guiGraphics = event.getGuiGraphics();
 
-			for(TickerElement ticker : elements)
-				if(ticker != null)
-					ticker.render(guiGraphics, window, player, invert, partial);
+				for (TickerElement ticker : elements)
+					if (ticker != null)
+						ticker.render(guiGraphics, window, player, invert, partial);
+			}
 		}
 
 		public static class TickerElement {

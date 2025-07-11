@@ -13,6 +13,7 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import net.neoforged.neoforge.client.gui.VanillaGuiLayers;
 import net.neoforged.neoforge.network.PacketDistributor;
 import org.lwjgl.opengl.GL11;
 import org.violetmoon.quark.base.QuarkClient;
@@ -63,22 +64,29 @@ public class HotbarChangerModule extends ZetaModule {
 		}
 
 		@PlayEvent
-		public void hudHeathPre(ZRenderGuiOverlay.PlayerHealth.Pre event) {
-			float shift = -getRealHeight(event.getPartialTick().getGameTimeDeltaTicks()) + 22;
-			if(shift < 0) {
-				event.getGuiGraphics().pose().translate(0, shift, 0);
-				shifting = true;
+		public void hudHeathPre(ZRenderGuiOverlay.Pre event) {
+			if (event.getLayerName().equals(VanillaGuiLayers.PLAYER_HEALTH)) {
+				float shift = -getRealHeight(event.getPartialTick().getGameTimeDeltaTicks()) + 22;
+				if (shift < 0) {
+					event.getGuiGraphics().pose().translate(0, shift, 0);
+					shifting = true;
+				}
 			}
 		}
 
 		@PlayEvent
-		public void hudDebugTextPre(ZRenderGuiOverlay.DebugText.Pre event) {
-			hudOverlay(event);
+		public void hudDebugTextPre(ZRenderGuiOverlay.Pre event) {
+			if (event.getLayerName().equals(VanillaGuiLayers.DEBUG_OVERLAY)) {
+				hudOverlay(event);
+			}
 		}
 
+		//?
 		@PlayEvent
-		public void hudPotionIconsPre(ZRenderGuiOverlay.PotionIcons.Pre event) {
-			hudOverlay(event);
+		public void hudPotionIconsPre(ZRenderGuiOverlay.Pre event) {
+			if (event.getLayerName().equals(VanillaGuiLayers.EFFECTS)) {
+				hudOverlay(event);
+			}
 		}
 
 		public void hudOverlay(ZRenderGuiOverlay event) {
@@ -90,59 +98,61 @@ public class HotbarChangerModule extends ZetaModule {
 		}
 
 		@PlayEvent
-		public void hudPost(ZRenderGuiOverlay.Hotbar.Pre event) {
-			if(height <= 0)
-				return;
+		public void hudPost(ZRenderGuiOverlay.Pre event) {
+			if (event.getLayerName().equals(VanillaGuiLayers.HOTBAR)) {
+				if (height <= 0)
+					return;
 
-			Minecraft mc = Minecraft.getInstance();
-			Player player = mc.player;
-			GuiGraphics guiGraphics = event.getGuiGraphics();
-			PoseStack matrix = guiGraphics.pose();
+				Minecraft mc = Minecraft.getInstance();
+				Player player = mc.player;
+				GuiGraphics guiGraphics = event.getGuiGraphics();
+				PoseStack matrix = guiGraphics.pose();
 
-			matrix.pushPose();
-			matrix.translate(0,0, -500);
-			RenderSystem.enableDepthTest();
-
-			Window res = event.getWindow();
-			float realHeight = getRealHeight(event.getPartialTick().getGameTimeDeltaTicks());
-			float xStart = res.getGuiScaledWidth() / 2f - 91;
-			float yStart = res.getGuiScaledHeight() - realHeight;
-
-			RenderSystem.enableBlend();
-			RenderSystem.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
-
-			RenderSystem.setShader(GameRenderer::getPositionTexShader);
-			for(int i = 0; i < 3; i++) {
 				matrix.pushPose();
-				RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 0.05f);
-				matrix.translate(xStart, yStart + i * 21, 0);
-				guiGraphics.blit(HOTBAR, 0, 0, 0, 0, 182, 22, 182, 22);
-				matrix.popPose();
-			}
+				matrix.translate(0, 0, -500);
+				RenderSystem.enableDepthTest();
 
-			RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
+				Window res = event.getWindow();
+				float realHeight = getRealHeight(event.getPartialTick().getGameTimeDeltaTicks());
+				float xStart = res.getGuiScaledWidth() / 2f - 91;
+				float yStart = res.getGuiScaledHeight() - realHeight;
 
-			for(int i = 0; i < 3; i++) {
-				String draw = Integer.toString(i + 1);
-				KeyMapping key = mc.options.keyHotbarSlots[i];
-				if(!key.isUnbound()) {
-					draw = key.getTranslatedKeyMessage().getString();
+				RenderSystem.enableBlend();
+				RenderSystem.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+
+				RenderSystem.setShader(GameRenderer::getPositionTexShader);
+				for (int i = 0; i < 3; i++) {
+					matrix.pushPose();
+					RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 0.75F);
+					matrix.translate(xStart, yStart + i * 21, 0);
+					guiGraphics.blit(HOTBAR, 0, 0, 0, 0, 182, 22, 182, 22);
+					matrix.popPose();
 				}
 
-				draw = ChatFormatting.BOLD + draw;
+				RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
 
-				guiGraphics.drawString(mc.font, draw, xStart - mc.font.width(draw) - 2, yStart + i * 21 + 7, 0xFFFFFF, true);
+				for (int i = 0; i < 3; i++) {
+					String draw = Integer.toString(i + 1);
+					KeyMapping key = mc.options.keyHotbarSlots[i];
+					if (!key.isUnbound()) {
+						draw = key.getTranslatedKeyMessage().getString();
+					}
+
+					draw = ChatFormatting.BOLD + draw;
+
+					guiGraphics.drawString(mc.font, draw, xStart - mc.font.width(draw) - 2, yStart + i * 21 + 7, 0xFFFFFF, true);
+				}
+
+				for (int i = 0; i < 27; i++) {
+					ItemStack invStack = player.getInventory().getItem(i + 9);
+					int x = (int) (xStart + (i % 9) * 20 + 3);
+					int y = (int) (yStart + (i / 9) * 21 + 3);
+
+					guiGraphics.renderItem(invStack, x, y);
+					guiGraphics.renderItemDecorations(mc.font, invStack, x, y);
+				}
+				matrix.popPose();
 			}
-
-			for(int i = 0; i < 27; i++) {
-				ItemStack invStack = player.getInventory().getItem(i + 9);
-				int x = (int) (xStart + (i % 9) * 20 + 3);
-				int y = (int) (yStart + (i / 9) * 21 + 3);
-
-				guiGraphics.renderItem(invStack, x, y);
-				guiGraphics.renderItemDecorations(mc.font, invStack, x, y);
-			}
-			matrix.popPose();
 		}
 
 		@PlayEvent

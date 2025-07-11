@@ -29,6 +29,7 @@ import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.biome.Biomes;
 import net.minecraft.world.level.storage.loot.functions.LootItemFunctionType;
 import net.minecraft.world.level.storage.loot.predicates.LootItemConditionType;
+import net.neoforged.neoforge.client.gui.VanillaGuiLayers;
 import org.jetbrains.annotations.NotNull;
 import org.violetmoon.quark.base.Quark;
 import org.violetmoon.quark.catnip.animation.AnimationTickHolder;
@@ -366,8 +367,8 @@ public class PathfinderMapsModule extends ZetaModule {
 		}
 
 		@PlayEvent
-		public void drawHUD(ZRenderGuiOverlay.Hotbar.Post event) {
-			if(drawHud) {
+		public void drawHUD(ZRenderGuiOverlay.Post event) {
+			if(drawHud && event.getLayerName().equals(VanillaGuiLayers.HOTBAR)) {
 				Minecraft mc = Minecraft.getInstance();
 
 				GuiGraphics guiGraphics = event.getGuiGraphics();

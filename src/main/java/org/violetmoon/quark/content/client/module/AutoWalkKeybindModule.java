@@ -9,10 +9,12 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.player.Input;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.resources.language.I18n;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
 
+import net.neoforged.neoforge.client.gui.VanillaGuiLayers;
 import org.violetmoon.quark.base.QuarkClient;
 import org.violetmoon.zeta.client.event.load.ZKeyMapping;
 import org.violetmoon.zeta.client.event.play.ZInput;
@@ -57,8 +59,8 @@ public class AutoWalkKeybindModule extends ZetaModule {
 		}
 
 		@PlayEvent
-		public void drawHUD(ZRenderGuiOverlay.Hotbar.Post event) {
-			if(drawHud && autorunning) {
+		public void drawHUD(ZRenderGuiOverlay.Post event) {
+			if(drawHud && event.getLayerName().equals(VanillaGuiLayers.HOTBAR) && autorunning) {
 				String message = I18n.get("quark.misc.autowalking");
 
 				GuiGraphics guiGraphics = event.getGuiGraphics();

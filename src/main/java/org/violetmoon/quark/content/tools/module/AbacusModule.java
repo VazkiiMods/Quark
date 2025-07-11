@@ -19,6 +19,7 @@ import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
+import net.neoforged.neoforge.client.gui.VanillaGuiLayers;
 import org.joml.Matrix4f;
 import org.violetmoon.quark.base.Quark;
 import org.violetmoon.quark.base.config.type.RGBAColorConfig;
@@ -59,26 +60,28 @@ public class AbacusModule extends ZetaModule {
 		}
 
 		@PlayEvent
-		public void onHUDRenderPost(ZRenderGuiOverlay.Crosshair.Post event) {
-			Minecraft mc = Minecraft.getInstance();
-			Player player = mc.player;
-			GuiGraphics guiGraphics = event.getGuiGraphics();
-			if(player != null) {
-				ItemStack stack = player.getMainHandItem();
-				if(!(stack.getItem() instanceof AbacusItem))
-					stack = player.getOffhandItem();
+		public void onHUDRenderPost(ZRenderGuiOverlay.Post event) {
+			if (event.getLayerName().equals(VanillaGuiLayers.CROSSHAIR)) {
+				Minecraft mc = Minecraft.getInstance();
+				Player player = mc.player;
+				GuiGraphics guiGraphics = event.getGuiGraphics();
+				if (player != null) {
+					ItemStack stack = player.getMainHandItem();
+					if (!(stack.getItem() instanceof AbacusItem))
+						stack = player.getOffhandItem();
 
-				if(stack.getItem() instanceof AbacusItem) {
-					int distance = AbacusItem.Client.getCount(stack, player);
-					if(distance > -1) {
-						Window window = event.getWindow();
-						int x = window.getGuiScaledWidth() / 2 + 10;
-						int y = window.getGuiScaledHeight() / 2 - 7;
+					if (stack.getItem() instanceof AbacusItem) {
+						int distance = AbacusItem.Client.getCount(stack, player);
+						if (distance > -1) {
+							Window window = event.getWindow();
+							int x = window.getGuiScaledWidth() / 2 + 10;
+							int y = window.getGuiScaledHeight() / 2 - 7;
 
-						guiGraphics.renderItem(stack, x, y);
+							guiGraphics.renderItem(stack, x, y);
 
-						String distStr = distance < AbacusItem.MAX_COUNT ? Integer.toString(distance + 1) : (AbacusItem.MAX_COUNT + "+");
-						guiGraphics.drawString(mc.font, distStr, x + 17, y + 5, 0xFFFFFF, true);
+							String distStr = distance < AbacusItem.MAX_COUNT ? Integer.toString(distance + 1) : (AbacusItem.MAX_COUNT + "+");
+							guiGraphics.drawString(mc.font, distStr, x + 17, y + 5, 0xFFFFFF, true);
+						}
 					}
 				}
 			}

@@ -31,6 +31,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
+import net.neoforged.neoforge.client.gui.VanillaGuiLayers;
 import org.apache.commons.lang3.tuple.Pair;
 import org.violetmoon.quark.base.Quark;
 import org.violetmoon.zeta.client.event.play.ZClientTick;
@@ -195,42 +196,44 @@ public class ReacharoundPlacingModule extends ZetaModule {
 	public static class Client extends ReacharoundPlacingModule {
 
 		@PlayEvent
-		public void onRender(ZRenderGuiOverlay.Crosshair.Post event) {
-			GuiGraphics guiGraphics = event.getGuiGraphics();
+		public void onRender(ZRenderGuiOverlay.Post event) {
+			if (event.equals(VanillaGuiLayers.CROSSHAIR)) {
+				GuiGraphics guiGraphics = event.getGuiGraphics();
 
-			Minecraft mc = Minecraft.getInstance();
-			Player player = mc.player;
+				Minecraft mc = Minecraft.getInstance();
+				Player player = mc.player;
 
-			if(mc.options.hideGui)
-				return;
-			
-			HitResult result = mc.hitResult;
-			if(result instanceof BlockHitResult bhr) {
-				BlockPos hitPos = bhr.getBlockPos();
-				BlockState stateAt = player.level().getBlockState(hitPos);
-				if(!stateAt.isAir())
+				if (mc.options.hideGui)
 					return;
-			}
-				
 
-			if(player != null && currentTarget != null) {
-				Window res = event.getWindow();
-				PoseStack matrix = event.getGuiGraphics().pose();
+				HitResult result = mc.hitResult;
+				if (result instanceof BlockHitResult bhr) {
+					BlockPos hitPos = bhr.getBlockPos();
+					BlockState stateAt = player.level().getBlockState(hitPos);
+					if (!stateAt.isAir())
+						return;
+				}
 
-				boolean vertical = (currentTarget.dir.getAxis() == Axis.Y);
-				ResourceLocation texture = (vertical ? OVERLAY_VERTICAL : OVERLAY_HORIZONTAL);
 
-				RenderSystem.blendFuncSeparate(GlStateManager.SourceFactor.ONE_MINUS_DST_COLOR, GlStateManager.DestFactor.ONE_MINUS_SRC_COLOR, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
+				if (player != null && currentTarget != null) {
+					Window res = event.getWindow();
+					PoseStack matrix = event.getGuiGraphics().pose();
 
-				matrix.pushPose();
-				int x = (res.getGuiScaledWidth() - 15) / 2;
-				int y = (res.getGuiScaledHeight() - 15) / 2;
-				guiGraphics.blit(texture, x, y, 0, 0, 16, 16, 16, 16);
+					boolean vertical = (currentTarget.dir.getAxis() == Axis.Y);
+					ResourceLocation texture = (vertical ? OVERLAY_VERTICAL : OVERLAY_HORIZONTAL);
 
-				matrix.popPose();
+					RenderSystem.blendFuncSeparate(GlStateManager.SourceFactor.ONE_MINUS_DST_COLOR, GlStateManager.DestFactor.ONE_MINUS_SRC_COLOR, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
 
-				RenderSystem.defaultBlendFunc();
+					matrix.pushPose();
+					int x = (res.getGuiScaledWidth() - 15) / 2;
+					int y = (res.getGuiScaledHeight() - 15) / 2;
+					guiGraphics.blit(texture, x, y, 0, 0, 16, 16, 16, 16);
 
+					matrix.popPose();
+
+					RenderSystem.defaultBlendFunc();
+
+				}
 			}
 		}
 

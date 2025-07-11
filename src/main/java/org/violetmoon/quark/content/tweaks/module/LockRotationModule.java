@@ -28,6 +28,7 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.HitResult.Type;
 import net.minecraft.world.phys.Vec3;
+import net.neoforged.neoforge.client.gui.VanillaGuiLayers;
 import net.neoforged.neoforge.network.PacketDistributor;
 import org.violetmoon.quark.api.IRotationLockable;
 import org.violetmoon.quark.base.Quark;
@@ -222,8 +223,9 @@ public class LockRotationModule extends ZetaModule {
 		}
 
 		@PlayEvent
-		public void onHUDRender(ZRenderGuiOverlay.Crosshair.Post event) {
-			if(clientProfile != null) {
+		public void onHUDRender(ZRenderGuiOverlay.Post event) {
+			if (event.getLayerName().equals(VanillaGuiLayers.CROSSHAIR)) {
+				if(clientProfile != null) {
 				GuiGraphics guiGraphics = event.getGuiGraphics();
 
 				RenderSystem.enableBlend();
@@ -243,6 +245,7 @@ public class LockRotationModule extends ZetaModule {
 				if(clientProfile.half > -1)
 					guiGraphics.blit(ClientUtil.GENERAL_ICONS, x + 16, y, clientProfile.half * 16, 79, 16, 16, 256, 256);
 
+				}
 			}
 		}
 	}

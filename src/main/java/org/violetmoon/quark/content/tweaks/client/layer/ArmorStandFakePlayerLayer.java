@@ -56,8 +56,7 @@ public class ArmorStandFakePlayerLayer<M extends EntityModel<ArmorStand>> extend
 				if(profile != null) {
 					PlayerSkin playerSkin = Minecraft.getInstance().getSkinManager().getInsecureSkin(profile);
 					if(playerSkin != null) {
-						String modelMeta = playerSkin.model().id();
-						slim = "slim".equals(modelMeta);
+						slim = playerSkin.model().equals(PlayerSkin.Model.SLIM);
 					}
 				}
 
@@ -88,7 +87,7 @@ public class ArmorStandFakePlayerLayer<M extends EntityModel<ArmorStand>> extend
 				rotateModel(model.leftPants, armor.getLeftLegPose());
 				rotateModel(model.rightPants, armor.getRightLegPose());
 
-				model.renderToBuffer(pose, buffer.getBuffer(rendertype), light, OverlayTexture.NO_OVERLAY, 1);
+				model.renderToBuffer(pose, buffer.getBuffer(rendertype), light, OverlayTexture.NO_OVERLAY, -1);
 
 				pose.popPose();
 			}

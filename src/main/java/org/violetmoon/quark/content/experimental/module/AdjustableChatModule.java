@@ -1,5 +1,6 @@
 package org.violetmoon.quark.content.experimental.module;
 
+import net.neoforged.neoforge.client.gui.VanillaGuiLayers;
 import org.violetmoon.zeta.client.event.play.ZRenderGuiOverlay;
 import org.violetmoon.zeta.config.Config;
 import org.violetmoon.zeta.event.bus.PlayEvent;
@@ -17,13 +18,17 @@ public class AdjustableChatModule extends ZetaModule {
 	public static class Client extends AdjustableChatModule {
 
 		@PlayEvent
-		public void pre(ZRenderGuiOverlay.ChatPanel.Pre event) {
-			event.getGuiGraphics().pose().translate(horizontalShift, verticalShift, 0);
+		public void pre(ZRenderGuiOverlay.Pre event) {
+			if (event.getLayerName().equals(VanillaGuiLayers.CHAT)) {
+				event.getGuiGraphics().pose().translate(horizontalShift, verticalShift, 0);
+			}
 		}
 
 		@PlayEvent
-		public void post(ZRenderGuiOverlay.ChatPanel.Post event) {
-			event.getGuiGraphics().pose().translate(-horizontalShift, -verticalShift, 0);
+		public void post(ZRenderGuiOverlay.Post event) {
+			if (event.getLayerName().equals(VanillaGuiLayers.CHAT)) {
+				event.getGuiGraphics().pose().translate(-horizontalShift, -verticalShift, 0);
+			}
 		}
 	}
 }

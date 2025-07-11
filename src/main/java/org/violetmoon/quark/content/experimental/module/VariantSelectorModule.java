@@ -28,6 +28,7 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
+import net.neoforged.neoforge.client.gui.VanillaGuiLayers;
 import net.neoforged.neoforge.network.PacketDistributor;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -336,100 +337,102 @@ public class VariantSelectorModule extends ZetaModule {
 		}
 
 		@PlayEvent
-		public void onRender(ZRenderGuiOverlay.Crosshair.Pre event) {
-			GuiGraphics guiGraphics = event.getGuiGraphics();
+		public void onRender(ZRenderGuiOverlay.Pre event) {
+			if (event.getLayerName().equals(VanillaGuiLayers.CROSSHAIR)) {
+				GuiGraphics guiGraphics = event.getGuiGraphics();
 
-			Minecraft mc = Minecraft.getInstance();
-			if(mc.screen instanceof VariantSelectorScreen || !showHud)
-				return;
-
-			Player player = mc.player;
-			String savedVariant = getSavedVariant(player);
-
-			ItemStack mainHand = player.getMainHandItem();
-			ItemStack displayLeft = mainHand.copy();
-
-			Block variantBlock = null;
-
-			if(displayLeft.is(hammer)) {
-				HitResult result = mc.hitResult;
-				if(result instanceof BlockHitResult bhr) {
-					BlockPos pos = bhr.getBlockPos();
-					Block testBlock = player.level().getBlockState(pos).getBlock();
-
-					displayLeft = new ItemStack(testBlock);
-					variantBlock = getVariantBlockFromAny(testBlock, savedVariant);
-				}
-			} else
-				variantBlock = getMainHandVariantBlock(player, savedVariant);
-
-			if(variantBlock != null) {
-				ItemStack displayRight = new ItemStack(variantBlock);
-
-				if(displayLeft.getItem() == displayRight.getItem())
+				Minecraft mc = Minecraft.getInstance();
+				if (mc.screen instanceof VariantSelectorScreen || !showHud)
 					return;
 
-				Window window = event.getWindow();
-				int x = window.getGuiScaledWidth() / 2;
-				int y = window.getGuiScaledHeight() / 2 + 12;
+				Player player = mc.player;
+				String savedVariant = getSavedVariant(player);
 
-				if(alignHudToHotbar) {
-					HumanoidArm arm = mc.options.mainHand().get();
-					if(arm == HumanoidArm.RIGHT)
-						x += 125;
-					else
-						x -= 93;
+				ItemStack mainHand = player.getMainHandItem();
+				ItemStack displayLeft = mainHand.copy();
 
-					y = window.getGuiScaledHeight() - 19;
-				}
+				Block variantBlock = null;
 
-				int offset = 8;
-				int width = smallerArrow ? 13 : 16;
+				if (displayLeft.is(hammer)) {
+					HitResult result = mc.hitResult;
+					if (result instanceof BlockHitResult bhr) {
+						BlockPos pos = bhr.getBlockPos();
+						Block testBlock = player.level().getBlockState(pos).getBlock();
 
-				displayLeft.setCount(1);
-
-				int posX = x - offset - width + hudOffsetX;
-				int posY = y + hudOffsetY;
-
-				if(!showSimpleHud) {
-					guiGraphics.renderFakeItem(displayLeft, posX, posY);
-
-					RenderSystem.enableBlend();
-					if(renderLikeCrossHair) {
-						RenderSystem.blendFuncSeparate(GlStateManager.SourceFactor.ONE_MINUS_DST_COLOR, GlStateManager.DestFactor.ONE_MINUS_SRC_COLOR, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
-						RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1);
-					}else{
-						RenderSystem.defaultBlendFunc();
-						RenderSystem.setShaderColor(0.8f, 0.8f, 0.8f, 0.7f);
+						displayLeft = new ItemStack(testBlock);
+						variantBlock = getVariantBlockFromAny(testBlock, savedVariant);
 					}
-					//alternative smaller arrow
-					if(smallerArrow){
-						guiGraphics.blit(ClientUtil.GENERAL_ICONS, posX + 8, posY+5, 0,
-								141+17, 22, 15, 256, 256);
-					}else {
-						guiGraphics.blit(ClientUtil.GENERAL_ICONS, posX + 8, posY, 0,
-								141, 22, 15, 256, 256);
-					}
+				} else
+					variantBlock = getMainHandVariantBlock(player, savedVariant);
 
-					RenderSystem.defaultBlendFunc();
+				if (variantBlock != null) {
+					ItemStack displayRight = new ItemStack(variantBlock);
 
-					posX += width * 2;
-				} else {
-					final ResourceLocation WIDGETS_LOCATION = ResourceLocation.withDefaultNamespace("textures/gui/widget.png"); //TODO this file no longer exists
+					if (displayLeft.getItem() == displayRight.getItem())
+						return;
 
-					if(alignHudToHotbar) {
-						RenderSystem.enableBlend();
-						RenderSystem.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
-						if(enableGreenTint)
-							RenderSystem.setShaderColor(0.5F, 1.0F, 0.5F, 1.0F);
+					Window window = event.getWindow();
+					int x = window.getGuiScaledWidth() / 2;
+					int y = window.getGuiScaledHeight() / 2 + 12;
+
+					if (alignHudToHotbar) {
+						HumanoidArm arm = mc.options.mainHand().get();
+						if (arm == HumanoidArm.RIGHT)
+							x += 125;
 						else
-							RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
-						guiGraphics.blit(WIDGETS_LOCATION, posX - 3, posY - 3, 24, 23, 22, 22, 256, 256);
-					} else
-						posX += width;
-				}
+							x -= 93;
 
-				guiGraphics.renderFakeItem(displayRight, posX, posY);
+						y = window.getGuiScaledHeight() - 19;
+					}
+
+					int offset = 8;
+					int width = smallerArrow ? 13 : 16;
+
+					displayLeft.setCount(1);
+
+					int posX = x - offset - width + hudOffsetX;
+					int posY = y + hudOffsetY;
+
+					if (!showSimpleHud) {
+						guiGraphics.renderFakeItem(displayLeft, posX, posY);
+
+						RenderSystem.enableBlend();
+						if (renderLikeCrossHair) {
+							RenderSystem.blendFuncSeparate(GlStateManager.SourceFactor.ONE_MINUS_DST_COLOR, GlStateManager.DestFactor.ONE_MINUS_SRC_COLOR, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
+							RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1);
+						} else {
+							RenderSystem.defaultBlendFunc();
+							RenderSystem.setShaderColor(0.8f, 0.8f, 0.8f, 0.7f);
+						}
+						//alternative smaller arrow
+						if (smallerArrow) {
+							guiGraphics.blit(ClientUtil.GENERAL_ICONS, posX + 8, posY + 5, 0,
+									141 + 17, 22, 15, 256, 256);
+						} else {
+							guiGraphics.blit(ClientUtil.GENERAL_ICONS, posX + 8, posY, 0,
+									141, 22, 15, 256, 256);
+						}
+
+						RenderSystem.defaultBlendFunc();
+
+						posX += width * 2;
+					} else {
+						final ResourceLocation WIDGETS_LOCATION = ResourceLocation.withDefaultNamespace("textures/gui/widget.png"); //TODO this file no longer exists
+
+						if (alignHudToHotbar) {
+							RenderSystem.enableBlend();
+							RenderSystem.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+							if (enableGreenTint)
+								RenderSystem.setShaderColor(0.5F, 1.0F, 0.5F, 1.0F);
+							else
+								RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
+							guiGraphics.blit(WIDGETS_LOCATION, posX - 3, posY - 3, 24, 23, 22, 22, 256, 256);
+						} else
+							posX += width;
+					}
+
+					guiGraphics.renderFakeItem(displayRight, posX, posY);
+				}
 			}
 		}
 	}
