@@ -6,13 +6,11 @@ import net.minecraft.core.Holder;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleTypes;
-import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.BlockTags;
-import net.minecraft.util.RandomSource;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
@@ -41,7 +39,6 @@ import org.violetmoon.quark.addons.oddities.inventory.EnchantmentMatrix;
 import org.violetmoon.quark.addons.oddities.inventory.EnchantmentMatrix.Piece;
 import org.violetmoon.quark.addons.oddities.inventory.MatrixEnchantingMenu;
 import org.violetmoon.quark.addons.oddities.module.MatrixEnchantingModule;
-import org.violetmoon.quark.addons.oddities.util.Influence;
 import org.violetmoon.quark.addons.oddities.util.InfluenceLocations;
 import org.violetmoon.quark.api.IEnchantmentInfluencer;
 import org.violetmoon.quark.base.Quark;
@@ -217,8 +214,7 @@ public class MatrixEnchantingTableBlockEntity extends AbstractEnchantingTableBlo
 
 			if (stack.has(QuarkDataComponents.STACK_MATRIX)) {
 					CompoundTag cmp = stack.get(QuarkDataComponents.STACK_MATRIX).copyTag();
-					if(cmp != null)
-						matrix.readFromNBT(cmp);
+                	matrix.readFromNBT(cmp);
 				}
 			}
 		}
@@ -382,7 +378,7 @@ public class MatrixEnchantingTableBlockEntity extends AbstractEnchantingTableBlo
 			return influencer;
 		else if(MatrixEnchantingModule.customInfluences.containsKey(state))
 			return MatrixEnchantingModule.customInfluences.get(state);
-		return CandleInfluencer.forBlock(state.getBlock(), world, pos);
+		return CandleInfluencer.forBlock(state, world, pos);
 	}
 
 	@Override
@@ -401,11 +397,11 @@ public class MatrixEnchantingTableBlockEntity extends AbstractEnchantingTableBlo
 		private static final CandleInfluencer INVERTED_INSTANCE = new CandleInfluencer(true);
 
 		@Nullable
-		public static CandleInfluencer forBlock(Block block, Level world, BlockPos pos) {
+		public static CandleInfluencer forBlock(BlockState blockState, Level world, BlockPos pos) {
 			if(MatrixEnchantingModule.candleInfluencingFailed)
 				return null;
 
-			if(CANDLES.contains(block)) {
+			if(CANDLES.contains(blockState.getBlock()) && blockState.getValue(CandleBlock.LIT)) {
 				if(MatrixEnchantingModule.soulCandlesInvert) {
 					BlockPos posBelow = pos.below();
 					BlockState below = world.getBlockState(posBelow);
@@ -449,7 +445,7 @@ public class MatrixEnchantingTableBlockEntity extends AbstractEnchantingTableBlo
 
 		@Override
 		public double getExtraParticleChance(BlockGetter world, BlockPos pos, BlockState state) {
-			return 0.25;
+			return 0.25d;
 		}
 
 		@Override

@@ -38,7 +38,7 @@ public class MorePottedPlantsModule extends ZetaModule {
 		add(event, Blocks.CARROTS, "carrot");
 		add(event, Blocks.CHORUS_FLOWER, "chorus");
 		add(event, Blocks.COCOA, "cocoa_bean");
-		Block grass = add(event, Blocks.SHORT_GRASS, "grass");
+		Block grass = add(event, Blocks.SHORT_GRASS, "short_grass");
 		add(event, Blocks.PEONY, "peony");
 		Block largeFern = add(event, Blocks.LARGE_FERN, "large_fern");
 		add(event, Blocks.LILAC, "lilac");

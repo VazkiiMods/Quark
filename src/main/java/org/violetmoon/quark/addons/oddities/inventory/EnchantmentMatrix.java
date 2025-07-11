@@ -2,7 +2,6 @@ package org.violetmoon.quark.addons.oddities.inventory;
 
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderLookup;
-import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
@@ -17,7 +16,6 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.enchantment.Enchantment;
-import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.item.enchantment.EnchantmentInstance;
 
 import net.minecraft.world.level.Level;
@@ -157,7 +155,7 @@ public class EnchantmentMatrix {
 		HolderLookup.RegistryLookup<Enchantment> enchantmentRegistryLookup = levelAsInWorld.registryAccess().lookupOrThrow(Registries.ENCHANTMENT);
 		enchantmentRegistryLookup.listElements().forEach(enchantment -> {
 
-			String id = enchantment.getKey().toString();
+			String id = enchantment.getKey().location().toString();
 			boolean isValid = true;
 
 			if (!enchantment.is(EnchantmentTags.IN_ENCHANTING_TABLE)) {
@@ -173,7 +171,6 @@ public class EnchantmentMatrix {
 			if(isValid
 					&& !EnchantmentsBegoneModule.shouldBegone(enchantment)
 					&& !MatrixEnchantingModule.disallowedEnchantments.contains(id)
-					//Neo versions of these methods do exist I think
 					//todo: An additional check exists to see if an enchantment was allowed on books, will need to be replaced. "|| (book && enchantment.isAllowedOnBooks())"
 					&& ((enchantment.value().canEnchant(target) && enchantment.value().isPrimaryItem(target)))) {
 				int enchantLevel = 1;
@@ -205,13 +202,13 @@ public class EnchantmentMatrix {
 		for(EnchantmentDataWrapper wrapper : validEnchants)
 			total += wrapper.mutableWeight.val;
 
-		/*if(total == 0) {
+		if(total == 0) {
 			for(EnchantmentDataWrapper wrapper : validEnchants)
 				wrapper.mutableWeight.val++;
-		}*/
+		}
 
 		EnchantmentDataWrapper ret = WeightedRandom.getRandomItem(rng, validEnchants).orElse(null);
-		if(!simulate && ret != null && influences.containsKey(ret.enchantment) && influences.get(ret.enchantment) > 0)
+		if(!simulate && ret != null && influences.containsKey(ret.enchantment.value()) && influences.get(ret.enchantment.value()) > 0)
 			influenced = true;
 
 		return ret;
@@ -527,7 +524,7 @@ public class EnchantmentMatrix {
 				}
 
 
-				influence = Mth.clamp(influences.getOrDefault(enchantment, 0), -MatrixEnchantingModule.influenceMax, MatrixEnchantingModule.influenceMax);
+				influence = Mth.clamp(influences.getOrDefault(enchantment.value(), 0), -MatrixEnchantingModule.influenceMax, MatrixEnchantingModule.influenceMax);
 				float multiplier = 1F + influence * (float) MatrixEnchantingModule.influencePower;
 				mutableWeight.val *= multiplier;
 
@@ -540,7 +537,7 @@ public class EnchantmentMatrix {
 						mutableWeight.val *= MatrixEnchantingModule.dupeMultiplier;
 						mark = false;
 						break;
-					} else if(!other.enchant.value().exclusiveSet().contains(enchantment) || !enchantment.value().exclusiveSet().contains(other.enchant)) {
+					} else if(other.enchant.value().exclusiveSet().contains(enchantment) || enchantment.value().exclusiveSet().contains(other.enchant)) {
 						mutableWeight.val *= MatrixEnchantingModule.incompatibleMultiplier;
 						mark = false;
 						break;
@@ -561,7 +558,7 @@ public class EnchantmentMatrix {
 
 	private static class MutableWeight extends Weight {
 
-		protected int val;
+		protected double val;
 
 		public MutableWeight(int val) {
 			super(val);
@@ -569,7 +566,7 @@ public class EnchantmentMatrix {
 
 		@Override
 		public int asInt() {
-			return val;
+			return (int) val;
 		}
 
 	}

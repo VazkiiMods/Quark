@@ -84,7 +84,7 @@ public class GreenerGrassModule extends ZetaModule {
 			"minecraft:tall_grass",
 			"minecraft:grass_block",
 			"minecraft:fern",
-			"minecraft:grass",
+			"minecraft:short_grass",
 			"minecraft:potted_fern",
 			"minecraft:sugar_cane",
 			"environmental:giant_tall_grass",

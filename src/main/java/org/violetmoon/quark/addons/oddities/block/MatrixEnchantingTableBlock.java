@@ -128,27 +128,26 @@ public class MatrixEnchantingTableBlock extends EnchantingTableBlock implements 
 								ParticleOptions extra = influencer.getExtraParticleOptions(worldIn, blockpos, state);
 								double chance = influencer.getExtraParticleChance(worldIn, blockpos, state);
 
-								if(extra != null) {
-									int steps = 20;
-									double dx = (double) (pos.getX() - blockpos.getX()) / steps;
-									double dy = (double) (pos.getY() - blockpos.getY()) / steps;
-									double dz = (double) (pos.getZ() - blockpos.getZ()) / steps;
 
-									for(int p = 0; p < steps; p++) {
-										boolean doDust = rand.nextDouble() < 0.5;
-										boolean doExtra = extra != null && rand.nextDouble() < chance;
-										if(!doDust && !doExtra)
-											continue;
+								int steps = 20;
+								double dx = (double) (pos.getX() - blockpos.getX()) / steps;
+								double dy = (double) (pos.getY() - blockpos.getY()) / steps;
+								double dz = (double) (pos.getZ() - blockpos.getZ()) / steps;
 
-										double px = blockpos.getX() + 0.5 + dx * p + rand.nextDouble() * 0.2 - 0.1;
-										double py = blockpos.getY() + 0.5 + dy * p + Math.sin((double) p / steps * Math.PI) * 0.5 + rand.nextDouble() * 0.2 - 0.1;
-										double pz = blockpos.getZ() + 0.5 + dz * p + rand.nextDouble() * 0.2 - 0.1;
+								for(int p = 0; p < steps; p++) {
+									boolean doDust = rand.nextDouble() < 0.5;
+									boolean doExtra = extra != null && rand.nextDouble() < chance;
+									if(!doDust && !doExtra)
+										continue;
 
-										if(doDust)
-											worldIn.addParticle(new DustParticleOptions(new Vector3f((comp >> 16)/255f, (comp >> 8) / 255f, comp / 255f), 1F), px, py, pz, 0, 0, 0);
-										if(doExtra)
-											worldIn.addParticle(extra, px, py, pz, 0, 0, 0);
-									}
+									double px = blockpos.getX() + 0.5 + dx * p + rand.nextDouble() * 0.2 - 0.1;
+									double py = blockpos.getY() + 0.5 + dy * p + Math.sin((double) p / steps * Math.PI) * 0.5 + rand.nextDouble() * 0.2 - 0.1;
+									double pz = blockpos.getZ() + 0.5 + dz * p + rand.nextDouble() * 0.2 - 0.1;
+
+									if(doDust)
+										worldIn.addParticle(new DustParticleOptions(new Vector3f((comp >> 16)/255f, (comp >> 8) / 255f, comp / 255f), 1F), px, py, pz, 0, 0, 0);
+									if(doExtra)
+										worldIn.addParticle(extra, px, py, pz, 0, 0, 0);
 								}
 							}
 						}
