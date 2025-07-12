@@ -224,7 +224,7 @@ public class LockRotationModule extends ZetaModule {
 
 		@PlayEvent
 		public void onHUDRender(ZRenderGuiOverlay.Post event) {
-			if (event.getLayerName().equals(VanillaGuiLayers.CROSSHAIR)) {
+			if (event.getLayerName().equals(VanillaGuiLayers.CROSSHAIR) && !Minecraft.getInstance().options.hideGui) {
 				if(clientProfile != null) {
 				GuiGraphics guiGraphics = event.getGuiGraphics();
 

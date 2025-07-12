@@ -60,7 +60,7 @@ public class AutoWalkKeybindModule extends ZetaModule {
 
 		@PlayEvent
 		public void drawHUD(ZRenderGuiOverlay.Post event) {
-			if(drawHud && event.getLayerName().equals(VanillaGuiLayers.HOTBAR) && autorunning) {
+			if(drawHud && event.getLayerName().equals(VanillaGuiLayers.HOTBAR) && autorunning && !Minecraft.getInstance().options.hideGui) {
 				String message = I18n.get("quark.misc.autowalking");
 
 				GuiGraphics guiGraphics = event.getGuiGraphics();

@@ -65,7 +65,7 @@ public class HotbarChangerModule extends ZetaModule {
 
 		@PlayEvent
 		public void hudHeathPre(ZRenderGuiOverlay.Pre event) {
-			if (event.getLayerName().equals(VanillaGuiLayers.PLAYER_HEALTH)) {
+			if (event.getLayerName().equals(VanillaGuiLayers.PLAYER_HEALTH) && !Minecraft.getInstance().options.hideGui) {
 				float shift = -getRealHeight(event.getPartialTick().getGameTimeDeltaTicks()) + 22;
 				if (shift < 0) {
 					event.getGuiGraphics().pose().translate(0, shift, 0);
@@ -76,7 +76,7 @@ public class HotbarChangerModule extends ZetaModule {
 
 		@PlayEvent
 		public void hudDebugTextPre(ZRenderGuiOverlay.Pre event) {
-			if (event.getLayerName().equals(VanillaGuiLayers.DEBUG_OVERLAY)) {
+			if (event.getLayerName().equals(VanillaGuiLayers.DEBUG_OVERLAY) && !Minecraft.getInstance().options.hideGui) {
 				hudOverlay(event);
 			}
 		}
@@ -84,7 +84,7 @@ public class HotbarChangerModule extends ZetaModule {
 		//?
 		@PlayEvent
 		public void hudPotionIconsPre(ZRenderGuiOverlay.Pre event) {
-			if (event.getLayerName().equals(VanillaGuiLayers.EFFECTS)) {
+			if (event.getLayerName().equals(VanillaGuiLayers.EFFECTS) && !Minecraft.getInstance().options.hideGui) {
 				hudOverlay(event);
 			}
 		}
@@ -99,11 +99,11 @@ public class HotbarChangerModule extends ZetaModule {
 
 		@PlayEvent
 		public void hudPost(ZRenderGuiOverlay.Pre event) {
-			if (event.getLayerName().equals(VanillaGuiLayers.HOTBAR)) {
+			Minecraft mc = Minecraft.getInstance();
+			if (event.getLayerName().equals(VanillaGuiLayers.HOTBAR) && !Minecraft.getInstance().options.hideGui) {
 				if (height <= 0)
 					return;
 
-				Minecraft mc = Minecraft.getInstance();
 				Player player = mc.player;
 				GuiGraphics guiGraphics = event.getGuiGraphics();
 				PoseStack matrix = guiGraphics.pose();

@@ -197,7 +197,7 @@ public class ReacharoundPlacingModule extends ZetaModule {
 
 		@PlayEvent
 		public void onRender(ZRenderGuiOverlay.Post event) {
-			if (event.equals(VanillaGuiLayers.CROSSHAIR)) {
+			if (event.equals(VanillaGuiLayers.CROSSHAIR) && !Minecraft.getInstance().options.hideGui) {
 				GuiGraphics guiGraphics = event.getGuiGraphics();
 
 				Minecraft mc = Minecraft.getInstance();

@@ -338,7 +338,7 @@ public class VariantSelectorModule extends ZetaModule {
 
 		@PlayEvent
 		public void onRender(ZRenderGuiOverlay.Pre event) {
-			if (event.getLayerName().equals(VanillaGuiLayers.CROSSHAIR)) {
+			if (event.getLayerName().equals(VanillaGuiLayers.CROSSHAIR) && !Minecraft.getInstance().options.hideGui) {
 				GuiGraphics guiGraphics = event.getGuiGraphics();
 
 				Minecraft mc = Minecraft.getInstance();

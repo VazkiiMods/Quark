@@ -368,7 +368,7 @@ public class PathfinderMapsModule extends ZetaModule {
 
 		@PlayEvent
 		public void drawHUD(ZRenderGuiOverlay.Post event) {
-			if(drawHud && event.getLayerName().equals(VanillaGuiLayers.HOTBAR)) {
+			if(drawHud && event.getLayerName().equals(VanillaGuiLayers.HOTBAR) && !Minecraft.getInstance().options.hideGui) {
 				Minecraft mc = Minecraft.getInstance();
 
 				GuiGraphics guiGraphics = event.getGuiGraphics();

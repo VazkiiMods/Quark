@@ -61,7 +61,7 @@ public class AbacusModule extends ZetaModule {
 
 		@PlayEvent
 		public void onHUDRenderPost(ZRenderGuiOverlay.Post event) {
-			if (event.getLayerName().equals(VanillaGuiLayers.CROSSHAIR)) {
+			if (event.getLayerName().equals(VanillaGuiLayers.CROSSHAIR) && !Minecraft.getInstance().options.hideGui) {
 				Minecraft mc = Minecraft.getInstance();
 				Player player = mc.player;
 				GuiGraphics guiGraphics = event.getGuiGraphics();

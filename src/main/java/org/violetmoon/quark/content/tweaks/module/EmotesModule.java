@@ -278,7 +278,7 @@ public class EmotesModule extends ZetaModule {
 
 		@PlayEvent
 		public void drawCrosshair(ZRenderGuiOverlay.Post event) {
-			if (event.getLayerName().equals(VanillaGuiLayers.CROSSHAIR)) {
+			if (event.getLayerName().equals(VanillaGuiLayers.CROSSHAIR) && !Minecraft.getInstance().options.hideGui) {
 				Minecraft mc = Minecraft.getInstance();
 				Window res = event.getWindow();
 				GuiGraphics guiGraphics = event.getGuiGraphics();
