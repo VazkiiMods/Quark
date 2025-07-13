@@ -28,10 +28,10 @@ import net.neoforged.neoforge.items.IItemHandler;
 import net.neoforged.neoforge.items.ItemStackHandler;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.violetmoon.quark.addons.oddities.inventory.BackpackContainer;
 import org.violetmoon.quark.addons.oddities.inventory.BackpackMenu;
 import org.violetmoon.quark.addons.oddities.module.BackpackModule;
 import org.violetmoon.quark.base.Quark;
-import org.violetmoon.quark.base.handler.ProxiedItemStackHandler;
 import org.violetmoon.zeta.item.IZetaItem;
 import org.violetmoon.zeta.item.ext.IZetaItemExtensions;
 import org.violetmoon.zeta.module.ZetaModule;
@@ -87,14 +87,13 @@ public class BackpackItem extends ArmorItem implements IZetaItem, IZetaItemExten
 	}
 
 	public static boolean doesBackpackHaveItems(ItemStack stack) {
-		Optional<IItemHandler> handlerOpt = Optional.ofNullable(stack.getCapability(Capabilities.ItemHandler.ITEM, null));
-
-		if(handlerOpt.isEmpty())
+		if (!stack.has(DataComponents.CONTAINER) && stack.is(BackpackModule.backpack)) {
 			return false;
+		}
+		BackpackContainer backpackInv = new BackpackContainer(stack);
 
-		IItemHandler handler = handlerOpt.orElse(new ItemStackHandler());
-		for(int i = 0; i < handler.getSlots(); i++)
-			if(!handler.getStackInSlot(i).isEmpty())
+		for(int i = 0; i < backpackInv.getContainerSize(); i++)
+			if(!backpackInv.getItem(i).isEmpty())
 				return true;
 
 		return false;

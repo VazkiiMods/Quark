@@ -73,7 +73,7 @@ public class Stool extends Entity {
 
 	@Override
 	public Vec3 getPassengerRidingPosition(Entity entity) {
-		return this.position().add(this.getPassengerAttachmentPoint(entity, entity.getType().getDimensions(), -0.3F));
+		return super.getPassengerRidingPosition(entity).subtract(0, 0.5, 0);//this.position().add(this.getPassengerAttachmentPoint(entity, entity.getType().getDimensions(), -0.3F));
 	}
 
 	@Override

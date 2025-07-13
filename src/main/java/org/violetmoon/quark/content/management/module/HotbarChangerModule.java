@@ -65,7 +65,8 @@ public class HotbarChangerModule extends ZetaModule {
 
 		@PlayEvent
 		public void hudHeathPre(ZRenderGuiOverlay.Pre event) {
-			if (event.getLayerName().equals(VanillaGuiLayers.PLAYER_HEALTH) && !Minecraft.getInstance().options.hideGui) {
+			boolean shouldShift = event.getLayerName().equals(VanillaGuiLayers.EXPERIENCE_BAR);
+			if (shouldShift && !Minecraft.getInstance().options.hideGui) {
 				float shift = -getRealHeight(event.getPartialTick().getGameTimeDeltaTicks()) + 22;
 				if (shift < 0) {
 					event.getGuiGraphics().pose().translate(0, shift, 0);
@@ -74,19 +75,19 @@ public class HotbarChangerModule extends ZetaModule {
 			}
 		}
 
+		// Why?
 		@PlayEvent
 		public void hudDebugTextPre(ZRenderGuiOverlay.Pre event) {
-			if (event.getLayerName().equals(VanillaGuiLayers.DEBUG_OVERLAY) && !Minecraft.getInstance().options.hideGui) {
+			boolean shouldShift = event.getLayerName().equals(VanillaGuiLayers.DEBUG_OVERLAY) || event.getLayerName().equals(VanillaGuiLayers.EFFECTS);
+			if (shouldShift && !Minecraft.getInstance().options.hideGui) {
 				hudOverlay(event);
 			}
 		}
 
-		//?
+		// What?
 		@PlayEvent
 		public void hudPotionIconsPre(ZRenderGuiOverlay.Pre event) {
-			if (event.getLayerName().equals(VanillaGuiLayers.EFFECTS) && !Minecraft.getInstance().options.hideGui) {
-				hudOverlay(event);
-			}
+
 		}
 
 		public void hudOverlay(ZRenderGuiOverlay event) {

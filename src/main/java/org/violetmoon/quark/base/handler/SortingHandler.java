@@ -90,14 +90,13 @@ public final class SortingHandler {
 		for(Slot s : c.slots) {
 			Container inv = s.container;
 			if((inv == player.getInventory()) == playerContainer) {
-				if(!playerContainer && s instanceof SlotItemHandler slot) {
-					sortInventory(slot.getItemHandler(), lockedSlots);
+				if(!playerContainer) {
+					sortInventory(s.container, lockedSlots);
 				} else {
-					InvWrapper wrapper = new InvWrapper(inv);
 					if(playerContainer)
-						sortInventory(wrapper, 9, 36, lockedSlots);
+						sortInventory(inv, 9, 36, lockedSlots);
 					else
-						sortInventory(wrapper, lockedSlots);
+						sortInventory(inv, lockedSlots);
 				}
 				break;
 			}
@@ -105,26 +104,26 @@ public final class SortingHandler {
 
 		if(backpack)
 			for(Slot s : c.slots)
-				if(s instanceof CachedItemHandlerSlot) {
-					sortInventory(((CachedItemHandlerSlot) s).getItemHandler(), lockedSlots);
+				if(s instanceof CachedItemHandlerSlot cachedSlot) {
+					sortInventory(cachedSlot.container, lockedSlots);
 					break;
 				}
 	}
 
-	public static void sortInventory(IItemHandler handler, int[] lockedSlots) {
-		sortInventory(handler, 0, lockedSlots);
+	public static void sortInventory(Container container, int[] lockedSlots) {
+		sortInventory(container, 0, lockedSlots);
 	}
 
-	public static void sortInventory(IItemHandler handler, int iStart, int[] lockedSlots) {
-		sortInventory(handler, iStart, handler.getSlots(), lockedSlots);
+	public static void sortInventory(Container container, int iStart, int[] lockedSlots) {
+		sortInventory(container, iStart, container.getContainerSize(), lockedSlots);
 	}
 
-	public static void sortInventory(IItemHandler handler, int iStart, int iEnd, int[] lockedSlots) {
+	public static void sortInventory(Container container, int iStart, int iEnd, int[] lockedSlots) {
 		List<ItemStack> stacks = new ArrayList<>();
 		List<ItemStack> restore = new ArrayList<>();
 
 		for(int i = iStart; i < iEnd; i++) {
-			ItemStack stackAt = handler.getStackInSlot(i);
+			ItemStack stackAt = container.getItem(i);
 
 			restore.add(stackAt.copy());
 			if(!isLocked(i, lockedSlots) && !stackAt.isEmpty())
@@ -134,11 +133,11 @@ public final class SortingHandler {
 		mergeStacks(stacks);
 		sortStackList(stacks);
 
-		if(setInventory(handler, stacks, iStart, iEnd, lockedSlots) == InteractionResult.FAIL)
-			setInventory(handler, restore, iStart, iEnd, lockedSlots);
+		if(setInventory(container, stacks, iStart, iEnd, lockedSlots) == InteractionResult.FAIL)
+			setInventory(container, restore, iStart, iEnd, lockedSlots);
 	}
 
-	private static InteractionResult setInventory(IItemHandler inventory, List<ItemStack> stacks, int iStart, int iEnd, int[] lockedSlots) {
+	private static InteractionResult setInventory(Container container, List<ItemStack> stacks, int iStart, int iEnd, int[] lockedSlots) {
 		int skipped = 0;
 		for(int i = iStart; i < iEnd; i++) {
 			if(isLocked(i, lockedSlots)) {
@@ -149,14 +148,15 @@ public final class SortingHandler {
 			int j = i - iStart - skipped;
 			ItemStack stack = j >= stacks.size() ? ItemStack.EMPTY : stacks.get(j);
 
-			ItemStack stackInSlot = inventory.getStackInSlot(i);
+			ItemStack stackInSlot = container.getItem(i);
 			if(!stackInSlot.isEmpty()) {
-				ItemStack extractTest = inventory.extractItem(i, inventory.getSlotLimit(i), true);
+				//ItemStack extractTest = container.removeItem(i, container.getItem(i).getCount());
+				ItemStack extractTest = container.removeItemNoUpdate(i);
 				if(extractTest.isEmpty() || extractTest.getCount() != stackInSlot.getCount())
 					return InteractionResult.PASS;
 			}
 
-			if(!stack.isEmpty() && !inventory.isItemValid(i, stack))
+			if(!stack.isEmpty() && !container.canTakeItem(container, i, stack))
 				return InteractionResult.PASS;
 		}
 
@@ -164,7 +164,7 @@ public final class SortingHandler {
 			if(isLocked(i, lockedSlots))
 				continue;
 
-			inventory.extractItem(i, inventory.getSlotLimit(i), false);
+			container.removeItem(i, container.getItem(i).getCount());
 		}
 
 		skipped = 0;
@@ -178,7 +178,7 @@ public final class SortingHandler {
 			ItemStack stack = j >= stacks.size() ? ItemStack.EMPTY : stacks.get(j);
 
 			if(!stack.isEmpty())
-				if(!inventory.insertItem(i, stack, false).isEmpty())
+				if(!container.canPlaceItem(i, stack))
 					return InteractionResult.FAIL;
 		}
 

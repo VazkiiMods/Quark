@@ -228,19 +228,12 @@ public class BackpackModule extends ZetaModule {
 		public void clientTick(ZClientTick.Start event) {
 
 			Minecraft mc = Minecraft.getInstance();
-			if(isInventoryGUI(mc.screen) && !backpackRequested && isEntityWearingBackpack(mc.player) && !mc.player.portalProcess.isInsidePortalThisTick()) {
-				requestBackpack();
-				mc.player.inventoryMenu.setCarried(mc.player.getItemBySlot(EquipmentSlot.CHEST));
-				backpackRequested = true;
-			} else if(mc.screen instanceof BackpackInventoryScreen) {
-				if(heldStack != null) {
-					mc.player.inventoryMenu.setCarried(heldStack);
-					heldStack = null;
-				}
-
-				backpackRequested = false;
-			}
-		}
+            if (isInventoryGUI(mc.screen) && !backpackRequested && isEntityWearingBackpack(mc.player) && mc.player.portalProcess != null && !mc.player.portalProcess.isInsidePortalThisTick()) {
+                requestBackpack();
+                mc.player.inventoryMenu.setCarried(mc.player.getItemBySlot(EquipmentSlot.CHEST));
+                backpackRequested = true;
+            }
+        }
 
 		@LoadEvent
 		public void registerItemColors(ZAddItemColorHandlers event) {

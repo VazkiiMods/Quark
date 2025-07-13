@@ -11,7 +11,6 @@ import org.jetbrains.annotations.NotNull;
 import org.violetmoon.quark.addons.oddities.inventory.slot.BackpackSlot;
 import org.violetmoon.quark.addons.oddities.inventory.slot.CachedItemHandlerSlot;
 import org.violetmoon.quark.addons.oddities.module.BackpackModule;
-import org.violetmoon.quark.base.util.InventoryIIH;
 
 public class BackpackMenu extends InventoryMenu {
 
@@ -30,12 +29,12 @@ public class BackpackMenu extends InventoryMenu {
 
 		ItemStack backpack = inventory.armor.get(2);
 		if(backpack.getItem() == BackpackModule.backpack) {
-			InventoryIIH inv = new InventoryIIH(backpack);
+			BackpackContainer backpackInv = new BackpackContainer(backpack);
 
 			for(int i = 0; i < 3; ++i)
 				for(int j = 0; j < 9; ++j) {
 					int k = j + i * 9;
-					addSlot(new BackpackSlot(inv, k, left + j * 18, top + i * 18));
+					addSlot(new BackpackSlot(backpackInv, k, left + j * 18, top + i * 18));
 				}
 		}
 	}

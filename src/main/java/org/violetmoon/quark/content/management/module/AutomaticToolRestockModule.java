@@ -8,6 +8,7 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.Container;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
@@ -20,6 +21,7 @@ import net.neoforged.neoforge.common.ItemAbility;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.items.IItemHandler;
 import net.neoforged.neoforge.items.wrapper.PlayerInvWrapper;
+import org.violetmoon.quark.addons.oddities.inventory.BackpackContainer;
 import org.violetmoon.quark.addons.oddities.module.BackpackModule;
 import org.violetmoon.quark.api.event.GatherToolClassesEvent;
 import org.violetmoon.quark.base.Quark;
@@ -131,21 +133,20 @@ public class AutomaticToolRestockModule extends ZetaModule {
 
 				int lower = hotbar ? 0 : 9;
 				int upper = player.getInventory().items.size();
-				boolean foundInInv = crawlInventory(new PlayerInvWrapper(player.getInventory()), lower, upper, ctx);
+				boolean foundInInv = crawlInventory(player.getInventory(), lower, upper, ctx);
 
 				if(!foundInInv && Quark.ZETA.modules.isEnabled(BackpackModule.class)) {
 					ItemStack backpack = player.getInventory().armor.get(2);
-
 					if(backpack.getItem() == BackpackModule.backpack) {
-						InventoryIIH inv = new InventoryIIH(backpack);
-						crawlInventory(inv, 0, inv.getSlots(), ctx);
+						Container container = new BackpackContainer(backpack);
+						crawlInventory(container, 0, container.getContainerSize(), ctx);
 					}
 				}
 			}
 		}
 	}
 
-	private boolean crawlInventory(IItemHandler inv, int lowerBound, int upperBound, RestockContext ctx) {
+	private boolean crawlInventory(Container inv, int lowerBound, int upperBound, RestockContext ctx) {
 		ServerPlayer player = ctx.player;
 		int currSlot = ctx.currSlot;
 		List<Enchantment> enchantmentsOnStack = ctx.enchantmentsOnStack;
@@ -207,13 +208,13 @@ public class AutomaticToolRestockModule extends ZetaModule {
 		return classes;
 	}
 
-	private boolean findReplacement(IItemHandler inv, Player player, int lowerBound, int upperBound, int currSlot, Predicate<ItemStack> match) {
+	private boolean findReplacement(Container inv, Player player, int lowerBound, int upperBound, int currSlot, Predicate<ItemStack> match) {
 		synchronized (MUTEX) {
 			for(int i = lowerBound; i < upperBound; i++) {
 				if(i == currSlot)
 					continue;
 
-				ItemStack stackAt = inv.getStackInSlot(i);
+				ItemStack stackAt = inv.getItem(i);
 				if(!stackAt.isEmpty() && match.test(stackAt)) {
 					pushReplace(player, inv, i, currSlot);
 					return true;
@@ -224,7 +225,7 @@ public class AutomaticToolRestockModule extends ZetaModule {
 		}
 	}
 
-	private void pushReplace(Player player, IItemHandler inv, int slot1, int slot2) {
+	private void pushReplace(Player player, Container inv, int slot1, int slot2) {
 		if(!replacements.containsKey(player))
 			replacements.put(player, new Stack<>());
 		replacements.get(player).push(new QueuedRestock(inv, slot1, slot2));
@@ -232,23 +233,23 @@ public class AutomaticToolRestockModule extends ZetaModule {
 
 	private void switchItems(Player player, QueuedRestock restock) {
 		Inventory playerInv = player.getInventory();
-		IItemHandler providingInv = restock.providingInv;
+		Container providingInv = restock.providingInv;
 
 		int providingSlot = restock.providingSlot;
 		int playerSlot = restock.playerSlot;
 
-		if(providingSlot >= providingInv.getSlots() || playerSlot >= playerInv.items.size())
+		if(providingSlot >= providingInv.getContainerSize() || playerSlot >= playerInv.items.size())
 			return;
 
 		ItemStack stackAtPlayerSlot = playerInv.getItem(playerSlot).copy();
-		ItemStack stackProvidingSlot = providingInv.getStackInSlot(providingSlot).copy();
+		ItemStack stackProvidingSlot = providingInv.getItem(providingSlot).copy();
 
 		//Botania rods are only detected in the stackAtPlayerSlot but other tools are only detected in stackProvidingSlot so we check em both
 		if(itemIgnored(stackAtPlayerSlot) || itemIgnored(stackProvidingSlot))
 			return;
 
-		providingInv.extractItem(providingSlot, stackProvidingSlot.getCount(), false);
-		providingInv.insertItem(providingSlot, stackAtPlayerSlot, false);
+		providingInv.removeItem(providingSlot, stackProvidingSlot.getCount());
+		providingInv.setItem(providingSlot, stackAtPlayerSlot);
 
 		playerInv.setItem(playerSlot, stackProvidingSlot);
 	}
@@ -295,7 +296,7 @@ public class AutomaticToolRestockModule extends ZetaModule {
 			Optional<Predicate<ItemStack>> toolPredicate) {
 	}
 
-	private record QueuedRestock(IItemHandler providingInv, int providingSlot, int playerSlot) {
+	private record QueuedRestock(Container providingInv, int providingSlot, int playerSlot) {
 	}
 
 }
