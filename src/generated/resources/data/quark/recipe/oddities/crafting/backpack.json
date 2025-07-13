@@ -1,4 +1,19 @@
 {
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:and",
+      "values": [
+        {
+          "type": "zeta:flag",
+          "flag": "backpack"
+        },
+        {
+          "type": "zeta:flag",
+          "flag": "ravager_hide"
+        }
+      ]
+    }
+  ],
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "key": {

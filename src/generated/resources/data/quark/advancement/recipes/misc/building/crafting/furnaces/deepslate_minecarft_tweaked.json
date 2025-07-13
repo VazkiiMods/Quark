@@ -1,4 +1,14 @@
 {
+  "neoforge:conditions": [
+    {
+      "type": "zeta:flag",
+      "flag": "variant_furnaces"
+    },
+    {
+      "type": "zeta:flag",
+      "flag": "minecart_upgrade"
+    }
+  ],
   "parent": "minecraft:recipes/root",
   "criteria": {
     "has_the_recipe": {

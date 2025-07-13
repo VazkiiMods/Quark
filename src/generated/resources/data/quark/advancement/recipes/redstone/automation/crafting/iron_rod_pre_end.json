@@ -1,4 +1,14 @@
 {
+  "neoforge:conditions": [
+    {
+      "type": "zeta:flag",
+      "flag": "iron_rod"
+    },
+    {
+      "type": "zeta:flag",
+      "flag": "iron_rod_pre_end"
+    }
+  ],
   "parent": "minecraft:recipes/root",
   "criteria": {
     "has_the_recipe": {

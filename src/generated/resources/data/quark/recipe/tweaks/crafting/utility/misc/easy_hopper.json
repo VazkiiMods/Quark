@@ -1,4 +1,10 @@
 {
+  "neoforge:conditions": [
+    {
+      "type": "zeta:flag",
+      "flag": "easy_hopper"
+    }
+  ],
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "key": {

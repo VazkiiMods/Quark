@@ -1,4 +1,10 @@
 {
+  "neoforge:conditions": [
+    {
+      "type": "zeta:flag",
+      "flag": "glass_shard"
+    }
+  ],
   "type": "minecraft:crafting_shaped",
   "category": "building",
   "key": {

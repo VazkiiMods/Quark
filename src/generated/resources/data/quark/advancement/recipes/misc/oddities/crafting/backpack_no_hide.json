@@ -1,4 +1,22 @@
 {
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:and",
+      "values": [
+        {
+          "type": "zeta:flag",
+          "flag": "backpack"
+        },
+        {
+          "type": "neoforge:not",
+          "value": {
+            "type": "zeta:flag",
+            "flag": "ravager_hide"
+          }
+        }
+      ]
+    }
+  ],
   "parent": "minecraft:recipes/root",
   "criteria": {
     "has_the_recipe": {

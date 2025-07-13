@@ -1,9 +1,15 @@
 {
+  "neoforge:conditions": [
+    {
+      "type": "zeta:flag",
+      "flag": "variant_furnaces"
+    }
+  ],
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "key": {
     "#": {
-      "item": "minecraft:blackstone"
+      "item": "minecraft:deepslate"
     }
   },
   "pattern": [

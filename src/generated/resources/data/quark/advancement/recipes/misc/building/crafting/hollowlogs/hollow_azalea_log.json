@@ -1,4 +1,19 @@
 {
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:and",
+      "values": [
+        {
+          "type": "zeta:flag",
+          "flag": "hollow_logs"
+        },
+        {
+          "type": "zeta:flag",
+          "flag": "azalea_wood"
+        }
+      ]
+    }
+  ],
   "parent": "minecraft:recipes/root",
   "criteria": {
     "has_the_recipe": {
