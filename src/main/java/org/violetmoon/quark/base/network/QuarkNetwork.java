@@ -34,7 +34,7 @@ public enum QuarkNetwork implements BasePacketPayload.PacketTypeProvider {
 	HARVEST_MESSAGE(HarvestMessage.class, HarvestMessage.STREAM_CODEC),
 	REQUEST_EMOTE_MESSAGE(RequestEmoteMessage.class, RequestEmoteMessage.STREAM_CODEC),
 	CHANGE_HOTBAR_MESSAGE(ChangeHotbarMessage.class, ChangeHotbarMessage.STREAM_CODEC),
-	SET_LOCK_PROFILE_MESSAGE(SetLockProfileMessage.class, SetLockProfileMessage.STREAM_CODEC),
+	SET_LOCK_PROFILE_MESSAGE(SetLockProfileMessage.class, SetLockProfileMessage.OPTIONAL_STREAM_CODEC),
 	SHARE_ITEM_C2S_MESSAGE(ShareItemC2SMessage.class, ShareItemC2SMessage.STREAM_CODEC),
 	SCROLL_ON_BUNDLE_MESSAGE(ScrollOnBundleMessage.class, ScrollOnBundleMessage.STREAM_CODEC),
 
