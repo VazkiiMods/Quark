@@ -11,11 +11,11 @@
       "entries": [
         {
           "type": "minecraft:item",
-          "name": "quark:magenta_stool"
+          "name": "quark:orange_crystal_lamp"
         }
       ],
       "rolls": 1.0
     }
   ],
-  "random_sequence": "quark:blocks/magenta_stool"
+  "random_sequence": "quark:blocks/orange_crystal_lamp"
 }

@@ -3,7 +3,9 @@ package org.violetmoon.quark.datagen;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.levelgen.structure.Structure;
 import org.violetmoon.quark.base.Quark;
 
 public class QuarkTags {
@@ -86,9 +88,57 @@ public class QuarkTags {
 
     }
     public static class Biomes{
+        public static final TagKey<Biome> HAS_ANCIENT_TREES = tag("has_ancient_trees");
+        public static final TagKey<Biome> HAS_AZALEA_TREES = tag("has_azalea_trees");
 
+        public static final TagKey<Biome> HAS_CHORUS_VEGETATION = tag("has_chorus_vegetation");
+        public static final TagKey<Biome> HAS_CORUNDUM = tag("has_corundum");
+        public static final TagKey<Biome> HAS_FAIRY_RINGS = tag("has_fairy_rings");
+        public static final TagKey<Biome> HAS_FAIRY_RINGS_RARELY = tag("has_fairy_rings_rarely");
+
+        public static final TagKey<Biome> HAS_FALLEN_ACACIA = tag("has_fallen_acacia");
+        public static final TagKey<Biome> HAS_FALLEN_BIRCH = tag("has_fallen_birch");
+        public static final TagKey<Biome> HAS_FALLEN_CHERRY = tag("has_fallen_cherry");
+        public static final TagKey<Biome> HAS_FALLEN_DARK_OAK = tag("has_fallen_dark_oak");
+        public static final TagKey<Biome> HAS_FALLEN_JUNGLE = tag("has_fallen_jungle");
+        public static final TagKey<Biome> HAS_FALLEN_MANGROVE = tag("has_fallen_mangrove");
+        public static final TagKey<Biome> HAS_FALLEN_OAK = tag("has_fallen_oak");
+        public static final TagKey<Biome> HAS_FALLEN_SPRUCE = tag("has_fallen_spruce");
+        public static final TagKey<Biome> HAS_LOWER_FALLEN_TREE_DENSITY = tag("has_lower_fallen_tree_density");
+
+        public static final TagKey<Biome> HAS_MONSTER_BOXES = tag("has_monster_boxes");
+        public static final TagKey<Biome> HAS_OBSIDIAN_SPIKES = tag("has_obsidian_spikes");
+
+        public static final TagKey<Biome> HAS_SHALE = tag("has_shale");
+        public static final TagKey<Biome> HAS_MYALITE = tag("has_myalite");
+        public static final TagKey<Biome> HAS_LIMESTONE = tag("has_limestone");
+        public static final TagKey<Biome> HAS_JASPER = tag("has_jasper");
+
+        public static final TagKey<Biome> DOES_NOT_HAVE_LAVA_POCKETS = tag("does_not_have_lava_pockets");
+        public static final TagKey<Biome> HAS_PERMAFROST = tag("has_permafrost");
+
+        public static final TagKey<Biome> HAS_LIMESTONE_CLUSTERS = tag("has_limestone_clusters");
+        public static final TagKey<Biome> HAS_JASPER_CLUSTERS = tag("has_jasper_clusters");
+        public static final TagKey<Biome> HAS_MYALITE_CLUSTERS = tag("has_myalite_clusters");
+        public static final TagKey<Biome> HAS_CALCITE_CLUSTERS = tag("has_calcite_clusters");
+
+        public static final TagKey<Biome> HAS_SPIRAL_SPIRES = tag("has_spiral_spires");
+
+        public static final TagKey<Biome> HAS_FROSTY_BLOSSOM_TREES = tag("has_frosty_blossom_trees");
+        public static final TagKey<Biome> HAS_SERENE_BLOSSOM_TREES = tag("has_serene_blossom_trees");
+        public static final TagKey<Biome> HAS_WARM_BLOSSOM_TREES = tag("has_warm_blossom_trees");
+        public static final TagKey<Biome> HAS_SUNNY_BLOSSOM_TREES = tag("has_sunny_blossom_trees");
+        public static final TagKey<Biome> HAS_FIERY_BLOSSOM_TREES = tag("has_fiery_blossom_trees");
+
+        private static TagKey<Biome> tag(String id) {
+            return TagKey.create(Registries.BIOME, Quark.asResource(id));
+        }
     }
     public static class Structures{
 
+
+        private static TagKey<Structure> tag(String id) {
+            return TagKey.create(Registries.STRUCTURE, Quark.asResource(id));
+        }
     }
 }
