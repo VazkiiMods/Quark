@@ -52,8 +52,9 @@ public class SlimeInABucketModule extends ZetaModule {
 				if(!stack.isEmpty() && stack.getItem() == Items.BUCKET) {
 					if(!event.getLevel().isClientSide) {
 						ItemStack outStack = new ItemStack(slime_in_a_bucket);
-						CompoundTag cmp = event.getTarget().serializeAttachments(event.getLevel().registryAccess());
-						outStack.set(DataComponents.ENTITY_DATA, CustomData.of(cmp));
+						CompoundTag cmp = new CompoundTag();
+						event.getTarget().save(cmp);
+						outStack.set(QuarkDataComponents.SLIME_NBT, CustomData.of(cmp));
 
 						if(stack.getCount() == 1)
 							player.setItemInHand(hand, outStack);
@@ -81,7 +82,7 @@ public class SlimeInABucketModule extends ZetaModule {
 		@LoadEvent
 		public void clientSetup(ZClientSetup event) {
 			event.enqueueWork(() -> ItemProperties.register(slime_in_a_bucket, Quark.asResource("excited"),
-					(stack, world, e, id) -> stack.get(QuarkDataComponents.EXCITED) ? 1 : 0));
+					(stack, world, e, id) -> Boolean.TRUE.equals(stack.get(QuarkDataComponents.EXCITED)) ? 1 : 0));
 		}
 	}
 }

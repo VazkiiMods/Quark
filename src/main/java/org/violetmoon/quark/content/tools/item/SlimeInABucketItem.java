@@ -77,9 +77,10 @@ public class SlimeInABucketItem extends ZetaItem {
 		if(!worldIn.isClientSide) {
 			Slime slime = new Slime(EntityType.SLIME, worldIn);
 
-			CompoundTag data = playerIn.getItemInHand(hand).get(QuarkDataComponents.SLIME_NBT).copyTag();
-			if(data != null)
+			if((playerIn.getItemInHand(hand).has(QuarkDataComponents.SLIME_NBT))){
+				CompoundTag data = playerIn.getItemInHand(hand).get(QuarkDataComponents.SLIME_NBT).copyTag();
 				slime.load(data);
+				}
 			else {
 				slime.getAttribute(Attributes.MAX_HEALTH).setBaseValue(1.0);
 				slime.getAttribute(Attributes.MOVEMENT_SPEED).setBaseValue(0.3);
@@ -103,17 +104,15 @@ public class SlimeInABucketItem extends ZetaItem {
 
 	@NotNull
 	@Override
-	//todo: Fix this shit
 	public Component getName(@NotNull ItemStack stack) {
-		/*if(stack.has(QuarkDataComponents.SLIME_NBT)) {
+		if(stack.has(QuarkDataComponents.SLIME_NBT)) {
 			CompoundTag cmp = stack.get(QuarkDataComponents.SLIME_NBT).copyTag();
 			if(cmp != null && cmp.contains("CustomName")) {
 
-				Component custom = Component.Serializer.fromJson(cmp.getString("CustomName", RegistryAccess.EMPTY));
+				Component custom = Component.Serializer.fromJson(cmp.getString("CustomName"), RegistryAccess.EMPTY);
 				return Component.translatable("item.quark.slime_in_a_bucket.named", custom);
 			}
 		}
-		 */
 
 		return super.getName(stack);
 	}

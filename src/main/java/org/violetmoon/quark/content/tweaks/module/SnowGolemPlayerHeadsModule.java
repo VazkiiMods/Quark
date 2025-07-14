@@ -1,5 +1,7 @@
 package org.violetmoon.quark.content.tweaks.module;
 
+import com.mojang.authlib.properties.PropertyMap;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.animal.SnowGolem;
@@ -9,6 +11,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.item.component.ResolvableProfile;
 import net.minecraft.world.phys.Vec3;
 import org.violetmoon.quark.base.components.QuarkDataComponents;
 import org.violetmoon.zeta.advancement.ManualTrigger;
@@ -22,6 +25,7 @@ import org.violetmoon.zeta.util.Hint;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 @ZetaLoadModule(category = "tweaks")
 public class SnowGolemPlayerHeadsModule extends ZetaModule {
@@ -44,7 +48,8 @@ public class SnowGolemPlayerHeadsModule extends ZetaModule {
 			if(snowman.hasPumpkin()) {
 				ItemStack stack = new ItemStack(Items.PLAYER_HEAD);
 				String name = e.getCustomName().getString();
-				stack.set(QuarkDataComponents.SKULL_OWNER, name);
+				ResolvableProfile profile = new ResolvableProfile(Optional.of(name), Optional.empty(), new PropertyMap());
+				stack.set(DataComponents.PROFILE, profile);
 				Vec3 pos = e.position();
 				event.getDrops().add(new ItemEntity(e.level(), pos.x, pos.y, pos.z, stack));
 
