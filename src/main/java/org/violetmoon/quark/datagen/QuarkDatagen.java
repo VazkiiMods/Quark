@@ -1,14 +1,17 @@
 package org.violetmoon.quark.datagen;
 
 import net.minecraft.core.HolderLookup;
+import net.minecraft.core.RegistrySetBuilder;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.data.PackOutput;
 import net.minecraft.data.loot.LootTableProvider;
+import net.minecraft.data.tags.BiomeTagsProvider;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.common.data.ExistingFileHelper;
 import net.neoforged.neoforge.data.event.GatherDataEvent;
+import net.neoforged.neoforge.registries.NeoForgeRegistries;
 import org.violetmoon.quark.base.Quark;
 
 import java.util.Collections;
@@ -17,6 +20,7 @@ import java.util.concurrent.CompletableFuture;
 
 @EventBusSubscriber(modid = Quark.MOD_ID, bus = EventBusSubscriber.Bus.MOD)
 public class QuarkDatagen {
+
     @SubscribeEvent
     public static void gatherData(GatherDataEvent gatherDataEvent){
         System.out.println("GENERATING QUARK DATA. PLEASE HOLD");
@@ -49,6 +53,7 @@ public class QuarkDatagen {
         generator.addProvider(gatherDataEvent.includeServer(), qbtp);
         generator.addProvider(gatherDataEvent.includeServer(), new QuarkItemTagProvider(packOutput, holderLookupProvider, qbtp.contentsGetter(), null, existingFileHelper));
          */
+        generator.addProvider(gatherDataEvent.includeServer(), new QuarkBiomeTagProvider(packOutput, holderLookupProvider, null, existingFileHelper));
 
         //things like modded tags can be done manually
 
@@ -57,10 +62,16 @@ public class QuarkDatagen {
         //do we need advancements?
         //generator.addProvider(gatherDataEvent.includeServer(), new QuarkAdvancementProvider(packOutput, holderLookupProvider));
 
+        //Neoforge-specific generators
+        generator.addProvider(true, new QuarkDatapackProvider(packOutput, holderLookupProvider));
+
         //assets
         //The existing models seem to work in 1.21.1 so these aren't high priority
         //generator.addProvider(gatherDataEvent.includeClient(), new QuarkItemModelProvider(packOutput, existingFileHelper));
         //generator.addProvider(gatherDataEvent.includeClient(), new QuarkBlockStateProvider(packOutput, existingFileHelper));
+
+
         System.out.println("QUARK DATA GENERATED. YIPPEE");
     }
+
 }

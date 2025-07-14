@@ -1,4 +1,10 @@
 {
+  "neoforge:conditions": [
+    {
+      "type": "zeta:flag",
+      "flag": "magnet"
+    }
+  ],
   "replace": false,
   "values": [
     "minecraft:item",
