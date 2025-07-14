@@ -223,9 +223,10 @@ public class LockRotationModule extends ZetaModule {
 					newProfile = new LockProfile(Direction.getNearest((float) look.x, (float) look.y, (float) look.z), -1);
 				}
 
-				if(clientProfile != null && clientProfile.equals(newProfile))
+				if(clientProfile != null && clientProfile.equals(newProfile)) {
 					clientProfile = null;
-				else {
+					PacketDistributor.sendToServer(new SetLockProfileMessage(clientProfile));
+				} else {
 					clientProfile = newProfile;
 					PacketDistributor.sendToServer(new SetLockProfileMessage(clientProfile));
 				}

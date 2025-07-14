@@ -69,7 +69,6 @@ public class GrabChickensModule extends ZetaModule {
 			} else if(passengers.isEmpty()) {
 				if(!level.isClientSide)
 					target.startRiding(player, false);
-
 				changed = true;
 			}
 

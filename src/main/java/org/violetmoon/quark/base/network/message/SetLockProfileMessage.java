@@ -1,6 +1,7 @@
 package org.violetmoon.quark.base.network.message;
 
 import io.netty.buffer.ByteBuf;
+import net.minecraft.network.FriendlyByteBuf;
 import org.jetbrains.annotations.NotNull;
 import org.violetmoon.quark.catnip.net.base.ServerboundPacketPayload;
 import net.minecraft.network.codec.StreamCodec;
@@ -13,22 +14,28 @@ public record SetLockProfileMessage(LockProfile profile) implements ServerboundP
 	public static final StreamCodec<ByteBuf, SetLockProfileMessage> STREAM_CODEC = LockProfile.STREAM_CODEC
 			.map(SetLockProfileMessage::new, SetLockProfileMessage::profile);
 
-	public static final StreamCodec<ByteBuf, SetLockProfileMessage> OPTIONAL_STREAM_CODEC = new StreamCodec<>() {
+	public static final StreamCodec<FriendlyByteBuf, SetLockProfileMessage> OPTIONAL_STREAM_CODEC = new StreamCodec<>() {
         @Override
-        public SetLockProfileMessage decode(@NotNull ByteBuf byteBuf) {
+        public SetLockProfileMessage decode(@NotNull FriendlyByteBuf byteBuf) {
 			SetLockProfileMessage message;
-			try {
-				 message = STREAM_CODEC.decode(byteBuf);
+
+			if (byteBuf.readBoolean()) try {
+				message = STREAM_CODEC.decode(byteBuf);
 			} catch (NullPointerException nullPointerException) {
 				message = new SetLockProfileMessage(null);
 			}
+			else {
+				message = new SetLockProfileMessage(null);
+			}
+
 
 			return message;
 		}
 
         @Override
-        public void encode(@NotNull ByteBuf byteBuf, SetLockProfileMessage setLockProfileMessage) {
-			STREAM_CODEC.encode(byteBuf, setLockProfileMessage);
+        public void encode(@NotNull FriendlyByteBuf byteBuf, @NotNull SetLockProfileMessage setLockProfileMessage) {
+			byteBuf.writeBoolean(setLockProfileMessage.profile != null);
+			if (setLockProfileMessage.profile != null) STREAM_CODEC.encode(byteBuf, setLockProfileMessage);
         }
     };
 

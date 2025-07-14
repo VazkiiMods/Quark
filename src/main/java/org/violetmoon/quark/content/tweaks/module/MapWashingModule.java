@@ -14,7 +14,7 @@ import org.violetmoon.zeta.module.ZetaModule;
 @ZetaLoadModule(category = "tweaks", antiOverlap = "supplementaries")
 public class MapWashingModule extends ZetaModule {
 	private final CauldronInteraction WASHING_MAP = (state, level, pos, player, hand, stack) -> {
-		if (isEnabled()) return ItemInteractionResult.FAIL;
+		if (!isEnabled()) return ItemInteractionResult.FAIL;
 
 		if(!stack.is(Items.FILLED_MAP)) {
 			return ItemInteractionResult.FAIL;

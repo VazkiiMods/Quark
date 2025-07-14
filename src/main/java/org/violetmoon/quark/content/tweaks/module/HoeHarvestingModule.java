@@ -125,8 +125,7 @@ public class HoeHarvestingModule extends ZetaModule {
 			return type != PlantType.WATER && type != PlantType.DESERT;
 		}*/
 
-		return isHarvestableMaterial(state) &&
-				state.canBeReplaced(new BlockPlaceContext(new UseOnContext(player, InteractionHand.MAIN_HAND, new BlockHitResult(new Vec3(0.5, 0.5, 0.5), Direction.DOWN, pos, false))));
+		return isHarvestableMaterial(state) || state.canBeReplaced(new BlockPlaceContext(new UseOnContext(player, InteractionHand.MAIN_HAND, new BlockHitResult(new Vec3(0.5, 0.5, 0.5), Direction.DOWN, pos, false))));
 	}
 
 	public static boolean isHarvestableMaterial(BlockState state) {
