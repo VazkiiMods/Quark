@@ -90,14 +90,10 @@ public final class SortingHandler {
 		for(Slot s : c.slots) {
 			Container inv = s.container;
 			if((inv == player.getInventory()) == playerContainer) {
-				if(!playerContainer) {
-					sortInventory(s.container, lockedSlots);
-				} else {
-					if(playerContainer)
-						sortInventory(inv, 9, 36, lockedSlots);
-					else
-						sortInventory(inv, lockedSlots);
-				}
+				if(playerContainer)
+					sortInventory(inv, 9, 36, lockedSlots);
+				else
+					sortInventory(inv, lockedSlots);
 				break;
 			}
 		}
@@ -138,48 +134,33 @@ public final class SortingHandler {
 	}
 
 	private static InteractionResult setInventory(Container container, List<ItemStack> stacks, int iStart, int iEnd, int[] lockedSlots) {
-		int skipped = 0;
-		for(int i = iStart; i < iEnd; i++) {
-			if(isLocked(i, lockedSlots)) {
+		int skipped = 0; // Track how many slots have been skipped
+
+		// Copy container over to a map to make sure when we clear the container we can restore the slots that dont get sorted.
+		Map<Integer, ItemStack> containerCopy = new HashMap<>();
+		for (int containSlot = 0; containSlot < container.getContainerSize(); containSlot++) {
+			containerCopy.put(containSlot, container.getItem(containSlot));
+		}
+
+		container.clearContent(); // Clear container. Perhaps its possible to only remove what is necessary? I'm a little unsure of this though.
+
+		// Restore any items that shouldn't of been cleared.
+		for (int slot = 0; slot < container.getContainerSize(); slot++) {
+			if (slot < iStart || slot > iEnd) {
+				container.setItem(slot, containerCopy.get(slot));
+			}
+		}
+
+		// Set the sorted slots to what they are supposed to be.
+		for (int slot = iStart; slot < iEnd; slot++) {
+			// Check if it's a locked slot, in which case we skip it.
+			if(isLocked(slot, lockedSlots)) {
+				container.setItem(slot, containerCopy.get(slot));
 				skipped++;
 				continue;
 			}
 
-			int j = i - iStart - skipped;
-			ItemStack stack = j >= stacks.size() ? ItemStack.EMPTY : stacks.get(j);
-
-			ItemStack stackInSlot = container.getItem(i);
-			if(!stackInSlot.isEmpty()) {
-				//ItemStack extractTest = container.removeItem(i, container.getItem(i).getCount());
-				ItemStack extractTest = container.removeItemNoUpdate(i);
-				if(extractTest.isEmpty() || extractTest.getCount() != stackInSlot.getCount())
-					return InteractionResult.PASS;
-			}
-
-			if(!stack.isEmpty() && !container.canTakeItem(container, i, stack))
-				return InteractionResult.PASS;
-		}
-
-		for(int i = iStart; i < iEnd; i++) {
-			if(isLocked(i, lockedSlots))
-				continue;
-
-			container.removeItem(i, container.getItem(i).getCount());
-		}
-
-		skipped = 0;
-		for(int i = iStart; i < iEnd; i++) {
-			if(isLocked(i, lockedSlots)) {
-				skipped++;
-				continue;
-			}
-
-			int j = i - iStart - skipped;
-			ItemStack stack = j >= stacks.size() ? ItemStack.EMPTY : stacks.get(j);
-
-			if(!stack.isEmpty())
-				if(!container.canPlaceItem(i, stack))
-					return InteractionResult.FAIL;
+			container.setItem(slot, stacks.get(slot - iStart - skipped));
 		}
 
 		return InteractionResult.SUCCESS;

@@ -48,9 +48,8 @@ public class BottledCloudItem extends ZetaItem {
 					world.setBlockAndUpdate(pos, BottledCloudModule.cloud.defaultBlockState());
 				}
 
-				stack.shrink(1);
-
 				if(!player.getAbilities().instabuild) {
+					stack.shrink(1);
 					ItemStack returnStack = new ItemStack(Items.GLASS_BOTTLE);
 					if(stack.isEmpty())
 						stack = returnStack;
