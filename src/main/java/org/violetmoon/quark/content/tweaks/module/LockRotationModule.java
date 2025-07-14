@@ -125,6 +125,13 @@ public class LockRotationModule extends ZetaModule {
 			// Half (stairs)
 			else if(props.containsKey(BlockStateProperties.HALF))
 				setState = setState.setValue(BlockStateProperties.HALF, half == 1 ? Half.TOP : Half.BOTTOM);
+		} else if (face.getAxis().equals(Axis.Y)) {
+			if(props.containsKey(BlockStateProperties.SLAB_TYPE) && props.get(BlockStateProperties.SLAB_TYPE) != SlabType.DOUBLE)
+				setState = setState.setValue(BlockStateProperties.SLAB_TYPE, face == Direction.DOWN ? SlabType.TOP : SlabType.BOTTOM);
+
+				// Half (stairs)
+			else if(props.containsKey(BlockStateProperties.HALF))
+				setState = setState.setValue(BlockStateProperties.HALF, face == Direction.DOWN ? Half.TOP : Half.BOTTOM);
 		}
 
 		return setState;
@@ -167,6 +174,8 @@ public class LockRotationModule extends ZetaModule {
 			ByteBufCodecs.INT, LockProfile::half,
 		    LockProfile::new
 		);
+
+
 	}
 
 	@ZetaLoadModule(clientReplacement = true)
@@ -216,9 +225,10 @@ public class LockRotationModule extends ZetaModule {
 
 				if(clientProfile != null && clientProfile.equals(newProfile))
 					clientProfile = null;
-				else
+				else {
 					clientProfile = newProfile;
-				PacketDistributor.sendToServer(new SetLockProfileMessage(clientProfile));
+					PacketDistributor.sendToServer(new SetLockProfileMessage(clientProfile));
+				}
 			}
 		}
 
