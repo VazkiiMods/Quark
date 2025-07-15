@@ -63,7 +63,7 @@ public class CompassAnglePropertyFunction implements ItemPropertyFunction {
 		if(lodestonePos != null) {
 			calculate = true;
 			target = lodestonePos;
-		} else if(!isLodestone) {
+		} else if (!isLodestone) {
 			if(dimension.equals(LevelStem.END.location()) && CompassesWorkEverywhereModule.enableEnd)
 				calculate = true;
 			else if(dimension.equals(LevelStem.NETHER.location()) && CompassesWorkEverywhereModule.isCompassCalculated(stack) && CompassesWorkEverywhereModule.enableNether) {

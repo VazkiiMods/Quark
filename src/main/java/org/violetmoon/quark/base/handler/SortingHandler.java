@@ -475,6 +475,7 @@ public final class SortingHandler {
 		MINECART(classPredicate(MinecartItem.class)),
 		RAIL(list(Blocks.RAIL, Blocks.POWERED_RAIL, Blocks.DETECTOR_RAIL, Blocks.ACTIVATOR_RAIL)),
 		DYE(classPredicate(DyeItem.class)),
+		FOOD(stack -> (stack.has(DataComponents.FOOD)), FOOD_COMPARATOR),
 		ANY(inverseClassPredicate(BlockItem.class)),
 		BLOCK(classPredicate(BlockItem.class));
 

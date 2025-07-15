@@ -83,17 +83,17 @@ public class CameraModule extends ZetaModule {
 				Quark.asResource("shaders/post/bluefocus.json"),
 				Quark.asResource("shaders/post/yellowfocus.json"),
 
-				ResourceLocation.withDefaultNamespace("shaders/post/bumpy.json"), //TODO this seems to not exist anymore
-				ResourceLocation.withDefaultNamespace("shaders/post/notch.json"),
+				//ResourceLocation.withDefaultNamespace("shaders/post/bumpy.json"), //TODO this seems to not exist anymore
+				//ResourceLocation.withDefaultNamespace("shaders/post/notch.json"),
 				ResourceLocation.withDefaultNamespace("shaders/post/creeper.json"),
 				Quark.asResource("shaders/post/enderman.json"),
 
 				Quark.asResource("shaders/post/bits.json"),
-				ResourceLocation.withDefaultNamespace("shaders/post/blobs.json"),
-				ResourceLocation.withDefaultNamespace("shaders/post/pencil.json"),
-				Quark.asResource("shaders/post/watercolor.json"),
+				//ResourceLocation.withDefaultNamespace("shaders/post/blobs.json"),
+				//ResourceLocation.withDefaultNamespace("shaders/post/pencil.json"),
+				//Quark.asResource("shaders/post/watercolor.json"),
 				Quark.asResource("shaders/post/monochrome.json"),
-				ResourceLocation.withDefaultNamespace("shaders/post/sobel.json"),
+				//ResourceLocation.withDefaultNamespace("shaders/post/sobel.json"),
 
 				Quark.asResource("shaders/post/colorblind/deuteranopia.json"),
 				Quark.asResource("shaders/post/colorblind/protanopia.json"),
