@@ -1,0 +1,19 @@
+{
+  "type": "quark:mixed_exclusion",
+  "subtype": "chest4",
+  "conditions": [
+    {
+      "type": "neoforge:and",
+      "values": [
+        {
+          "type": "zeta:flag",
+          "flag": "wood_to_chest_recipes"
+        },
+        {
+          "type": "zeta:flag",
+          "flag": "variant_chests"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,10 @@
+{
+  "replace": false,
+  "values": [
+    "minecraft:item_frame",
+    {
+      "id": "quark:backpack",
+      "required": false
+    }
+  ]
+}

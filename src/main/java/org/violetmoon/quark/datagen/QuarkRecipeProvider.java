@@ -140,6 +140,7 @@ public class QuarkRecipeProvider extends RecipeProvider implements IConditionBui
             //TODO make a way to reference regular chests from trapped chests
             //trappedChestRecipe(chest.asItem(), chest.originalChest).unlockedBy("test", PlayerTrigger.TriggerInstance.tick()).save(recipeOutput, "quark:building/chests/" + "");
         }
+        //TODO https://github.com/VazkiiMods/Quark/blob/master/src/main/resources/data/quark/recipes/tweaks/crafting/utility/chests/mixed_chest_wood_but_without_exclusions.json
             //compressed
         compressUncompress(Items.APPLE, CompressedBlocksModule.apple, recipeOutput, null, "apple_crate");
         compressUncompress(Items.BEETROOT, CompressedBlocksModule.beetroot, recipeOutput, null, "beetroot_crate");

@@ -1,0 +1,9 @@
+{
+  "type": "quark:slab_to_block",
+  "neoforge:conditions": [
+    {
+      "type": "zeta:flag",
+      "flag": "slabs_to_blocks"
+    }
+  ]
+}

@@ -48,6 +48,7 @@ public class QuarkBlockLootTableProvider extends BlockLootSubProvider {
 
     @Override
     protected void generate() {
+        System.out.println("QuarkBlockLootTableProvider#generate called");
         //Automation
         dropSelf(ChuteModule.chute);
         //Building
@@ -98,7 +99,8 @@ public class QuarkBlockLootTableProvider extends BlockLootSubProvider {
         for(Block block : VerticalPlanksModule.blocks)
             dropSelf(block);
         for(Block block : VerticalSlabsModule.blocks)
-            add(block, createSlabItemTable(block)); //untested, this is for vanilla double slabs
+            add(block, createSlabItemTable(block));
+            //this is for vanilla double slabs, but it happens to work with verticals!
         for(Block block : WoodenPostsModule.blocks)
             dropSelf(block);
         //Tools
@@ -147,6 +149,7 @@ public class QuarkBlockLootTableProvider extends BlockLootSubProvider {
 
     @Override
     protected Iterable<Block> getKnownBlocks(){
+        System.out.println("QuarkBlockLootTableProvider#getKnownBlocks called");
         List<Block> ret = new ArrayList<>();
         //Automation
         ret.add(ChuteModule.chute);
