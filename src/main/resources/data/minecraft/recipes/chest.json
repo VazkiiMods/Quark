@@ -14,9 +14,9 @@
   "result": {
     "item": "minecraft:chest"
   },
-  "conditions": [
+  "neoforge:conditions": [
     {
-      "type": "forge:not",
+      "type": "neoforge:not",
       "value": {
         "type": "quark:flag",
         "flag": "variant_chests"

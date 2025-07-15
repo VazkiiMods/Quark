@@ -1,6 +1,7 @@
 package org.violetmoon.quark.addons.oddities.client.screen;
 
 import com.mojang.blaze3d.systems.RenderSystem;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.Button;
@@ -98,7 +99,7 @@ public class BackpackInventoryScreen extends InventoryScreen implements IQuarkBu
 		int leftPos = this.leftPos;
 		int topPos = this.topPos;
 		guiGraphics.blit(BACKPACK_INVENTORY_BACKGROUND, leftPos, topPos, 0, 0, imageWidth, imageHeight);
-		renderEntityInInventoryFollowsMouse(guiGraphics, leftPos + 51, topPos + 75, leftPos + 51 - mouseX, topPos + 75 - 50 - mouseY,30, 0F, mouseX, mouseY,  minecraft.player);
+		renderEntityInInventoryFollowsMouse(guiGraphics, leftPos + 26, topPos + 8, leftPos + 75, topPos + 78, 30, 0.0625F, mouseX, mouseY, this.minecraft.player);
 		moveCharmsButtons();
 	}
 

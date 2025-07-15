@@ -16,9 +16,9 @@
   "result": {
     "item": "minecraft:bookshelf"
   },
-  "conditions": [
+  "neoforge:conditions": [
     {
-      "type": "forge:not",
+      "type": "neoforge:not",
       "value": {
         "type": "quark:flag",
         "flag": "variant_bookshelves"

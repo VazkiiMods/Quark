@@ -31,7 +31,7 @@ public class ExclusionRecipe implements CraftingRecipe {
 	}
 
 	@Override
-	public boolean matches(CraftingInput input, Level level) {
+	public boolean matches(@NotNull CraftingInput input, @NotNull Level level) {
 		for(ResourceLocation recipeLoc : excluded) {
 			Optional<RecipeHolder<?>> recipeHolder = level.getRecipeManager().byKey(recipeLoc);
 			if(recipeHolder.isPresent()) {
@@ -45,7 +45,7 @@ public class ExclusionRecipe implements CraftingRecipe {
 	}
 
 	@Override
-	public ItemStack assemble(CraftingInput input, HolderLookup.Provider provider) {
+	public @NotNull ItemStack assemble(@NotNull CraftingInput input, HolderLookup.@NotNull Provider provider) {
 		return parent.assemble(input, provider);
 	}
 
@@ -55,7 +55,7 @@ public class ExclusionRecipe implements CraftingRecipe {
 	}
 
 	@Override
-	public ItemStack getResultItem(HolderLookup.Provider provider) {
+	public @NotNull ItemStack getResultItem(HolderLookup.@NotNull Provider provider) {
 		return parent.getResultItem(provider);
 	}
 
@@ -72,7 +72,7 @@ public class ExclusionRecipe implements CraftingRecipe {
 	}
 
 	@Override
-	public NonNullList<ItemStack> getRemainingItems(CraftingInput input) {
+	public @NotNull NonNullList<ItemStack> getRemainingItems(@NotNull CraftingInput input) {
 		return parent.getRemainingItems(input);
 	}
 
@@ -100,16 +100,14 @@ public class ExclusionRecipe implements CraftingRecipe {
 	}
 
 	@Override
-	public CraftingBookCategory category() {
+	public @NotNull CraftingBookCategory category() {
 		return parent.category();
 	}
 
+	// I dont think its needed, but just in case.
 	private static class ShapedExclusionRecipe extends ExclusionRecipe implements CraftingRecipe {
-		private final ShapedRecipe shapedParent;
-
 		public ShapedExclusionRecipe(CraftingRecipe shapedParent, List<ResourceLocation> excluded) {
 			super(shapedParent, excluded);
-			this.shapedParent = (ShapedRecipe)shapedParent;
 		}
 	}
 
@@ -137,12 +135,12 @@ public class ExclusionRecipe implements CraftingRecipe {
 		};
 
 		@Override
-		public MapCodec<ExclusionRecipe> codec() {
+		public @NotNull MapCodec<ExclusionRecipe> codec() {
 			return CODEC;
 		}
 
 		@Override
-		public StreamCodec<RegistryFriendlyByteBuf, ExclusionRecipe> streamCodec() {
+		public @NotNull StreamCodec<RegistryFriendlyByteBuf, ExclusionRecipe> streamCodec() {
 			return STREAM_CODEC;
 		}
 	}

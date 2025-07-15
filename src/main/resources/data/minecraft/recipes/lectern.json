@@ -10,7 +10,7 @@
       "tag": "minecraft:wooden_slabs"
     },
     "B": {
-      "tag": "forge:bookshelves"
+      "tag": "c:bookshelves"
     }
   },
   "result": {

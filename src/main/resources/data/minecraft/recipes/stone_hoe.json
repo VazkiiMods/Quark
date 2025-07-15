@@ -17,9 +17,9 @@
   "result": {
     "item": "minecraft:stone_hoe"
   },
-  "conditions": [
+  "neoforge:conditions": [
     {
-      "type": "forge:not",
+      "type": "neoforge:not",
       "value": {
         "type": "quark:flag",
         "flag": "better_stone_tools"

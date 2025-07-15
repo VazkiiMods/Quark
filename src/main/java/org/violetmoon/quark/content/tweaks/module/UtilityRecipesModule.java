@@ -20,9 +20,6 @@ import org.violetmoon.zeta.module.ZetaModule;
 @ZetaLoadModule(category = "tweaks")
 public class UtilityRecipesModule extends ZetaModule {
 
-	@Config(description = "Can any wool color be dyed?", flag = "dye_any_wool")
-	public static boolean dyeAnyWool = true;
-
 	@Config(description = "Can other stone-like materials be used for crafting stone tools?", flag = "better_stone_tools")
 	public static boolean betterStoneToolCrafting = true;
 

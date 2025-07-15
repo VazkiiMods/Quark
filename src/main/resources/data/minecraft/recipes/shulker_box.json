@@ -7,7 +7,7 @@
   ],
   "key": {
     "#": {
-      "tag": "forge:chests"
+      "tag": "c:chests"
     },
     "-": {
       "item": "minecraft:shulker_shell"

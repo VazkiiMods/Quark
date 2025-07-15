@@ -12,19 +12,14 @@ import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.tags.ItemTags;
 import net.minecraft.tags.TagKey;
-import net.minecraft.tags.TagNetworkSerialization;
-import net.minecraft.world.inventory.CraftingContainer;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.*;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
-import org.violetmoon.quark.base.recipe.ExclusionRecipe;
 
-public class MixedExclusionRecipe implements CraftingRecipe /*implements CraftingRecipe, IShapedRecipe<CraftingContainer>*/ {
+public class MixedExclusionRecipe implements CraftingRecipe {
     public static final MixedExclusionRecipe.Serializer SERIALIZER = new MixedExclusionRecipe.Serializer();
 
     private NonNullList<Ingredient> ingredients;
@@ -41,20 +36,6 @@ public class MixedExclusionRecipe implements CraftingRecipe /*implements Craftin
         this.placeholder = placeholder;
     }
 
-    /*public static MixedExclusionRecipe forChest(String group, boolean log) {
-        ItemStack output = new ItemStack(Items.CHEST, (log ? 4 : 1));
-        TagKey<Item> tag = (log ? ItemTags.LOGS : ItemTags.PLANKS);
-        ItemStack placeholder = new ItemStack(log ? Items.OAK_LOG : Items.OAK_PLANKS);
-        return new MixedExclusionRecipe(group, output, tag, placeholder);
-    }
-
-    public static MixedExclusionRecipe forFurnace(String group) {
-        ItemStack output = new ItemStack(Items.FURNACE);
-        TagKey<Item> tag = ItemTags.STONE_CRAFTING_MATERIALS;
-        ItemStack placeholder = new ItemStack(Items.COBBLESTONE);
-        return new MixedExclusionRecipe(group, output, tag, placeholder);
-    }*/
-
     @Override
     public boolean canCraftInDimensions(int x, int y) {
         return x == 3 && y == 3;
@@ -62,7 +43,7 @@ public class MixedExclusionRecipe implements CraftingRecipe /*implements Craftin
 
     @Override
     @NotNull
-    public ItemStack assemble(CraftingInput input, HolderLookup.Provider provider) {
+    public ItemStack assemble(@NotNull CraftingInput input, HolderLookup.@NotNull Provider provider) {
         return output.copy();
     }
 
@@ -73,7 +54,7 @@ public class MixedExclusionRecipe implements CraftingRecipe /*implements Craftin
     }
 
     @Override
-    public ItemStack getResultItem(HolderLookup.Provider provider) {
+    public @NotNull ItemStack getResultItem(HolderLookup.@NotNull Provider provider) {
         return output.copy();
     }
 
@@ -84,12 +65,12 @@ public class MixedExclusionRecipe implements CraftingRecipe /*implements Craftin
     }
 
     @Override
-    public CraftingBookCategory category() {
+    public @NotNull CraftingBookCategory category() {
         return CraftingBookCategory.MISC;
     }
 
     @Override
-    public boolean matches(CraftingInput input, Level level) {
+    public boolean matches(CraftingInput input, @NotNull Level level) {
         if(input.getItem(4).isEmpty()) {
             ItemStack first = null;
             boolean foundDifference = false;
@@ -141,7 +122,7 @@ public class MixedExclusionRecipe implements CraftingRecipe /*implements Craftin
         );
         public static final StreamCodec<RegistryFriendlyByteBuf, MixedExclusionRecipe> STREAM_CODEC = new StreamCodec<>() {
             @Override
-            public MixedExclusionRecipe decode(RegistryFriendlyByteBuf buf) {
+            public @NotNull MixedExclusionRecipe decode(RegistryFriendlyByteBuf buf) {
                 String group = buf.readUtf();
                 ItemStack output = ItemStack.STREAM_CODEC.decode(buf);
                 TagKey<Item> tagKey = evilBackportedTagKeyStreamCodec(Registries.ITEM).decode(buf);
@@ -163,12 +144,12 @@ public class MixedExclusionRecipe implements CraftingRecipe /*implements Craftin
         }
 
         @Override
-        public MapCodec<MixedExclusionRecipe> codec() {
+        public @NotNull MapCodec<MixedExclusionRecipe> codec() {
             return CODEC;
         }
 
         @Override
-        public StreamCodec<RegistryFriendlyByteBuf, MixedExclusionRecipe> streamCodec() {
+        public @NotNull StreamCodec<RegistryFriendlyByteBuf, MixedExclusionRecipe> streamCodec() {
             return STREAM_CODEC;
         }
     }

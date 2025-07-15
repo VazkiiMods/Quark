@@ -7,6 +7,7 @@ import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Unit;
 import net.minecraft.world.Containers;
 import net.minecraft.world.MenuProvider;
@@ -43,8 +44,8 @@ import java.util.function.Consumer;
 
 public class BackpackItem extends ArmorItem implements IZetaItem, IZetaItemExtensions, MenuProvider {
 
-	private static final String WORN_TEXTURE = Quark.MOD_ID + ":textures/misc/backpack_worn.png";
-	private static final String WORN_OVERLAY_TEXTURE = Quark.MOD_ID + ":textures/misc/backpack_worn_overlay.png";
+	private static final ResourceLocation WORN_TEXTURE = Quark.asResource("textures/misc/backpack_worn.png");
+	private static final ResourceLocation WORN_OVERLAY_TEXTURE = Quark.asResource("textures/misc/backpack_worn_overlay.png");
 
 	@Nullable
 	private final ZetaModule module;
@@ -117,6 +118,11 @@ public class BackpackItem extends ArmorItem implements IZetaItem, IZetaItemExten
 	@Override
 	public <T extends LivingEntity> int damageItemZeta(ItemStack stack, int amount, T entity, Consumer<Item> onBroken) {
 		return 0;
+	}
+
+	@Override
+	public ResourceLocation getArmorTexture(ItemStack stack, Entity entity, EquipmentSlot slot, ArmorMaterial.Layer layer, boolean innerModel) {
+		return type != null && type.equals("overlay") ? WORN_OVERLAY_TEXTURE : WORN_TEXTURE;
 	}
 
 	@Override
@@ -243,5 +249,7 @@ public class BackpackItem extends ArmorItem implements IZetaItem, IZetaItemExten
 	public Component getDisplayName() {
 		return Component.translatable(getDescriptionId());
 	}
+
+
 
 }
