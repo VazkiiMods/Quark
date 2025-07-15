@@ -22,8 +22,11 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.*;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
+import org.violetmoon.quark.base.recipe.ExclusionRecipe;
 
 public class MixedExclusionRecipe implements CraftingRecipe /*implements CraftingRecipe, IShapedRecipe<CraftingContainer>*/ {
+    public static final MixedExclusionRecipe.Serializer SERIALIZER = new MixedExclusionRecipe.Serializer();
+
     private NonNullList<Ingredient> ingredients;
 
     private final String group;
@@ -77,7 +80,7 @@ public class MixedExclusionRecipe implements CraftingRecipe /*implements Craftin
     @NotNull
     @Override
     public RecipeSerializer<?> getSerializer() {
-        return new Serializer();
+        return SERIALIZER;
     }
 
     @Override
@@ -136,9 +139,24 @@ public class MixedExclusionRecipe implements CraftingRecipe /*implements Craftin
                         )
                         .apply(inst, MixedExclusionRecipe::new)
         );
-        public static final StreamCodec<RegistryFriendlyByteBuf, MixedExclusionRecipe> STREAM_CODEC = StreamCodec.of(
-                MixedExclusionRecipe.Serializer::toNetwork, MixedExclusionRecipe.Serializer::fromNetwork
-        );
+        public static final StreamCodec<RegistryFriendlyByteBuf, MixedExclusionRecipe> STREAM_CODEC = new StreamCodec<>() {
+            @Override
+            public MixedExclusionRecipe decode(RegistryFriendlyByteBuf buf) {
+                String group = buf.readUtf();
+                ItemStack output = ItemStack.STREAM_CODEC.decode(buf);
+                TagKey<Item> tagKey = evilBackportedTagKeyStreamCodec(Registries.ITEM).decode(buf);
+                ItemStack placeholder = ItemStack.STREAM_CODEC.decode(buf);
+                return new MixedExclusionRecipe(group, output, tagKey, placeholder);
+            }
+
+            @Override
+            public void encode(RegistryFriendlyByteBuf buf, MixedExclusionRecipe recipe) {
+                buf.writeUtf(recipe.group);
+                ItemStack.STREAM_CODEC.encode(buf, recipe.output);
+                evilBackportedTagKeyStreamCodec(Registries.ITEM).encode(buf, recipe.tag);
+                ItemStack.STREAM_CODEC.encode(buf, recipe.placeholder);
+            }
+        };
 
         public static <T> StreamCodec<ByteBuf, TagKey<T>> evilBackportedTagKeyStreamCodec(ResourceKey<? extends Registry<T>> registry) {
             return ResourceLocation.STREAM_CODEC.map(resourceLocation -> TagKey.create(registry, resourceLocation), TagKey::location);
@@ -152,21 +170,6 @@ public class MixedExclusionRecipe implements CraftingRecipe /*implements Craftin
         @Override
         public StreamCodec<RegistryFriendlyByteBuf, MixedExclusionRecipe> streamCodec() {
             return STREAM_CODEC;
-        }
-
-        private static MixedExclusionRecipe fromNetwork(RegistryFriendlyByteBuf byteBuf) {
-            String group = byteBuf.readUtf();
-            ItemStack output = ItemStack.STREAM_CODEC.decode(byteBuf);
-            TagKey<Item> tagKey = evilBackportedTagKeyStreamCodec(Registries.ITEM).decode(byteBuf);
-            ItemStack placeholder = ItemStack.STREAM_CODEC.decode(byteBuf);
-            return new MixedExclusionRecipe(group, output, tagKey, placeholder);
-        }
-
-        private static void toNetwork(RegistryFriendlyByteBuf byteBuf, MixedExclusionRecipe recipe) {
-            byteBuf.writeUtf(recipe.group);
-            ItemStack.STREAM_CODEC.encode(byteBuf, recipe.output);
-            evilBackportedTagKeyStreamCodec(Registries.ITEM).encode(byteBuf, recipe.tag);
-            ItemStack.STREAM_CODEC.encode(byteBuf, recipe.placeholder);
         }
     }
 }
