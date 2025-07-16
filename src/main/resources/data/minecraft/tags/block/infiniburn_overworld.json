@@ -2,6 +2,11 @@
   "replace": false,
   "values": [
     "quark:charcoal_block",
-    "quark:blaze_lantern"
+    "quark:blaze_lantern",
+    "quark:netherrack_bricks",
+    "quark:netherrack_bricks_slab",
+    "quark:netherrack_bricks_stairs",
+    "quark:netherrack_bricks_wall",
+    "quark:netherrack_bricks_vertical_slab"
   ]
 }

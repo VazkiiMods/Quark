@@ -16,11 +16,14 @@ import net.minecraft.core.component.DataComponents;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.FormattedText;
+import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.network.chat.contents.TranslatableContents;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.inventory.tooltip.TooltipComponent;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.component.ItemContainerContents;
 import net.minecraft.world.level.block.ShulkerBoxBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.RandomizableContainerBlockEntity;
@@ -42,35 +45,29 @@ public class ShulkerBoxTooltips {
 
 	public static void makeTooltip(ZGatherTooltipComponents event) {
 		ItemStack stack = event.getItemStack();
-		if(SimilarBlockTypeHandler.isShulkerBox(stack) && stack.has(DataComponents.BLOCK_ENTITY_DATA)) {
-			CompoundTag cmp = stack.get(DataComponents.BLOCK_ENTITY_DATA).copyTag();
-
-			if(cmp.contains("LootTable"))
+		if(SimilarBlockTypeHandler.isShulkerBox(stack) && stack.has(DataComponents.CONTAINER)) {
+			ItemContainerContents contents = stack.get(DataComponents.CONTAINER);
+			if (contents.nonEmptyStream().toList().isEmpty()) {
 				return;
-
-			if(!cmp.contains("id"))
-				return;
+			}
 
 			ClientPacketListener listener = Minecraft.getInstance().getConnection();
-			BlockEntity te = BlockEntity.loadStatic(BlockPos.ZERO, ((BlockItem) stack.getItem()).getBlock().defaultBlockState(), cmp, listener.registryAccess());
-			if(te != null) {
-				List<Either<FormattedText, TooltipComponent>> tooltip = event.getTooltipElements();
-				List<Either<FormattedText, TooltipComponent>> tooltipCopy = new ArrayList<>(tooltip);
+			List<Either<FormattedText, TooltipComponent>> tooltip = event.getTooltipElements();
+			List<Either<FormattedText, TooltipComponent>> tooltipCopy = new ArrayList<>(tooltip);
 
-				for(int i = 1; i < tooltipCopy.size(); i++) {
-					Either<FormattedText, TooltipComponent> either = tooltipCopy.get(i);
-					if(either.left().isPresent()) {
-						String s = either.left().get().getString();
-						if(!s.startsWith("\u00a7") || s.startsWith("\u00a7o"))
-							tooltip.remove(either);
-					}
+			for(int i = 1; i < tooltipCopy.size(); i++) {
+				Either<FormattedText, TooltipComponent> either = tooltipCopy.get(i);
+				if(either.left().isPresent() && either.left().get() instanceof MutableComponent component) {
+					String s = either.left().get().getString();
+					if (component.getContents() instanceof TranslatableContents translatableContents && translatableContents.getKey().contains("container.shulkerBox"))
+						tooltip.remove(either);
 				}
-
-				if(!ImprovedTooltipsModule.shulkerBoxRequireShift || Screen.hasShiftDown())
-					tooltip.add(1, Either.right(new ShulkerComponent(stack)));
-				if(ImprovedTooltipsModule.shulkerBoxRequireShift && !Screen.hasShiftDown())
-					tooltip.add(1, Either.left(Component.translatable("quark.misc.shulker_box_shift")));
 			}
+
+			if(!ImprovedTooltipsModule.shulkerBoxRequireShift || Screen.hasShiftDown())
+				tooltip.add(1, Either.right(new ShulkerComponent(stack)));
+			if(ImprovedTooltipsModule.shulkerBoxRequireShift && !Screen.hasShiftDown())
+				tooltip.add(1, Either.left(Component.translatable("quark.misc.shulker_box_shift")));
 		}
 	}
 
@@ -96,75 +93,63 @@ public class ShulkerBoxTooltips {
 
 			PoseStack pose = guiGraphics.pose();
 
-			CompoundTag cmp = stack.get(DataComponents.BLOCK_ENTITY_DATA).copyTag();
-			if(cmp != null) {
-				if(cmp.contains("LootTable"))
-					return;
+			if(stack.has(DataComponents.CONTAINER)) {
+				ItemContainerContents contents = stack.get(DataComponents.CONTAINER);
 
-				if(!cmp.contains("id")) {
-					cmp = cmp.copy();
-					cmp.putString("id", "minecraft:shulker_box");
+				ItemStack currentBox = stack;
+				int currentX = tooltipX;
+				int currentY = tooltipY - 1;
+
+				int size = contents.getSlots();
+				int[] dims = {Math.min(size, 9), 1 + (size-1) / 9};
+				for (int[] testAgainst : TARGET_RATIOS) {
+					if (testAgainst[0] * testAgainst[1] == size) {
+						dims = testAgainst;
+						break;
+					}
 				}
-				BlockEntity te = BlockEntity.loadStatic(BlockPos.ZERO, ((BlockItem) stack.getItem()).getBlock().defaultBlockState(), cmp, mc.player.registryAccess());
-				if(te != null) {
-					if(te instanceof RandomizableContainerBlockEntity randomizable)
-						randomizable.setLootTable(null, 0);
 
-					//Optional<IItemHandler> handler = te.getCapability(ForgeCapabilities.ITEM_HANDLER, null);
-					/*handler.ifPresent((capability) -> {
-						ItemStack currentBox = stack;
-						int currentX = tooltipX;
-						int currentY = tooltipY - 1;
+				int texWidth = CORNER * 2 + EDGE * dims[0];
+				int right = currentX + texWidth;
+				Window window = mc.getWindow();
+				if (right > window.getGuiScaledWidth())
+					currentX -= (right - window.getGuiScaledWidth());
 
-						int size = capability.getSlots();
-						int[] dims = { Math.min(size, 9), Math.max(size / 9, 1) };
-						for(int[] testAgainst : TARGET_RATIOS) {
-							if(testAgainst[0] * testAgainst[1] == size) {
-								dims = testAgainst;
-								break;
-							}
-						}
+				pose.pushPose();
+				pose.translate(0, 0, 700);
 
-						int texWidth = CORNER * 2 + EDGE * dims[0];
-						int right = currentX + texWidth;
-						Window window = mc.getWindow();
-						if(right > window.getGuiScaledWidth())
-							currentX -= (right - window.getGuiScaledWidth());
+				int color = -1;
 
-						pose.pushPose();
-						pose.translate(0, 0, 700);
-
-						int color = -1;
-
-						if(ImprovedTooltipsModule.shulkerBoxUseColors && ((BlockItem) currentBox.getItem()).getBlock() instanceof ShulkerBoxBlock boxBlock) {
-							DyeColor dye = boxBlock.getColor();
-							if(dye != null) {
-								color = dye.getTextureDiffuseColor();
-							}
-						}
-
-						renderTooltipBackground(guiGraphics, mc, pose, currentX, currentY, dims[0], dims[1], color);
-
-						for(int i = 0; i < size; i++) {
-							ItemStack itemstack = capability.getStackInSlot(i);
-							int xp = currentX + 6 + (i % 9) * 18;
-							int yp = currentY + 6 + (i / 9) * 18;
-
-							if(!itemstack.isEmpty()) {
-								guiGraphics.renderItem(itemstack, xp, yp);
-								guiGraphics.renderItemDecorations(mc.font, itemstack, xp, yp);
-							}
-
-							if(!Quark.ZETA.modules.get(ChestSearchingModule.class).namesMatch(itemstack)) {
-								RenderSystem.disableDepthTest();
-								guiGraphics.fill(xp, yp, xp + 16, yp + 16, 0xAA000000);
-							}
-						}
-
-						pose.popPose();
-					});*/
-
+				if (ImprovedTooltipsModule.shulkerBoxUseColors && ((BlockItem) currentBox.getItem()).getBlock() instanceof ShulkerBoxBlock boxBlock) {
+					DyeColor dye = boxBlock.getColor();
+					if (dye != null) {
+						color = dye.getTextureDiffuseColor();
+					}
 				}
+
+				renderTooltipBackground(guiGraphics, mc, pose, currentX, currentY, dims[0], dims[1], color);
+
+				int skipped = 0;
+				for (int i = 0; i < size; i++) {
+					ItemStack itemstack = contents.getStackInSlot(i);
+					if (itemstack.isEmpty()) {
+						skipped++;
+						continue;
+					}
+
+					int xp = currentX + 6 + ((i-skipped) % 9) * 18;
+					int yp = currentY + 6 + ((i-skipped) / 9) * 18;
+
+					guiGraphics.renderItem(itemstack, xp, yp);
+					guiGraphics.renderItemDecorations(mc.font, itemstack, xp, yp);
+
+					if (!Quark.ZETA.modules.get(ChestSearchingModule.class).namesMatch(itemstack)) {
+						RenderSystem.disableDepthTest();
+						guiGraphics.fill(xp, yp, xp + 16, yp + 16, 0xAA000000);
+					}
+				}
+
+				pose.popPose();
 			}
 		}
 
@@ -214,12 +199,23 @@ public class ShulkerBoxTooltips {
 
 		@Override
 		public int getHeight() {
-			return 65;
+			if (stack.isEmpty() || !stack.has(DataComponents.CONTAINER))
+				return 0;
+			else {
+				ItemContainerContents contents = stack.get(DataComponents.CONTAINER);
+				return 11 + (1 + (Math.toIntExact((contents.nonEmptyStream().count())) - 1) / 9) * 18;
+			}
 		}
 
+		//171 max
 		@Override
 		public int getWidth(@NotNull Font font) {
-			return 171;
+			if (stack.isEmpty() || !stack.has(DataComponents.CONTAINER))
+				return 0;
+			else {
+				ItemContainerContents contents = stack.get(DataComponents.CONTAINER);
+				return 9 + Math.min(Math.toIntExact(contents.nonEmptyStream().count()), 9) * 18;
+			}
 		}
 	}
 
