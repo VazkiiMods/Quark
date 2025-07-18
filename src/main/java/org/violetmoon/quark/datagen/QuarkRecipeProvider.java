@@ -6,6 +6,7 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.data.PackOutput;
 import net.minecraft.data.recipes.*;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.DyeColor;
@@ -31,6 +32,10 @@ import org.violetmoon.quark.content.experimental.module.VariantSelectorModule;
 import org.violetmoon.quark.content.mobs.module.StonelingsModule;
 import org.violetmoon.quark.content.tools.module.*;
 import org.violetmoon.quark.content.tweaks.module.GlassShardModule;
+import org.violetmoon.quark.content.tweaks.module.UtilityRecipesModule;
+import org.violetmoon.quark.content.world.module.AncientWoodModule;
+import org.violetmoon.quark.content.world.module.AzaleaWoodModule;
+import org.violetmoon.quark.content.world.module.BlossomTreesModule;
 import org.violetmoon.quark.content.world.module.CorundumModule;
 import org.violetmoon.zeta.config.FlagCondition;
 
@@ -233,7 +238,7 @@ public class QuarkRecipeProvider extends RecipeProvider implements IConditionBui
             //slabs
         //need variant registry access
             //stairs
-
+        //need variant registry access
             //stonevariants (vanilla folder removed 1.21, it was inconsistently used)
         ShapedRecipeBuilder.shaped(RecipeCategory.MISC, MoreStoneVariantsModule.polishedCalcite)
                 .pattern("##")
@@ -257,7 +262,56 @@ public class QuarkRecipeProvider extends RecipeProvider implements IConditionBui
             //walls
 
             //bookshelves (new 1.21 folder)
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, Blocks.BOOKSHELF)
+                .pattern("###")
+                .pattern("XXX")
+                .pattern("###")
+                .define('#', Blocks.OAK_PLANKS)
+                .define('X', Items.BOOK)
+                .unlockedBy("test", PlayerTrigger.TriggerInstance.tick())
+                .save(recipeOutput.withConditions(zCond("variant_bookshelves")), "quark:building/crafting/bookshelves/oak_bookshelf");
+//vanilla wood variant bookshelves here
+//        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, VariantBookshelvesModule.birch)
+//                .pattern("###")
+//                .pattern("XXX")
+//                .pattern("###")
+//                .define('#', Blocks.BIRCH_PLANKS)
+//                .define('#', Items.BOOK)
+//                .unlockedBy("test", PlayerTrigger.TriggerInstance.tick())
+//                .save(recipeOutput.withConditions(zCond("variant_bookshelves")), "quark:building/crafting/bookshelves/birch_bookshelf");
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, AncientWoodModule.woodSet.bookshelf)
+                .pattern("###")
+                .pattern("XXX")
+                .pattern("###")
+                .define('#', AncientWoodModule.woodSet.planks)
+                .define('X', Items.BOOK)
+                .unlockedBy("test", PlayerTrigger.TriggerInstance.tick())
+                .save(recipeOutput.withConditions(and(zCond("variant_bookshelves"), zCond("ancient_wood"))), "quark:building/crafting/bookshelves/ancient_bookshelf");
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, AzaleaWoodModule.woodSet.bookshelf)
+                .pattern("###")
+                .pattern("XXX")
+                .pattern("###")
+                .define('#', AncientWoodModule.woodSet.planks)
+                .define('X', Items.BOOK)
+                .unlockedBy("test", PlayerTrigger.TriggerInstance.tick())
+                .save(recipeOutput.withConditions(and(zCond("variant_bookshelves"), zCond("azalea_wood"))), "quark:building/crafting/bookshelves/azalea_bookshelf");
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, BlossomTreesModule.woodSet.bookshelf)
+                .pattern("###")
+                .pattern("XXX")
+                .pattern("###")
+                .define('#', BlossomTreesModule.woodSet.planks)
+                .define('X', Items.BOOK)
+                .unlockedBy("test", PlayerTrigger.TriggerInstance.tick())
+                .save(recipeOutput.withConditions(and(zCond("variant_bookshelves"), zCond("blossom_trees"))), "quark:building/crafting/bookshelves/blossom_bookshelf");
 
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, Blocks.LECTERN)
+                .pattern("SSS")
+                .pattern(" B ")
+                .pattern(" S ")
+                .define('S', ItemTags.WOODEN_SLABS)
+                .define('B', Tags.Items.BOOKSHELVES)
+                .unlockedBy("test", PlayerTrigger.TriggerInstance.tick())
+                .save(recipeOutput.withConditions(zCond("variant_bookshelves")), "quark:building/crafting/bookshelves/lectern_with_variant_bookshelves");
             //hedges (new 1.21 folder)
 
             //leafcarpet (new 1.21 folder)
@@ -506,7 +560,48 @@ public class QuarkRecipeProvider extends RecipeProvider implements IConditionBui
                 .group("blue_dye")
                 .unlockedBy("test", PlayerTrigger.TriggerInstance.tick())
                 .save(recipeOutput.withConditions(zCond("coral_to_dye")), "quark:tweaks/crafting/utility/coral/tube_to_blue");
-            //utility/misc
+            //utility/better_stone_tools
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, Items.STONE_SWORD)
+                .pattern("#")
+                .pattern("#")
+                .pattern("S")
+                .define('#', QuarkTags.Items.STONE_TOOL_MATERIALS)
+                .define('S', Tags.Items.RODS_WOODEN)
+                .unlockedBy("test", PlayerTrigger.TriggerInstance.tick())
+                .save(recipeOutput.withConditions(zCond("better_stone_tools")), "quark:tweaks/crafting/utility/better_stone_tools/sword");
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, Items.STONE_SHOVEL)
+                .pattern("#")
+                .pattern("S")
+                .pattern("S")
+                .define('#', QuarkTags.Items.STONE_TOOL_MATERIALS)
+                .define('S', Tags.Items.RODS_WOODEN)
+                .unlockedBy("test", PlayerTrigger.TriggerInstance.tick())
+                .save(recipeOutput.withConditions(zCond("better_stone_tools")), "quark:tweaks/crafting/utility/better_stone_tools/shovel");
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, Items.STONE_PICKAXE)
+                .pattern("###")
+                .pattern(" S ")
+                .pattern(" S ")
+                .define('#', QuarkTags.Items.STONE_TOOL_MATERIALS)
+                .define('S', Tags.Items.RODS_WOODEN)
+                .unlockedBy("test", PlayerTrigger.TriggerInstance.tick())
+                .save(recipeOutput.withConditions(zCond("better_stone_tools")), "quark:tweaks/crafting/utility/better_stone_tools/pickaxe");
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, Items.STONE_AXE)
+                .pattern("##")
+                .pattern("#S")
+                .pattern(" S")
+                .define('#', QuarkTags.Items.STONE_TOOL_MATERIALS)
+                .define('S', Tags.Items.RODS_WOODEN)
+                .unlockedBy("test", PlayerTrigger.TriggerInstance.tick())
+                .save(recipeOutput.withConditions(zCond("better_stone_tools")), "quark:tweaks/crafting/utility/better_stone_tools/axe");
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, Items.STONE_AXE)
+                .pattern("##")
+                .pattern(" S")
+                .pattern(" S")
+                .define('#', QuarkTags.Items.STONE_TOOL_MATERIALS)
+                .define('S', Tags.Items.RODS_WOODEN)
+                .unlockedBy("test", PlayerTrigger.TriggerInstance.tick())
+                .save(recipeOutput.withConditions(zCond("better_stone_tools")), "quark:tweaks/crafting/utility/better_stone_tools/hoe");
+        //utility/misc
         ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, Items.BLACK_DYE)
                 .requires(Items.CHARCOAL)
                 .group("black_dye")

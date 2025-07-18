@@ -36,7 +36,7 @@ public class QuarkTags {
         public static final TagKey<Block> STAINED_FRAMED_GLASSES = tag("stained_framed_glasses");
         public static final TagKey<Block> STOOLS = tag("stools");
         public static final TagKey<Block> UNDERGROUND_BIOME_REPLACEABLE = tag("underground_biome_replaceable");
-        //vertical_slab tag should be deprecated
+        //vertical_slab (singular) tag should be deprecated
         public static final TagKey<Block> VERTICAL_SLABS = tag("vertical_slabs");
         public static final TagKey<Block> WOODEN_VERTICAL_SLABS = tag("wooden_vertical_slabs");
         public static final TagKey<Block> WRAITH_SPAWNABLE = tag("wraith_spawnable");
