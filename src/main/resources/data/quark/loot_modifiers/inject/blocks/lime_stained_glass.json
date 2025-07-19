@@ -1,0 +1,10 @@
+{
+  "type": "neoforge:add_table",
+  "conditions": [
+    {
+      "condition": "neoforge:loot_table_id",
+      "loot_table_id": "minecraft:blocks/lime_stained_glass"
+    }
+  ],
+  "table": "quark:inject/blocks/lime_stained_glass"
+}
