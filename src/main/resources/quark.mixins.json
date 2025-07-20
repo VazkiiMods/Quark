@@ -89,6 +89,7 @@
     "client.BannerItemMixin",
     "client.BeaconTileEntityRendererMixin",
     "client.BiomeMixin",
+    "client.CapeLayerMixin",
     "client.ChatComponentMixin",
     "client.ContainerScreenMixin",
     "client.ElytraLayerMixin",

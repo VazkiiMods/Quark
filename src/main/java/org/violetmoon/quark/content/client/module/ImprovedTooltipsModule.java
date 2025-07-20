@@ -20,6 +20,7 @@ import org.violetmoon.zeta.config.Config;
 import org.violetmoon.zeta.event.bus.LoadEvent;
 import org.violetmoon.zeta.event.bus.PlayEvent;
 import org.violetmoon.zeta.event.load.ZConfigChanged;
+import org.violetmoon.zeta.event.play.ZSkipAttributeTooltip;
 import org.violetmoon.zeta.module.ZetaLoadModule;
 import org.violetmoon.zeta.module.ZetaModule;
 
@@ -127,6 +128,11 @@ public class ImprovedTooltipsModule extends ZetaModule {
 		private static boolean ignore(ItemStack stack) {
 			return Boolean.TRUE.equals(stack.get(QuarkDataComponents.IGNORE));
 		}
+
+        @PlayEvent
+        public void heyItsMeTooltip(ZSkipAttributeTooltip event) {
+            if (attributeTooltips) AttributeTooltips.removeAttributeTooltips(event);
+        }
 
 		@PlayEvent
 		public void makeTooltip(ZGatherTooltipComponents event) {

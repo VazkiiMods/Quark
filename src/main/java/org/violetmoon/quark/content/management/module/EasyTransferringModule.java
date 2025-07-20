@@ -16,7 +16,7 @@ import org.violetmoon.zeta.module.ZetaModule;
 import java.util.List;
 
 @ZetaLoadModule(category = "management")
-public class EasyTransferingModule extends ZetaModule {
+public class EasyTransferringModule extends ZetaModule {
 
 	public static boolean shiftLocked = false;
 
@@ -24,7 +24,7 @@ public class EasyTransferingModule extends ZetaModule {
 	public static boolean enableShiftLock = true;
 
 	@ZetaLoadModule(clientReplacement = true)
-	public static class Client extends EasyTransferingModule {
+	public static class Client extends EasyTransferringModule {
 		@LoadEvent
 		public void registerKeybinds(ZKeyMapping event) {
 			addButton(event, 1, "insert", false);

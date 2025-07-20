@@ -8,7 +8,6 @@ import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.CraftingMenu;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.block.entity.BlockEntity;
 import net.neoforged.neoforge.items.IItemHandler;
 import net.neoforged.neoforge.items.ItemHandlerHelper;
 import net.neoforged.neoforge.items.SlotItemHandler;
@@ -17,10 +16,9 @@ import org.apache.commons.lang3.tuple.Pair;
 import org.jetbrains.annotations.NotNull;
 import org.violetmoon.quark.api.IQuarkButtonAllowed;
 import org.violetmoon.quark.api.ITransferManager;
-import org.violetmoon.quark.api.QuarkCapabilities;
 import org.violetmoon.quark.base.Quark;
 import org.violetmoon.quark.base.config.QuarkGeneralConfig;
-import org.violetmoon.quark.content.management.module.EasyTransferingModule;
+import org.violetmoon.quark.content.management.module.EasyTransferringModule;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,7 +27,7 @@ import java.util.function.BiPredicate;
 public class InventoryTransferHandler {
 
 	public static void transfer(Player player, boolean isRestock, boolean smart) {
-		if(!Quark.ZETA.modules.isEnabled(EasyTransferingModule.class) || player.isSpectator() || !accepts(player.containerMenu, player))
+		if(!Quark.ZETA.modules.isEnabled(EasyTransferringModule.class) || player.isSpectator() || !accepts(player.containerMenu, player))
 			return;
 
 		//		if(!useContainer && !player.getEntityWorld().getWorldInfo().getGameRulesInstance().getBoolean(StoreToChests.GAME_RULE)) {

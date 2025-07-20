@@ -1,7 +1,5 @@
 package org.violetmoon.quark.content.client.tooltip;
 
-import com.google.common.collect.ImmutableMultimap;
-import com.google.common.collect.Multimap;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.datafixers.util.Either;
@@ -14,10 +12,10 @@ import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.core.Holder;
 import net.minecraft.core.component.DataComponents;
-import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.FormattedText;
 import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.network.chat.contents.TranslatableContents;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.EquipmentSlot;
@@ -25,35 +23,34 @@ import net.minecraft.world.entity.EquipmentSlotGroup;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
-import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.attributes.DefaultAttributes;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.tooltip.TooltipComponent;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.PotionItem;
-import net.minecraft.world.item.TippedArrowItem;
 import net.minecraft.world.item.component.ItemAttributeModifiers;
-import net.minecraft.world.item.enchantment.Enchantments;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.violetmoon.quark.base.Quark;
 import org.violetmoon.quark.base.client.handler.ClientUtil;
 import org.violetmoon.quark.catnip.animation.AnimationTickHolder;
 import org.violetmoon.quark.content.client.module.ImprovedTooltipsModule;
-import org.violetmoon.quark.content.client.resources.AttributeDisplayType;
 import org.violetmoon.quark.content.client.resources.AttributeIconEntry;
 import org.violetmoon.quark.content.client.resources.AttributeIconEntry.CompareType;
-import org.violetmoon.quark.content.client.resources.AttributeSlot;
 import org.violetmoon.zeta.client.event.play.ZGatherTooltipComponents;
+import org.violetmoon.zeta.event.bus.PlayEvent;
+import org.violetmoon.zeta.event.play.ZSkipAttributeTooltip;
 
 import java.util.*;
+import java.util.stream.Collectors;
+
+import static org.violetmoon.quark.content.client.module.ImprovedTooltipsModule.attributeTooltips;
 
 /**
  * @author WireSegal
- *         Created at 10:34 AM on 9/1/19.
+ * Originally made at 10:34 AM on 9/1/19.
  */
-public class AttributeTooltips {
 
+public class AttributeTooltips {
 	public static final ResourceLocation TEXTURE_UPGRADE = Quark.asResource("textures/attribute/upgrade.png");
 	public static final ResourceLocation TEXTURE_DOWNGRADE = Quark.asResource("textures/attribute/downgrade.png");
 
@@ -74,16 +71,16 @@ public class AttributeTooltips {
 		return null;
 	}
 
-	private static MutableComponent format(ItemAttributeModifiers.Entry entry) {
+	private static MutableComponent format(ItemAttributeModifiers.Entry entry, double baseVal) {
 		double value = entry.modifier().amount();
 		switch(entry.modifier().operation()) {
 			case ADD_VALUE -> {
-				return Component.literal((value > 0 ? "+" : "") + ItemAttributeModifiers.ATTRIBUTE_MODIFIER_FORMAT.format((value))
-						.formatted(value < 0 ? ChatFormatting.RED : ChatFormatting.WHITE));
+				return Component.literal(ItemAttributeModifiers.ATTRIBUTE_MODIFIER_FORMAT.format((value + baseVal))
+                        .formatted(value < 0 ? ChatFormatting.RED : ChatFormatting.WHITE));
 			}
 			case ADD_MULTIPLIED_BASE -> {
-				return Component.literal((value > 0 ? "+" : "") + ItemAttributeModifiers.ATTRIBUTE_MODIFIER_FORMAT.format((value * 100) + "%")
-						.formatted(value < 0 ? ChatFormatting.RED : ChatFormatting.WHITE));
+				return Component.literal((value > 0 ? "+" : "") + (ItemAttributeModifiers.ATTRIBUTE_MODIFIER_FORMAT.format(value * 100))
+						.formatted(value < 0 ? ChatFormatting.RED : ChatFormatting.WHITE) + "%");
 			}
 			case ADD_MULTIPLIED_TOTAL -> {
 				AttributeSupplier supplier = DefaultAttributes.getSupplier(EntityType.PLAYER);
@@ -103,106 +100,120 @@ public class AttributeTooltips {
 
 		if (!Screen.hasShiftDown() && stack.has(DataComponents.ATTRIBUTE_MODIFIERS) && !stack.get(DataComponents.ATTRIBUTE_MODIFIERS).modifiers().isEmpty()) {
 			if (Minecraft.getInstance().player == null) return;
-
 			List<Either<FormattedText, TooltipComponent>> tooltipRaw = event.getTooltipElements();
-			ItemAttributeModifiers modifiers = stack.get(DataComponents.ATTRIBUTE_MODIFIERS);
-			Player player = Minecraft.getInstance().player;
-
 			tooltipRaw.add(1, Either.right(new AttributeComponent(stack)));
 		}
 	}
 
-	public record ModifierData(Holder<Attribute> attribute, AttributeModifier modifier, EquipmentSlotGroup slot) {
+	public static void removeAttributeTooltips(ZSkipAttributeTooltip skipAttributeTooltip) {
+		skipAttributeTooltip.setSkipAll(!Screen.hasShiftDown());
 	}
 
-	private static Multimap<Attribute, AttributeModifier> getModifiersOnEquipped(Player player, ItemStack stack, Multimap<Attribute, AttributeModifier> attributes, AttributeSlot slot) {
-		return ImmutableMultimap.of();
-	}
-
-	private static Multimap<Attribute, AttributeModifier> getModifiers(ItemStack stack, AttributeSlot slot) {
-		return ImmutableMultimap.of();
-	}
-
-	private static int renderAttribute(GuiGraphics guiGraphics, ItemAttributeModifiers.Entry entry, int x, int y, ItemStack stack, ItemAttributeModifiers slotAttributes, Minecraft mc, boolean forceRenderIfZero, ItemAttributeModifiers equippedSlotAttributes, @Nullable Set<ItemAttributeModifiers.Entry> equippedAttrsToRender) {
+	private static int renderAttribute(GuiGraphics guiGraphics, ItemAttributeModifiers.Entry entry, int x, int y, Minecraft mc, @Nullable ItemAttributeModifiers.Entry differenceInAttribute) {
 		AttributeIconEntry iconEntry = getIconForAttribute(entry.attribute());
-		if(iconEntry != null) {
-			if(equippedAttrsToRender != null)
-				equippedAttrsToRender.remove(entry);
 
-			RenderSystem.setShader(GameRenderer::getPositionTexShader);
-			RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
+		if (iconEntry != null) {
 			guiGraphics.blit(iconEntry.texture(), x, y, 0, 0, 9, 9, 9, 9);
+			double baseVal = mc.player.getAttributeBaseValue(entry.attribute());
 
-			MutableComponent valueStr = format(entry);
+			// Comparison code.
+			if (ImprovedTooltipsModule.showUpgradeStatus && differenceInAttribute != null) {
+				MutableComponent valueStr = format(entry, baseVal).withStyle((differenceInAttribute.modifier().amount() > 0) ? ChatFormatting.GREEN : (differenceInAttribute.modifier().amount() < 0) ? ChatFormatting.RED : ChatFormatting.WHITE);
+				guiGraphics.drawString(mc.font, valueStr, x + 12, y + 1, -1);
+				if(differenceInAttribute.modifier().amount() != 0) {
+					int xp = x - 2;
+					int yp = y - 2;
+					if(ImprovedTooltipsModule.animateUpDownArrows && AnimationTickHolder.getTicks() + Minecraft.getInstance().getTimer().getGameTimeDeltaTicks() % 20 < 10)
+						yp++;
 
-			if(ImprovedTooltipsModule.showUpgradeStatus) {
-				CompareType compareType = iconEntry.comparison();
-
-				if(mc.player != null) {
-					ItemStack equipped = mc.player.getItemBySlot(mc.player.getEquipmentSlotForItem(stack));
-					if(!equipped.equals(stack) && !equipped.isEmpty()) {
-						if(!equippedSlotAttributes.modifiers().isEmpty()) {
-							ItemAttributeModifiers.Entry comparedAttribute = null;
-
-							for (ItemAttributeModifiers.Entry real : equippedSlotAttributes.modifiers()) {
-								if (real.attribute().equals(entry.attribute())) {
-									comparedAttribute = real;
-								}
-							}
-
-							if (comparedAttribute != null) {
-								ChatFormatting color = compareType.getColor(entry.modifier().amount(), comparedAttribute.modifier().amount());
-
-								if (color != ChatFormatting.WHITE) {
-									int xp = x - 2;
-									int yp = y - 2;
-									if (ImprovedTooltipsModule.animateUpDownArrows && AnimationTickHolder.getTicks() + Minecraft.getInstance().getTimer().getGameTimeDeltaTicks() % 20 < 10)
-										yp++;
-
-									guiGraphics.blit(color == ChatFormatting.RED ? TEXTURE_DOWNGRADE : TEXTURE_UPGRADE, xp, yp, 0, 0, 13, 13, 13, 13);
-								}
-
-								valueStr = valueStr.withStyle(color);
-							}
-						}
-					}
+					guiGraphics.blit(differenceInAttribute.modifier().amount() < 0 ? TEXTURE_DOWNGRADE : TEXTURE_UPGRADE, xp, yp, 0, 0, 13, 13, 13, 13);
 				}
+				x += mc.font.width(valueStr) + 20;
+			} else {
+				MutableComponent valueStr = format(entry, baseVal);
+				guiGraphics.drawString(mc.font, valueStr, x + 12, y + 1, -1);
+				x += mc.font.width(valueStr) + 20;
 			}
-
-			guiGraphics.drawString(mc.font, valueStr, x + 12, y + 1, -1);
-			x += mc.font.width(valueStr) + 20;
 		}
 
 		return x;
 	}
 
-	private static AttributeSlot getPrimarySlot(ItemStack stack) {
-		if(stack.getItem() instanceof PotionItem || stack.getItem() instanceof TippedArrowItem)
-			return AttributeSlot.POTION;
-		return AttributeSlot.fromCanonicalSlot(stack.getEquipmentSlot());
+	/**
+	 * Simplifies the attributes of the stack. Doing calculations to combine modifiers with the same operations.
+	 * @param stack The stack whomst is having their attributes simplified.
+	 * @return A simplified set of attribute modifiers. Don't wanna return the actual stack (It would probably cause some issues if it actually combined em)
+	 */
+	public static ItemAttributeModifiers simplifyStackAttributes(ItemStack stack) {
+		ItemAttributeModifiers modifiers = stack.get(DataComponents.ATTRIBUTE_MODIFIERS);
+		List<ItemAttributeModifiers.Entry> simplifiedList = new ArrayList<>();
+
+		for (ItemAttributeModifiers.Entry entry : modifiers.modifiers()) {
+			// Chat I dont like the double loop I made here.
+			boolean addedToList = false;
+			for (int j = 0; j < simplifiedList.size(); j++) {
+
+				ItemAttributeModifiers.Entry simplifiedEntry = simplifiedList.get(j);
+
+				// This may seem a little much, but really its just checking if everything that would need to be evaluated is evaluated.
+				if (simplifiedEntry.attribute().equals(entry.attribute()) &&
+						simplifiedEntry.modifier().operation().equals(entry.modifier().operation()) &&
+						simplifiedEntry.slot().equals(entry.slot())) {
+					double value = entry.modifier().amount();
+					switch (entry.modifier().operation()) { // Different operations mean different values
+						case ADD_VALUE, ADD_MULTIPLIED_BASE -> value += simplifiedEntry.modifier().amount();
+                        case ADD_MULTIPLIED_TOTAL -> value *= simplifiedEntry.modifier().amount();
+                    }
+
+					simplifiedList.set(j, new ItemAttributeModifiers.Entry(entry.attribute(),
+							new AttributeModifier(entry.modifier().id(), value, entry.modifier().operation()),
+							entry.slot()));
+					addedToList = true;
+					break;
+				}
+			}
+
+			if (addedToList) continue;
+			simplifiedList.add(entry);
+		}
+
+		return new ItemAttributeModifiers(simplifiedList, modifiers.showInTooltip());
 	}
 
-	private static boolean canShowAttributes(ItemStack stack) {
-		if(stack.isEmpty() || !stack.has(DataComponents.ATTRIBUTE_MODIFIERS) || stack.get(DataComponents.ATTRIBUTE_MODIFIERS).modifiers().isEmpty())
-			return false;
 
-		/*
-		 This will be remade in 1.21.4+, but I don't know if it will be fully accurate in 1.21.1.
-		 So, for future reference, heres the 1.20.1 code and a link to how the tooltip hiding works in 1.20.1
-		 https://minecraft.wiki/w/Item_format/Before_1.20.5#Display_Properties
+	/**
+	 * Compares two ItemStacks
+	 * @param firstStack Base stack being compared, this is what the player is utilizing right at that moment.
+	 * @param secondStack Secondary stack being compared, this is what the player is looking at.
+	 * @return The difference in attributes, all stored in an AttributeModifiers thingy
+	 */
+	public static ItemAttributeModifiers compareAttributesOfStacks(ItemStack firstStack, ItemStack secondStack) {
+		ItemAttributeModifiers simplifiedFirstStackMod = simplifyStackAttributes(firstStack);
+		ItemAttributeModifiers simplifiedSecondStackMod = simplifyStackAttributes(secondStack);
 
-		 if(slot == AttributeSlot.POTION)
-		 	return (ItemNBTHelper.getInt(stack, "HideFlags", 0) & 32) == 0;
+		List<ItemAttributeModifiers.Entry> comparedModifs = new ArrayList<>();
+		for (ItemAttributeModifiers.Entry firstEntry : simplifiedFirstStackMod.modifiers()) {
+			for (ItemAttributeModifiers.Entry secondEntry : simplifiedSecondStackMod.modifiers()) {
+				if (secondEntry.attribute().equals(firstEntry.attribute()) &&
+						secondEntry.modifier().operation().equals(firstEntry.modifier().operation()) &&
+						secondEntry.slot().equals(firstEntry.slot())) {
+					comparedModifs.add(new ItemAttributeModifiers.Entry(secondEntry.attribute(), new AttributeModifier(
+							secondEntry.modifier().id(), secondEntry.modifier().amount() - firstEntry.modifier().amount(), secondEntry.modifier().operation()
+					), secondEntry.slot()));
+					break;
+				}
+			}
+		}
 
-		 return (ItemNBTHelper.getInt(stack, "HideFlags", 0) & 2) == 0;
-		 */
-
-		/*if(slot == AttributeSlot.POTION)
-			return !stack.has(DataComponents.HIDE_ADDITIONAL_TOOLTIP);*/
-
-		return !stack.has(DataComponents.HIDE_TOOLTIP);
+		return new ItemAttributeModifiers(comparedModifs, simplifiedSecondStackMod.showInTooltip());
 	}
 
+
+	/**
+	 * The text component that shows what attributes an item has. Will be used in the tooltip.
+	 *
+	 * @param stack The stack that has the attributes. Should have the attribute modifier data component.
+	 */
 	public record AttributeComponent(ItemStack stack) implements ClientTooltipComponent, TooltipComponent {
 
 		@Override
@@ -211,77 +222,79 @@ public class AttributeTooltips {
 
 			if(!Screen.hasShiftDown()) {
 				pose.pushPose();
-				pose.translate(0, 0, 500);
 
+				pose.translate(0, 0, 500); // Sets the priority of the tooltip that we are making
+
+				// Shader stuff, shouldn't be too crazy
 				RenderSystem.setShader(GameRenderer::getPositionTexShader);
 				RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
 
 				Minecraft mc = Minecraft.getInstance();
-				//fixme port 1.20 check if this even does anything
-//				pose.translate(0F, 0F, mc.getItemRenderer().blitOffset);
+				Player player = mc.player; // Player will always be available, if it isnt then uhhhh
+				ItemAttributeModifiers modifiers = stack.get(DataComponents.ATTRIBUTE_MODIFIERS); // The attributes of the item.
 
+				// Sorting has some errors, huh.
+				/*modifiers.modifiers().sort((entry, entry2) -> {
+					if (!entry.attribute().equals(entry2.attribute())) {
+						return entry.attribute().getRegisteredName().compareTo(entry2.attribute().getRegisteredName());
+					} else if (entry.modifier().operation() != entry2.modifier().operation()) {
+						return entry.modifier().operation().id() - entry2.modifier().operation().id();
+					} else return 0;
+				});*/
+
+				int x = tooltipX;
 				int y = tooltipY - 1;
 
-				EquipmentSlot primarySlot = mc.player.getEquipmentSlotForItem(stack);
-				boolean showSlots = false;
-				int x = tooltipX;
+				List<EquipmentSlotGroup> groups = new ArrayList<>();
 
-				ItemAttributeModifiers attributeModifiers = stack.get(DataComponents.ATTRIBUTE_MODIFIERS);
-
-				ItemStack itemInSlot = mc.player.getItemBySlot(primarySlot);
-				ItemAttributeModifiers modifiersOnItemInSlot = itemInSlot.get(DataComponents.ATTRIBUTE_MODIFIERS);
-
-				Set<Holder<Attribute>> temporaryLookAtMe = new LinkedHashSet<>();
-				modifiersOnItemInSlot.modifiers().forEach((entry -> temporaryLookAtMe.add(entry.attribute())));
-				Set<ItemAttributeModifiers.Entry> equippedAttrsToRender = new LinkedHashSet<>();
-
-				for (ItemAttributeModifiers.Entry entry : attributeModifiers.modifiers()) {
-					if (temporaryLookAtMe.contains(entry.attribute())) {
-						equippedAttrsToRender.add(entry);
-					}
+				for (ItemAttributeModifiers.Entry entry : modifiers.modifiers()) {
+					if (!groups.contains(entry.slot())) groups.add(entry.slot());
 				}
 
-				//Multimap<Attribute, AttributeModifier> presentOnEquipped = getModifiersOnEquipped(mc.player, stack, slotAttributes, slot);
-				//Set<Attribute> equippedAttrsToRender = new LinkedHashSet<>(presentOnEquipped.keySet());
+				boolean shouldSeparateFromMain = groups.size() > 1;
+				ItemStack comparedItem = player.getItemBySlot(player.getEquipmentSlotForItem(stack));
 
-				for(ItemAttributeModifiers.Entry entry : attributeModifiers.modifiers()) {
-					if(getIconForAttribute(entry.attribute()) != null) {
-						if(entry.slot().test(primarySlot)) {
-							showSlots = true;
-							break;
+				for (EquipmentSlotGroup slotGroup : groups) {
+					int groupX = tooltipX;
+					if (shouldSeparateFromMain) {
+						guiGraphics.blit(ClientUtil.GENERAL_ICONS, groupX, y, 193 + slotGroup.ordinal() * 9, 35, 9, 9, 256, 256);
+						groupX += 16;
+					}
+
+					if (!comparedItem.isEmpty() && !comparedItem.equals(stack) &&
+							comparedItem.has(DataComponents.ATTRIBUTE_MODIFIERS) &&
+							!comparedItem.get(DataComponents.ATTRIBUTE_MODIFIERS).modifiers().isEmpty()) {
+						ItemAttributeModifiers differenceInModifiers = compareAttributesOfStacks(comparedItem, stack);
+
+						for (ItemAttributeModifiers.Entry entry : simplifyStackAttributes(stack).modifiers()) {
+							if (entry.slot() != slotGroup) {
+								continue;
+							}
+
+							ItemAttributeModifiers.Entry diffAttribute = null;
+
+							for (ItemAttributeModifiers.Entry potentialDiffAttribute : differenceInModifiers.modifiers()) {
+								if (potentialDiffAttribute.modifier().operation().equals(entry.modifier().operation()) &&
+										potentialDiffAttribute.slot().equals(entry.slot()) && potentialDiffAttribute.attribute().equals(entry.attribute())) {
+									diffAttribute = potentialDiffAttribute;
+									break;
+								}
+							}
+
+							groupX = renderAttribute(guiGraphics, entry, groupX, y, mc, diffAttribute);
+						}
+					} else {
+						for (ItemAttributeModifiers.Entry entry : simplifyStackAttributes(stack).modifiers()) {
+							if (entry.slot() != slotGroup) {
+								continue;
+							}
+
+							groupX = renderAttribute(guiGraphics, entry, groupX, y, mc, null);
 						}
 					}
+					x = groupX;
+					y += 10;
 				}
-
-				boolean anyToRender = false;
-				for(ItemAttributeModifiers.Entry entry : attributeModifiers.modifiers()) {
-					if(entry.modifier().amount() != 0) {
-						anyToRender = true;
-						break;
-					}
-				}
-
-				if(anyToRender) {
-					if(showSlots) {
-						RenderSystem.setShader(GameRenderer::getPositionTexShader);
-						RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
-						guiGraphics.blit(ClientUtil.GENERAL_ICONS, x, y, 193 + primarySlot.ordinal() * 9, 35, 9, 9, 256, 256);
-						x += 20;
-					}
-
-					for(ItemAttributeModifiers.Entry entry : attributeModifiers.modifiers())
-						x = renderAttribute(guiGraphics, entry,  x, y, stack, attributeModifiers, mc, false, modifiersOnItemInSlot, equippedAttrsToRender);
-					for(ItemAttributeModifiers.Entry entry : equippedAttrsToRender)
-						x = renderAttribute(guiGraphics, entry, x, y, stack, attributeModifiers, mc, true, modifiersOnItemInSlot, null);
-
-					for(ItemAttributeModifiers.Entry entry : attributeModifiers.modifiers()) {
-						if(getIconForAttribute(entry.attribute()) == null) {
-							guiGraphics.drawString(font, "[+]", x + 1, y + 1, 0xFFFF55, true);
-							break;
-						}
-					}
-				}
-
 
 				pose.popPose();
 
@@ -290,14 +303,48 @@ public class AttributeTooltips {
 
 		@Override
 		public int getHeight() {
-			return 10;
+			int y = 0;
+			ItemAttributeModifiers modifiers = stack.get(DataComponents.ATTRIBUTE_MODIFIERS);
+			if (modifiers.showInTooltip()) {
+				List<EquipmentSlotGroup> groups = new ArrayList<>();
+				for (ItemAttributeModifiers.Entry entry : modifiers.modifiers()) {
+					if (!groups.contains(entry.slot())) groups.add(entry.slot());
+				}
+				y = groups.size() * 10;
+			}
+			return y;
 		}
 
 		@Override
 		public int getWidth(@NotNull Font font) {
-			return 128;
+			int width = 8;
+			ItemAttributeModifiers modifiers = stack.get(DataComponents.ATTRIBUTE_MODIFIERS);
+			Minecraft mc = Minecraft.getInstance();
+
+			if (modifiers.showInTooltip()) {
+				List<EquipmentSlotGroup> groups = new ArrayList<>();
+
+				for (ItemAttributeModifiers.Entry entry : modifiers.modifiers()) {
+					if (!groups.contains(entry.slot())) groups.add(entry.slot());
+				}
+
+				int x = 0;
+				for (EquipmentSlotGroup slotGroup : groups) {
+					int groupX = 0;
+					if (groups.size() > 1) {
+						groupX += 16;
+					}
+
+					for (ItemAttributeModifiers.Entry entry : modifiers.modifiers()) {
+						if (entry.slot() != slotGroup) continue;
+						double baseVal = mc.player.getAttributeBaseValue(entry.attribute());
+						groupX += mc.font.width(format(entry, baseVal)) + 20;
+					}
+					x = Math.max(x, groupX);
+				}
+				width = x;
+			}
+			return width - 8;
 		}
-
 	}
-
 }

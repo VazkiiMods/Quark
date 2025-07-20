@@ -17,7 +17,7 @@ import java.util.function.Supplier;
 
 /**
  * Implement on a TileEntity or provide as a capability
- * to allow it to receive inventory transfering, and to have chest buttons
+ * to allow it to receive inventory transferring, and to have chest buttons
  * on the client.
  *
  * You should not check for TileEntities implementing this.
@@ -28,7 +28,7 @@ public interface ITransferManager {
 	boolean acceptsTransfer(Player player);
 
 	/**
-	 * Override this if you want to add a custom IItemHandler for transfering.
+	 * Override this if you want to add a custom IItemHandler for transferring.
 	 */
 	default IItemHandler getTransferItemHandler(Supplier<IItemHandler> defaultSupplier) {
 		return defaultSupplier.get();
