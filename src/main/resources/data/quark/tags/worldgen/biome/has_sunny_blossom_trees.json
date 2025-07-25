@@ -1,0 +1,11 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "zeta:flag",
+      "flag": "blossom_trees"
+    }
+  ],
+  "values": [
+    "#c:is_plains"
+  ]
+}

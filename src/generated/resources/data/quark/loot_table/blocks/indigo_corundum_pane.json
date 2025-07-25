@@ -11,11 +11,11 @@
       "entries": [
         {
           "type": "minecraft:item",
-          "name": "quark:yellow_corundum_pane"
+          "name": "quark:indigo_corundum_pane"
         }
       ],
       "rolls": 1.0
     }
   ],
-  "random_sequence": "quark:blocks/yellow_corundum_pane"
+  "random_sequence": "quark:blocks/indigo_corundum_pane"
 }

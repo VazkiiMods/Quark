@@ -13,6 +13,7 @@ import net.neoforged.neoforge.common.data.ExistingFileHelper;
 import net.neoforged.neoforge.data.event.GatherDataEvent;
 import net.neoforged.neoforge.registries.NeoForgeRegistries;
 import org.violetmoon.quark.base.Quark;
+import org.violetmoon.zeta.config.ConfigFlagManager;
 
 import java.util.Collections;
 import java.util.List;

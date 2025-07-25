@@ -50,7 +50,7 @@ public class QuarkTags {
         public static final TagKey<Item> AZALEA_LOGS = tag("azalea_logs");
         public static final TagKey<Item> BACKPACK_BLOCKED = tag("backpack_blocked");
         public static final TagKey<Item> BIG_HARVESTING_HOES = tag("big_harvesting_hoes");
-        public static final TagKey<Item> BLOSSOM_LOGS = tag("BLOSSOM_LOGS");
+        public static final TagKey<Item> BLOSSOM_LOGS = tag("blossom_logs");
         public static final TagKey<Item> CORUNDUM = tag("corundum");
         public static final TagKey<Item> CRAB_TEMPT_ITEMS = tag("crab_tempt_items");
         public static final TagKey<Item> CRYSTAL_LAMP = tag("crystal_lamp");
