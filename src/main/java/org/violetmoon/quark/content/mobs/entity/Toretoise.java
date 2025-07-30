@@ -7,6 +7,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
@@ -38,6 +39,9 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.level.pathfinder.PathType;
 import net.minecraft.world.level.storage.loot.LootParams;
+import net.minecraft.world.level.storage.loot.LootTable;
+import net.minecraft.world.level.storage.loot.parameters.LootContextParamSet;
+import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraft.world.phys.AABB;
 import net.neoforged.neoforge.common.ItemAbilities;
@@ -261,22 +265,23 @@ public class Toretoise extends Animal {
 	}
 
 	public void dropOre(int ore, LootParams.Builder lootContext) {
-		lootContext.withParameter(LootContextParams.ORIGIN, position());
+		lootContext.withParameter(LootContextParams.ORIGIN, position()).withParameter(LootContextParams.THIS_ENTITY, this);
 
-		BlockState dropState = null;
+		ResourceKey<LootTable> dropTableKey = null;
 		switch(ore) {
-		case 1 -> dropState = Blocks.DEEPSLATE_COAL_ORE.defaultBlockState();
-		case 2 -> dropState = Blocks.DEEPSLATE_IRON_ORE.defaultBlockState();
-		case 3 -> dropState = Blocks.DEEPSLATE_REDSTONE_ORE.defaultBlockState();
-		case 4 -> dropState = Blocks.DEEPSLATE_LAPIS_ORE.defaultBlockState();
-		case 5 -> dropState = Blocks.DEEPSLATE_COPPER_ORE.defaultBlockState();
+			case 1 -> dropTableKey = ToretoiseModule.COAL_LOOT;
+			case 2 -> dropTableKey = ToretoiseModule.IRON_LOOT;
+			case 3 -> dropTableKey = ToretoiseModule.REDSTONE_LOOT;
+			case 4 -> dropTableKey = ToretoiseModule.LAPIS_LOOT;
+			case 5 -> dropTableKey = ToretoiseModule.COPPER_LOOT;
 		}
 
-		if(dropState != null) {
+		if(dropTableKey != null) {
 			playSound(QuarkSounds.ENTITY_TORETOISE_HARVEST, 1F, 0.6F);
 			gameEvent(GameEvent.ENTITY_INTERACT);
 
-			List<ItemStack> drops = dropState.getDrops(lootContext);
+			LootTable dropTable = level().getServer().reloadableRegistries().getLootTable(dropTableKey);
+			List<ItemStack> drops = dropTable.getRandomItems(lootContext.create(LootContextParamSets.GIFT));
 			for(ItemStack drop : drops)
 				spawnAtLocation(drop, 1.2F);
 		}

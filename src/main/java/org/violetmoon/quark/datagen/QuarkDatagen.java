@@ -54,7 +54,9 @@ public class QuarkDatagen {
         generator.addProvider(gatherDataEvent.includeServer(), qbtp);
         generator.addProvider(gatherDataEvent.includeServer(), new QuarkItemTagProvider(packOutput, holderLookupProvider, qbtp.contentsGetter(), null, existingFileHelper));
          */
-        generator.addProvider(gatherDataEvent.includeServer(), new QuarkBiomeTagProvider(packOutput, holderLookupProvider, null, existingFileHelper));
+
+        //testing if biome tags can be done manually so they can have data load conditions (???)
+        //generator.addProvider(gatherDataEvent.includeServer(), new QuarkBiomeTagProvider(packOutput, holderLookupProvider, null, existingFileHelper));
 
         //things like modded tags can be done manually
 
@@ -72,7 +74,7 @@ public class QuarkDatagen {
         //generator.addProvider(gatherDataEvent.includeClient(), new QuarkBlockStateProvider(packOutput, existingFileHelper));
 
 
-        System.out.println("QUARK DATA GENERATED. YIPPEE");
+        System.out.println("QUARK DATA GATHERED. YIPPEE");
     }
 
 }

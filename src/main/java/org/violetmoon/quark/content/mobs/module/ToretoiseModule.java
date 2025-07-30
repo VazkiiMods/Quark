@@ -3,12 +3,14 @@ package org.violetmoon.quark.content.mobs.module;
 import com.google.common.collect.Lists;
 import net.minecraft.client.renderer.entity.EntityRenderers;
 import net.minecraft.core.registries.Registries;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.tags.BiomeTags;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobCategory;
 import net.minecraft.world.entity.SpawnPlacementTypes;
 import net.minecraft.world.level.levelgen.Heightmap.Types;
+import net.minecraft.world.level.storage.loot.LootTable;
 import net.neoforged.neoforge.common.Tags;
 import org.violetmoon.quark.base.Quark;
 import org.violetmoon.quark.content.mobs.client.render.entity.ToretoiseRenderer;
@@ -31,6 +33,12 @@ import java.util.List;
 public class ToretoiseModule extends ZetaModule {
 
 	public static EntityType<Toretoise> toretoiseType;
+
+	public static final ResourceKey<LootTable> COAL_LOOT = ResourceKey.create(Registries.LOOT_TABLE, Quark.asResource("toretoise/coal"));
+	public static final ResourceKey<LootTable> IRON_LOOT = ResourceKey.create(Registries.LOOT_TABLE, Quark.asResource("toretoise/iron"));
+	public static final ResourceKey<LootTable> REDSTONE_LOOT = ResourceKey.create(Registries.LOOT_TABLE, Quark.asResource("toretoise/redstone"));
+	public static final ResourceKey<LootTable> LAPIS_LOOT = ResourceKey.create(Registries.LOOT_TABLE, Quark.asResource("toretoise/lapis"));
+	public static final ResourceKey<LootTable> COPPER_LOOT = ResourceKey.create(Registries.LOOT_TABLE, Quark.asResource("toretoise/copper"));
 
 	@Config
 	public static int maxYLevel = 0;

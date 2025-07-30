@@ -1,0 +1,14 @@
+{
+  "type": "minecraft:gift",
+  "pools": [
+    {
+      "rolls": 1,
+      "entries": [
+        {
+          "type": "minecraft:loot_table",
+          "value": "minecraft:blocks/deepslate_copper_ore"
+        }
+      ]
+    }
+  ]
+}
