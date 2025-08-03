@@ -1,0 +1,6 @@
+{
+  "type": "neoforge:add_features",
+  "biomes": "#quark:has_frosty_blossom_trees",
+  "features": "quark:blue_blossom_placed",
+  "step": "vegetal_decoration"
+}

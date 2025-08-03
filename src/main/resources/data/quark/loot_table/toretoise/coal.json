@@ -3,11 +3,10 @@
   "pools": [
     {
       "rolls": 1,
-      "bonus_rolls": 1,
       "entries": [
         {
-          "type": "minecraft:item",
-          "name": "minecraft:stick"
+          "type": "minecraft:loot_table",
+          "value": "minecraft:blocks/deepslate_coal_ore"
         }
       ]
     }
