@@ -37,12 +37,13 @@ public class BlossomTreeGenerator extends Generator {
 	@Override
 	public void generateChunk(WorldGenRegion worldIn, ChunkGenerator generator, RandomSource rand, BlockPos pos) {
 		BlockPos placePos = pos.offset(rand.nextInt(16), 0, rand.nextInt(16));
+        placePos = worldIn.getHeightmapPos(Types.MOTION_BLOCKING, placePos);
 		if(quarkConfig.biomeConfig.canSpawn(getBiome(worldIn, placePos, false)) && rand.nextInt(quarkConfig.rarity) == 0) {
 			placePos = worldIn.getHeightmapPos(Types.MOTION_BLOCKING, placePos).below();
 
 			BlockState ground = worldIn.getBlockState(placePos);
 
-			if(ground.getBlock().canSustainPlant(ground, worldIn, pos, Direction.UP, Blocks.OAK_SAPLING.defaultBlockState()).isTrue()) {
+			if(!ground.getBlock().canSustainPlant(ground, worldIn, pos, Direction.UP, Blocks.OAK_SAPLING.defaultBlockState()).isFalse()) {
 				BlockPos up = placePos.above();
 				BlockState upState = worldIn.getBlockState(up);
 
