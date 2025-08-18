@@ -1,5 +1,12 @@
 package org.violetmoon.quark.content.world.gen;
 
+import java.util.List;
+
+import org.violetmoon.quark.content.world.module.FairyRingsModule;
+import org.violetmoon.zeta.config.type.DimensionConfig;
+import org.violetmoon.zeta.util.BlockUtils;
+import org.violetmoon.zeta.world.generator.Generator;
+
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Holder;
@@ -17,12 +24,6 @@ import net.minecraft.world.level.levelgen.feature.ConfiguredFeature;
 import net.minecraft.world.level.levelgen.feature.configurations.RandomPatchConfiguration;
 import net.minecraft.world.level.levelgen.placement.PlacedFeature;
 import net.neoforged.neoforge.common.Tags;
-import org.violetmoon.quark.content.world.module.FairyRingsModule;
-import org.violetmoon.zeta.config.type.DimensionConfig;
-import org.violetmoon.zeta.util.BlockUtils;
-import org.violetmoon.zeta.world.generator.Generator;
-
-import java.util.List;
 
 public class FairyRingGenerator extends Generator {
 

@@ -129,7 +129,7 @@ dependencies {
     runtimeOnly "curse.maven:nofog-296468:5438578"
     // runtimeOnly fg.deobf("curse.maven:woodworks-543610:5292418")
     // runtimeOnly fg.deobf("curse.maven:blueprint-382216:5292242")
-    runtimeOnly "curse.maven:farmers-delight-398521:5962800"
+    //runtimeOnly "curse.maven:farmers-delight-398521:5962800"
 
     runtimeOnly "top.theillusivec4.curios:curios-neoforge:${deps.curios}"
     compileOnly "top.theillusivec4.curios:curios-neoforge:${deps.curios}:api"

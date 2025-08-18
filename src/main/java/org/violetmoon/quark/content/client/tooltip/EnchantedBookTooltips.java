@@ -11,6 +11,7 @@ import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent;
 import net.minecraft.core.Holder;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
@@ -72,7 +73,7 @@ public class EnchantedBookTooltips {
 				for(; tooltipIndex < tooltip.size(); tooltipIndex++) {
 					Either<FormattedText, TooltipComponent> elmAt = tooltip.get(tooltipIndex);
 					if(elmAt.left().isPresent() && elmAt.left().get().equals(match)) {
-						boolean tableOnly = Boolean.TRUE.equals(stack.get(QuarkDataComponents.TABLE_ONLY_ENCHANTS));
+						boolean tableOnly = stack.has(QuarkDataComponents.TABLE_ONLY_ENCHANTS) && stack.get(QuarkDataComponents.TABLE_ONLY_ENCHANTS);
 						List<ItemStack> items = getItemsForEnchantment(ed.enchantment.value(), tableOnly);
 						int itemCount = items.size();
 						int lines = (int) Math.ceil((double) itemCount / 10.0);
@@ -98,7 +99,7 @@ public class EnchantedBookTooltips {
 				continue;
 
 			if(!stack.isEmpty() && e.canEnchant(stack)) {
-				if(onlyForTable && (!e.isPrimaryItem(stack) || !stack.isEnchantable() || Quark.ZETA.itemExtensions.get(stack).getEnchantmentValueZeta(stack) <= 0))
+				if((!e.isPrimaryItem(stack) || !stack.isEnchantable() || Quark.ZETA.itemExtensions.get(stack).getEnchantmentValueZeta(stack) <= 0))
 					continue;
 				list.add(stack);
 			}
@@ -117,7 +118,16 @@ public class EnchantedBookTooltips {
 	}
 
 	private static List<EnchantmentInstance> getEnchantedBookEnchantments(ItemStack stack) {
-		ItemEnchantments enchantments = stack.getEnchantments();
+		ItemEnchantments enchantments;
+		if (stack.has(DataComponents.ENCHANTMENTS) && !stack.get(DataComponents.ENCHANTMENTS).isEmpty()) {
+			enchantments = stack.get(DataComponents.ENCHANTMENTS);
+		}
+		else if (stack.has(DataComponents.STORED_ENCHANTMENTS) && !stack.get(DataComponents.STORED_ENCHANTMENTS).isEmpty()) {
+			enchantments = stack.get(DataComponents.STORED_ENCHANTMENTS);
+		} else {
+			return List.of();
+		}
+
 
 		List<EnchantmentInstance> retList = new ArrayList<>(enchantments.size());
 
