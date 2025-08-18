@@ -115,7 +115,7 @@ public class QuarkBlockLootTableProvider extends BlockLootSubProvider {
         //World
         for(Block block : AncientWoodModule.woodSet.allBlocks())
             dropSelf(block);
-        //add(AncientWoodModule.ancient_leaves, createLeavesDropWithBonusLikeHowOakLeavesDropApples(AncientWoodModule.ancient_leaves, AncientWoodModule.ancient_sapling, AncientWoodModule.ancient_fruit));
+        add(AncientWoodModule.ancient_leaves, createLeavesDropWithBonusLikeHowOakLeavesDropApples(AncientWoodModule.ancient_leaves, AncientWoodModule.ancient_sapling, AncientWoodModule.ancient_fruit));
         dropSelf(AncientWoodModule.ancient_sapling);
         //Azalea leaves are vanilla
         add(ChorusVegetationModule.chorus_weeds, createShearsDrops(ChorusVegetationModule.chorus_weeds));
@@ -145,7 +145,7 @@ public class QuarkBlockLootTableProvider extends BlockLootSubProvider {
         for(Block block : BlossomTreesModule.woodSet.allBlocks())
             dropSelf(block);
         for(BlossomTreesModule.BlossomTree tree : BlossomTreesModule.blossomTrees){
-            //add(tree.leaves, createLeavesDrops(tree.leaves, tree.sapling));
+            add(tree.leaves, createLeavesDrops(tree.leaves, tree.sapling));
             dropSelf(tree.sapling);
         }
 
@@ -196,7 +196,7 @@ public class QuarkBlockLootTableProvider extends BlockLootSubProvider {
         ret.add(GlassShardModule.dirtyGlassPane);
         //World
         ret.addAll(AncientWoodModule.woodSet.allBlocks());
-        //ret.add(AncientWoodModule.ancient_leaves);
+        ret.add(AncientWoodModule.ancient_leaves);
         ret.add(AncientWoodModule.ancient_sapling);
         ret.add(ChorusVegetationModule.chorus_weeds);
         ret.add(ChorusVegetationModule.chorus_twist);
@@ -218,7 +218,7 @@ public class QuarkBlockLootTableProvider extends BlockLootSubProvider {
         ret.add(SpiralSpiresModule.dusky_myalite);
         ret.addAll(BlossomTreesModule.woodSet.allBlocks());
         for(BlossomTreesModule.BlossomTree tree : BlossomTreesModule.blossomTrees){
-            //ret.add(tree.leaves);
+            ret.add(tree.leaves);
             ret.add(tree.sapling);
         }
         //Oddities

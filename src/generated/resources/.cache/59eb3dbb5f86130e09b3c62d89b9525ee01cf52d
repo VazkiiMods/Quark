@@ -1,4 +1,4 @@
-// 1.21.1	2025-08-18T16:56:02.550412	Loot Tables
+// 1.21.1	2025-08-18T17:21:42.2474758	Loot Tables
 321167e5d1e420c3799ebd55550623276a62d02f data/quark/loot_table/blocks/acacia_bookshelf.json
 78cf85302095b576b7eda6e9c83fd9141e777c3b data/quark/loot_table/blocks/acacia_chest.json
 2d740f286cb6b31376a3bb00878726966b38c064 data/quark/loot_table/blocks/acacia_hedge.json
@@ -17,6 +17,7 @@ b5ddd8febb02f8087a9d6e091375923c128da553 data/quark/loot_table/blocks/ancient_do
 aa8e698cd47a9e539a5a3855fdd6321fe23bae35 data/quark/loot_table/blocks/ancient_hedge.json
 92b826ec1fd0e50c7c149ac89f888ed9d28cb9dc data/quark/loot_table/blocks/ancient_ladder.json
 1829825997f0b37c1887f28b073e7def426469b2 data/quark/loot_table/blocks/ancient_leaf_carpet.json
+24684140f869730679f0a4be06ccf164c838d588 data/quark/loot_table/blocks/ancient_leaves.json
 e0fce7cce50ab502a5cfd5f7d7f6e010f7c3d426 data/quark/loot_table/blocks/ancient_log.json
 d2b68a17ae406249e7e9bdaecb269236cfcf271a data/quark/loot_table/blocks/ancient_planks.json
 11a9b05b0125a5e2baf061560776cb81fff4b08d data/quark/loot_table/blocks/ancient_planks_vertical_slab.json
@@ -87,6 +88,7 @@ deb03a5a435370fe80131d0989772b03104f5394 data/quark/loot_table/blocks/blossom_tr
 6fb21e7cb7baeb49b8994aeacf4e4b989831f9a5 data/quark/loot_table/blocks/blossom_wood.json
 3dd0a305dd052ab4b616f1d360bb9a8f1218bae6 data/quark/loot_table/blocks/blue_blossom_hedge.json
 47ad3b6434c609ef868301fddbc3b3b54623377e data/quark/loot_table/blocks/blue_blossom_leaf_carpet.json
+fa7e49724dbc5c79cf0964e12b08b3d25eb7e962 data/quark/loot_table/blocks/blue_blossom_leaves.json
 1705513d9a53818698241cfd9109cfdb5c22079b data/quark/loot_table/blocks/blue_blossom_sapling.json
 1263d5643d066b874b3da51f34bd3ff6772311ae data/quark/loot_table/blocks/blue_corundum.json
 0fd18649cc9a43f6baa984cd65ede84fa5178aeb data/quark/loot_table/blocks/blue_corundum_cluster.json
@@ -226,6 +228,7 @@ de555ce06978e144b21b357aa3e1796ec61e5243 data/quark/loot_table/blocks/jungle_tra
 3cf5fcad9ff1e0e34d68ba365358ec3a08673bac data/quark/loot_table/blocks/jungle_vertical_slab.json
 fcb269dc533a1905a9fb08823bf82a057c0cc2a3 data/quark/loot_table/blocks/lavender_blossom_hedge.json
 a1e7e38c3fb77eccd82f65778612a68721d3da19 data/quark/loot_table/blocks/lavender_blossom_leaf_carpet.json
+bf62d07cc37444a1954b472f80aa535ec4a31150 data/quark/loot_table/blocks/lavender_blossom_leaves.json
 076536179f7ca35d8c97651c8b792da9948fa79e data/quark/loot_table/blocks/lavender_blossom_sapling.json
 71084fe906d18cb42a1fce28b465f82af94e81e8 data/quark/loot_table/blocks/light_blue_framed_glass.json
 4962929feb3f2174978548686777ea08ce921bb7 data/quark/loot_table/blocks/light_blue_framed_glass_pane.json
@@ -286,6 +289,7 @@ fa95dc4f004e809ba9e56b2a3698a19f31b6726e data/quark/loot_table/blocks/oak_chest.
 9b8472939a90d883b18c59aa28cdb1dffd88ed7c data/quark/loot_table/blocks/oak_vertical_slab.json
 8696c4946370badf68099213c3cbb08915f870e9 data/quark/loot_table/blocks/orange_blossom_hedge.json
 0ed3f6fdc9fdcbd5d26127059cc0c05ce9cc3433 data/quark/loot_table/blocks/orange_blossom_leaf_carpet.json
+15d1e4d23dd8960b4dd063e58c99ffb95a797c91 data/quark/loot_table/blocks/orange_blossom_leaves.json
 130e93f5fc6092b93b5ddd77c06eeb64cbc3e1b8 data/quark/loot_table/blocks/orange_blossom_sapling.json
 86ab5143f569e9e9b39f6cdca109cff37ef24ec3 data/quark/loot_table/blocks/orange_corundum.json
 d016fa341d16802b4fe7fba1722d85b96f7a5a96 data/quark/loot_table/blocks/orange_corundum_cluster.json
@@ -374,6 +378,7 @@ ccf87662b73035822ed811583ad3ea4bfa220325 data/quark/loot_table/blocks/raw_gold_b
 351a43463eb8571d0dcdd002e2fabe0cbc36b5d6 data/quark/loot_table/blocks/raw_iron_bricks_vertical_slab.json
 006842b6cb20811ad56fd80c4ffd1f3820716f59 data/quark/loot_table/blocks/red_blossom_hedge.json
 ace8fcdac57b7aeb8496ae3730cb1e86d82e1f6e data/quark/loot_table/blocks/red_blossom_leaf_carpet.json
+1e2b27a11c6ddec6508d88492cc7cedf8ae640b9 data/quark/loot_table/blocks/red_blossom_leaves.json
 2264eda3ad25cd59c774aa4fa40ee730f7d11075 data/quark/loot_table/blocks/red_blossom_sapling.json
 fe73c3545d317ab23e0f4161405f1e1bdf158139 data/quark/loot_table/blocks/red_corundum.json
 a2574dd127bf541df58ae8f586ce487da4c3ed0f data/quark/loot_table/blocks/red_corundum_cluster.json
@@ -488,6 +493,7 @@ eb7eb9db4e44b47a5c4e748917dbfbf754bf0b89 data/quark/loot_table/blocks/white_shin
 9398f6d9c06dcbb3099e5cafb4c34ffb1c17a755 data/quark/loot_table/blocks/white_stool.json
 e05091bee680bcf9b94f6038c9cade9abf57acf2 data/quark/loot_table/blocks/yellow_blossom_hedge.json
 cb85faad71ceab280f4487aed4022c0ede659e92 data/quark/loot_table/blocks/yellow_blossom_leaf_carpet.json
+cf0d52f55cc0263a47921f55aa7b2775053c099c data/quark/loot_table/blocks/yellow_blossom_leaves.json
 3f75012db05791d184b31ec9883e5252720774f6 data/quark/loot_table/blocks/yellow_blossom_sapling.json
 c30a56fa909be8ec74f2e1b2662b07805e8bf8b0 data/quark/loot_table/blocks/yellow_corundum.json
 5a87b862031272bab4ddd06173371453b5e37ae8 data/quark/loot_table/blocks/yellow_corundum_cluster.json
