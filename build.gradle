@@ -130,6 +130,7 @@ dependencies {
     // runtimeOnly fg.deobf("curse.maven:woodworks-543610:5292418")
     // runtimeOnly fg.deobf("curse.maven:blueprint-382216:5292242")
     //runtimeOnly "curse.maven:farmers-delight-398521:5962800"
+    runtimeOnly "dev.emi:emi-neoforge:${deps.emi_version}"
 
     runtimeOnly "top.theillusivec4.curios:curios-neoforge:${deps.curios}"
     compileOnly "top.theillusivec4.curios:curios-neoforge:${deps.curios}:api"

@@ -3,8 +3,10 @@ package org.violetmoon.quark.datagen;
 import net.minecraft.advancements.critereon.ItemPredicate;
 import net.minecraft.client.OptionInstance;
 import net.minecraft.core.HolderLookup;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.data.loot.BlockLootSubProvider;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.flag.FeatureFlags;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
@@ -34,6 +36,7 @@ import org.violetmoon.quark.content.world.module.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 public class QuarkBlockLootTableProvider extends BlockLootSubProvider {
@@ -112,7 +115,7 @@ public class QuarkBlockLootTableProvider extends BlockLootSubProvider {
         //World
         for(Block block : AncientWoodModule.woodSet.allBlocks())
             dropSelf(block);
-        add(AncientWoodModule.ancient_leaves, createLeavesDropWithBonusLikeHowOakLeavesDropApples(AncientWoodModule.ancient_leaves, AncientWoodModule.ancient_sapling, AncientWoodModule.ancient_fruit));
+        //add(AncientWoodModule.ancient_leaves, createLeavesDropWithBonusLikeHowOakLeavesDropApples(AncientWoodModule.ancient_leaves, AncientWoodModule.ancient_sapling, AncientWoodModule.ancient_fruit));
         dropSelf(AncientWoodModule.ancient_sapling);
         //Azalea leaves are vanilla
         add(ChorusVegetationModule.chorus_weeds, createShearsDrops(ChorusVegetationModule.chorus_weeds));
@@ -142,7 +145,7 @@ public class QuarkBlockLootTableProvider extends BlockLootSubProvider {
         for(Block block : BlossomTreesModule.woodSet.allBlocks())
             dropSelf(block);
         for(BlossomTreesModule.BlossomTree tree : BlossomTreesModule.blossomTrees){
-            add(tree.leaves, createLeavesDrops(tree.leaves, tree.sapling));
+            //add(tree.leaves, createLeavesDrops(tree.leaves, tree.sapling));
             dropSelf(tree.sapling);
         }
 
@@ -158,27 +161,22 @@ public class QuarkBlockLootTableProvider extends BlockLootSubProvider {
         ret.add(CelebratoryLampsModule.stone_lamp);
         ret.add(CelebratoryLampsModule.stone_brick_lamp);
         ret.addAll(CompressedBlocksModule.blocks);
-        //ret.addAll(DuskboundBlocksModule.blocks); //need a way to access VariantRegistry slabs, stairs, and walls lists
         ret.addAll(FramedGlassModule.glassBlocks);
         ret.add(GoldBarsModule.gold_bars);
         ret.addAll(HedgesModule.hedges);
         ret.addAll(HollowLogsModule.hollowLogs);
-        //ret.addAll(IndustrialPaletteModule.blocks); //need slabs stairs walls etc
         ret.add(GrateModule.grate);
         ret.addAll(JapanesePaletteModule.blocks);
         ret.addAll(LeafCarpetModule.carpets);
         ret.addAll(MidoriModule.blocks);
-        //ret.addAll(MoreBrickTypesModule.);
         ret.addAll(MoreMudBlocksModule.blocks);
         ret.addAll(MorePottedPlantsModule.pottedPlants);
-        //ret.addAll(MoreStoneVariantsModule.blocks); //stairs slab walls
         ret.add(NetherBrickFenceGateModule.netherBrickFenceGate);
         ret.addAll(RainbowLampsModule.lamps);
         ret.addAll(RawMetalBricksModule.blocks);
         ret.add(RopeModule.rope);
         ret.add(ShearVinesModule.cut_vine);
         ret.addAll(ShinglesModule.blocks);
-        //ret.addAll(SoulSandstoneModule.blocks); //stairs slab walls
         ret.addAll(StoolsModule.stools);
         ret.add(SturdyStoneModule.sturdy_stone);
         ret.add(ThatchModule.thatch);
@@ -198,9 +196,8 @@ public class QuarkBlockLootTableProvider extends BlockLootSubProvider {
         ret.add(GlassShardModule.dirtyGlassPane);
         //World
         ret.addAll(AncientWoodModule.woodSet.allBlocks());
-        ret.add(AncientWoodModule.ancient_leaves);
+        //ret.add(AncientWoodModule.ancient_leaves);
         ret.add(AncientWoodModule.ancient_sapling);
-        //ret.addAll(AzaleaWoodModule.woodSet.allBlocks());
         ret.add(ChorusVegetationModule.chorus_weeds);
         ret.add(ChorusVegetationModule.chorus_twist);
         ret.addAll(CorundumModule.crystals);
@@ -209,24 +206,23 @@ public class QuarkBlockLootTableProvider extends BlockLootSubProvider {
         ret.addAll(CorundumModule.panes);
         ret.add(GlimmeringWealdModule.glow_shroom);
         ret.add(GlimmeringWealdModule.glow_lichen_growth);
-        //ret.add(GlimmeringWealdModule.glow_shroom_block);
         ret.add(GlimmeringWealdModule.glow_shroom_stem);
         ret.add(GlimmeringWealdModule.glow_shroom_ring);
         ret.add(MonsterBoxModule.monster_box);
-        ret.add(NewStoneTypesModule.limestoneBlock); //MoreStoneVariants should handle the other variants
+        ret.add(NewStoneTypesModule.limestoneBlock);
         ret.add(NewStoneTypesModule.jasperBlock);
         ret.add(NewStoneTypesModule.shaleBlock);
         ret.add(NewStoneTypesModule.myaliteBlock);
         ret.addAll(NewStoneTypesModule.polishedBlocks.values());
-        //ret.add(PermafrostModule.permafrost); //stairs slab walls
         ret.add(SpiralSpiresModule.myalite_crystal);
         ret.add(SpiralSpiresModule.dusky_myalite);
         ret.addAll(BlossomTreesModule.woodSet.allBlocks());
-        ret.addAll(BlossomTreesModule.blossomTrees.stream().map(blossomTree -> blossomTree.leaves).toList());
-        ret.addAll(BlossomTreesModule.blossomTrees.stream().map(blossomTree -> blossomTree.sapling).toList());
+        for(BlossomTreesModule.BlossomTree tree : BlossomTreesModule.blossomTrees){
+            //ret.add(tree.leaves);
+            ret.add(tree.sapling);
+        }
         //Oddities
         //Experimental
-
         return ret;
     }
 
