@@ -2,9 +2,7 @@ package org.violetmoon.quark.content.world.block;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.core.particles.DustParticleOptions;
-import net.minecraft.core.particles.ParticleOptions;
-import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.core.particles.*;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.item.CreativeModeTabs;
@@ -92,7 +90,7 @@ public class CorundumBlock extends ZetaGlassBlock {
 			double z = (double) pos.getZ() + rand.nextDouble();
 
 			//Unsure if this is correct behavior.
-			worldIn.addParticle((ParticleOptions) ParticleTypes.ENTITY_EFFECT, x, y, z, (color >> 16)/255f, (color >> 8) / 255f, color / 255f);
+			worldIn.addParticle(new BlockParticleOption(ParticleTypes.BLOCK, stateIn), x, y, z, (color >> 16)/255f, (color >> 8) / 255f, color / 255f);
 		}
 
 		if(!waxed)
