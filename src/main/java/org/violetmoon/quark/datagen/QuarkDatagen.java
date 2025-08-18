@@ -41,7 +41,7 @@ public class QuarkDatagen {
 
         generator.addProvider(gatherDataEvent.includeServer(), new QuarkRecipeProvider(packOutput, holderLookupProvider));
         generator.addProvider(gatherDataEvent.includeServer(), new LootTableProvider(packOutput, Collections.emptySet(),
-                List.of(/*new LootTableProvider.SubProviderEntry(QuarkBlockLootTableProvider::new, LootContextParamSets.BLOCK),*/
+                List.of(new LootTableProvider.SubProviderEntry(QuarkBlockLootTableProvider::new, LootContextParamSets.BLOCK),
                         new LootTableProvider.SubProviderEntry(QuarkEntityLootTableProvider::new, LootContextParamSets.ENTITY)),
                 holderLookupProvider));
         //do we need to generate vanilla data overrides (dye any wool, nether wart block, stone tools)?
