@@ -40,6 +40,7 @@ public class QuarkBlockLootTableProvider extends BlockLootSubProvider {
 
     private static final float[] LEAVES_STICK_CHANCES = new float[]{0.02F, 0.022222223F, 0.025F, 0.033333335F, 0.1F};
     private static final float[] LEAVES_BONUS_CHANCES = new float[]{0.005F, 0.0055555557F, 0.00625F, 0.008333334F, 0.025F};
+    private static final float[] NORMAL_LEAVES_SAPLING_CHANCES = {0.05F, 0.0625F, 0.083333336F, 0.1F};
     protected static final LootItemCondition.Builder HAS_SHEARS = MatchTool.toolMatches(ItemPredicate.Builder.item().of(Tags.Items.TOOLS_SHEAR));
 
     protected QuarkBlockLootTableProvider(HolderLookup.Provider holderLookupProvider) {
@@ -234,7 +235,7 @@ public class QuarkBlockLootTableProvider extends BlockLootSubProvider {
     @Override
     protected LootTable.Builder createLeavesDrops(Block p_250088_, Block p_250731_, float... p_248949_) { //don't use last arg
         HolderLookup.RegistryLookup<Enchantment> registrylookup = this.registries.lookupOrThrow(Registries.ENCHANTMENT);
-        return this.createSilkTouchOrShearsDispatchTable(p_250088_, ((LootPoolSingletonContainer.Builder<?>)this.applyExplosionCondition(p_250088_, LootItem.lootTableItem(p_250731_))).when(BonusLevelTableCondition.bonusLevelFlatChance(registrylookup.getOrThrow(Enchantments.FORTUNE), p_248949_))).withPool(LootPool.lootPool().setRolls(ConstantValue.exactly(1.0F)).when(this.checkNotShearsOrSilk()).add(((LootPoolSingletonContainer.Builder)this.applyExplosionDecay(p_250088_, LootItem.lootTableItem(Items.STICK).apply(SetItemCountFunction.setCount(UniformGenerator.between(1.0F, 2.0F))))).when(BonusLevelTableCondition.bonusLevelFlatChance(registrylookup.getOrThrow(Enchantments.FORTUNE), LEAVES_STICK_CHANCES))));
+        return this.createSilkTouchOrShearsDispatchTable(p_250088_, ((LootPoolSingletonContainer.Builder<?>)this.applyExplosionCondition(p_250088_, LootItem.lootTableItem(p_250731_))).when(BonusLevelTableCondition.bonusLevelFlatChance(registrylookup.getOrThrow(Enchantments.FORTUNE), NORMAL_LEAVES_SAPLING_CHANCES))).withPool(LootPool.lootPool().setRolls(ConstantValue.exactly(1.0F)).when(this.checkNotShearsOrSilk()).add(((LootPoolSingletonContainer.Builder)this.applyExplosionDecay(p_250088_, LootItem.lootTableItem(Items.STICK).apply(SetItemCountFunction.setCount(UniformGenerator.between(1.0F, 2.0F))))).when(BonusLevelTableCondition.bonusLevelFlatChance(registrylookup.getOrThrow(Enchantments.FORTUNE), LEAVES_STICK_CHANCES))));
     }
 
     //shears only, no silk touch
