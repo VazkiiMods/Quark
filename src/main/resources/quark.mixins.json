@@ -69,6 +69,7 @@
     "VillagerMixin",
     "VillagerTradesMixin",
     "WallBlockMixin",
+    "WorldGenRegionMixin",
     "accessor.AccessorAbstractArrow",
     "accessor.AccessorAbstractChestedHorse",
     "accessor.AccessorBaseContainerBlockEntity",
