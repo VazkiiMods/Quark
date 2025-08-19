@@ -118,7 +118,7 @@
     "frame": "challenge",
     "hidden": false,
     "icon": {
-      "item": "quark:blue_corundum_cluster"
+      "id": "quark:blue_corundum_cluster"
     },
     "show_toast": true,
     "title": {

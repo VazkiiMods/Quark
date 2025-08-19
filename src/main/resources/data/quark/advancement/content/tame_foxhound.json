@@ -18,7 +18,7 @@
     "frame": "task",
     "hidden": false,
     "icon": {
-      "item": "minecraft:coal"
+      "id": "minecraft:coal"
     },
     "show_toast": true,
     "title": {

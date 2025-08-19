@@ -53,7 +53,32 @@ public class PistonsMoveTileEntitiesModule extends ZetaModule {
 	public static List<String> renderBlacklist = Lists.newArrayList("psi:programmer", "botania:starfield");
 	// todo: shouldn't this be a tag? Its more efficient and clean than checking the id every time
 	@Config
-	public static List<String> movementBlacklist = Lists.newArrayList("minecraft:spawner", "integrateddynamics:cable", "randomthings:blockbreaker", "minecraft:ender_chest", "minecraft:enchanting_table", "minecraft:trapped_chest", "quark:spruce_trapped_chest", "quark:birch_trapped_chest", "quark:jungle_trapped_chest", "quark:acacia_trapped_chest", "quark:dark_oak_trapped_chest", "endergetic:bolloom_bud");
+	public static List<String> movementBlacklist = Lists.newArrayList(
+            "minecraft:spawner",
+            "integrateddynamics:cable",
+            "randomthings:blockbreaker",
+            "minecraft:ender_chest",
+            "minecraft:enchanting_table",
+            "minecraft:trapped_chest",
+            "quark:trapped_oak_chest",
+            "quark:trapped_spruce_chest",
+            "quark:trapped_birch_chest",
+            "quark:trapped_jungle_chest",
+            "quark:trapped_acacia_chest",
+            "quark:trapped_dark_oak_chest",
+            "quark:trapped_warped_chest",
+            "quark:trapped_crimson_chest",
+            "quark:trapped_nether_brick_chest",
+            "quark:trapped_purpur_chest",
+            "quark:trapped_prismarine_chest",
+            "quark:trapped_azalea_chest",
+            "quark:trapped_blossom_chest",
+            "quark:trapped_mangrove_chest",
+            "quark:trapped_ancient_chest",
+            "quark:trapped_cherry_chest",
+            "quark:trapped_bamboo_chest",
+            "endergetic:bolloom_bud"
+    );
 	@Config
 	public static List<String> delayedUpdateList = Lists.newArrayList("minecraft:dispenser", "minecraft:dropper");
 

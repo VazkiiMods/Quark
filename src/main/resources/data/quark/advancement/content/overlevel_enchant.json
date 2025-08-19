@@ -13,7 +13,7 @@
     "frame": "task",
     "hidden": false,
     "icon": {
-      "item": "quark:ancient_tome"
+      "id": "quark:ancient_tome"
     },
     "show_toast": true,
     "title": {

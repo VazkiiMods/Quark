@@ -1,34 +1,34 @@
 {
-  "parent": "quark:get_diamond_heart",
+  "parent": "minecraft:end/enter_end_gateway",
   "criteria": {
-    "make_stoneling": {
-      "trigger": "quark:make_stoneling"
+    "use_viaduct": {
+      "trigger": "quark:use_viaduct"
     }
   },
   "display": {
     "announce_to_chat": true,
     "description": {
-      "translate": "advancements.quark.make_stoneling.description"
+      "translate": "advancements.quark.use_viaduct.description"
     },
     "frame": "goal",
     "hidden": false,
     "icon": {
-      "item": "quark:diamond_heart"
+      "id": "quark:myalite_crystal"
     },
     "show_toast": true,
     "title": {
-      "translate": "advancements.quark.make_stoneling.title"
+      "translate": "advancements.quark.use_viaduct.title"
     }
   },
   "requirements": [
     [
-      "make_stoneling"
+      "use_viaduct"
     ]
   ],
   "neoforge:conditions": [
     {
       "type": "quark:advancement_flag",
-      "flag": "stoneling_drop_diamond_heart"
+      "flag": "myalite_viaduct"
     }
   ]
 

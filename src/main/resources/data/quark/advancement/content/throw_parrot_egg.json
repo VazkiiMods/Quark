@@ -1,34 +1,34 @@
 {
   "parent": "minecraft:husbandry/breed_an_animal",
   "criteria": {
-    "poison_baby": {
-      "trigger": "quark:poison_baby"
+    "throw_parrot_egg": {
+      "trigger": "quark:throw_parrot_egg"
     }
   },
   "display": {
     "announce_to_chat": true,
     "description": {
-      "translate": "advancements.quark.poison_baby.description"
+      "translate": "advancements.quark.throw_parrot_egg.description"
     },
-    "frame": "task",
+    "frame": "goal",
     "hidden": false,
     "icon": {
-      "item": "minecraft:poisonous_potato"
+      "id": "quark:egg_parrot_red_blue"
     },
     "show_toast": true,
     "title": {
-      "translate": "advancements.quark.poison_baby.title"
+      "translate": "advancements.quark.throw_parrot_egg.title"
     }
   },
   "requirements": [
     [
-      "poison_baby"
+      "throw_parrot_egg"
     ]
   ],
   "neoforge:conditions": [
     {
       "type": "quark:advancement_flag",
-      "flag": "poison_potato_usage"
+      "flag": "parrot_eggs"
     }
   ]
 

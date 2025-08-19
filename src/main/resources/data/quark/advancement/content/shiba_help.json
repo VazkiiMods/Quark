@@ -1,34 +1,34 @@
 {
-  "parent": "minecraft:story/mine_diamond",
+  "parent": "minecraft:husbandry/tame_an_animal",
   "criteria": {
-    "throw_pickarang": {
-      "trigger": "quark:throw_pickarang"
+    "shiba_help": {
+      "trigger": "quark:shiba_help"
     }
   },
   "display": {
     "announce_to_chat": true,
     "description": {
-      "translate": "advancements.quark.throw_pickarang.description"
+      "translate": "advancements.quark.shiba_help.description"
     },
     "frame": "task",
     "hidden": false,
     "icon": {
-      "item": "quark:pickarang"
+      "id": "minecraft:torch"
     },
     "show_toast": true,
     "title": {
-      "translate": "advancements.quark.throw_pickarang.title"
+      "translate": "advancements.quark.shiba_help.title"
     }
   },
   "requirements": [
     [
-      "throw_pickarang"
+      "shiba_help"
     ]
   ],
   "neoforge:conditions": [
     {
       "type": "quark:advancement_flag",
-      "flag": "pickarang"
+      "flag": "shiba"
     }
   ]
 

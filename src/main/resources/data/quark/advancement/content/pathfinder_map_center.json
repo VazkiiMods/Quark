@@ -13,7 +13,7 @@
     "frame": "goal",
     "hidden": false,
     "icon": {
-      "item": "minecraft:filled_map"
+      "id": "minecraft:filled_map"
     },
     "show_toast": true,
     "title": {

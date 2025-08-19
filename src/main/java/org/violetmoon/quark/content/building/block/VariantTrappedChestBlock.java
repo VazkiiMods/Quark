@@ -41,7 +41,7 @@ public class VariantTrappedChestBlock extends ChestBlock implements IZetaBlock, 
 		if(module == null) //auto registration below this line
 			return;
 
-		String resloc = (prefix != null ? prefix + "_" : "") + type + "_trapped_chest";
+		String resloc = "trapped_" + (prefix != null ? prefix + "_" : "") + type + "_chest";
 		module.zeta().registry.registerBlock(this, resloc, true);
 	}
 

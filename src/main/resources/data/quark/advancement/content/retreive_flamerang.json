@@ -1,34 +1,34 @@
 {
-  "parent": "minecraft:story/enchant_item",
+  "parent": "quark:throw_pickarang",
   "criteria": {
-    "influence": {
-      "trigger": "quark:influence"
+    "retreive_flamerang": {
+      "trigger": "quark:use_flamerang"
     }
   },
   "display": {
     "announce_to_chat": true,
     "description": {
-      "translate": "advancements.quark.influence.description"
+      "translate": "advancements.quark.retreive_flamerang.description"
     },
     "frame": "goal",
     "hidden": false,
     "icon": {
-      "item": "minecraft:lime_candle"
+      "id": "quark:flamerang"
     },
     "show_toast": true,
     "title": {
-      "translate": "advancements.quark.influence.title"
+      "translate": "advancements.quark.retreive_flamerang.title"
     }
   },
   "requirements": [
     [
-      "influence"
+      "retreive_flamerang"
     ]
   ],
   "neoforge:conditions": [
     {
       "type": "quark:advancement_flag",
-      "flag": "candle_influencing"
+      "flag": "flamerang"
     }
   ]
 

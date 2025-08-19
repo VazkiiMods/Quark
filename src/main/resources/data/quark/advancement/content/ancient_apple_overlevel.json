@@ -13,7 +13,7 @@
     "frame": "challenge",
     "hidden": true,
     "icon": {
-      "item": "quark:ancient_fruit"
+      "id": "quark:ancient_fruit"
     },
     "show_toast": true,
     "title": {

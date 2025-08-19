@@ -11,11 +11,11 @@
       "entries": [
         {
           "type": "minecraft:item",
-          "name": "quark:azalea_trapped_chest"
+          "name": "quark:trapped_azalea_chest"
         }
       ],
       "rolls": 1.0
     }
   ],
-  "random_sequence": "quark:blocks/azalea_trapped_chest"
+  "random_sequence": "quark:blocks/trapped_azalea_chest"
 }

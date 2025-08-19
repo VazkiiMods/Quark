@@ -70,7 +70,7 @@
     "frame": "challenge",
     "hidden": false,
     "icon": {
-      "item": "quark:red_blossom_sapling"
+      "id": "quark:red_blossom_sapling"
     },
     "show_toast": true,
     "title": {

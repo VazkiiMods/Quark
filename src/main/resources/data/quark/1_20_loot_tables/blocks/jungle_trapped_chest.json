@@ -12,7 +12,7 @@
               "source": "block_entity"
             }
           ],
-          "name": "quark:jungle_trapped_chest"
+          "name": "quark:trapped_jungle_chest"
         }
       ],
       "neoforge:conditions": [

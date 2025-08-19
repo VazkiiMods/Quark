@@ -12,7 +12,7 @@
               "source": "block_entity"
             }
           ],
-          "name": "quark:birch_trapped_chest"
+          "name": "quark:trapped_birch_chest"
         }
       ],
       "neoforge:conditions": [

@@ -99,7 +99,17 @@ public class WraithModule extends ZetaModule {
 				.build("soul_bead");
 		event.getRegistry().register(soulBeadType, "soul_bead", Registries.ENTITY_TYPE);
 
-		Quark.ZETA.entitySpawn.registerSpawn(wraithType, MobCategory.MONSTER, SpawnPlacementTypes.ON_GROUND, Types.MOTION_BLOCKING_NO_LEAVES, Monster::checkMonsterSpawnRules, spawnConfig);
+		Quark.ZETA.entitySpawn.registerSpawn(wraithType,
+                MobCategory.MONSTER,
+                SpawnPlacementTypes.ON_GROUND,
+                Types.MOTION_BLOCKING_NO_LEAVES,
+                (wraith,
+                 level,
+                 mobSpawnType,
+                 blockPos,
+                 random) -> Monster.checkMonsterSpawnRules(wraith, level, mobSpawnType, blockPos, random)
+                        && level.getBlockState(blockPos.below()).is(wraithSpawnableTag),
+                spawnConfig);
 		Quark.ZETA.entitySpawn.addEgg(this, wraithType, 0xececec, 0xbdbdbd, spawnConfig);
 
 		event.getAdvancementModifierRegistry().addModifier(new MonsterHunterModifier(this, ImmutableSet.of(wraithType)));

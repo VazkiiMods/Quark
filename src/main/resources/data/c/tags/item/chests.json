@@ -5,10 +5,10 @@
         "quark:purpur_chest",
         "quark:prismarine_chest",
         "quark:azalea_chest",
-        "quark:azalea_trapped_chest",
+        "quark:trapped_azalea_chest",
         "quark:blossom_chest",
-        "quark:blossom_trapped_chest",
+        "quark:trapped_blossom_chest",
         "quark:ancient_chest",
-        "quark:ancient_trapped_chest"
+        "quark:trapped_ancient_chest"
     ]
 }

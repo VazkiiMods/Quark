@@ -1,23 +1,23 @@
 {
-  "parent": "minecraft:adventure/kill_a_mob",
+  "parent": "quark:apply_color_rune",
   "criteria": {
-    "get_own_head": {
-      "trigger": "quark:own_head"
+    "wear_full_rainbow": {
+      "trigger": "quark:full_rainbow"
     }
   },
   "display": {
     "announce_to_chat": true,
     "description": {
-      "translate": "advancements.quark.get_own_head.description"
+      "translate": "advancements.quark.wear_full_rainbow.description"
     },
     "frame": "challenge",
-    "hidden": false,
+    "hidden": true,
     "icon": {
-      "item": "minecraft:player_head"
+      "id": "quark:smithing_template_rune"
     },
     "show_toast": true,
     "title": {
-      "translate": "advancements.quark.get_own_head.title"
+      "translate": "advancements.quark.wear_full_rainbow.title"
     }
   },
   "rewards": {
@@ -25,13 +25,13 @@
   },
   "requirements": [
     [
-      "get_own_head"
+      "wear_full_rainbow"
     ]
   ],
   "neoforge:conditions": [
     {
       "type": "quark:advancement_flag",
-      "flag": "snow_golem_player_heads"
+      "flag": "color_runes"
     }
   ]
 

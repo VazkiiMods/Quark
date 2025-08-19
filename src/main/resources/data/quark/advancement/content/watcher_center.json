@@ -1,34 +1,34 @@
 {
-  "parent": "minecraft:end/enter_end_gateway",
+  "parent": "minecraft:nether/obtain_blaze_rod",
   "criteria": {
-    "use_viaduct": {
-      "trigger": "quark:use_viaduct"
+    "watcher_center": {
+      "trigger": "quark:watcher_center"
     }
   },
   "display": {
     "announce_to_chat": true,
     "description": {
-      "translate": "advancements.quark.use_viaduct.description"
+      "translate": "advancements.quark.watcher_center.description"
     },
     "frame": "goal",
     "hidden": false,
     "icon": {
-      "item": "quark:myalite_crystal"
+      "id": "quark:ender_watcher"
     },
     "show_toast": true,
     "title": {
-      "translate": "advancements.quark.use_viaduct.title"
+      "translate": "advancements.quark.watcher_center.title"
     }
   },
   "requirements": [
     [
-      "use_viaduct"
+      "watcher_center"
     ]
   ],
   "neoforge:conditions": [
     {
       "type": "quark:advancement_flag",
-      "flag": "myalite_viaduct"
+      "flag": "ender_watcher"
     }
   ]
 

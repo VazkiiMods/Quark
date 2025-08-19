@@ -118,7 +118,7 @@
     "frame": "task",
     "hidden": false,
     "icon": {
-      "item": "quark:smithing_template_rune"
+      "id": "quark:smithing_template_rune"
     },
     "show_toast": true,
     "title": {

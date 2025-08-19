@@ -1,34 +1,34 @@
 {
-  "parent": "minecraft:husbandry/root",
+  "parent": "minecraft:nether/create_beacon",
   "criteria": {
-    "mine_toretoise": {
-      "trigger": "quark:mine_toretoise"
+    "redirect_beacon": {
+      "trigger": "quark:redirect_beacon"
     }
   },
   "display": {
     "announce_to_chat": true,
     "description": {
-      "translate": "advancements.quark.mine_toretoise.description"
+      "translate": "advancements.quark.redirect_beacon.description"
     },
     "frame": "task",
     "hidden": false,
     "icon": {
-      "item": "minecraft:diamond_pickaxe"
+      "id": "minecraft:beacon"
     },
     "show_toast": true,
     "title": {
-      "translate": "advancements.quark.mine_toretoise.title"
+      "translate": "advancements.quark.redirect_beacon.title"
     }
   },
   "requirements": [
     [
-      "mine_toretoise"
+      "redirect_beacon"
     ]
   ],
   "neoforge:conditions": [
     {
       "type": "quark:advancement_flag",
-      "flag": "toretoise"
+      "flag": "beacon_redirection"
     }
   ]
 

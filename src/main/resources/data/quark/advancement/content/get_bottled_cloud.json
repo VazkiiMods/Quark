@@ -22,7 +22,7 @@
     "frame": "task",
     "hidden": false,
     "icon": {
-      "item": "quark:bottled_cloud"
+      "id": "quark:bottled_cloud"
     },
     "show_toast": true,
     "title": {

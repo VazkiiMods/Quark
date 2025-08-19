@@ -20,7 +20,7 @@
     "frame": "task",
     "hidden": false,
     "icon": {
-      "item": "quark:crab_bucket"
+      "id": "quark:crab_bucket"
     },
     "show_toast": true,
     "title": {

@@ -22,7 +22,7 @@
     "frame": "goal",
     "hidden": false,
     "icon": {
-      "item": "quark:forgotten_hat"
+      "id": "quark:forgotten_hat"
     },
     "show_toast": true,
     "title": {

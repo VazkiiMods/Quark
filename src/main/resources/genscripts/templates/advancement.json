@@ -13,7 +13,7 @@
     "frame": "%type%",
     "hidden": false,
     "icon": {
-      "item": "%item%"
+      "id": "%item%"
     },
     "show_toast": true,
     "title": {

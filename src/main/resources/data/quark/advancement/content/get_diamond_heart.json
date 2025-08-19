@@ -22,7 +22,7 @@
     "frame": "task",
     "hidden": false,
     "icon": {
-      "item": "quark:diamond_heart"
+      "id": "quark:diamond_heart"
     },
     "show_toast": true,
     "title": {

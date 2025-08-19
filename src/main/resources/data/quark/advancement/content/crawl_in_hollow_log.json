@@ -13,7 +13,7 @@
     "frame": "task",
     "hidden": false,
     "icon": {
-      "item": "quark:hollow_oak_log"
+      "id": "quark:hollow_oak_log"
     },
     "show_toast": true,
     "title": {

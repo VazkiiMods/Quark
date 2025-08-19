@@ -1,34 +1,34 @@
 {
-  "parent": "minecraft:nether/obtain_blaze_rod",
+  "parent": "quark:get_diamond_heart",
   "criteria": {
-    "watcher_center": {
-      "trigger": "quark:watcher_center"
+    "make_stoneling": {
+      "trigger": "quark:make_stoneling"
     }
   },
   "display": {
     "announce_to_chat": true,
     "description": {
-      "translate": "advancements.quark.watcher_center.description"
+      "translate": "advancements.quark.make_stoneling.description"
     },
     "frame": "goal",
     "hidden": false,
     "icon": {
-      "item": "quark:ender_watcher"
+      "id": "quark:diamond_heart"
     },
     "show_toast": true,
     "title": {
-      "translate": "advancements.quark.watcher_center.title"
+      "translate": "advancements.quark.make_stoneling.title"
     }
   },
   "requirements": [
     [
-      "watcher_center"
+      "make_stoneling"
     ]
   ],
   "neoforge:conditions": [
     {
       "type": "quark:advancement_flag",
-      "flag": "ender_watcher"
+      "flag": "stoneling_drop_diamond_heart"
     }
   ]
 

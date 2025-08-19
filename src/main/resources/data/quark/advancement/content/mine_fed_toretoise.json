@@ -13,7 +13,7 @@
     "frame": "task",
     "hidden": false,
     "icon": {
-      "item": "minecraft:glow_berries"
+      "id": "minecraft:glow_berries"
     },
     "show_toast": true,
     "title": {
