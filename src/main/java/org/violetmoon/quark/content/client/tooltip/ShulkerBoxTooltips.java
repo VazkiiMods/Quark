@@ -100,7 +100,7 @@ public class ShulkerBoxTooltips {
 				int currentX = tooltipX;
 				int currentY = tooltipY - 1;
 
-				int size = contents.getSlots();
+                int size = Math.toIntExact(contents.nonEmptyStream().count());
 				int[] dims = {Math.min(size, 9), 1 + (size-1) / 9};
 				for (int[] testAgainst : TARGET_RATIOS) {
 					if (testAgainst[0] * testAgainst[1] == size) {
@@ -129,16 +129,11 @@ public class ShulkerBoxTooltips {
 
 				renderTooltipBackground(guiGraphics, mc, pose, currentX, currentY, dims[0], dims[1], color);
 
-				int skipped = 0;
 				for (int i = 0; i < size; i++) {
-					ItemStack itemstack = contents.getStackInSlot(i);
-					if (itemstack.isEmpty()) {
-						skipped++;
-						continue;
-					}
+					ItemStack itemstack = contents.nonEmptyItems().iterator().next();
 
-					int xp = currentX + 6 + ((i-skipped) % 9) * 18;
-					int yp = currentY + 6 + ((i-skipped) / 9) * 18;
+					int xp = currentX + 6 + ((i) % 9) * 18;
+					int yp = currentY + 6 + ((i) / 9) * 18;
 
 					guiGraphics.renderItem(itemstack, xp, yp);
 					guiGraphics.renderItemDecorations(mc.font, itemstack, xp, yp);
@@ -146,6 +141,7 @@ public class ShulkerBoxTooltips {
 					if (!Quark.ZETA.modules.get(ChestSearchingModule.class).namesMatch(itemstack)) {
 						RenderSystem.disableDepthTest();
 						guiGraphics.fill(xp, yp, xp + 16, yp + 16, 0xAA000000);
+                        RenderSystem.enableDepthTest();
 					}
 				}
 

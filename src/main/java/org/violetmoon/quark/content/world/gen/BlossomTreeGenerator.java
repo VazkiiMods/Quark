@@ -2,6 +2,9 @@ package org.violetmoon.quark.content.world.gen;
 
 import java.util.Optional;
 
+import net.minecraft.tags.BlockTags;
+import net.minecraft.world.level.block.FarmBlock;
+import net.minecraft.world.level.block.SaplingBlock;
 import org.violetmoon.quark.content.world.config.BlossomTreeConfig;
 import org.violetmoon.zeta.world.generator.Generator;
 
@@ -43,7 +46,8 @@ public class BlossomTreeGenerator extends Generator {
 
 			BlockState ground = worldIn.getBlockState(placePos);
 
-			if(!ground.getBlock().canSustainPlant(ground, worldIn, pos, Direction.UP, Blocks.OAK_SAPLING.defaultBlockState()).isFalse()) {
+
+			if (ground.getBlock().canSustainPlant(ground, worldIn, pos, Direction.UP, Blocks.OAK_SAPLING.defaultBlockState()).isTrue() || ground.is(BlockTags.DIRT) || ground.getBlock() instanceof FarmBlock) {
 				BlockPos up = placePos.above();
 				BlockState upState = worldIn.getBlockState(up);
 

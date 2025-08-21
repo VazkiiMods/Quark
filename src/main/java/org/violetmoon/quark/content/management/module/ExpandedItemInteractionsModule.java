@@ -285,9 +285,12 @@ public class ExpandedItemInteractionsModule extends ZetaModule {
 	}
 
 	public static BlockEntity getShulkerBoxEntity(ItemStack shulkerBox, RegistryAccess access) {
-		CompoundTag cmp;
-		if (shulkerBox.has(DataComponents.BLOCK_ENTITY_DATA)) cmp = shulkerBox.get(DataComponents.BLOCK_ENTITY_DATA).copyTag();
-		else cmp = new CompoundTag();
+        CompoundTag cmp;
+        if (shulkerBox.has(DataComponents.BLOCK_ENTITY_DATA)) {
+            cmp = shulkerBox.get(DataComponents.BLOCK_ENTITY_DATA).copyTag();
+        } else {
+            cmp = new CompoundTag();
+        }
 
 		if(cmp.contains("LootTable"))
 			return null;
