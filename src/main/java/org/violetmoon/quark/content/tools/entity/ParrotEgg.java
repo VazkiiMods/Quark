@@ -38,9 +38,9 @@ public class ParrotEgg extends ThrowableItemProjectile {
 
 	@Override
 	protected void defineSynchedData(SynchedEntityData.Builder builder) {
-		super.defineSynchedData(builder);
-		builder.define(VARIANT, 0);
-	}
+        super.defineSynchedData(builder);
+        builder.define(VARIANT, 0);
+    }
 
 	public Parrot.Variant getVariant() {
 		return Parrot.Variant.byId(getEntityData().get(VARIANT));
@@ -53,7 +53,7 @@ public class ParrotEgg extends ThrowableItemProjectile {
 	@NotNull
 	@Override
 	protected Item getDefaultItem() {
-		return ParrotEggsModule.parrotEggs.get(getVariant().getId());
+		return ParrotEggsModule.parrotEggs.get(0);
 	}
 
 	@Override

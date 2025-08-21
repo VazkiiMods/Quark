@@ -45,14 +45,14 @@ public class MoreStoneVariantsModule extends ZetaModule {
 	public final void register(ZRegister event) {
 		polishedCalcite = expandVanillaStone(event, this, Blocks.CALCITE, "calcite");
 		polishedDripstone = expandVanillaStone(event, this, Blocks.DRIPSTONE_BLOCK, "dripstone");
-		polishedTuff = expandVanillaStone(event, this, Blocks.TUFF, "tuff");
+		//polishedTuff = expandVanillaStone(event, this, Blocks.TUFF, "tuff");
 
 		add(event, "granite", MapColor.DIRT, SoundType.STONE, Blocks.POLISHED_GRANITE, BooleanSuppliers.TRUE);
 		add(event, "diorite", MapColor.QUARTZ, SoundType.STONE, Blocks.POLISHED_DIORITE, BooleanSuppliers.TRUE);
 		add(event, "andesite", MapColor.STONE, SoundType.STONE, Blocks.POLISHED_ANDESITE, BooleanSuppliers.TRUE);
 		add(event, "calcite", MapColor.TERRACOTTA_WHITE, SoundType.CALCITE, polishedCalcite, BooleanSuppliers.TRUE);
 		add(event, "dripstone", MapColor.TERRACOTTA_BROWN, SoundType.DRIPSTONE_BLOCK, polishedDripstone, BooleanSuppliers.TRUE);
-		add(event, "tuff", MapColor.TERRACOTTA_GRAY, SoundType.TUFF, polishedTuff, BooleanSuppliers.TRUE); //todo: Polished/Bricks for Tuff have been added in 1.21.
+		//add(event, "tuff", MapColor.TERRACOTTA_GRAY, SoundType.TUFF, polishedTuff, BooleanSuppliers.TRUE); //todo: Polished/Bricks for Tuff have been added in 1.21.
 
 		add(event, "limestone", MapColor.STONE, SoundType.STONE, NewStoneTypesModule.polishedBlocks.get(NewStoneTypesModule.limestoneBlock), () -> NewStoneTypesModule.enableLimestone);
 		add(event, "jasper", MapColor.TERRACOTTA_RED, SoundType.STONE, NewStoneTypesModule.polishedBlocks.get(NewStoneTypesModule.jasperBlock), () -> NewStoneTypesModule.enableJasper);

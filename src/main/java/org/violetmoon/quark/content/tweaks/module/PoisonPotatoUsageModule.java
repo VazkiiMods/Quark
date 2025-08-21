@@ -1,5 +1,6 @@
 package org.violetmoon.quark.content.tweaks.module;
 
+import net.minecraft.core.particles.ColorParticleOption;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerPlayer;
@@ -55,7 +56,7 @@ public class PoisonPotatoUsageModule extends ZetaModule {
 				Vec3 pos = entity.position();
 				if(event.getEntity().isCreative() || entity.level().random.nextDouble() < chance) {
 					entity.playSound(SoundEvents.GENERIC_EAT, 0.5f, 0.25f);
-					entity.level().addParticle((ParticleOptions) ParticleTypes.ENTITY_EFFECT, pos.x, pos.y, pos.z, 0.2, 0.8, 0);
+					entity.level().addParticle(ColorParticleOption.create(ParticleTypes.ENTITY_EFFECT, 0xffffff), pos.x, pos.y, pos.z, 0.2, 0.8, 0);
 					poisonEntity(entity);
 
 					if(event.getEntity() instanceof ServerPlayer sp)
