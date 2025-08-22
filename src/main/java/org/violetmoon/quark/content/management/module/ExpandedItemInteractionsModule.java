@@ -317,13 +317,13 @@ public class ExpandedItemInteractionsModule extends ZetaModule {
 
 		BlockEntity tile = getShulkerBoxEntity(shulkerBox, player.level().registryAccess());
 
-		if (tile != null && tile.getLevel() != null) {
-			Optional<IItemHandler> handlerHolder = Optional.ofNullable(tile.getLevel().getCapability(Capabilities.ItemHandler.BLOCK, tile.getBlockPos(), null));
+		if (tile != null) {
+			Optional<IItemHandler> handlerHolder = Optional.ofNullable(shulkerBox.getCapability(Capabilities.ItemHandler.ITEM));
 			if(handlerHolder.isPresent() && handlerHolder.orElse(new ItemStackHandler()) instanceof IItemHandler handler) {
 				if(SimilarBlockTypeHandler.isShulkerBox(stack) && allowDump) {
 					BlockEntity otherShulker = getShulkerBoxEntity(stack, player.level().registryAccess());
-					if(otherShulker != null && otherShulker.getLevel() != null) {
-						Optional<IItemHandler> otherHolder = Optional.ofNullable(otherShulker.getLevel().getCapability(Capabilities.ItemHandler.BLOCK, otherShulker.getBlockPos(), null));
+					if(otherShulker != null) {
+						Optional<IItemHandler> otherHolder = Optional.ofNullable(stack.getCapability(Capabilities.ItemHandler.ITEM));
 						if(otherHolder.isPresent() && otherHolder.orElse(new ItemStackHandler()) instanceof IItemHandler otherHandler) {
 							boolean any = false;
 							for(int i = 0; i < otherHandler.getSlots(); i++) {

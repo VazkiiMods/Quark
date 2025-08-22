@@ -36,6 +36,7 @@ import org.violetmoon.quark.content.client.module.ImprovedTooltipsModule;
 import org.violetmoon.zeta.client.event.play.ZGatherTooltipComponents;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
 
@@ -129,8 +130,9 @@ public class ShulkerBoxTooltips {
 
 				renderTooltipBackground(guiGraphics, mc, pose, currentX, currentY, dims[0], dims[1], color);
 
+                Iterator<ItemStack> stackIterator = contents.nonEmptyItems().iterator();
 				for (int i = 0; i < size; i++) {
-					ItemStack itemstack = contents.nonEmptyItems().iterator().next();
+					ItemStack itemstack = stackIterator.next();
 
 					int xp = currentX + 6 + ((i) % 9) * 18;
 					int yp = currentY + 6 + ((i) / 9) * 18;
