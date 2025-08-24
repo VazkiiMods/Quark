@@ -2,17 +2,17 @@ package org.violetmoon.quark.content.tools.module;
 
 import com.google.common.collect.Lists;
 import com.mojang.serialization.*;
+
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import it.unimi.dsi.fastutil.objects.Object2IntArrayMap;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
+
 import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
 import net.minecraft.core.component.DataComponentPredicate;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.ListTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
@@ -38,13 +38,12 @@ import net.minecraft.world.level.storage.loot.entries.LootItem;
 import net.minecraft.world.level.storage.loot.entries.LootPoolEntryContainer;
 import net.minecraft.world.level.storage.loot.functions.LootItemFunctionType;
 import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
+
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.violetmoon.quark.api.QuarkCapabilities;
+
 import org.violetmoon.quark.base.Quark;
 import org.violetmoon.quark.base.util.ItemEnchantsUtil;
-import org.violetmoon.quark.content.experimental.module.EnchantmentsBegoneModule;
-import org.violetmoon.quark.content.tools.base.RuneColor;
 import org.violetmoon.quark.content.tools.item.AncientTomeItem;
 import org.violetmoon.quark.content.tools.loot.EnchantTome;
 import org.violetmoon.quark.content.world.module.MonsterBoxModule;
@@ -67,7 +66,6 @@ import org.violetmoon.zeta.module.ZetaModule;
 import org.violetmoon.zeta.util.Hint;
 
 import java.util.*;
-import java.util.stream.Stream;
 
 @ZetaLoadModule(category = "tools")
 public class AncientTomesModule extends ZetaModule {
@@ -209,8 +207,6 @@ public class AncientTomesModule extends ZetaModule {
 			Optional<Holder.Reference<Enchantment>> optHeld = enchRegistry.getHolder(realsourceKey);
 			if (optHeld.isEmpty()) {
 				Quark.LOG.error("Unknown enchantment found for Tomes!");
-				continue;
-			} else if (!EnchantmentsBegoneModule.shouldBegone(realsourceKey)) {
 				continue;
 			}
 			validEnchants.add(optHeld.get());
@@ -442,7 +438,6 @@ public class AncientTomesModule extends ZetaModule {
 		enchants.clear();
 		for(String s : enchantNames) {
 			ResourceKey<Enchantment> realsourceKey = ResourceKey.create(Registries.ENCHANTMENT, ResourceLocation.parse(s));
-			//if(!EnchantmentsBegoneModule.shouldBegone(realsourceKey))
 			 //enchants.add(enchant);
 		}
 	}

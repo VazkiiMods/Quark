@@ -2,15 +2,19 @@ package org.violetmoon.quark.content.tools.module;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.sounds.SimpleSoundInstance;
+import net.minecraft.core.Holder;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.item.CreativeModeTabs;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.JukeboxSongs;
-import net.minecraft.world.item.Rarity;
+import net.minecraft.world.item.*;
 import net.minecraft.world.level.dimension.LevelStem;
 import net.minecraft.world.level.storage.loot.BuiltInLootTables;
 import net.minecraft.world.level.storage.loot.entries.LootItem;
 import net.minecraft.world.level.storage.loot.entries.LootPoolEntryContainer;
+
+import org.violetmoon.quark.base.Quark;
 import org.violetmoon.quark.base.handler.QuarkSounds;
 import org.violetmoon.zeta.client.event.play.ZClientTick;
 import org.violetmoon.zeta.config.Config;
@@ -37,14 +41,18 @@ public class EndermoshMusicDiscModule extends ZetaModule {
 	protected int lootQuality = 1;
 
 	@Hint
-	public Item endermosh;
+	public static Item endermosh;
+
+    public static ResourceKey<JukeboxSong> ENDERMOSH_DISC_SONG = Quark.asResourceKey(Registries.JUKEBOX_SONG, "endermosh");
 
 	@LoadEvent
 	public final void register(ZRegister event) {
-		// endermosh = new QuarkMusicDiscItem(14, () -> QuarkSounds.MUSIC_ENDERMOSH, "endermosh", this, 3783); // Tick length calculated from endermosh.ogg - 3:09.150
-		// TODO: JukeboxSongs.XXXXXX requires datagen with above parameters
-		endermosh = new ZetaItem("music_disc_endermosh", this, new Item.Properties().rarity(Rarity.RARE).jukeboxPlayable(JukeboxSongs.THIRTEEN).stacksTo(1)).setCreativeTab(CreativeModeTabs.TOOLS_AND_UTILITIES);
-	}
+		endermosh = new ZetaItem("music_disc_endermosh", this, new Item.Properties()
+                .rarity(Rarity.RARE)
+                .jukeboxPlayable(ENDERMOSH_DISC_SONG)
+                .stacksTo(1)
+        ).setCreativeTab(CreativeModeTabs.TOOLS_AND_UTILITIES);
+    }
 
 	@PlayEvent
 	public void onLootTableLoad(ZLootTableLoad event) {

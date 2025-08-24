@@ -20,6 +20,7 @@ public class QuarkTags {
         public static final TagKey<Block> CRYSTAL_LAMP = tag("crystal_lamp");
         public static final TagKey<Block> FALLEN_LOG_CAN_SPAWN_ON = tag("fallen_log_can_spawn_on");
         public static final TagKey<Block> FOXHOUND_SPAWNABLE = tag("foxhound_spawnable");
+        public static final TagKey<Block> FRAMED_GLASSES = tag("framed_glasses");
         public static final TagKey<Block> FRAMED_GLASS_PANES = tag("framed_glass_panes");
         public static final TagKey<Block> HEDGES = tag("hedges");
         public static final TagKey<Block> HOLLOW_LOGS = tag("hollow_logs");

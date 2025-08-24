@@ -13,7 +13,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-import org.violetmoon.quark.base.item.QuarkMusicDiscItem;
+import org.violetmoon.quark.content.tools.item.AmbientDiscItem;
 import org.violetmoon.quark.content.tools.module.AmbientDiscsModule;
 
 import javax.annotation.Nullable;
@@ -31,7 +31,7 @@ public class LevelRendererMixin {
 	)
 	public void playStreamingMusic(Holder<JukeboxSong> song, BlockPos pos, CallbackInfo ci) {
 
-		if(level.getBlockEntity(pos) instanceof JukeboxBlockEntity jukebox && jukebox.getTheItem().getItem() instanceof QuarkMusicDiscItem quarkDisc && AmbientDiscsModule.Client.playAmbientSound(quarkDisc, pos))
+		if(level.getBlockEntity(pos) instanceof JukeboxBlockEntity jukebox && jukebox.getTheItem().getItem() instanceof AmbientDiscItem ambientDisc && AmbientDiscsModule.Client.playAmbientSound(ambientDisc, pos))
 			ci.cancel();
 	}
 

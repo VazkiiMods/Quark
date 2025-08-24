@@ -22,7 +22,6 @@ import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 
 import org.violetmoon.quark.addons.oddities.module.MatrixEnchantingModule;
-import org.violetmoon.quark.content.experimental.module.EnchantmentsBegoneModule;
 
 import java.awt.*;
 import java.util.*;
@@ -169,7 +168,6 @@ public class EnchantmentMatrix {
 			}
 
 			if(isValid
-					&& !EnchantmentsBegoneModule.shouldBegone(enchantment)
 					&& !MatrixEnchantingModule.disallowedEnchantments.contains(id)
 					//todo: An additional check exists to see if an enchantment was allowed on books, will need to be replaced. "|| (book && enchantment.isAllowedOnBooks())"
 					&& ((enchantment.value().canEnchant(target) && enchantment.value().isPrimaryItem(target)))) {

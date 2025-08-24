@@ -65,7 +65,10 @@ public class VerticalSlabsModule extends ZetaModule {
 				Blocks.MANGROVE_SLAB, Blocks.MUD_BRICK_SLAB,
 
 				// 1.20
-				Blocks.CHERRY_SLAB, Blocks.BAMBOO_SLAB, Blocks.BAMBOO_MOSAIC_SLAB
+				Blocks.CHERRY_SLAB, Blocks.BAMBOO_SLAB, Blocks.BAMBOO_MOSAIC_SLAB,
+
+                //1.21.1
+                Blocks.TUFF_SLAB, Blocks.POLISHED_TUFF_SLAB, Blocks.TUFF_BRICK_SLAB
 		)
 				.forEach(b -> new QuarkVerticalSlabBlock(b, this));
 

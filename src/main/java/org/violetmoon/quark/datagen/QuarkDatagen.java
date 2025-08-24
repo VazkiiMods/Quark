@@ -44,6 +44,9 @@ public class QuarkDatagen {
                 List.of(new LootTableProvider.SubProviderEntry(QuarkBlockLootTableProvider::new, LootContextParamSets.BLOCK),
                         new LootTableProvider.SubProviderEntry(QuarkEntityLootTableProvider::new, LootContextParamSets.ENTITY)),
                 holderLookupProvider));
+
+
+
         //do we need to generate vanilla data overrides (dye any wool, nether wart block, stone tools)?
             // I would prefer these be implemented differently
 
@@ -65,7 +68,7 @@ public class QuarkDatagen {
         //do we need advancements?
         //generator.addProvider(gatherDataEvent.includeServer(), new QuarkAdvancementProvider(packOutput, holderLookupProvider));
 
-        //Neoforge-specific generators
+        //Built-In-Data generators
         generator.addProvider(true, new QuarkDatapackProvider(packOutput, holderLookupProvider));
 
         //assets

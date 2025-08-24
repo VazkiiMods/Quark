@@ -87,7 +87,7 @@ public class GrabChickensModule extends ZetaModule {
 		Level level = player.level();
 
 		if(player.hasPassenger(e -> e.getType() == EntityType.CHICKEN)) {
-			if(!canPlayerHostChicken(player)) {
+			if(!canPlayerHostChicken(player) || player.isCrouching()) {
 				player.ejectPassengers();
 
 				if(level instanceof ServerLevel slevel)

@@ -31,6 +31,9 @@ public class FramedGlassModule extends ZetaModule {
 	public static ZetaGlassBlock framed_glass;
 	public static ZetaInheritedPaneBlock framed_glass_pane;
 
+    public static List<Block> stainedFramedGlass = new ArrayList<>();
+    public static List<Block> stainedFramedGlassPanes = new ArrayList<>();
+
 	@LoadEvent
 	public final void register(ZRegister event) {
 		Block.Properties props = Block.Properties.of()
@@ -38,13 +41,14 @@ public class FramedGlassModule extends ZetaModule {
 				.sound(SoundType.GLASS);
 
 		framed_glass = (ZetaGlassBlock) new ZetaGlassBlock("framed_glass", this, false, props).setCreativeTab(CreativeModeTabs.COLORED_BLOCKS, Blocks.GLASS, false);
-		framed_glass_pane = (ZetaInheritedPaneBlock) new ZetaInheritedPaneBlock((IZetaBlock) framed_glass).setCreativeTab(CreativeModeTabs.COLORED_BLOCKS, Blocks.GLASS_PANE, false);
+		framed_glass_pane = (ZetaInheritedPaneBlock) new ZetaInheritedPaneBlock(framed_glass).setCreativeTab(CreativeModeTabs.COLORED_BLOCKS, Blocks.GLASS_PANE, false);
 
 		CreativeTabManager.daisyChain();
 		for(DyeColor dye : MiscUtil.CREATIVE_COLOR_ORDER){
 			Block block = new ZetaGlassBlock(dye.getName() + "_framed_glass", this, true, props).setCreativeTab(CreativeModeTabs.COLORED_BLOCKS, Blocks.PINK_STAINED_GLASS, false);
 			blockMap.put(dye, (IZetaBlock) block);
 			glassBlocks.add((Block) blockMap.get(dye));
+            stainedFramedGlass.add(block);
 		}
 		CreativeTabManager.endDaisyChain();
 
@@ -53,6 +57,7 @@ public class FramedGlassModule extends ZetaModule {
 			Block block = new ZetaInheritedPaneBlock(blockMap.get(dye)).setCreativeTab(CreativeModeTabs.COLORED_BLOCKS, Blocks.PINK_STAINED_GLASS_PANE, false);
 			paneMap.put(dye, (IZetaBlock) block);
 			glassBlocks.add(block);
+            stainedFramedGlassPanes.add(block);
 		}
 
 		CreativeTabManager.endDaisyChain();

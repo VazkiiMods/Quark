@@ -23,20 +23,32 @@ public class QuarkItemTagProvider extends ItemTagsProvider {
 
     @Override
     protected void addTags(HolderLookup.Provider provider) {
-        //Our tags
+        addToQuarkTags(provider);
+        addToVanillaTags(provider);
+        addToConventionTags(provider);
+        addToOtherModTags(provider);
+
+    }
+
+    private void addToQuarkTags(HolderLookup.Provider provider) {
         for(Block log : AncientWoodModule.woodSet.allLogs()){
             this.tag(QuarkTags.Items.ANCIENT_LOGS).add(log.asItem());
         }
+    }
 
-        //Vanilla tags
+    private void addToVanillaTags(HolderLookup.Provider provider) {
         for(Block log : AncientWoodModule.woodSet.allLogs()){
             this.tag(ItemTags.LOGS_THAT_BURN).add(log.asItem());
         }
+    }
 
-        //Convention tags
+    private void addToConventionTags(HolderLookup.Provider provider) {
         for (Block bookshelf : VariantBookshelvesModule.variantBookshelves){
             this.tag(Tags.Items.BOOKSHELVES).add(bookshelf.asItem());
         }
+    }
 
+    private void addToOtherModTags(HolderLookup.Provider provider) {
+        //lootr
     }
 }

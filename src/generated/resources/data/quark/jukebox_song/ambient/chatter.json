@@ -1,0 +1,10 @@
+{
+  "comparator_output": 15,
+  "description": {
+    "translate": "item.quark.music_disc_wind.desc"
+  },
+  "length_in_seconds": 1000000.0,
+  "sound_event": {
+    "sound_id": "quark:ambient.chatter"
+  }
+}
