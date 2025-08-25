@@ -591,6 +591,12 @@ public abstract class AbstractPickarang<T extends AbstractPickarang<T>> extends 
 	}
 
 	@Override
+    @NotNull
+	public Vec3 getPassengerRidingPosition(@NotNull Entity entity) {
+        return super.getPassengerRidingPosition(entity).subtract(0, 0.4, 0);
+	}
+
+	@Override
 	protected boolean canAddPassenger(@NotNull Entity passenger) {
 		return super.canAddPassenger(passenger) || passenger instanceof ItemEntity || passenger instanceof ExperienceOrb;
 	}

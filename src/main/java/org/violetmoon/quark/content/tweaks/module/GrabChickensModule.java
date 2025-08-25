@@ -50,35 +50,28 @@ public class GrabChickensModule extends ZetaModule {
 		Player player = event.getEntity();
 		Level level = event.getLevel();
 
-		if(staticEnabled && event.getHand() == InteractionHand.MAIN_HAND
-				&& !player.isCrouching()
-				&& !(player instanceof FakePlayer)
-				&& player.getMainHandItem().isEmpty()
-				&& canPlayerHostChicken(player)
-				&& target.getType() == EntityType.CHICKEN
-				&& !((Chicken) target).isBaby()) {
-			List<Entity> passengers = player.getPassengers();
+        if (staticEnabled && event.getHand() == InteractionHand.MAIN_HAND && !player.isCrouching() && !(player instanceof FakePlayer) && player.getMainHandItem().isEmpty()) {
+            List<Entity> chickens = player.getPassengers().stream().filter(entity -> entity instanceof Chicken).toList();
+            boolean changed = false;
 
-			boolean changed = false;
+            if (!chickens.isEmpty()) {
+                if (!level.isClientSide)
+                    chickens.forEach(Entity::stopRiding);
+                changed = true;
+            } else if (canPlayerHostChicken(player) && target instanceof Chicken chicken && !chicken.isBaby()) {
+                if (!level.isClientSide)
+                    target.startRiding(player, false);
+                changed = true;
+            }
 
-			if(passengers.contains(target)) {
-				if(!level.isClientSide)
-					target.stopRiding();
-
-				changed = true;
-			} else if(passengers.isEmpty()) {
-				if(!level.isClientSide)
-					target.startRiding(player, false);
-				changed = true;
-			}
-
-			if(changed) {
-				if(level instanceof ServerLevel slevel)
-					slevel.getChunkSource().chunkMap.broadcast(target, new ClientboundSetPassengersPacket(player));
-				else
-					player.swing(InteractionHand.MAIN_HAND);
-			}
-		}
+            if (changed) {
+                if (level instanceof ServerLevel serverLevel) {
+                    serverLevel.getChunkSource().chunkMap.broadcast(target, new ClientboundSetPassengersPacket(player));
+                } else {
+                    player.swing(InteractionHand.MAIN_HAND);
+                }
+            }
+        }
 	}
 
 	@PlayEvent
@@ -119,14 +112,11 @@ public class GrabChickensModule extends ZetaModule {
 
 		//not client-replacement module since it's just somewhere to stick this method
 		public static void setRenderChickenFeetStatus(Chicken entity, ChickenModel<Chicken> model) {
-			if(!staticEnabled)
-				return;
+			if (!staticEnabled) return;
 
 			boolean should = entity.getVehicle() == null || entity.getVehicle().getType() != EntityType.PLAYER;
 			model.leftLeg.visible = should;
 			model.rightLeg.visible = should;
 		}
-
 	}
-
 }
