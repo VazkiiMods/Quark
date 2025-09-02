@@ -45,11 +45,6 @@ public class QuarkDatagen {
                         new LootTableProvider.SubProviderEntry(QuarkEntityLootTableProvider::new, LootContextParamSets.ENTITY)),
                 holderLookupProvider));
 
-
-
-        //do we need to generate vanilla data overrides (dye any wool, nether wart block, stone tools)?
-            // I would prefer these be implemented differently
-
         //tags
         /*
         for 1.21.1 Siuol already manually converted the forge tags to c

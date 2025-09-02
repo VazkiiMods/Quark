@@ -1,7 +1,7 @@
 {
   "comparator_output": 15,
   "description": {
-    "translate": "item.quark.music_disc_drips.desc"
+    "translate": "item.quark.music_disc_fire.desc"
   },
   "length_in_seconds": 1000000.0,
   "sound_event": {

@@ -29,6 +29,7 @@ import net.minecraft.world.level.storage.loot.predicates.MatchTool;
 import net.minecraft.world.level.storage.loot.providers.number.ConstantValue;
 import net.minecraft.world.level.storage.loot.providers.number.UniformGenerator;
 import net.neoforged.neoforge.common.Tags;
+import org.violetmoon.quark.base.Quark;
 import org.violetmoon.quark.content.automation.block.EnderWatcherBlock;
 import org.violetmoon.quark.content.automation.block.RedstoneRandomizerBlock;
 import org.violetmoon.quark.content.automation.module.*;
@@ -87,7 +88,8 @@ public class QuarkBlockLootTableProvider extends BlockLootSubProvider {
             dropSelfWithRespectToSlab(block);
         for(Block block : MoreMudBlocksModule.blocks)
             dropSelfWithRespectToSlab(block);
-        for(Block block : MorePottedPlantsModule.pottedPlants) add(block, createPotFlowerItemTable(MorePottedPlantsModule.getItemLikeFromBlock(block))); //untested
+        for(Block block : MorePottedPlantsModule.pottedPlants)
+            add(block, createPotFlowerItemTable(MorePottedPlantsModule.getItemLikeFromBlock(block))); //untested
         dropSelf(NetherBrickFenceGateModule.netherBrickFenceGate);
         for(Block block : RainbowLampsModule.lamps)
             dropSelf(block);
@@ -160,6 +162,18 @@ public class QuarkBlockLootTableProvider extends BlockLootSubProvider {
             dropSelf(tree.sapling);
         }
 
+//        //ALL variantregistry stuff
+//        //preferably there'd be a better way to get to these registry objects
+//        //so we can actually sort them by module
+//        for(Block block : Quark.ZETA.variantRegistry.slabs){
+//            add(block, createSlabItemTable(block));
+//        }
+//        for(Block block : Quark.ZETA.variantRegistry.stairs){
+//            dropSelf(block);
+//        }
+//        for(Block block : Quark.ZETA.variantRegistry.walls){
+//            dropSelf(block);
+//        }
     }
 
     @Override
