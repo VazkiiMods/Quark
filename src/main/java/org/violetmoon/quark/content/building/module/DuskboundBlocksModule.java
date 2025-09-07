@@ -32,6 +32,8 @@ public class DuskboundBlocksModule extends ZetaModule {
 
 		event.getVariantRegistry().addSlabAndStairs((IZetaBlock) duskbound, null);
 		CreativeTabManager.endDaisyChain();
+        blocks.add(duskbound);
+        blocks.add(duskbound_lantern);
 	}
 
 }

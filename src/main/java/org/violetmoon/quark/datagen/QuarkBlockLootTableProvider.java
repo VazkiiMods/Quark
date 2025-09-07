@@ -54,6 +54,16 @@ public class QuarkBlockLootTableProvider extends BlockLootSubProvider {
         super(Set.of(), FeatureFlags.REGISTRY.allFlags(), holderLookupProvider);
     }
 
+
+    /*
+     * IMPORTANT
+     * IMPORTANT
+     * IMPORTANT
+     * IMPORTANT
+     * IMPORTANT
+     *
+     * REMEMBER TO ADD ENTRIES TO BOTH GENERATE AND GET KNOWN BLOCKS
+     */
     @Override
     protected void generate() {
         System.out.println("QuarkBlockLootTableProvider#generate called");
@@ -72,12 +82,16 @@ public class QuarkBlockLootTableProvider extends BlockLootSubProvider {
         dropSelf(CelebratoryLampsModule.stone_brick_lamp);
         for(Block block : CompressedBlocksModule.blocks)
             dropSelf(block);
+        for(Block block : DuskboundBlocksModule.blocks)
+            dropSelf(block);
         for(Block block : FramedGlassModule.glassBlocks)
             dropSelf(block);
         dropSelf(GoldBarsModule.gold_bars);
         for(Block block : HedgesModule.hedges)
             dropSelf(block);
         for(Block block : HollowLogsModule.hollowLogs)
+            dropSelf(block);
+        for(Block block : IndustrialPaletteModule.blocks)
             dropSelf(block);
         dropSelf(GrateModule.grate);
         for(Block block : JapanesePaletteModule.blocks)
@@ -86,10 +100,13 @@ public class QuarkBlockLootTableProvider extends BlockLootSubProvider {
             dropSelf(block);
         for(Block block : MidoriModule.blocks)
             dropSelfWithRespectToSlab(block);
+        //Brick Types in Variant
         for(Block block : MoreMudBlocksModule.blocks)
             dropSelfWithRespectToSlab(block);
         for(Block block : MorePottedPlantsModule.pottedPlants)
             add(block, createPotFlowerItemTable(MorePottedPlantsModule.getItemLikeFromBlock(block))); //untested
+        for(Block block : MoreStoneVariantsModule.blocks)
+            dropSelf(block);
         dropSelf(NetherBrickFenceGateModule.netherBrickFenceGate);
         for(Block block : RainbowLampsModule.lamps)
             dropSelf(block);
@@ -99,6 +116,8 @@ public class QuarkBlockLootTableProvider extends BlockLootSubProvider {
         this.add(ShearVinesModule.cut_vine, noDrop());
         for(Block block : ShinglesModule.blocks)
             dropSelfWithRespectToSlab(block);
+        for(Block block : SoulSandstoneModule.blocks)
+            dropSelf(block);
         for(Block block : StoolsModule.stools)
             dropSelf(block);
         dropSelf(SturdyStoneModule.sturdy_stone);
@@ -120,11 +139,15 @@ public class QuarkBlockLootTableProvider extends BlockLootSubProvider {
             //this is for vanilla double slabs, but it happens to work with verticals!
         for(Block block : WoodenPostsModule.blocks)
             dropSelf(block);
+
+
         //Tools
         this.add(BottledCloudModule.cloud, noDrop());
+
         //Tweaks
         this.add(GlassShardModule.dirtyGlass, dropDirtyShards(GlassShardModule.dirtyGlass));
         dropWhenSilkTouch(GlassShardModule.dirtyGlassPane);
+
         //World
         for(Block block : AncientWoodModule.woodSet.allBlocks())
             dropSelfWithRespectToSlab(block);
@@ -162,18 +185,20 @@ public class QuarkBlockLootTableProvider extends BlockLootSubProvider {
             dropSelf(tree.sapling);
         }
 
-//        //ALL variantregistry stuff
-//        //preferably there'd be a better way to get to these registry objects
-//        //so we can actually sort them by module
-//        for(Block block : Quark.ZETA.variantRegistry.slabs){
-//            add(block, createSlabItemTable(block));
-//        }
-//        for(Block block : Quark.ZETA.variantRegistry.stairs){
-//            dropSelf(block);
-//        }
-//        for(Block block : Quark.ZETA.variantRegistry.walls){
-//            dropSelf(block);
-//        }
+        //ALL variantregistry stuff
+        //preferably there'd be a better way to get to these registry objects
+        //so we can actually sort them by module
+        for(Block block : Quark.ZETA.variantRegistry.slabs){
+            add(block, createSlabItemTable(block));
+        }
+
+        for(Block block : Quark.ZETA.variantRegistry.stairs){
+            dropSelf(block);
+        }
+
+        for(Block block : Quark.ZETA.variantRegistry.walls){
+            dropSelf(block);
+        }
     }
 
     @Override
@@ -194,22 +219,26 @@ public class QuarkBlockLootTableProvider extends BlockLootSubProvider {
         ret.add(CelebratoryLampsModule.stone_lamp);
         ret.add(CelebratoryLampsModule.stone_brick_lamp);
         ret.addAll(CompressedBlocksModule.blocks);
+        ret.addAll(DuskboundBlocksModule.blocks);
         ret.addAll(FramedGlassModule.glassBlocks);
         ret.add(GoldBarsModule.gold_bars);
         ret.addAll(HedgesModule.hedges);
         ret.addAll(HollowLogsModule.hollowLogs);
+        ret.addAll(IndustrialPaletteModule.blocks);
         ret.add(GrateModule.grate);
         ret.addAll(JapanesePaletteModule.blocks);
         ret.addAll(LeafCarpetModule.carpets);
         ret.addAll(MidoriModule.blocks);
         ret.addAll(MoreMudBlocksModule.blocks);
         ret.addAll(MorePottedPlantsModule.pottedPlants);
+        ret.addAll(MoreStoneVariantsModule.blocks);
         ret.add(NetherBrickFenceGateModule.netherBrickFenceGate);
         ret.addAll(RainbowLampsModule.lamps);
         ret.addAll(RawMetalBricksModule.blocks);
         ret.add(RopeModule.rope);
         ret.add(ShearVinesModule.cut_vine);
         ret.addAll(ShinglesModule.blocks);
+        ret.addAll(SoulSandstoneModule.blocks);
         ret.addAll(StoolsModule.stools);
         ret.add(SturdyStoneModule.sturdy_stone);
         ret.add(ThatchModule.thatch);
@@ -222,6 +251,7 @@ public class QuarkBlockLootTableProvider extends BlockLootSubProvider {
         ret.addAll(VerticalPlanksModule.blocks);
         ret.addAll(VerticalSlabsModule.blocks);
         ret.addAll(WoodenPostsModule.blocks);
+
         //Tools
         ret.add(BottledCloudModule.cloud);
         //Tweaks
@@ -254,6 +284,10 @@ public class QuarkBlockLootTableProvider extends BlockLootSubProvider {
             ret.add(tree.leaves);
             ret.add(tree.sapling);
         }
+
+        ret.addAll(Quark.ZETA.variantRegistry.slabs);
+        ret.addAll(Quark.ZETA.variantRegistry.stairs);
+        ret.addAll(Quark.ZETA.variantRegistry.walls);
         //Oddities
         //Experimental
         return ret;
@@ -270,9 +304,9 @@ public class QuarkBlockLootTableProvider extends BlockLootSubProvider {
 
     //vanillacopies
     @Override
-    protected LootTable.Builder createLeavesDrops(Block p_250088_, Block p_250731_, float... p_248949_) { //don't use last arg
+    protected LootTable.Builder createLeavesDrops(Block leafBlock, Block saplingBlock, float... unused) { //don't use last arg
         HolderLookup.RegistryLookup<Enchantment> registrylookup = this.registries.lookupOrThrow(Registries.ENCHANTMENT);
-        return this.createSilkTouchOrShearsDispatchTable(p_250088_, ((LootPoolSingletonContainer.Builder<?>)this.applyExplosionCondition(p_250088_, LootItem.lootTableItem(p_250731_))).when(BonusLevelTableCondition.bonusLevelFlatChance(registrylookup.getOrThrow(Enchantments.FORTUNE), NORMAL_LEAVES_SAPLING_CHANCES))).withPool(LootPool.lootPool().setRolls(ConstantValue.exactly(1.0F)).when(this.checkNotShearsOrSilk()).add(((LootPoolSingletonContainer.Builder)this.applyExplosionDecay(p_250088_, LootItem.lootTableItem(Items.STICK).apply(SetItemCountFunction.setCount(UniformGenerator.between(1.0F, 2.0F))))).when(BonusLevelTableCondition.bonusLevelFlatChance(registrylookup.getOrThrow(Enchantments.FORTUNE), LEAVES_STICK_CHANCES))));
+        return this.createSilkTouchOrShearsDispatchTable(leafBlock, ((LootPoolSingletonContainer.Builder<?>)this.applyExplosionCondition(leafBlock, LootItem.lootTableItem(saplingBlock))).when(BonusLevelTableCondition.bonusLevelFlatChance(registrylookup.getOrThrow(Enchantments.FORTUNE), NORMAL_LEAVES_SAPLING_CHANCES))).withPool(LootPool.lootPool().setRolls(ConstantValue.exactly(1.0F)).when(this.checkNotShearsOrSilk()).add(((LootPoolSingletonContainer.Builder)this.applyExplosionDecay(leafBlock, LootItem.lootTableItem(Items.STICK).apply(SetItemCountFunction.setCount(UniformGenerator.between(1.0F, 2.0F))))).when(BonusLevelTableCondition.bonusLevelFlatChance(registrylookup.getOrThrow(Enchantments.FORTUNE), LEAVES_STICK_CHANCES))));
     }
 
     //shears only, no silk touch

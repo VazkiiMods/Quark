@@ -14,8 +14,12 @@ import org.violetmoon.zeta.module.ZetaLoadModule;
 import org.violetmoon.zeta.module.ZetaModule;
 import org.violetmoon.zeta.registry.CreativeTabManager;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @ZetaLoadModule(category = "building")
 public class SoulSandstoneModule extends ZetaModule {
+    public static List<Block> blocks = new ArrayList<>();
 
 	@LoadEvent
 	public final void register(ZRegister event) {
@@ -23,12 +27,21 @@ public class SoulSandstoneModule extends ZetaModule {
 				.requiresCorrectToolForDrops()
 				.strength(0.8F);
 
+        Block soulSandstone = new ZetaBlock("soul_sandstone", this, props).setCreativeTab(CreativeModeTabs.BUILDING_BLOCKS, Blocks.SEA_LANTERN, true);
+
 		CreativeTabManager.daisyChain();
-		event.getVariantRegistry().addSlabStairsWall((IZetaBlock) new ZetaBlock("soul_sandstone", this, props).setCreativeTab(CreativeModeTabs.BUILDING_BLOCKS, Blocks.SEA_LANTERN, true), null);
-		new ZetaBlock("chiseled_soul_sandstone", this, props).setCreativeTab(CreativeModeTabs.BUILDING_BLOCKS);
-		event.getVariantRegistry().addSlab((IZetaBlock) new ZetaBlock("cut_soul_sandstone", this, props).setCreativeTab(CreativeModeTabs.BUILDING_BLOCKS), null);
-		event.getVariantRegistry().addSlabAndStairs((IZetaBlock) new ZetaBlock("smooth_soul_sandstone", this, props).setCreativeTab(CreativeModeTabs.BUILDING_BLOCKS), null);
+		event.getVariantRegistry().addSlabStairsWall((IZetaBlock) soulSandstone, null);
+		Block chiseledSoulSandstone = new ZetaBlock("chiseled_soul_sandstone", this, props).setCreativeTab(CreativeModeTabs.BUILDING_BLOCKS);
+		Block cutSoulSandstone = new ZetaBlock("cut_soul_sandstone", this, props).setCreativeTab(CreativeModeTabs.BUILDING_BLOCKS);
+        event.getVariantRegistry().addSlab((IZetaBlock) cutSoulSandstone, null);
+        Block smoothSoulSandstone = new ZetaBlock("smooth_soul_sandstone", this, props).setCreativeTab(CreativeModeTabs.BUILDING_BLOCKS);
+        event.getVariantRegistry().addSlabAndStairs((IZetaBlock) smoothSoulSandstone, null);
 		CreativeTabManager.endDaisyChain();
+
+        blocks.add(soulSandstone);
+        blocks.add(chiseledSoulSandstone);
+        blocks.add(cutSoulSandstone);
+        blocks.add(smoothSoulSandstone);
 	}
 
 }

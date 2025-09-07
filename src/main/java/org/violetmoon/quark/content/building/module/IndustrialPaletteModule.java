@@ -47,20 +47,25 @@ public class IndustrialPaletteModule extends ZetaModule {
 		BooleanSupplier ironPlateCond = () -> enableIronPlates;
 		BooleanSupplier ironLadderCond = () -> enableIronLadder;
 
-		Block plate = new ZetaBlock("iron_plate", this, props).setCondition(ironPlateCond).setCreativeTab(CreativeModeTabs.BUILDING_BLOCKS, Blocks.CHAIN, true);
-		Block rusty = new ZetaBlock("rusty_iron_plate", this, props).setCondition(ironPlateCond).setCreativeTab(CreativeModeTabs.BUILDING_BLOCKS);
+		Block ironPlate = new ZetaBlock("iron_plate", this, props).setCondition(ironPlateCond).setCreativeTab(CreativeModeTabs.BUILDING_BLOCKS, Blocks.CHAIN, true);
+		Block rustyIronPlate = new ZetaBlock("rusty_iron_plate", this, props).setCondition(ironPlateCond).setCreativeTab(CreativeModeTabs.BUILDING_BLOCKS);
 
-		new ZetaPillarBlock("iron_pillar", this, props).setCondition(ironPlateCond).setCreativeTab(CreativeModeTabs.BUILDING_BLOCKS);
+		Block ironPillar = new ZetaPillarBlock("iron_pillar", this, props).setCondition(ironPlateCond).setCreativeTab(CreativeModeTabs.BUILDING_BLOCKS);
 
-		event.getVariantRegistry().addSlabAndStairs((IZetaBlock) plate, null);
-		event.getVariantRegistry().addSlabAndStairs((IZetaBlock) rusty, null);
+		event.getVariantRegistry().addSlabAndStairs((IZetaBlock) ironPlate, null);
+		event.getVariantRegistry().addSlabAndStairs((IZetaBlock) rustyIronPlate, null);
 		CreativeTabManager.endDaisyChain();
 
-		new VariantLadderBlock("iron", this, Block.Properties.of()
+		Block ironLadder = new VariantLadderBlock("iron", this, Block.Properties.of()
 				.strength(0.8F)
 				.sound(IRON_LADDER_SOUND_TYPE)
 				.noOcclusion()
 				.pushReaction(PushReaction.DESTROY), false
 		).setCondition(ironLadderCond);
+
+        blocks.add(ironPlate);
+        blocks.add(rustyIronPlate);
+        blocks.add(ironPillar);
+        blocks.add(ironLadder);
 	}
 }

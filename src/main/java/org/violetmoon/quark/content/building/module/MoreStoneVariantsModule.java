@@ -23,6 +23,8 @@ import org.violetmoon.zeta.module.ZetaModule;
 import org.violetmoon.zeta.registry.CreativeTabManager;
 import org.violetmoon.zeta.util.BooleanSuppliers;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.function.BooleanSupplier;
 
 @ZetaLoadModule(category = "building", loadPhase = 10) //Needs to load after NewStoneTypesModule
@@ -39,20 +41,19 @@ public class MoreStoneVariantsModule extends ZetaModule {
 
 	public static Block polishedCalcite;
 	public static Block polishedDripstone;
-	public static Block polishedTuff;
+
+    public static List<Block> blocks = new ArrayList<>();
 
 	@LoadEvent
 	public final void register(ZRegister event) {
 		polishedCalcite = expandVanillaStone(event, this, Blocks.CALCITE, "calcite");
 		polishedDripstone = expandVanillaStone(event, this, Blocks.DRIPSTONE_BLOCK, "dripstone");
-		//polishedTuff = expandVanillaStone(event, this, Blocks.TUFF, "tuff");
 
 		add(event, "granite", MapColor.DIRT, SoundType.STONE, Blocks.POLISHED_GRANITE, BooleanSuppliers.TRUE);
 		add(event, "diorite", MapColor.QUARTZ, SoundType.STONE, Blocks.POLISHED_DIORITE, BooleanSuppliers.TRUE);
 		add(event, "andesite", MapColor.STONE, SoundType.STONE, Blocks.POLISHED_ANDESITE, BooleanSuppliers.TRUE);
 		add(event, "calcite", MapColor.TERRACOTTA_WHITE, SoundType.CALCITE, polishedCalcite, BooleanSuppliers.TRUE);
 		add(event, "dripstone", MapColor.TERRACOTTA_BROWN, SoundType.DRIPSTONE_BLOCK, polishedDripstone, BooleanSuppliers.TRUE);
-		//add(event, "tuff", MapColor.TERRACOTTA_GRAY, SoundType.TUFF, polishedTuff, BooleanSuppliers.TRUE); //todo: Polished/Bricks for Tuff have been added in 1.21.
 
 		add(event, "limestone", MapColor.STONE, SoundType.STONE, NewStoneTypesModule.polishedBlocks.get(NewStoneTypesModule.limestoneBlock), () -> NewStoneTypesModule.enableLimestone);
 		add(event, "jasper", MapColor.TERRACOTTA_RED, SoundType.STONE, NewStoneTypesModule.polishedBlocks.get(NewStoneTypesModule.jasperBlock), () -> NewStoneTypesModule.enableJasper);
@@ -71,7 +72,6 @@ public class MoreStoneVariantsModule extends ZetaModule {
 		manager.putFlag(this, "andesite", true);
 		manager.putFlag(this, "calcite", true);
 		manager.putFlag(this, "dripstone", true);
-		manager.putFlag(this, "tuff", true);
 	}
 
 	public Block expandVanillaStone(ZRegister event, ZetaModule module, Block raw, String name) {
@@ -97,17 +97,18 @@ public class MoreStoneVariantsModule extends ZetaModule {
 		ZetaBlock bricks = (ZetaBlock) constr.make(name + "_bricks", this, props)
 				.setCondition(() -> cond.getAsBoolean() && enableBricks)
 				.setCreativeTab(CreativeModeTabs.BUILDING_BLOCKS, basePolished, false);
-		constr.make("chiseled_" + name + "_bricks", this, props)
+        ZetaBlock chiseledBricks = (ZetaBlock) constr.make("chiseled_" + name + "_bricks", this, props)
 				.setCondition(() -> cond.getAsBoolean() && enableBricks && enableChiseledBricks)
 				.setCreativeTab(CreativeModeTabs.BUILDING_BLOCKS);
-		pillarConstr.make(name + "_pillar", this, props)
+        ZetaPillarBlock pillar = (ZetaPillarBlock) pillarConstr.make(name + "_pillar", this, props)
 				.setCondition(() -> cond.getAsBoolean() && enablePillar)
 				.setCreativeTab(CreativeModeTabs.BUILDING_BLOCKS);
 
 		event.getVariantRegistry().addSlabStairsWall(bricks, null);
 		CreativeTabManager.endDaisyChain();
-
-
+        blocks.add(bricks);
+        blocks.add(chiseledBricks);
+        blocks.add(pillar);
 	}
 
 	private void addPillar(ZRegister event, String name, MapColor color, SoundType sound, Block parentBlock, BooleanSupplier cond, ZetaBlock.Constructor<ZetaPillarBlock> pillarConstr) {
