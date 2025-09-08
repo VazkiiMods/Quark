@@ -30,7 +30,7 @@
   ],
   "neoforge:conditions": [
     {
-      "type": "quark:advancement_flag",
+      "type": "zeta:flag",
       "flag": "color_runes"
     }
   ]

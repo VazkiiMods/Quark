@@ -2,109 +2,109 @@
   "parent": "minecraft:story/enchant_item",
   "criteria": {
     "rune_white": {
-      "neoforge:conditions": {
+      "conditions": {
         "recipe_id": "quark:tools/smithing/rune_smithing_white"
       },
       "trigger": "minecraft:recipe_crafted"
     },
     "rune_orange": {
-      "neoforge:conditions": {
+      "conditions": {
         "recipe_id": "quark:tools/smithing/rune_smithing_orange"
       },
       "trigger": "minecraft:recipe_crafted"
     },
     "rune_magenta": {
-      "neoforge:conditions": {
+      "conditions": {
         "recipe_id": "quark:tools/smithing/rune_smithing_magenta"
       },
       "trigger": "minecraft:recipe_crafted"
     },
     "rune_light_blue": {
-      "neoforge:conditions": {
+      "conditions": {
         "recipe_id": "quark:tools/smithing/rune_smithing_light_blue"
       },
       "trigger": "minecraft:recipe_crafted"
     },
     "rune_yellow": {
-      "neoforge:conditions": {
+      "conditions": {
         "recipe_id": "quark:tools/smithing/rune_smithing_yellow"
       },
       "trigger": "minecraft:recipe_crafted"
     },
     "rune_lime": {
-      "neoforge:conditions": {
+      "conditions": {
         "recipe_id": "quark:tools/smithing/rune_smithing_lime"
       },
       "trigger": "minecraft:recipe_crafted"
     },
     "rune_pink": {
-      "neoforge:conditions": {
+      "conditions": {
         "recipe_id": "quark:tools/smithing/rune_smithing_pink"
       },
       "trigger": "minecraft:recipe_crafted"
     },
     "rune_gray": {
-      "neoforge:conditions": {
+      "conditions": {
         "recipe_id": "quark:tools/smithing/rune_smithing_gray"
       },
       "trigger": "minecraft:recipe_crafted"
     },
     "rune_light_gray": {
-      "neoforge:conditions": {
+      "conditions": {
         "recipe_id": "quark:tools/smithing/rune_smithing_light_gray"
       },
       "trigger": "minecraft:recipe_crafted"
     },
     "rune_cyan": {
-      "neoforge:conditions": {
+      "conditions": {
         "recipe_id": "quark:tools/smithing/rune_smithing_cyan"
       },
       "trigger": "minecraft:recipe_crafted"
     },
     "rune_purple": {
-      "neoforge:conditions": {
+      "conditions": {
         "recipe_id": "quark:tools/smithing/rune_smithing_purple"
       },
       "trigger": "minecraft:recipe_crafted"
     },
     "rune_blue": {
-      "neoforge:conditions": {
+      "conditions": {
         "recipe_id": "quark:tools/smithing/rune_smithing_blue"
       },
       "trigger": "minecraft:recipe_crafted"
     },
     "rune_brown": {
-      "neoforge:conditions": {
+      "conditions": {
         "recipe_id": "quark:tools/smithing/rune_smithing_brown"
       },
       "trigger": "minecraft:recipe_crafted"
     },
     "rune_green": {
-      "neoforge:conditions": {
+      "conditions": {
         "recipe_id": "quark:tools/smithing/rune_smithing_green"
       },
       "trigger": "minecraft:recipe_crafted"
     },
     "rune_red": {
-      "neoforge:conditions": {
+      "conditions": {
         "recipe_id": "quark:tools/smithing/rune_smithing_red"
       },
       "trigger": "minecraft:recipe_crafted"
     },
     "rune_black": {
-      "neoforge:conditions": {
+      "conditions": {
         "recipe_id": "quark:tools/smithing/rune_smithing_black"
       },
       "trigger": "minecraft:recipe_crafted"
     },
     "rune_rainbow": {
-      "neoforge:conditions": {
+      "conditions": {
         "recipe_id": "quark:tools/smithing/rune_smithing_rainbow"
       },
       "trigger": "minecraft:recipe_crafted"
     },
     "rune_blank": {
-      "neoforge:conditions": {
+      "conditions": {
         "recipe_id": "quark:tools/smithing/rune_smithing_blank"
       },
       "trigger": "minecraft:recipe_crafted"
@@ -149,10 +149,9 @@
   ],
   "neoforge:conditions": [
     {
-      "type": "quark:advancement_flag",
+      "type": "zeta:flag",
       "flag": "color_runes"
     }
   ],
   "sends_telemetry_event": true
-
 }

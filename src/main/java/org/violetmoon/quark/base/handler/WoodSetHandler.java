@@ -130,7 +130,7 @@ public class WoodSetHandler {
 		set.post = new WoodPostBlock(module, set.fence, "", sound).setCondition(() -> Quark.ZETA.modules.isEnabledOrOverlapping(WoodenPostsModule.class));
 		set.strippedPost = new WoodPostBlock(module, set.fence, "stripped_", sound).setCondition(() -> Quark.ZETA.modules.isEnabledOrOverlapping(WoodenPostsModule.class));
 
-		VariantChestsModule.makeChestBlocksExternal(module, name, Blocks.CHEST, sound, BooleanSuppliers.TRUE);
+		VariantChestsModule.makeChestBlocksExternal(module, name, Blocks.CHEST, sound, set.planks, BooleanSuppliers.TRUE);
 
 		set.signItem = new ZetaSignItem(module, set.sign, set.wallSign);
 		set.hangingSignItem = new ZetaHangingSignItem(module, set.ceilingHangingSign, set.wallHangingSign);

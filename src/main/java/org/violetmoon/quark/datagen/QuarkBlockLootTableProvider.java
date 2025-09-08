@@ -124,9 +124,9 @@ public class QuarkBlockLootTableProvider extends BlockLootSubProvider {
         dropSelf(ThatchModule.thatch);
         for(Block block : VariantBookshelvesModule.variantBookshelves)
             add(block, createSingleItemTableWithSilkTouch(block, Items.BOOK, ConstantValue.exactly(3.0F)));
-        for(Block block : VariantChestsModule.regularChests)
+        for(Block block : VariantChestsModule.regularChests.values())
             dropSelf(block);
-        for(Block block : VariantChestsModule.trappedChests)
+        for(Block block : VariantChestsModule.trappedChests.values())
             dropSelf(block);
         dropSelf(VariantFurnacesModule.deepslateFurnace);
         dropSelf(VariantFurnacesModule.blackstoneFurnace);
@@ -188,15 +188,15 @@ public class QuarkBlockLootTableProvider extends BlockLootSubProvider {
         //ALL variantregistry stuff
         //preferably there'd be a better way to get to these registry objects
         //so we can actually sort them by module
-        for(Block block : Quark.ZETA.variantRegistry.slabs){
+        for(Block block : Quark.ZETA.variantRegistry.slabs.values()){
             add(block, createSlabItemTable(block));
         }
 
-        for(Block block : Quark.ZETA.variantRegistry.stairs){
+        for(Block block : Quark.ZETA.variantRegistry.stairs.values()){
             dropSelf(block);
         }
 
-        for(Block block : Quark.ZETA.variantRegistry.walls){
+        for(Block block : Quark.ZETA.variantRegistry.walls.values()){
             dropSelf(block);
         }
     }
@@ -243,8 +243,8 @@ public class QuarkBlockLootTableProvider extends BlockLootSubProvider {
         ret.add(SturdyStoneModule.sturdy_stone);
         ret.add(ThatchModule.thatch);
         ret.addAll(VariantBookshelvesModule.variantBookshelves);
-        ret.addAll(VariantChestsModule.regularChests);
-        ret.addAll(VariantChestsModule.trappedChests);
+        ret.addAll(VariantChestsModule.regularChests.values());
+        ret.addAll(VariantChestsModule.trappedChests.values());
         ret.add(VariantFurnacesModule.deepslateFurnace);
         ret.add(VariantFurnacesModule.blackstoneFurnace);
         ret.addAll(VariantLaddersModule.variantLadders);
@@ -285,9 +285,9 @@ public class QuarkBlockLootTableProvider extends BlockLootSubProvider {
             ret.add(tree.sapling);
         }
 
-        ret.addAll(Quark.ZETA.variantRegistry.slabs);
-        ret.addAll(Quark.ZETA.variantRegistry.stairs);
-        ret.addAll(Quark.ZETA.variantRegistry.walls);
+        ret.addAll(Quark.ZETA.variantRegistry.slabs.values());
+        ret.addAll(Quark.ZETA.variantRegistry.stairs.values());
+        ret.addAll(Quark.ZETA.variantRegistry.walls.values());
         //Oddities
         //Experimental
         return ret;

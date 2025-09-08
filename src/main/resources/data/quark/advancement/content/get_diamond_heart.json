@@ -2,7 +2,7 @@
   "parent": "minecraft:adventure/kill_a_mob",
   "criteria": {
     "get_diamond_heart": {
-      "neoforge:conditions": {
+      "conditions": {
         "items": [
           {
             "items": [
@@ -36,7 +36,7 @@
   ],
   "neoforge:conditions": [
     {
-      "type": "quark:advancement_flag",
+      "type": "zeta:flag",
       "flag": "stoneling_drop_diamond_heart"
     }
   ]

@@ -2,7 +2,7 @@
   "parent": "minecraft:adventure/kill_a_mob",
   "criteria": {
     "get_forgotten_hat": {
-      "neoforge:conditions": {
+      "conditions": {
         "items": [
           {
             "items": [
@@ -36,7 +36,7 @@
   ],
   "neoforge:conditions": [
     {
-      "type": "quark:advancement_flag",
+      "type": "zeta:flag",
       "flag": "forgotten"
     }
   ]

@@ -2,7 +2,7 @@
   "parent": "minecraft:husbandry/tactical_fishing",
   "criteria": {
     "crab_bucket": {
-      "neoforge:conditions": {
+      "conditions": {
         "item": {
           "items": [
             "quark:crab_bucket"
@@ -34,9 +34,8 @@
   ],
   "neoforge:conditions": [
     {
-      "type": "quark:advancement_flag",
+      "type": "zeta:flag",
       "flag": "crabs"
     }
   ]
-
 }

@@ -1,7 +1,9 @@
 package org.violetmoon.quark.datagen;
 
 import net.minecraft.advancements.critereon.PlayerTrigger;
+import net.minecraft.core.Holder;
 import net.minecraft.core.HolderLookup;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.data.PackOutput;
 import net.minecraft.data.recipes.*;
@@ -22,6 +24,7 @@ import net.neoforged.neoforge.common.Tags;
 import net.neoforged.neoforge.common.conditions.ICondition;
 import net.neoforged.neoforge.common.conditions.IConditionBuilder;
 import org.jetbrains.annotations.NotNull;
+import org.spongepowered.asm.mixin.injection.struct.InjectorGroupInfo;
 import org.violetmoon.quark.addons.oddities.module.*;
 import org.violetmoon.quark.base.util.CorundumColor;
 import org.violetmoon.quark.content.automation.module.*;
@@ -39,6 +42,7 @@ import org.violetmoon.quark.content.world.module.BlossomTreesModule;
 import org.violetmoon.quark.content.world.module.CorundumModule;
 import org.violetmoon.zeta.config.FlagCondition;
 
+import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 
@@ -137,14 +141,14 @@ public class QuarkRecipeProvider extends RecipeProvider implements IConditionBui
         //etc
         //Building
             //chests
-        for (Block chest : VariantChestsModule.regularChests){
-            //TODO make a way to reference planks from VariantChestsModule
-            //chestRecipe(chest.asItem(), chestPlanks).unlockedBy("test", PlayerTrigger.TriggerInstance.tick()).save(recipeOutput, "quark:building/chests/" + "");
+        for (Map.Entry<Block, Block> chestEntry : VariantChestsModule.regularChests.entrySet()) {
+            chestRecipe(chestEntry.getValue().asItem(), chestEntry.getKey()).unlockedBy("test", PlayerTrigger.TriggerInstance.tick()).save(recipeOutput, "quark:building/chests/" + BuiltInRegistries.BLOCK.getKey(chestEntry.getValue()).getPath());
         }
-        for (Block chest : VariantChestsModule.trappedChests){
-            //TODO make a way to reference regular chests from trapped chests
-            //trappedChestRecipe(chest.asItem(), chest.originalChest).unlockedBy("test", PlayerTrigger.TriggerInstance.tick()).save(recipeOutput, "quark:building/chests/" + "");
+
+        for (Map.Entry<Block, Block> chestEntry : VariantChestsModule.trappedChests.entrySet()) {
+            trappedChestRecipe(chestEntry.getValue().asItem(), chestEntry.getKey()).unlockedBy("test", PlayerTrigger.TriggerInstance.tick()).save(recipeOutput, "quark:building/chests/" + BuiltInRegistries.BLOCK.getKey(chestEntry.getValue()).getPath());
         }
+
         //TODO https://github.com/VazkiiMods/Quark/blob/master/src/main/resources/data/quark/recipes/tweaks/crafting/utility/chests/mixed_chest_wood_but_without_exclusions.json
             //compressed
         compressUncompress(Items.APPLE, CompressedBlocksModule.apple, recipeOutput, null, "apple_crate");

@@ -67,8 +67,8 @@ public class VariantChestsModule extends ZetaModule {
 	private static boolean enableRevertingWoodenChests = true;
 
 	// blocks
-	public static final List<Block> regularChests = new ArrayList<>();
-	public static final List<Block> trappedChests = new ArrayList<>();
+	public static final Map<Block, Block> regularChests = new HashMap<>();
+	public static final Map<Block, Block> trappedChests = new HashMap<>();
 
 	// the block entity type (all chests share it)
 	public static BlockEntityType<VariantChestBlockEntity> chestTEType;
@@ -102,18 +102,18 @@ public class VariantChestsModule extends ZetaModule {
 	@LoadEvent
 	public final void register(ZRegister event) {
 		for(Wood s : VanillaWoods.ALL)
-			makeChestBlocks(s.name(), Blocks.CHEST, s.soundPlanks());
+			makeChestBlocks(s.name(), Blocks.CHEST, s.soundPlanks(), s.planks());
 		makeChestBlocks("nether_brick", Blocks.NETHER_BRICKS, null);
 		makeChestBlocks("purpur", Blocks.PURPUR_BLOCK, null);
 		makeChestBlocks("prismarine", Blocks.PRISMARINE, null);
 
 		CreativeTabManager.daisyChain();
-		for(Block regularChest : regularChests)
+		for(Block regularChest : regularChests.values())
 			CreativeTabManager.addToCreativeTabNextTo(CreativeModeTabs.FUNCTIONAL_BLOCKS, regularChest, Blocks.CHEST, true);
 		CreativeTabManager.endDaisyChain();
 
 		CreativeTabManager.daisyChain();
-		for(Block trappedChest : trappedChests)
+		for(Block trappedChest : trappedChests.values())
 			CreativeTabManager.addToCreativeTabNextTo(CreativeModeTabs.REDSTONE_BLOCKS, trappedChest, Blocks.TRAPPED_CHEST, true);
 		CreativeTabManager.endDaisyChain();
 
@@ -121,37 +121,41 @@ public class VariantChestsModule extends ZetaModule {
 	}
 
 	private void makeChestBlocks(String name, Block base, @Nullable SoundType sound) {
-		makeChestBlocks(this, name, base, sound, BooleanSuppliers.TRUE);
+		makeChestBlocks(name, base, sound, base);
 	}
 
-	private void makeChestBlocks(ZetaModule module, String name, Block base, @Nullable SoundType sound, BooleanSupplier condition) {
+    private void makeChestBlocks(String name, Block base, @Nullable SoundType sound, Block materialBlock) {
+        makeChestBlocks(this, name, base, sound, materialBlock, BooleanSuppliers.TRUE);
+    }
+
+	private void makeChestBlocks(ZetaModule module, String name, Block base, @Nullable SoundType sound, Block materialBlock, BooleanSupplier condition) {
 		BlockBehaviour.Properties props = BlockPropertyUtil.copyPropertySafe(base);
 		if(sound != null)
 			props = props.sound(sound);
 
 		VariantChestBlock regularChest = new VariantChestBlock(name, module, () -> chestTEType, props).setCondition(condition);
-		regularChests.add(regularChest);
+		regularChests.put(materialBlock, regularChest);
 		chestMappings.put(Quark.asTagKey(Registries.STRUCTURE, name + "_chest_structures"), regularChest);
 
 		VariantTrappedChestBlock trappedChest = new VariantTrappedChestBlock(name, module, () -> trappedChestTEType, props).setCondition(condition);
-		trappedChests.add(trappedChest);
+		trappedChests.put(materialBlock, trappedChest);
 		trappedChestMappings.put(Quark.asTagKey(Registries.STRUCTURE, name + "_chest_structures"), trappedChest);
 
 		Quark.LOOTR_INTEGRATION.makeChestBlocks(module, name, base, condition, regularChest, trappedChest);
 	}
 
 	//only enables the block if the variant chests module is enabled
-	public static void makeChestBlocksExternal(ZetaModule module, String name, Block base, @Nullable SoundType sound, BooleanSupplier condition) {
+	public static void makeChestBlocksExternal(ZetaModule module, String name, Block base, @Nullable SoundType sound, Block materialBlock, BooleanSupplier condition) {
 		VariantChestsModule me = Quark.ZETA.modules.get(VariantChestsModule.class);
-		me.makeChestBlocks(module, name, base, sound, () -> me.isEnabled() && condition.getAsBoolean());
+		me.makeChestBlocks(module, name, base, sound, materialBlock, () -> me.isEnabled() && condition.getAsBoolean());
 	}
 
 	/// STUFF that has to happen after all the makeChestBlocks calls are performed...! ///
 
 	@LoadEvent
 	public void postRegister(ZRegister.Post e) {
-		chestTEType = BlockEntityType.Builder.of(VariantChestBlockEntity::new, regularChests.toArray(new Block[0])).build(null);
-		trappedChestTEType = BlockEntityType.Builder.of(VariantTrappedChestBlockEntity::new, trappedChests.toArray(new Block[0])).build(null);
+		chestTEType = BlockEntityType.Builder.of(VariantChestBlockEntity::new, regularChests.values().toArray(new Block[0])).build(null);
+		trappedChestTEType = BlockEntityType.Builder.of(VariantTrappedChestBlockEntity::new, trappedChests.values().toArray(new Block[0])).build(null);
 
 		Quark.ZETA.registry.register(chestTEType, "variant_chest", Registries.BLOCK_ENTITY_TYPE);
 		Quark.ZETA.registry.register(trappedChestTEType, "variant_trapped_chest", Registries.BLOCK_ENTITY_TYPE);
@@ -176,8 +180,8 @@ public class VariantChestsModule extends ZetaModule {
 				Block block = BuiltInRegistries.BLOCK.get(ResourceLocation.parse(right));
 				if(block != Blocks.AIR) {
 					manualChestMappings.put(ResourceLocation.parse(left), block);
-					if(regularChests.contains(block)) {
-						var trapped = trappedChests.get(regularChests.indexOf(block));
+					if(regularChests.containsValue(block)) {
+						var trapped = trappedChests.get(regularChests.entrySet());
 						manualTrappedChestMappings.put(ResourceLocation.parse(left), trapped);
 					}
 				}
@@ -285,7 +289,7 @@ public class VariantChestsModule extends ZetaModule {
 
 		@LoadEvent
 		public void setItemExtensions(ZRegisterClientExtension event) {
-			for (Block b : regularChests) {
+			for (Block b : regularChests.values()) {
 				event.registerItem(new IZetaClientItemExtensions() {
 					@Override
 					public BlockEntityWithoutLevelRenderer getBEWLR() {
@@ -294,7 +298,7 @@ public class VariantChestsModule extends ZetaModule {
 				}, b.asItem());
 			}
 
-			for (Block b : trappedChests) {
+			for (Block b : trappedChests.values()) {
 				event.registerItem(new IZetaClientItemExtensions() {
 					@Override
 					public BlockEntityWithoutLevelRenderer getBEWLR() {

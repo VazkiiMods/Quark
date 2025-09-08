@@ -55,9 +55,9 @@ public class QuarkItemModelProvider extends ItemModelProvider {
         simpleBlockItem(ThatchModule.thatch);
         for(Block block : VariantBookshelvesModule.variantBookshelves)
             simpleBlockItem(block);
-        for(Block block : VariantChestsModule.regularChests)
+        for(Block block : VariantChestsModule.regularChests.values())
             simpleBlockItem(block);
-        for(Block block : VariantChestsModule.trappedChests)
+        for(Block block : VariantChestsModule.trappedChests.values())
             simpleBlockItem(block);
         simpleBlockItem(VariantFurnacesModule.deepslateFurnace);
         simpleBlockItem(VariantFurnacesModule.blackstoneFurnace);

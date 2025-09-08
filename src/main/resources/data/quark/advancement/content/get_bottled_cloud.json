@@ -2,7 +2,7 @@
   "parent": "minecraft:adventure/root",
   "criteria": {
     "get_bottled_cloud": {
-      "neoforge:conditions": {
+      "conditions": {
         "items": [
           {
             "items": [
@@ -36,7 +36,7 @@
   ],
   "neoforge:conditions": [
     {
-      "type": "quark:advancement_flag",
+      "type": "zeta:flag",
       "flag": "bottled_cloud"
     }
   ]

@@ -2,7 +2,7 @@
   "parent": "minecraft:story/smelt_iron",
   "criteria": {
     "red": {
-      "neoforge:conditions": {
+      "conditions": {
         "items": [
           {
             "items": [
@@ -14,7 +14,7 @@
       "trigger": "minecraft:inventory_changed"
     },
     "orange": {
-      "neoforge:conditions": {
+      "conditions": {
         "items": [
           {
             "items": [
@@ -26,7 +26,7 @@
       "trigger": "minecraft:inventory_changed"
     },
     "yellow": {
-      "neoforge:conditions": {
+      "conditions": {
         "items": [
           {
             "items": [
@@ -38,7 +38,7 @@
       "trigger": "minecraft:inventory_changed"
     },
    "green": {
-      "neoforge:conditions": {
+      "conditions": {
         "items": [
           {
             "items": [
@@ -50,7 +50,7 @@
       "trigger": "minecraft:inventory_changed"
     },
     "blue": {
-      "neoforge:conditions": {
+      "conditions": {
         "items": [
           {
             "items": [
@@ -62,7 +62,7 @@
       "trigger": "minecraft:inventory_changed"
     },
     "indigo": {
-      "neoforge:conditions": {
+      "conditions": {
         "items": [
           {
             "items": [
@@ -74,7 +74,7 @@
       "trigger": "minecraft:inventory_changed"
     },
     "violet": {
-      "neoforge:conditions": {
+      "conditions": {
         "items": [
           {
             "items": [
@@ -86,7 +86,7 @@
       "trigger": "minecraft:inventory_changed"
     },
     "white": {
-      "neoforge:conditions": {
+      "conditions": {
         "items": [
           {
             "items": [
@@ -98,7 +98,7 @@
       "trigger": "minecraft:inventory_changed"
     },
     "black": {
-      "neoforge:conditions": {
+      "conditions": {
         "items": [
           {
             "items": [
@@ -141,7 +141,7 @@
   ],
   "neoforge:conditions": [
     {
-      "type": "quark:advancement_flag",
+      "type": "zeta:flag",
       "flag": "corundum"
     }
   ]

@@ -102,7 +102,7 @@ public class VerticalSlabsModule extends ZetaModule {
 			current.first = first;
 		}
 
-		Quark.ZETA.variantRegistry.slabs.forEach(b -> {
+		Quark.ZETA.variantRegistry.slabs.values().forEach(b -> {
 			if(b instanceof IVerticalSlabProvider provider)
 				provider.getVerticalSlab(b, this);
 			else
