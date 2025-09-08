@@ -52,7 +52,7 @@ public class WoodSetHandler {
 	public static EntityType<QuarkBoat> quarkBoatEntityType = null;
 	public static EntityType<QuarkChestBoat> quarkChestBoatEntityType = null;
 
-	private static final List<WoodSet> woodSets = new ArrayList<>();
+	public static final List<WoodSet> woodSets = new ArrayList<>();
 
 	@LoadEvent
 	public static void register(ZRegister event) {

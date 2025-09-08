@@ -10,6 +10,7 @@ import org.violetmoon.quark.content.building.module.*;
 import org.violetmoon.quark.content.tools.module.AbacusModule;
 
 public class QuarkItemModelProvider extends ItemModelProvider {
+    //1.21: we don't need these, the 1.20 models work
     public QuarkItemModelProvider(PackOutput packOutput, ExistingFileHelper existingFileHelper){
         super(packOutput, Quark.MOD_ID, existingFileHelper);
     }
@@ -65,7 +66,7 @@ public class QuarkItemModelProvider extends ItemModelProvider {
             simpleBlockItem(block);
         for(Block block : VerticalPlanksModule.blocks)
             simpleBlockItem(block);
-        for(Block block : VerticalSlabsModule.blocks)
+        for(Block block : VerticalSlabsModule.blocks.values())
             simpleBlockItem(block); //untested
         for(Block block : WoodenPostsModule.blocks)
             simpleBlockItem(block);

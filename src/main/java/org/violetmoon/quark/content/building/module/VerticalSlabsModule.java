@@ -27,14 +27,11 @@ import org.violetmoon.zeta.module.ZetaLoadModule;
 import org.violetmoon.zeta.module.ZetaModule;
 import org.violetmoon.zeta.util.handler.ToolInteractionHandler;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Locale;
-import java.util.Optional;
+import java.util.*;
 
 @ZetaLoadModule(category = "building")
 public class VerticalSlabsModule extends ZetaModule {
-	public static List<Block> blocks = new ArrayList<>();
+	public static Map<Block, QuarkVerticalSlabBlock> blocks = new HashMap<>();
 
 	@Config(description = "Should Walls and Panes attempt to connect to the side of Vertical Slabs?")
 	public static boolean allowSideConnections = true;

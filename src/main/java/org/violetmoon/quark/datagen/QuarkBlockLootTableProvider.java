@@ -134,7 +134,7 @@ public class QuarkBlockLootTableProvider extends BlockLootSubProvider {
             dropSelf(block);
         for(Block block : VerticalPlanksModule.blocks)
             dropSelf(block);
-        for(Block block : VerticalSlabsModule.blocks)
+        for(Block block : VerticalSlabsModule.blocks.values())
             add(block, createSlabItemTable(block));
             //this is for vanilla double slabs, but it happens to work with verticals!
         for(Block block : WoodenPostsModule.blocks)
@@ -249,7 +249,7 @@ public class QuarkBlockLootTableProvider extends BlockLootSubProvider {
         ret.add(VariantFurnacesModule.blackstoneFurnace);
         ret.addAll(VariantLaddersModule.variantLadders);
         ret.addAll(VerticalPlanksModule.blocks);
-        ret.addAll(VerticalSlabsModule.blocks);
+        ret.addAll(VerticalSlabsModule.blocks.values());
         ret.addAll(WoodenPostsModule.blocks);
 
         //Tools

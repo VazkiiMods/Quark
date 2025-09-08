@@ -1,7 +1,6 @@
 package org.violetmoon.quark.datagen;
 
 import net.minecraft.advancements.critereon.PlayerTrigger;
-import net.minecraft.core.Holder;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
@@ -23,10 +22,9 @@ import net.neoforged.neoforge.common.Tags;
 import net.neoforged.neoforge.common.conditions.ICondition;
 import net.neoforged.neoforge.common.conditions.IConditionBuilder;
 import org.jetbrains.annotations.NotNull;
-import org.spongepowered.asm.mixin.injection.struct.InjectorGroupInfo;
-import org.jetbrains.annotations.Nullable;
 import org.violetmoon.quark.addons.oddities.module.*;
 import org.violetmoon.quark.base.Quark;
+import org.violetmoon.quark.base.handler.WoodSetHandler;
 import org.violetmoon.quark.base.util.CorundumColor;
 import org.violetmoon.quark.content.automation.module.*;
 import org.violetmoon.quark.content.building.block.RainbowLampBlock;
@@ -251,7 +249,7 @@ public class QuarkRecipeProvider extends RecipeProvider implements IConditionBui
                 .unlockedBy(getHasName(DuskboundBlocksModule.blocks.get(0)), has(DuskboundBlocksModule.blocks.get(0)))
                 .save(recipeOutput.withConditions(zCond("duskbound_blocks")), "quark:building/crafting/stairs/duskbound_stairs");
             //TODO the rest of the stairs
-            //stonevariants (vanilla folder removed 1.21, it was inconsistently used)
+            //stonevariants (vanilla subdir removed 1.21, it was inconsistently used)
         ShapedRecipeBuilder.shaped(RecipeCategory.MISC, MoreStoneVariantsModule.polishedCalcite)
                 .pattern("##")
                 .pattern("##")
@@ -266,11 +264,27 @@ public class QuarkRecipeProvider extends RecipeProvider implements IConditionBui
                 .save(recipeOutput.withConditions(zCond("dripstone")), "quark:building/crafting/stonevariants/polished_dripstone");
         //no polished tuff/tuff bricks, they are vanilla now
 
-
             //vertplanks
 
             //vertslabs
+        for(Block slab : VerticalSlabsModule.blocks.keySet()) {
+            ICondition condition = zCond("vertical_slabs");
 
+            if(slab.getDescriptionId().contains("ancient")){
+                condition = and(zCond("vertical_slabs"), zCond("ancient_wood"));
+            }
+            else if(slab.getDescriptionId().contains("azalea")){
+                condition = and(zCond("vertical_slabs"), zCond("azalea_wood"));
+            }
+
+            //probably more config-dependent vert slabs
+
+            String slabName = BuiltInRegistries.BLOCK.getKey(slab).getPath().replace("_slab", "");
+
+            vertslabRecipe(RecipeCategory.BUILDING_BLOCKS, VerticalSlabsModule.blocks.get(slab), Ingredient.of(slab))
+                    .unlockedBy("test", PlayerTrigger.TriggerInstance.tick())
+                    .save(recipeOutput.withConditions(condition), "quark:building/crafting/vertslabs/" + slabName + "_vertical_slab");
+        }
             //walls
 
             //bookshelves (new 1.21 folder)
@@ -334,7 +348,7 @@ public class QuarkRecipeProvider extends RecipeProvider implements IConditionBui
 
             //stools (new 1.21 folder)
 
-            //misc building blocks (duskbound, soul sandstone, grate, midori, raw metal bricks, rope, ironplate, paperwall/lantern, thatch)
+            //misc building blocks (midori, raw metal bricks, rope, ironplate, paperwall/lantern, thatch)
         ShapedRecipeBuilder.shaped(RecipeCategory.BUILDING_BLOCKS, DuskboundBlocksModule.blocks.get(0), 16)
                 .pattern("PPP")
                 .pattern("POP")
@@ -355,11 +369,35 @@ public class QuarkRecipeProvider extends RecipeProvider implements IConditionBui
                 .pattern("DDD")
                 .pattern("DED")
                 .pattern("DDD")
-                .define('P', DuskboundBlocksModule.blocks.get(0))
+                .define('D', DuskboundBlocksModule.blocks.get(0))
                 .define('E', Items.ENDER_PEARL)
                 .unlockedBy("test", PlayerTrigger.TriggerInstance.tick())
                 .save(recipeOutput.withConditions(zCond("duskbound_blocks")), "quark:building/crafting/duskbound_lantern");
-
+        ShapedRecipeBuilder.shaped(RecipeCategory.BUILDING_BLOCKS, SoulSandstoneModule.blocks.get(0))
+                .pattern("##")
+                .pattern("##")
+                .define('#', Blocks.SOUL_SAND)
+                .unlockedBy("test", PlayerTrigger.TriggerInstance.tick())
+                .save(recipeOutput.withConditions(zCond("soul_sandstone")), "quark:building/crafting/soul_sandstone");
+        ShapedRecipeBuilder.shaped(RecipeCategory.BUILDING_BLOCKS, SoulSandstoneModule.blocks.get(1))
+                .pattern("#")
+                .pattern("#")
+                .define('#', SoulSandstoneModule.blocks.get(0))
+                .unlockedBy("test", PlayerTrigger.TriggerInstance.tick())
+                .save(recipeOutput.withConditions(zCond("soul_sandstone")), "quark:building/crafting/chiseled_soul_sandstone");
+        ShapedRecipeBuilder.shaped(RecipeCategory.BUILDING_BLOCKS, SoulSandstoneModule.blocks.get(3))
+                .pattern("##")
+                .pattern("##")
+                .define('#', SoulSandstoneModule.blocks.get(0))
+                .unlockedBy("test", PlayerTrigger.TriggerInstance.tick())
+                .save(recipeOutput.withConditions(zCond("soul_sandstone")), "quark:building/crafting/cut_soul_sandstone");
+        //smooth_soul_sandstone is furnace recipe
+        ShapedRecipeBuilder.shaped(RecipeCategory.BUILDING_BLOCKS, GrateModule.grate)
+                .pattern("##")
+                .pattern("##")
+                .define('#', Blocks.IRON_BARS)
+                .unlockedBy("test", PlayerTrigger.TriggerInstance.tick())
+                .save(recipeOutput.withConditions(zCond("grate")), "quark:building/crafting/grate");
 
         ShapedRecipeBuilder.shaped(RecipeCategory.BUILDING_BLOCKS, SturdyStoneModule.sturdy_stone)
                 .pattern("CCC")
@@ -861,6 +899,16 @@ public class QuarkRecipeProvider extends RecipeProvider implements IConditionBui
                 .pattern(" L ")
                 .define('L', solidLog)
                 .unlockedBy("test", PlayerTrigger.TriggerInstance.tick());
+    }
+
+    public static RecipeBuilder vertslabRecipe(RecipeCategory category, ItemLike output, Ingredient input) {
+        if(output == null || input == null){
+            System.out.println("Missing vertical/horizontal slab pair!!!");
+        }
+        return ShapedRecipeBuilder.shaped(category, output, 3).define('#', input)
+                .pattern("#")
+                .pattern("#")
+                .pattern("#");
     }
 
     //multi-recipe methods

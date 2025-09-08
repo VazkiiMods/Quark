@@ -36,7 +36,7 @@ public class QuarkVerticalSlabBlock extends VerticalSlabBlock implements IZetaBl
 			setCondition(quarkSlab.parent::isEnabled);
 
 		CreativeTabManager.addToCreativeTabNextTo(CreativeModeTabs.BUILDING_BLOCKS, this, parent, false);
-		VerticalSlabsModule.blocks.add(this);
+		VerticalSlabsModule.blocks.put(parent, this);
 	}
 
 	@Override
