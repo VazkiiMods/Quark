@@ -1,6 +1,10 @@
-// 1.21.1	2025-09-07T18:10:22.3035796	Recipes
+// 1.21.1	2025-09-08T11:51:30.6098787	Recipes
 fb6fd8d5cb1cdf314d6d30c5ae844968525e6fa1 data/quark/advancement/recipes/building_blocks/building/crafting/compressed/vanilla_nether_wart_block_4x4.json
+c088da1d71ec9d4a9f9baea7fed9183d9cf86668 data/quark/advancement/recipes/building_blocks/building/crafting/duskbound_block.json
+148b1cc15a853cac415a7a80daf4b916b403768c data/quark/advancement/recipes/building_blocks/building/crafting/duskbound_block_without_myalite.json
 00dcb0174ffe638d2ac999064a2acb10b3681ffb data/quark/advancement/recipes/building_blocks/building/crafting/panes/paper_wall.json
+4afa538245efde7d2e933e2eba7c1ceeefa3965f data/quark/advancement/recipes/building_blocks/building/crafting/slabs/duskbound_slab.json
+32fc8e4fc093a56ea29b60e5569f21f4da744d72 data/quark/advancement/recipes/building_blocks/building/crafting/stairs/duskbound_stairs.json
 5949de252976d5b098bba0daa59d0942720c6850 data/quark/advancement/recipes/building_blocks/building/crafting/sturdy_stone.json
 51710d0b59fec46331c149abdf81a62b47f8bdbf data/quark/advancement/recipes/building_blocks/building/crafting/sturdy_stone_cyclic.json
 c1e4ca234e855644cc1285173e6a97def5310291 data/quark/advancement/recipes/building_blocks/building/crafting/sturdy_stone_uncompress.json
@@ -350,6 +354,8 @@ efb9450143cb26d002601d1b24e8b5fecdd35d10 data/quark/recipe/building/crafting/com
 2c55cdefb6518d896b1e3260daae932be6ce9094 data/quark/recipe/building/crafting/compressed/sugar_cane_block.json
 3e320e8e66ec1bd1afd41d7b932be756d3afdfb1 data/quark/recipe/building/crafting/compressed/sugar_cane_blockuncompress.json
 b930539d190df73a35c089002bfe0056efb0eb44 data/quark/recipe/building/crafting/compressed/vanilla_nether_wart_block_4x4.json
+39e5f49c395f95fd75772e0dbd51dd59e6c0e6b6 data/quark/recipe/building/crafting/duskbound_block.json
+96ed210de15d09fd549081a1f991e168fb9c3bd7 data/quark/recipe/building/crafting/duskbound_block_without_myalite.json
 ad990080e4736659a33cb8e0609bb9cb06e5f969 data/quark/recipe/building/crafting/furnaces/blackstoneminecart.json
 ab39085f26049d60594bed4e8c0e546746ea7997 data/quark/recipe/building/crafting/furnaces/blackstone_blast_furnace.json
 7c119f62d8c026384e868d529354fc611291ee7f data/quark/recipe/building/crafting/furnaces/blackstone_furnace.json
@@ -426,6 +432,8 @@ a506cd3444b5f3068ce3f0193fe1a07abe20f58e data/quark/recipe/building/crafting/shi
 b5cf9a0ca2539424f27b252f242f0be2ee9cf203 data/quark/recipe/building/crafting/shingles/white_shingles_dye.json
 07b74d510cbd71cdd687868bfe04f5be7303dfb5 data/quark/recipe/building/crafting/shingles/yellow_shingles.json
 6cc05f937b314fdcd4cad183f4e945fb7e87fd71 data/quark/recipe/building/crafting/shingles/yellow_shingles_dye.json
+1e41a95178395f7db84663b272770356b78166f7 data/quark/recipe/building/crafting/slabs/duskbound_slab.json
+3d4fafc564bc0e9f3d0906b740f684454143997c data/quark/recipe/building/crafting/stairs/duskbound_stairs.json
 5ef74844f2b9a02142568931e69598275e1170e4 data/quark/recipe/building/crafting/stonevariants/polished_calcite.json
 4ee602939dd84989051ac6054e90313341b8bd3b data/quark/recipe/building/crafting/stonevariants/polished_dripstone.json
 b8b809dfeb3e490930263200481f7f70e0fe00ac data/quark/recipe/building/crafting/sturdy_stone.json

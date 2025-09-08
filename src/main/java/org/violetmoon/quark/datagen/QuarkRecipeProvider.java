@@ -8,7 +8,6 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.data.PackOutput;
 import net.minecraft.data.recipes.*;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.DyeColor;
@@ -25,21 +24,18 @@ import net.neoforged.neoforge.common.conditions.ICondition;
 import net.neoforged.neoforge.common.conditions.IConditionBuilder;
 import org.jetbrains.annotations.NotNull;
 import org.spongepowered.asm.mixin.injection.struct.InjectorGroupInfo;
+import org.jetbrains.annotations.Nullable;
 import org.violetmoon.quark.addons.oddities.module.*;
+import org.violetmoon.quark.base.Quark;
 import org.violetmoon.quark.base.util.CorundumColor;
 import org.violetmoon.quark.content.automation.module.*;
 import org.violetmoon.quark.content.building.block.RainbowLampBlock;
-import org.violetmoon.quark.content.building.block.SturdyStoneBlock;
 import org.violetmoon.quark.content.building.module.*;
 import org.violetmoon.quark.content.experimental.module.VariantSelectorModule;
 import org.violetmoon.quark.content.mobs.module.StonelingsModule;
 import org.violetmoon.quark.content.tools.module.*;
 import org.violetmoon.quark.content.tweaks.module.GlassShardModule;
-import org.violetmoon.quark.content.tweaks.module.UtilityRecipesModule;
-import org.violetmoon.quark.content.world.module.AncientWoodModule;
-import org.violetmoon.quark.content.world.module.AzaleaWoodModule;
-import org.violetmoon.quark.content.world.module.BlossomTreesModule;
-import org.violetmoon.quark.content.world.module.CorundumModule;
+import org.violetmoon.quark.content.world.module.*;
 import org.violetmoon.zeta.config.FlagCondition;
 
 import java.util.Map;
@@ -58,7 +54,7 @@ public class QuarkRecipeProvider extends RecipeProvider implements IConditionBui
 
     @Override
     protected void buildRecipes(@NotNull RecipeOutput recipeOutput){
-        //Automation
+        //CATEGORY: Automation
         ShapedRecipeBuilder.shaped(RecipeCategory.REDSTONE, ChuteModule.chute)
                 .pattern("WWW")
                 .pattern("SWS")
@@ -139,7 +135,7 @@ public class QuarkRecipeProvider extends RecipeProvider implements IConditionBui
                 .unlockedBy("test", PlayerTrigger.TriggerInstance.tick())
                 .save(recipeOutput.withConditions(zCond("redstone_randomizer")), "quark:automation/crafting/redstone_randomizer");
         //etc
-        //Building
+        //CATEGORY: Building
             //chests
         for (Map.Entry<Block, Block> chestEntry : VariantChestsModule.regularChests.entrySet()) {
             chestRecipe(chestEntry.getValue().asItem(), chestEntry.getKey()).unlockedBy("test", PlayerTrigger.TriggerInstance.tick()).save(recipeOutput, "quark:building/chests/" + BuiltInRegistries.BLOCK.getKey(chestEntry.getValue()).getPath());
@@ -246,9 +242,15 @@ public class QuarkRecipeProvider extends RecipeProvider implements IConditionBui
             colorShingles(ShinglesModule.blockMap.get(dyeColor).getBlock(), dyeColor, recipeOutput.withConditions(zCond("shingles")));
         }
             //slabs
-        //need variant registry access
+            //TODO the rest of the slabs
+        slabBuilder(RecipeCategory.BUILDING_BLOCKS, Quark.ZETA.variantRegistry.slabs.get(DuskboundBlocksModule.blocks.get(0)), Ingredient.of(DuskboundBlocksModule.blocks.get(0)))
+                .unlockedBy(getHasName(DuskboundBlocksModule.blocks.get(0)), has(DuskboundBlocksModule.blocks.get(0)))
+                .save(recipeOutput.withConditions(zCond("duskbound_blocks")), "quark:building/crafting/slabs/duskbound_slab");
             //stairs
-        //need variant registry access
+        stairBuilder(Quark.ZETA.variantRegistry.stairs.get(DuskboundBlocksModule.blocks.get(0)), Ingredient.of(DuskboundBlocksModule.blocks.get(0)))
+                .unlockedBy(getHasName(DuskboundBlocksModule.blocks.get(0)), has(DuskboundBlocksModule.blocks.get(0)))
+                .save(recipeOutput.withConditions(zCond("duskbound_blocks")), "quark:building/crafting/stairs/duskbound_stairs");
+            //TODO the rest of the stairs
             //stonevariants (vanilla folder removed 1.21, it was inconsistently used)
         ShapedRecipeBuilder.shaped(RecipeCategory.MISC, MoreStoneVariantsModule.polishedCalcite)
                 .pattern("##")
@@ -333,6 +335,32 @@ public class QuarkRecipeProvider extends RecipeProvider implements IConditionBui
             //stools (new 1.21 folder)
 
             //misc building blocks (duskbound, soul sandstone, grate, midori, raw metal bricks, rope, ironplate, paperwall/lantern, thatch)
+        ShapedRecipeBuilder.shaped(RecipeCategory.BUILDING_BLOCKS, DuskboundBlocksModule.blocks.get(0), 16)
+                .pattern("PPP")
+                .pattern("POP")
+                .pattern("PPP")
+                .define('P', Blocks.PURPUR_BLOCK)
+                .define('O', SpiralSpiresModule.dusky_myalite)
+                .unlockedBy("test", PlayerTrigger.TriggerInstance.tick())
+                .save(recipeOutput.withConditions(and(zCond("duskbound_blocks"), zCond("spiral_spires"))), "quark:building/crafting/duskbound_block");
+        ShapedRecipeBuilder.shaped(RecipeCategory.BUILDING_BLOCKS, DuskboundBlocksModule.blocks.get(0), 16)
+                .pattern("PPP")
+                .pattern("POP")
+                .pattern("PPP")
+                .define('P', Blocks.PURPUR_BLOCK)
+                .define('O', Blocks.OBSIDIAN)
+                .unlockedBy("test", PlayerTrigger.TriggerInstance.tick())
+                .save(recipeOutput.withConditions(and(zCond("duskbound_blocks"), not(zCond("spiral_spires")))), "quark:building/crafting/duskbound_block_without_myalite");
+        ShapedRecipeBuilder.shaped(RecipeCategory.BUILDING_BLOCKS, DuskboundBlocksModule.blocks.get(1), 4)
+                .pattern("DDD")
+                .pattern("DED")
+                .pattern("DDD")
+                .define('P', DuskboundBlocksModule.blocks.get(0))
+                .define('E', Items.ENDER_PEARL)
+                .unlockedBy("test", PlayerTrigger.TriggerInstance.tick())
+                .save(recipeOutput.withConditions(zCond("duskbound_blocks")), "quark:building/crafting/duskbound_lantern");
+
+
         ShapedRecipeBuilder.shaped(RecipeCategory.BUILDING_BLOCKS, SturdyStoneModule.sturdy_stone)
                 .pattern("CCC")
                 .pattern("CCC")
@@ -353,7 +381,7 @@ public class QuarkRecipeProvider extends RecipeProvider implements IConditionBui
                 .unlockedBy("test", PlayerTrigger.TriggerInstance.tick())
                 .save(recipeOutput.withConditions(and(not(modLoaded("cyclic")), zCond("sturdy_stone"))), "quark:building/crafting/sturdy_stone_uncompress");
 
-        //Experimental
+        //CATEGORY: Experimental
         ShapedRecipeBuilder.shaped(RecipeCategory.TOOLS, VariantSelectorModule.hammer)
                 .pattern("III")
                 .pattern("ISI")
@@ -362,9 +390,9 @@ public class QuarkRecipeProvider extends RecipeProvider implements IConditionBui
                 .define('S', Tags.Items.RODS_WOODEN)
                 .unlockedBy("test", PlayerTrigger.TriggerInstance.tick())
                 .save(recipeOutput.withConditions(zCond("hammer")), "quark:experimental/crafting/hammer"); //this recipe is called "trowel" in 1.20
-        //Mobs
+        //CATEGORY: Mobs
             //  RecipeProvider does not seem to have campfire recipes ??
-        //Oddities
+        //CATEGORY: Oddities
         ShapedRecipeBuilder.shaped(RecipeCategory.MISC, BackpackModule.backpack)
                 .pattern("LRL")
                 .pattern("LCL")
@@ -457,7 +485,7 @@ public class QuarkRecipeProvider extends RecipeProvider implements IConditionBui
                 .define('P', Items.POTATO)
                 .unlockedBy("test", PlayerTrigger.TriggerInstance.tick())
                 .save(recipeOutput.withConditions(and(zCond("tiny_potato"), or(zCond("tiny_potato_never_uses_heart"), not(zCond("stonelings"))))), "quark:oddities/crafting/tiny_potato_no_heart");
-        //Tools
+        //CATEGORY: Tools
         ShapedRecipeBuilder.shaped(RecipeCategory.TOOLS, AbacusModule.abacus)
                 .pattern("WSW")
                 .pattern("WIW")
@@ -742,7 +770,7 @@ public class QuarkRecipeProvider extends RecipeProvider implements IConditionBui
 
         //TODO elytra duplication recipetype
         //TODO slab to full block recipetype
-        //World
+        //CATEGORY: World
             //  use stonecutterResultFromBase for stonecutter recipes
     }
 
@@ -827,12 +855,12 @@ public class QuarkRecipeProvider extends RecipeProvider implements IConditionBui
     }
 
     public static ShapedRecipeBuilder hollowLogRecipe(ItemLike output, ItemLike solidLog) {
-        //TODO some logs, like ancient, need hollow_logs AND their respective wood type enabled config conditions
         return ShapedRecipeBuilder.shaped(RecipeCategory.MISC, output, 4)
                 .pattern(" L ")
                 .pattern("L L")
                 .pattern(" L ")
-                .define('L', solidLog);
+                .define('L', solidLog)
+                .unlockedBy("test", PlayerTrigger.TriggerInstance.tick());
     }
 
     //multi-recipe methods
