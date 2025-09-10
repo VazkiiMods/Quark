@@ -34,9 +34,12 @@ import org.violetmoon.quark.content.mobs.module.StonelingsModule;
 import org.violetmoon.quark.content.tools.module.*;
 import org.violetmoon.quark.content.tweaks.module.GlassShardModule;
 import org.violetmoon.quark.content.world.module.*;
+import org.violetmoon.zeta.block.IZetaBlock;
 import org.violetmoon.zeta.config.FlagCondition;
+import org.violetmoon.zeta.util.VanillaWoods;
 
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 
@@ -286,7 +289,81 @@ public class QuarkRecipeProvider extends RecipeProvider implements IConditionBui
                     .save(recipeOutput.withConditions(condition), "quark:building/crafting/vertslabs/" + slabName + "_vertical_slab");
         }
             //walls
+        for(IZetaBlock baseBlock : Quark.ZETA.variantRegistry.walls.keySet()) {
+            Block base = baseBlock.getBlock();
+            ICondition condition = zCond("");
+            Block wallBlock = Quark.ZETA.variantRegistry.walls.get(baseBlock);
 
+            String dir = "quark:building/crafting/walls/";
+
+            //detect World walls
+            if(base.getDescriptionId().contains("limestone") || base.getDescriptionId().contains("jasper") || base.getDescriptionId().contains("shale") ||
+                    base.getDescriptionId().contains("myalite") || base.getDescriptionId().contains("myalite") ||base.getDescriptionId().contains("permafrost") ||
+                    base.getDescriptionId().contains("andesite") || base.getDescriptionId().contains("diorite") ||base.getDescriptionId().contains("granite")){
+
+                dir = "quark:world/crafting/walls/";
+                if(base.getDescriptionId().contains("andesite") || base.getDescriptionId().contains("diorite") ||base.getDescriptionId().contains("granite")){
+                    condition = zCond("more_stone_variants");
+                }
+                else if(base.getDescriptionId().contains("jasper")){
+                    condition = zCond("limestone");
+                }
+                else if(base.getDescriptionId().contains("limestone")){
+                    condition = zCond("limestone");
+                }
+                else if(base.getDescriptionId().contains("myalite")){
+                    condition = zCond("myalite");
+                }
+                else if(base.getDescriptionId().contains("permafrost")){
+                    condition = zCond("permafrost");
+                }
+            }
+            else {
+                dir = "quark:building/crafting/walls/";
+
+                if (base.getDescriptionId().contains("blackstone_bricks")) {
+                    condition = zCond("blackstone_bricks");
+                } else if (base.getDescriptionId().contains("blue_nether_bricks")) {
+                    condition = zCond("blue_nether_bricks");
+                } else if (base.getDescriptionId().contains("calcite_bricks")) {
+                    condition = zCond("more_stone_variants");
+                } else if (base.getDescriptionId().equals("block.minecraft.calcite")) {
+                    condition = zCond("calcite");
+                } else if (base.getDescriptionId().contains("cobblestone_bricks")) {
+                    condition = zCond("cobblestone_bricks");
+                } else if (base.getDescriptionId().contains("dirt_bricks")) {
+                    condition = zCond("dirt_bricks");
+                } else if (base.getDescriptionId().equals("block.minecraft.dripstone_block")) {
+                    condition = zCond("dripstone");
+                } else if (base.getDescriptionId().contains("dripstone_bricks")) {
+                    condition = zCond("dripstone");
+                } else if (base.getDescriptionId().contains("mossy_cobblestone_bricks")) {
+                    condition = zCond("cobblestone_bricks");
+                } else if (base.getDescriptionId().contains("netherrack_bricks")) {
+                    condition = zCond("netherrack_bricks");
+                } else if (base.getDescriptionId().contains("raw")) {
+                    condition = zCond("raw_metal_bricks");
+                } else if (base.getDescriptionId().contains("sandstone_bricks")) {
+                    condition = zCond("sandstone_bricks");
+                } else if (base.getDescriptionId().contains("soul_sandstone")) {
+                    condition = zCond("soul_sandstone");
+                }
+                //should soul sandstone bricks be sandstone_bricks and soul_sandstone? they aren't in 1.20.
+                else if (base.getDescriptionId().contains("tuff")) {
+                    condition = zCond("tuff");
+                } else if (base.getDescriptionId().contains("tuff")) {
+                    condition = zCond("tuff");
+                }
+            }
+
+            if(Objects.equals(condition, zCond(""))){
+                System.out.println("Wall is missing a condition:" + wallBlock);
+            }
+
+            wallBuilder(RecipeCategory.BUILDING_BLOCKS, wallBlock, Ingredient.of(base))
+                    .unlockedBy("test", PlayerTrigger.TriggerInstance.tick())
+                    .save(recipeOutput.withConditions(condition),  dir + BuiltInRegistries.BLOCK.getKey(base).getPath() + "_wall");
+        }
             //bookshelves (new 1.21 folder)
         ShapedRecipeBuilder.shaped(RecipeCategory.MISC, Blocks.BOOKSHELF)
                 .pattern("###")
@@ -296,15 +373,21 @@ public class QuarkRecipeProvider extends RecipeProvider implements IConditionBui
                 .define('X', Items.BOOK)
                 .unlockedBy("test", PlayerTrigger.TriggerInstance.tick())
                 .save(recipeOutput.withConditions(zCond("variant_bookshelves")), "quark:building/crafting/bookshelves/oak_bookshelf");
-//vanilla wood variant bookshelves here
-//        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, VariantBookshelvesModule.birch)
-//                .pattern("###")
-//                .pattern("XXX")
-//                .pattern("###")
-//                .define('#', Blocks.BIRCH_PLANKS)
-//                .define('#', Items.BOOK)
-//                .unlockedBy("test", PlayerTrigger.TriggerInstance.tick())
-//                .save(recipeOutput.withConditions(zCond("variant_bookshelves")), "quark:building/crafting/bookshelves/birch_bookshelf");
+        //vanilla wood variant bookshelves
+        int i = 0;
+        for(VanillaWoods.Wood type : VanillaWoods.NON_OAK){ //SPRUCE, BIRCH, JUNGLE, ACACIA, DARK_OAK, CRIMSON, WARPED, MANGROVE, BAMBOO, CHERRY
+            String name = type.name();
+            Block plank = type.planks();
+            ShapedRecipeBuilder.shaped(RecipeCategory.MISC, VariantBookshelvesModule.variantBookshelves.get(i))
+                    .pattern("###")
+                    .pattern("XXX")
+                    .pattern("###")
+                    .define('#', plank)
+                    .define('X', Items.BOOK)
+                    .unlockedBy("test", PlayerTrigger.TriggerInstance.tick())
+                    .save(recipeOutput.withConditions(zCond("variant_bookshelves")), "quark:building/crafting/bookshelves/" + name + "_bookshelf");
+            i++;
+        }
         ShapedRecipeBuilder.shaped(RecipeCategory.MISC, AncientWoodModule.woodSet.bookshelf)
                 .pattern("###")
                 .pattern("XXX")
@@ -754,9 +837,9 @@ public class QuarkRecipeProvider extends RecipeProvider implements IConditionBui
                 .define('X', Items.TNT)
                 .unlockedBy("test", PlayerTrigger.TriggerInstance.tick())
                 .save(recipeOutput.withConditions(zCond("minecart_upgrade")), "quark:tweaks/crafting/utility/misc/tnt_minecart");
-            //utility/tools
+            //utility/tools is in Quark VDO
 
-            //utility/wool
+            //utility/wool is no longer needed, these are now vanilla recipes
 
             //glass (new 1.21)
         shardGlassRecipe(Items.BLACK_STAINED_GLASS).unlockedBy("test", PlayerTrigger.TriggerInstance.tick())
@@ -779,7 +862,6 @@ public class QuarkRecipeProvider extends RecipeProvider implements IConditionBui
                 .define('#', GlassShardModule.dirtyShard)
                 .unlockedBy("test", PlayerTrigger.TriggerInstance.tick())
                 .save(recipeOutput.withConditions(zCond("glass_shard")), "quark:tweaks/crafting/utility/glass/dirty_glass");
-        //TODO dirty glass from mixed shards exclusion recipe.
         shardGlassRecipe(Items.GRAY_STAINED_GLASS).unlockedBy("test", PlayerTrigger.TriggerInstance.tick())
                 .save(recipeOutput.withConditions(zCond("glass_shard")), "quark:tweaks/crafting/utility/glass/gray_glass");
         shardGlassRecipe(Items.GREEN_STAINED_GLASS).unlockedBy("test", PlayerTrigger.TriggerInstance.tick())
@@ -859,7 +941,6 @@ public class QuarkRecipeProvider extends RecipeProvider implements IConditionBui
     public static ShapedRecipeBuilder corundomLampRecipe(ItemLike output, CorundumColor corundumColor) {
         Block corundum = CorundumModule.getCrystal(corundumColor);
 
-        //todo conditions: rainbow_lamps, corundum, rainbow_lamp_corundum
         return ShapedRecipeBuilder.shaped(RecipeCategory.REDSTONE, output)
                 .pattern(" R ")
                 .pattern("RCR")
@@ -881,7 +962,6 @@ public class QuarkRecipeProvider extends RecipeProvider implements IConditionBui
             case BLACK -> Items.BLACK_DYE;
         };
 
-        //todo conditions: rainbow_lamps && ( ! corundum || ! rainbow_lamp_corundum)
         return ShapedRecipeBuilder.shaped(RecipeCategory.REDSTONE, output)
                 .pattern(" D ")
                 .pattern("RAR")
