@@ -1,0 +1,25 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "###",
+    "WWW"
+  ],
+  "key": {
+    "#": {
+      "item": "minecraft:lime_wool"
+    },
+    "W": {
+      "tag": "minecraft:wooden_slabs"
+    }    
+  },
+  "result": {
+    "id": "quark:lime_stool",
+    "count": 1
+  },
+  "neoforge:conditions": [
+    {
+      "type": "zeta:flag",
+      "flag": "stools"
+    }
+  ]
+} 

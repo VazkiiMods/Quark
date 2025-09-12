@@ -1,0 +1,35 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "# #",
+    "#W#",
+    "# #"
+  ],
+  "key": {
+    "#": {
+      "tag": "c:rods/wooden"
+    },
+    "W": {
+      "item": "quark:ancient_planks"
+    }
+  },
+  "result": {
+    "id": "quark:ancient_ladder",
+    "count": 4
+  },
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:and",
+      "values": [
+        {
+          "type": "zeta:flag",
+          "flag": "variant_ladders"
+        },
+        {
+          "type": "zeta:flag",
+          "flag": "ancient_wood"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "item": "quark:pipe"
+    },
+    {
+      "item": "minecraft:glass"
+    }
+  ],
+  "result": {
+    "id": "quark:encased_pipe",
+    "count": 1
+  },
+  "neoforge:conditions": [
+    {
+      "type": "zeta:flag",
+      "flag": "encased_pipes"
+    }
+  ]
+}

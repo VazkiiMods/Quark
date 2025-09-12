@@ -1,0 +1,25 @@
+{
+  "type": "minecraft:stonecutting",
+  "ingredient": {
+    "item": "quark:limestone"
+  },
+  "result": {
+		"id": "quark:limestone_bricks_slab",
+      "count": 2
+},
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:and",
+      "values": [
+        {
+          "type": "zeta:flag",
+          "flag": "stone_bricks"
+        },
+        {
+          "type": "zeta:flag",
+          "flag": "limestone"
+        }
+      ]
+    }
+  ]
+} 

@@ -1,0 +1,23 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "###",
+    "###"
+  ],
+  "key": {
+    "#": {
+      "item": "quark:orange_corundum"
+    }
+  },
+  "result": {
+    "id": "quark:orange_corundum_pane",
+    "count": 16
+  },
+  "group": "quark:corundum_sheet",
+  "neoforge:conditions": [
+    {
+      "type": "zeta:flag",
+      "flag": "corundum"
+    }
+  ]
+} 

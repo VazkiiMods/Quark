@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "item": "quark:cocoa_beans_sack"
+    }
+  ],
+  "result": {
+    "id": "minecraft:cocoa_beans",
+    "count": 9
+  },
+  "neoforge:conditions": [
+    {
+      "type": "zeta:flag",
+        "flag": "cocoa_beans_sack"
+    }
+  ]
+} 

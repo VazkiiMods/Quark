@@ -1,0 +1,56 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "D": {
+      "item": "minecraft:blue_dye"
+    },
+    "R": {
+      "item": "minecraft:redstone"
+    },
+    "G": {
+      "item": "minecraft:glowstone_dust"
+    },
+    "A": {
+      "item": "minecraft:amethyst_block"
+    }
+  },
+  "pattern": [
+    " D ",
+    "RAR",
+    " G "
+  ],
+  "result": {
+    "id": "quark:indigo_crystal_lamp",
+    "count": 1
+  },
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:and",
+      "values": [
+        {
+          "type": "zeta:flag",
+          "flag": "rainbow_lamps"
+        },
+        {
+          "type": "neoforge:or",
+          "values": [
+            {
+              "type": "neoforge:not",
+              "value": {
+                "type": "zeta:flag",
+                "flag": "corundum"
+              }
+            },
+            {
+              "type": "neoforge:not",
+              "value": {
+                "type": "zeta:flag",
+                "flag": "rainbow_lamp_corundum"
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

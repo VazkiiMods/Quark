@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "###"
+  ],
+  "key": {
+    "#": {
+      "item": "quark:polished_dripstone"
+    }
+  },
+  "result": {
+    "id": "quark:polished_dripstone_slab",
+    "count": 6
+  },
+  "neoforge:conditions": [
+    {
+      "type": "zeta:flag",
+      "flag": "dripstone"
+    }
+  ]
+} 

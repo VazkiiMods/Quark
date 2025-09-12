@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "group": "planks",
+  "ingredients": [
+    {
+      "tag": "quark:blossom_logs"
+    }
+  ],
+  "result": {
+    "id": "quark:blossom_planks",
+    "count": 4
+  },
+  "neoforge:conditions": [
+    {
+      "type": "zeta:flag",
+      "flag": "blossom_trees"
+    }
+  ]
+}

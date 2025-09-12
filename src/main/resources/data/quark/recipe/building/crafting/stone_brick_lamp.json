@@ -1,0 +1,29 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "SSS",
+    "GTG",
+    "SSS"
+  ],
+  "key": {
+    "S": {
+      "item": "minecraft:stone_bricks"
+    },
+    "G": {
+      "item": "minecraft:glass"
+    },
+    "T": {
+      "item": "minecraft:torch"
+    }
+  },
+  "result": {
+    "id": "quark:stone_brick_lamp",
+    "count": 3
+  },
+  "neoforge:conditions": [
+    {
+      "type": "zeta:flag",
+      "flag": "celebratory_lamps"
+    }
+  ]
+}

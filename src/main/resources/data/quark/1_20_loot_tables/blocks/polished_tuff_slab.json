@@ -12,7 +12,7 @@
               "neoforge:conditions": [
                 {
                   "condition": "minecraft:block_state_property",
-                  "block": "quark:polished_tuff_slab",
+                  "block": "minecraft:polished_tuff_slab",
                   "properties": {
                     "type": "double"
                   }
@@ -24,7 +24,7 @@
               "function": "minecraft:explosion_decay"
             }
           ],
-          "name": "quark:polished_tuff_slab"
+          "name": "minecraft:polished_tuff_slab"
         }
       ]
     }

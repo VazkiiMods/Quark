@@ -1,0 +1,34 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "L",
+    "W"
+  ],
+  "key": {
+    "L": {
+      "item": "minecraft:azalea_leaves"
+    },
+    "W": {
+      "tag": "quark:azalea_logs"
+    }
+  },
+  "result": {
+    "id": "quark:azalea_hedge",
+    "count": 2
+  },
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:and",
+      "values": [
+        {
+          "type": "zeta:flag",
+          "flag": "hedges"
+        },
+        {
+          "type": "zeta:flag",
+          "flag": "azalea_wood"
+        }
+      ]
+    }
+  ]
+} 

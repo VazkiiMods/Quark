@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "###",
+    "###"
+  ],
+  "key": {
+    "#": {
+      "item": "quark:jasper"
+    }
+  },
+  "result": {
+    "id": "quark:jasper_wall",
+    "count": 6
+  },
+  "neoforge:conditions": [
+    {
+      "type": "zeta:flag",
+      "flag": "jasper"
+    }
+  ]
+} 

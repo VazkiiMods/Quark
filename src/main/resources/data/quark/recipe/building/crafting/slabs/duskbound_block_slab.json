@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "###"
+  ],
+  "key": {
+    "#": {
+      "item": "quark:duskbound_block"
+    }
+  },
+  "result": {
+    "id": "quark:duskbound_block_slab",
+    "count": 6
+  },
+  "neoforge:conditions": [
+    {
+      "type": "zeta:flag",
+      "flag": "duskbound_blocks"
+    }
+  ]
+} 

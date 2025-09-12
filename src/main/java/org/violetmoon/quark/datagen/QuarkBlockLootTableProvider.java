@@ -1,18 +1,16 @@
 package org.violetmoon.quark.datagen;
 
 import net.minecraft.advancements.critereon.ItemPredicate;
-import net.minecraft.client.OptionInstance;
 import net.minecraft.core.HolderLookup;
-import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.data.loot.BlockLootSubProvider;
-import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.flag.FeatureFlags;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.DoorBlock;
 import net.minecraft.world.level.block.SlabBlock;
 import net.minecraft.world.level.storage.loot.IntRange;
 import net.minecraft.world.level.storage.loot.LootPool;
@@ -29,15 +27,8 @@ import net.minecraft.world.level.storage.loot.predicates.MatchTool;
 import net.minecraft.world.level.storage.loot.providers.number.ConstantValue;
 import net.minecraft.world.level.storage.loot.providers.number.UniformGenerator;
 import net.neoforged.neoforge.common.Tags;
-import org.violetmoon.quark.addons.oddities.block.CrateBlock;
-import org.violetmoon.quark.addons.oddities.module.CrateModule;
-import org.violetmoon.quark.addons.oddities.module.MagnetsModule;
-import org.violetmoon.quark.addons.oddities.module.PipesModule;
-import org.violetmoon.quark.addons.oddities.module.TinyPotatoModule;
+import org.violetmoon.quark.addons.oddities.module.*;
 import org.violetmoon.quark.base.Quark;
-import org.violetmoon.quark.content.automation.block.EnderWatcherBlock;
-import org.violetmoon.quark.content.automation.block.IronRodBlock;
-import org.violetmoon.quark.content.automation.block.RedstoneRandomizerBlock;
 import org.violetmoon.quark.content.automation.module.*;
 import org.violetmoon.quark.content.building.module.*;
 import org.violetmoon.quark.content.tools.module.BottledCloudModule;
@@ -46,7 +37,6 @@ import org.violetmoon.quark.content.world.module.*;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 public class QuarkBlockLootTableProvider extends BlockLootSubProvider {
@@ -92,7 +82,7 @@ public class QuarkBlockLootTableProvider extends BlockLootSubProvider {
         for(Block block : DuskboundBlocksModule.blocks)
             dropSelf(block);
         for(Block block : FramedGlassModule.glassBlocks)
-            dropSelf(block);
+            dropWhenSilkTouch(block);
         dropSelf(GoldBarsModule.gold_bars);
         for(Block block : HedgesModule.hedges)
             dropSelf(block);
@@ -102,15 +92,15 @@ public class QuarkBlockLootTableProvider extends BlockLootSubProvider {
             dropSelf(block);
         dropSelf(GrateModule.grate);
         for(Block block : JapanesePaletteModule.blocks)
-            dropSelfWithRespectToSlab(block);
+            dropSelfWithRespectToAlternates(block);
         for(Block block : LeafCarpetModule.carpets)
             dropSelf(block);
         for(Block block : MidoriModule.blocks)
-            dropSelfWithRespectToSlab(block);
+            dropSelfWithRespectToAlternates(block);
         for(Block block : MoreBrickTypesModule.blocks)
-            dropSelfWithRespectToSlab(block);
+            dropSelfWithRespectToAlternates(block);
         for(Block block : MoreMudBlocksModule.blocks)
-            dropSelfWithRespectToSlab(block);
+            dropSelfWithRespectToAlternates(block);
         for(Block block : MorePottedPlantsModule.pottedPlants)
             add(block, createPotFlowerItemTable(MorePottedPlantsModule.getItemLikeFromBlock(block))); //untested
         for(Block block : MoreStoneVariantsModule.blocks)
@@ -119,11 +109,11 @@ public class QuarkBlockLootTableProvider extends BlockLootSubProvider {
         for(Block block : RainbowLampsModule.lamps)
             dropSelf(block);
         for(Block block : RawMetalBricksModule.blocks)
-            dropSelfWithRespectToSlab(block);
+            dropSelfWithRespectToAlternates(block);
         dropSelf(RopeModule.rope);
         this.add(ShearVinesModule.cut_vine, noDrop());
         for(Block block : ShinglesModule.blocks)
-            dropSelfWithRespectToSlab(block);
+            dropSelfWithRespectToAlternates(block);
         for(Block block : SoulSandstoneModule.blocks)
             dropSelf(block);
         for(Block block : StoolsModule.stools)
@@ -158,11 +148,11 @@ public class QuarkBlockLootTableProvider extends BlockLootSubProvider {
 
         //World
         for(Block block : AncientWoodModule.woodSet.allBlocks())
-            dropSelfWithRespectToSlab(block);
+            dropSelfWithRespectToAlternates(block);
         add(AncientWoodModule.ancient_leaves, createLeavesDropWithBonusLikeHowOakLeavesDropApples(AncientWoodModule.ancient_leaves, AncientWoodModule.ancient_sapling, AncientWoodModule.ancient_fruit));
         dropSelf(AncientWoodModule.ancient_sapling);
         for(Block block : AzaleaWoodModule.woodSet.allBlocks())
-            dropSelfWithRespectToSlab(block);
+            dropSelfWithRespectToAlternates(block);
         //Azalea leaves are vanilla
         add(ChorusVegetationModule.chorus_weeds, createShearsDrops(ChorusVegetationModule.chorus_weeds));
         add(ChorusVegetationModule.chorus_twist, createShearsDrops(ChorusVegetationModule.chorus_twist));
@@ -173,10 +163,11 @@ public class QuarkBlockLootTableProvider extends BlockLootSubProvider {
         for(Block block : CorundumModule.clusters)
             dropSelf(block);
         for(Block block : CorundumModule.panes)
-            dropSelf(block);
+            dropWhenSilkTouch(block);
         dropSelf(GlimmeringWealdModule.glow_shroom);
         dropSelf(GlimmeringWealdModule.glow_lichen_growth);
         //TODO GlimmeringWealdModule.glow_shroom_block. mushroom cap fullblock drops are weird
+        this.add(GlimmeringWealdModule.glow_shroom_block,createMushroomBlockDrop(GlimmeringWealdModule.glow_shroom_block, GlimmeringWealdModule.glow_shroom));
         dropWhenSilkTouch(GlimmeringWealdModule.glow_shroom_stem);
         dropSelf(GlimmeringWealdModule.glow_shroom_ring);
         this.add(MonsterBoxModule.monster_box, noDrop());
@@ -187,11 +178,11 @@ public class QuarkBlockLootTableProvider extends BlockLootSubProvider {
         for(Block block : NewStoneTypesModule.polishedBlocks.values())
             dropSelf(block);
         for(Block block : PermafrostModule.blocks)
-            dropSelfWithRespectToSlab(block);
+            dropSelfWithRespectToAlternates(block);
         dropSelf(SpiralSpiresModule.myalite_crystal);
         dropSelf(SpiralSpiresModule.dusky_myalite);
         for(Block block : BlossomTreesModule.woodSet.allBlocks())
-            dropSelfWithRespectToSlab(block);
+            dropSelfWithRespectToAlternates(block);
         for(BlossomTreesModule.BlossomTree tree : BlossomTreesModule.blossomTrees){
             add(tree.leaves, createLeavesDrops(tree.leaves, tree.sapling));
             dropSelf(tree.sapling);
@@ -218,6 +209,7 @@ public class QuarkBlockLootTableProvider extends BlockLootSubProvider {
         dropSelf(TinyPotatoModule.tiny_potato);
         dropSelf(CrateModule.crate);
         dropSelf(MagnetsModule.magnet);
+        dropSelf(BackpackModule.bonded_ravager_hide);
     }
 
     @Override
@@ -295,6 +287,7 @@ public class QuarkBlockLootTableProvider extends BlockLootSubProvider {
         ret.add(GlimmeringWealdModule.glow_lichen_growth);
         ret.add(GlimmeringWealdModule.glow_shroom_stem);
         ret.add(GlimmeringWealdModule.glow_shroom_ring);
+        ret.add(GlimmeringWealdModule.glow_shroom_block);
         ret.add(MonsterBoxModule.monster_box);
         ret.add(NewStoneTypesModule.limestoneBlock);
         ret.addAll(PermafrostModule.blocks);
@@ -321,13 +314,16 @@ public class QuarkBlockLootTableProvider extends BlockLootSubProvider {
         ret.add(TinyPotatoModule.tiny_potato);
         ret.add(CrateModule.crate);
         ret.add(MagnetsModule.magnet);
+        ret.add(BackpackModule.bonded_ravager_hide);
         //Experimental
         return ret;
     }
 
-    public void dropSelfWithRespectToSlab(Block block) {
+    public void dropSelfWithRespectToAlternates(Block block) {
         if (block instanceof SlabBlock slabBlock) {
-            createSlabItemTable(slabBlock);
+            this.add(slabBlock, createSlabItemTable(slabBlock));
+        } else if (block instanceof DoorBlock doorBlock) {
+            this.add(doorBlock, createDoorTable(doorBlock));
         } else {
             dropSelf(block);
         }
@@ -383,4 +379,5 @@ public class QuarkBlockLootTableProvider extends BlockLootSubProvider {
     private LootItemCondition.Builder checkShearsOrSilk() {
         return HAS_SHEARS.or(super.hasSilkTouch());
     }
+
 }

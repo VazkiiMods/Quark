@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "item": "quark:deepslate_tile_vertical_slab"
+    }
+  ],
+  "result": {
+    "id": "minecraft:deepslate_tile_slab",
+    "count": 1
+  },
+  "neoforge:conditions": [
+    {
+      "type": "zeta:flag",
+        "flag": "vertical_slabs"
+    }
+  ]
+} 

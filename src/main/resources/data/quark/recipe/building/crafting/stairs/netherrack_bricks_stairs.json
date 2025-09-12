@@ -1,0 +1,23 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "#  ",
+    "## ",
+    "###"
+  ],
+  "key": {
+    "#": {
+      "item": "quark:netherrack_bricks"
+    }
+  },
+  "result": {
+    "id": "quark:netherrack_bricks_stairs",
+    "count": 4
+  },
+  "neoforge:conditions": [
+    {
+      "type": "zeta:flag",
+      "flag": "netherrack_bricks"
+    }
+  ]
+} 

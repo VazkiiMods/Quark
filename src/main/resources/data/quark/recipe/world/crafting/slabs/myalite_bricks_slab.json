@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "###"
+  ],
+  "key": {
+    "#": {
+      "item": "quark:myalite_bricks"
+    }
+  },
+  "result": {
+    "id": "quark:myalite_bricks_slab",
+    "count": 6
+  },
+  "neoforge:conditions": [
+    {
+      "type": "zeta:flag",
+      "flag": "myalite"
+    }
+  ]
+} 

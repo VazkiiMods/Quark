@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "###"
+  ],
+  "key": {
+    "#": {
+      "item": "quark:cobblestone_bricks"
+    }
+  },
+  "result": {
+    "id": "quark:cobblestone_bricks_slab",
+    "count": 6
+  },
+  "neoforge:conditions": [
+    {
+      "type": "zeta:flag",
+      "flag": "cobblestone_bricks"
+    }
+  ]
+} 

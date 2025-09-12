@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "item": "quark:bamboo_mosaic_vertical_slab"
+    }
+  ],
+  "result": {
+    "id": "minecraft:bamboo_mosaic_slab",
+    "count": 1
+  },
+  "neoforge:conditions": [
+    {
+      "type": "zeta:flag",
+        "flag": "vertical_slabs"
+    }
+  ]
+} 

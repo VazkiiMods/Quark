@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "###",
+    "# #",
+    "###"
+  ],
+  "key": {
+    "#": {
+      "item": "minecraft:blackstone"
+    }
+  },
+  "result": {
+    "id": "quark:blackstone_furnace"
+  },
+  "neoforge:conditions": [
+      {
+        "type": "zeta:flag",
+        "flag": "variant_furnaces"
+      }
+  ]
+}

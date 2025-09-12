@@ -47,7 +47,7 @@
     "quark:polished_limestone_slab",
     "quark:polished_myalite_slab",
     "quark:polished_shale_slab",
-    "quark:polished_tuff_slab",
+    "minecraft:polished_tuff_slab",
     "quark:purple_shingles_slab",
     "quark:raw_copper_bricks_slab",
     "quark:raw_gold_bricks_slab",
@@ -63,7 +63,6 @@
     "quark:soul_sandstone_bricks_slab",
     "quark:soul_sandstone_slab",
     "quark:thatch_slab",
-    "quark:tuff_bricks_slab",
     "quark:white_shingles_slab",
     "quark:yellow_shingles_slab"
   ]

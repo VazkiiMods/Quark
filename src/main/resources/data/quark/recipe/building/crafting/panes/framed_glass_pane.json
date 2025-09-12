@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "###",
+    "###"
+  ],
+  "key": {
+    "#": {
+      "item": "quark:framed_glass"
+    }
+  },
+  "result": {
+    "id": "quark:framed_glass_pane",
+    "count": 16
+  },
+  "neoforge:conditions": [
+    {
+      "type": "zeta:flag",
+      "flag": "framed_glass"
+    }
+  ]
+} 

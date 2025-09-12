@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "###",
+    "###",
+    "###"
+  ],
+  "key": {
+    "#": {
+      "item": "quark:ravager_hide"
+    }
+  },
+  "result": {
+    "id": "quark:bonded_ravager_hide"
+  },
+  "neoforge:conditions": [
+    {
+      "type": "zeta:flag",
+      "flag": "ravager_hide"
+    }
+  ]
+}

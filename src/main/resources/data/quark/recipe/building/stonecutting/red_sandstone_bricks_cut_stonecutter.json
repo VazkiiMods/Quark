@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:stonecutting",
+  "ingredient": {
+    "item": "minecraft:cut_red_sandstone"
+  },
+  "result": {
+		"id": "quark:red_sandstone_bricks",
+  "count": 1
+},
+  "neoforge:conditions": [
+    {
+      "type": "zeta:flag",
+      "flag": "sandstone_bricks"
+    }
+  ]
+}

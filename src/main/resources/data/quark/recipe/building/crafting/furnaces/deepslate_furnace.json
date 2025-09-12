@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "###",
+    "# #",
+    "###"
+  ],
+  "key": {
+    "#": {
+      "item": "minecraft:cobbled_deepslate"
+    }
+  },
+  "result": {
+    "id": "quark:deepslate_furnace"
+  },
+  "neoforge:conditions": [
+      {
+        "type": "zeta:flag",
+        "flag": "variant_furnaces"
+      }
+  ]
+}

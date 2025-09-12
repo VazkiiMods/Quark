@@ -2,7 +2,7 @@
     "replace": false,
     "values": [
         "minecraft:light_weighted_pressure_plate",
-        "#forge:chests",
+        "#c:chests",
         "quark:azalea_chest",
         "quark:trapped_azalea_chest",
         "quark:blossom_chest",

@@ -1,5 +1,8 @@
 package org.violetmoon.quark.content.tools.base;
 
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.TextColor;
 import net.minecraft.util.StringRepresentable;
@@ -15,7 +18,11 @@ import java.util.HashMap;
  * Created at 10:00 AM on 12/23/23.
  */
 public class RuneColor implements StringRepresentable {
-	
+    public static final MapCodec<RuneColor> RUNE_COLOR_CODEC = RecordCodecBuilder.mapCodec(
+            inst -> inst.group(
+                    Codec.STRING.optionalFieldOf("color", "blank").forGetter(runeColor -> runeColor.name)
+            ).apply(inst, RuneColor::byName)
+    );
 
 	private static final HashMap<String, RuneColor> BY_NAME = new HashMap<>();
 	private static final HashMap<DyeColor, RuneColor> BY_COLOR = new HashMap<>();

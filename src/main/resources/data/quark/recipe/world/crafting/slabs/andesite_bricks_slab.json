@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "###"
+  ],
+  "key": {
+    "#": {
+      "item": "quark:andesite_bricks"
+    }
+  },
+  "result": {
+    "id": "quark:andesite_bricks_slab",
+    "count": 6
+  },
+  "neoforge:conditions": [
+    {
+      "type": "zeta:flag",
+      "flag": "more_stone_variants"
+    }
+  ]
+} 

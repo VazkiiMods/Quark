@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "item": "minecraft:nether_bricks"
+    },
+    {
+      "item": "minecraft:nether_wart_block"
+    }
+  ],
+  "result": {
+    "id": "minecraft:red_nether_bricks",
+    "count": 2
+  },
+  "neoforge:conditions": [
+    {
+      "type": "zeta:flag",
+      "flag": "blue_nether_bricks"
+    }
+  ]
+}

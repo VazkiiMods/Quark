@@ -1,0 +1,23 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "##",
+    "##",
+    "##"
+  ],
+  "key": {
+    "#": {
+      "item": "minecraft:string"
+    }
+  },
+  "result": {
+    "id": "quark:rope",
+    "count": 3
+  },
+  "neoforge:conditions": [
+    {
+      "type": "zeta:flag",
+      "flag": "rope"
+    }
+  ]
+} 

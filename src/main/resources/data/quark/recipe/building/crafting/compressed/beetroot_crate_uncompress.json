@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "item": "quark:beetroot_crate"
+    }
+  ],
+  "result": {
+    "id": "minecraft:beetroot",
+    "count": 9
+  },
+  "neoforge:conditions": [
+    {
+      "type": "zeta:flag",
+        "flag": "beetroot_crate"
+    }
+  ]
+} 

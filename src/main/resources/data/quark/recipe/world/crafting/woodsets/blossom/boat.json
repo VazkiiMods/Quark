@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "group": "boat",
+  "pattern": [
+    "# #",
+    "###"
+  ],
+  "key": {
+    "#": {
+      "item": "quark:blossom_planks"
+    }
+  },
+  "result": {
+    "id": "quark:blossom_boat"
+  },
+  "neoforge:conditions": [
+    {
+      "type": "zeta:flag",
+      "flag": "blossom_trees"
+    }
+  ]
+}

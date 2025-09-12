@@ -1,0 +1,35 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "PPP",
+    "POP",
+    "PPP"
+  ],
+  "key": {
+    "P": {
+      "item": "minecraft:purpur_block"
+    },
+    "O": {
+      "item": "quark:dusky_myalite"
+    }
+  },
+  "result": {
+    "id": "quark:duskbound_block",
+    "count": 8
+  },
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:and",
+      "values": [
+        {
+          "type": "zeta:flag",
+          "flag": "duskbound_blocks"
+        },
+        {
+          "type": "zeta:flag",
+          "flag": "spiral_spires"
+        }
+      ]
+    }
+  ]
+} 

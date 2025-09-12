@@ -42,6 +42,8 @@ public class FramedGlassModule extends ZetaModule {
 
 		framed_glass = (ZetaGlassBlock) new ZetaGlassBlock("framed_glass", this, false, props).setCreativeTab(CreativeModeTabs.COLORED_BLOCKS, Blocks.GLASS, false);
 		framed_glass_pane = (ZetaInheritedPaneBlock) new ZetaInheritedPaneBlock(framed_glass).setCreativeTab(CreativeModeTabs.COLORED_BLOCKS, Blocks.GLASS_PANE, false);
+        glassBlocks.add(framed_glass);
+        glassBlocks.add(framed_glass_pane);
 
 		CreativeTabManager.daisyChain();
 		for(DyeColor dye : MiscUtil.CREATIVE_COLOR_ORDER){
