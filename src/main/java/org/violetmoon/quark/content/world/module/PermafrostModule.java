@@ -1,5 +1,6 @@
 package org.violetmoon.quark.content.world.module;
 
+import net.minecraft.world.level.block.Block;
 import org.violetmoon.quark.base.util.BlockPropertyUtil;
 import org.violetmoon.quark.base.util.QuarkWorldGenWeights;
 import org.violetmoon.quark.content.world.undergroundstyle.PermafrostStyle;
@@ -25,9 +26,11 @@ import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.levelgen.GenerationStep;
 import net.minecraft.world.level.material.MapColor;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @ZetaLoadModule(category = "world")
 public class PermafrostModule extends ZetaModule {
-
 	@Config
 	public UndergroundStyleConfig generationSettings = UndergroundStyleConfig.styleBuilder()
 		.style(new PermafrostStyle())
@@ -44,6 +47,8 @@ public class PermafrostModule extends ZetaModule {
 	@Hint
 	public static ZetaBlock permafrost;
 
+    public static List<Block> blocks = new ArrayList<>();
+
 	@LoadEvent
 	public final void register(ZRegister event) {
 		CreativeTabManager.daisyChain();
@@ -56,11 +61,14 @@ public class PermafrostModule extends ZetaModule {
 				.setCreativeTab(CreativeModeTabs.BUILDING_BLOCKS, Blocks.DEEPSLATE, true);
 
 		event.getVariantRegistry().addSlabStairsWall(permafrost, null);
-		event.getVariantRegistry().addSlabStairsWall((IZetaBlock) new ZetaBlock("permafrost_bricks", this,
-				BlockPropertyUtil.copyPropertySafe(permafrost)).setCreativeTab(CreativeModeTabs.BUILDING_BLOCKS), null);
+        ZetaBlock permafrostBricks = (ZetaBlock) new ZetaBlock("permafrost_bricks", this,
+                BlockPropertyUtil.copyPropertySafe(permafrost)).setCreativeTab(CreativeModeTabs.BUILDING_BLOCKS);
+		event.getVariantRegistry().addSlabStairsWall(permafrostBricks, null);
 		CreativeTabManager.endDaisyChain();
 
 		((PermafrostStyle) generationSettings.style).setBlock(permafrost.defaultBlockState());
+        blocks.add(permafrost);
+        blocks.add(permafrostBricks);
 	}
 
 	@LoadEvent

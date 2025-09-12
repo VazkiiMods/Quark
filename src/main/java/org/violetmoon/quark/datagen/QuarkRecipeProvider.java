@@ -1,5 +1,6 @@
 package org.violetmoon.quark.datagen;
 
+import net.minecraft.advancements.critereon.InventoryChangeTrigger;
 import net.minecraft.advancements.critereon.PlayerTrigger;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -285,7 +286,7 @@ public class QuarkRecipeProvider extends RecipeProvider implements IConditionBui
             String slabName = BuiltInRegistries.BLOCK.getKey(slab).getPath().replace("_slab", "");
 
             vertslabRecipe(RecipeCategory.BUILDING_BLOCKS, VerticalSlabsModule.blocks.get(slab), Ingredient.of(slab))
-                    .unlockedBy("test", PlayerTrigger.TriggerInstance.tick())
+                    .unlockedBy("obtained_slab", InventoryChangeTrigger.TriggerInstance.hasItems(slab.asItem()))
                     .save(recipeOutput.withConditions(condition), "quark:building/crafting/vertslabs/" + slabName + "_vertical_slab");
         }
             //walls

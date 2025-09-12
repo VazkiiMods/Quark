@@ -14,6 +14,9 @@ import org.violetmoon.zeta.event.load.ZRegister;
 import org.violetmoon.zeta.module.ZetaLoadModule;
 import org.violetmoon.zeta.module.ZetaModule;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 import java.util.function.BooleanSupplier;
 
 @ZetaLoadModule(category = "building")
@@ -26,16 +29,18 @@ public class MoreBrickTypesModule extends ZetaModule {
 	public boolean enableSandstoneBricks = true;
 
 	@Config(flag = "cobblestone_bricks", description = "This also includes Mossy Cobblestone Bricks")
-	private static boolean enableCobblestoneBricks = true;
+    public boolean enableCobblestoneBricks = true;
 
 	@Config(flag = "blackstone_bricks", description = "Requires Cobblestone Bricks to be enabled")
-	private static boolean enableBlackstoneBricks = true;
+    public boolean enableBlackstoneBricks = true;
 
 	@Config(flag = "dirt_bricks", description = "Requires Cobblestone Bricks to be enabled")
-	private static boolean enableDirtBricks = true;
+    public boolean enableDirtBricks = true;
 
 	@Config(flag = "netherrack_bricks", description = "Requires Cobblestone Bricks to be enabled")
-	private static boolean enableNetherrackBricks = true;
+    public boolean enableNetherrackBricks = true;
+
+    public static List<Block> blocks = new ArrayList<>();
 
 	@LoadEvent
 	public final void register(ZRegister event) {
@@ -54,11 +59,13 @@ public class MoreBrickTypesModule extends ZetaModule {
 	}
 
 	private void add(ZRegister event, String name, Block parent, BooleanSupplier cond, Block placeBehind) {
-		event.getVariantRegistry().addSlabStairsWall((IZetaBlock) new ZetaBlock(name + "_bricks", this,
-				BlockPropertyUtil.copyPropertySafe(parent)
-						.requiresCorrectToolForDrops())
-				.setCondition(cond)
-				.setCreativeTab(CreativeModeTabs.BUILDING_BLOCKS, placeBehind, true), null);
+        ZetaBlock brickBlock = (ZetaBlock) new ZetaBlock(name + "_bricks", this,
+                BlockPropertyUtil.copyPropertySafe(parent)
+                        .requiresCorrectToolForDrops())
+                .setCondition(cond)
+                .setCreativeTab(CreativeModeTabs.BUILDING_BLOCKS, placeBehind, true);
+        blocks.add(brickBlock);
+		event.getVariantRegistry().addSlabStairsWall(brickBlock, null);
 	}
 
 }

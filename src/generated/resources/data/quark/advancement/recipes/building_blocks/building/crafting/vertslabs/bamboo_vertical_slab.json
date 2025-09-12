@@ -13,14 +13,21 @@
       },
       "trigger": "minecraft:recipe_unlocked"
     },
-    "test": {
-      "trigger": "minecraft:tick"
+    "obtained_slab": {
+      "conditions": {
+        "items": [
+          {
+            "items": "minecraft:bamboo_slab"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
     }
   },
   "requirements": [
     [
       "has_the_recipe",
-      "test"
+      "obtained_slab"
     ]
   ],
   "rewards": {

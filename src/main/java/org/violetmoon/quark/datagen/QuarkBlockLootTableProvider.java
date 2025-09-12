@@ -29,8 +29,14 @@ import net.minecraft.world.level.storage.loot.predicates.MatchTool;
 import net.minecraft.world.level.storage.loot.providers.number.ConstantValue;
 import net.minecraft.world.level.storage.loot.providers.number.UniformGenerator;
 import net.neoforged.neoforge.common.Tags;
+import org.violetmoon.quark.addons.oddities.block.CrateBlock;
+import org.violetmoon.quark.addons.oddities.module.CrateModule;
+import org.violetmoon.quark.addons.oddities.module.MagnetsModule;
+import org.violetmoon.quark.addons.oddities.module.PipesModule;
+import org.violetmoon.quark.addons.oddities.module.TinyPotatoModule;
 import org.violetmoon.quark.base.Quark;
 import org.violetmoon.quark.content.automation.block.EnderWatcherBlock;
+import org.violetmoon.quark.content.automation.block.IronRodBlock;
 import org.violetmoon.quark.content.automation.block.RedstoneRandomizerBlock;
 import org.violetmoon.quark.content.automation.module.*;
 import org.violetmoon.quark.content.building.module.*;
@@ -72,6 +78,7 @@ public class QuarkBlockLootTableProvider extends BlockLootSubProvider {
         dropSelf(EnderWatcherModule.ender_watcher);
         dropSelf(FeedingTroughModule.feeding_trough); //todo: Needs to be aware of block-entity name when broken
         dropSelf(GravisandModule.gravisand);
+        dropSelf(IronRodModule.iron_rod);
         dropSelf(MetalButtonsModule.iron_button);
         dropSelf(MetalButtonsModule.gold_button);
         dropSelf(ObsidianPlateModule.obsidian_plate); //todo: Should this drop without a diamond/netherite pick?
@@ -100,7 +107,8 @@ public class QuarkBlockLootTableProvider extends BlockLootSubProvider {
             dropSelf(block);
         for(Block block : MidoriModule.blocks)
             dropSelfWithRespectToSlab(block);
-        //Brick Types in Variant
+        for(Block block : MoreBrickTypesModule.blocks)
+            dropSelfWithRespectToSlab(block);
         for(Block block : MoreMudBlocksModule.blocks)
             dropSelfWithRespectToSlab(block);
         for(Block block : MorePottedPlantsModule.pottedPlants)
@@ -153,6 +161,8 @@ public class QuarkBlockLootTableProvider extends BlockLootSubProvider {
             dropSelfWithRespectToSlab(block);
         add(AncientWoodModule.ancient_leaves, createLeavesDropWithBonusLikeHowOakLeavesDropApples(AncientWoodModule.ancient_leaves, AncientWoodModule.ancient_sapling, AncientWoodModule.ancient_fruit));
         dropSelf(AncientWoodModule.ancient_sapling);
+        for(Block block : AzaleaWoodModule.woodSet.allBlocks())
+            dropSelfWithRespectToSlab(block);
         //Azalea leaves are vanilla
         add(ChorusVegetationModule.chorus_weeds, createShearsDrops(ChorusVegetationModule.chorus_weeds));
         add(ChorusVegetationModule.chorus_twist, createShearsDrops(ChorusVegetationModule.chorus_twist));
@@ -176,6 +186,8 @@ public class QuarkBlockLootTableProvider extends BlockLootSubProvider {
         dropSelf(NewStoneTypesModule.myaliteBlock);
         for(Block block : NewStoneTypesModule.polishedBlocks.values())
             dropSelf(block);
+        for(Block block : PermafrostModule.blocks)
+            dropSelfWithRespectToSlab(block);
         dropSelf(SpiralSpiresModule.myalite_crystal);
         dropSelf(SpiralSpiresModule.dusky_myalite);
         for(Block block : BlossomTreesModule.woodSet.allBlocks())
@@ -199,6 +211,13 @@ public class QuarkBlockLootTableProvider extends BlockLootSubProvider {
         for(Block block : Quark.ZETA.variantRegistry.walls.values()){
             dropSelf(block);
         }
+
+        //Oddities
+        dropSelf(PipesModule.pipe);
+        dropSelf(PipesModule.encasedPipe);
+        dropSelf(TinyPotatoModule.tiny_potato);
+        dropSelf(CrateModule.crate);
+        dropSelf(MagnetsModule.magnet);
     }
 
     @Override
@@ -214,6 +233,7 @@ public class QuarkBlockLootTableProvider extends BlockLootSubProvider {
         ret.add(MetalButtonsModule.gold_button);
         ret.add(ObsidianPlateModule.obsidian_plate);
         ret.add(RedstoneRandomizerModule.redstone_randomizer);
+        ret.add(IronRodModule.iron_rod);
         
         //Building
         ret.add(CelebratoryLampsModule.stone_lamp);
@@ -229,6 +249,7 @@ public class QuarkBlockLootTableProvider extends BlockLootSubProvider {
         ret.addAll(JapanesePaletteModule.blocks);
         ret.addAll(LeafCarpetModule.carpets);
         ret.addAll(MidoriModule.blocks);
+        ret.addAll(MoreBrickTypesModule.blocks);
         ret.addAll(MoreMudBlocksModule.blocks);
         ret.addAll(MorePottedPlantsModule.pottedPlants);
         ret.addAll(MoreStoneVariantsModule.blocks);
@@ -254,13 +275,16 @@ public class QuarkBlockLootTableProvider extends BlockLootSubProvider {
 
         //Tools
         ret.add(BottledCloudModule.cloud);
+
         //Tweaks
         ret.add(GlassShardModule.dirtyGlass);
         ret.add(GlassShardModule.dirtyGlassPane);
+
         //World
         ret.addAll(AncientWoodModule.woodSet.allBlocks());
         ret.add(AncientWoodModule.ancient_leaves);
         ret.add(AncientWoodModule.ancient_sapling);
+        ret.addAll(AzaleaWoodModule.woodSet.allBlocks());
         ret.add(ChorusVegetationModule.chorus_weeds);
         ret.add(ChorusVegetationModule.chorus_twist);
         ret.addAll(CorundumModule.crystals);
@@ -273,6 +297,7 @@ public class QuarkBlockLootTableProvider extends BlockLootSubProvider {
         ret.add(GlimmeringWealdModule.glow_shroom_ring);
         ret.add(MonsterBoxModule.monster_box);
         ret.add(NewStoneTypesModule.limestoneBlock);
+        ret.addAll(PermafrostModule.blocks);
         ret.add(NewStoneTypesModule.jasperBlock);
         ret.add(NewStoneTypesModule.shaleBlock);
         ret.add(NewStoneTypesModule.myaliteBlock);
@@ -288,7 +313,14 @@ public class QuarkBlockLootTableProvider extends BlockLootSubProvider {
         ret.addAll(Quark.ZETA.variantRegistry.slabs.values());
         ret.addAll(Quark.ZETA.variantRegistry.stairs.values());
         ret.addAll(Quark.ZETA.variantRegistry.walls.values());
+
         //Oddities
+
+        ret.add(PipesModule.pipe);
+        ret.add(PipesModule.encasedPipe);
+        ret.add(TinyPotatoModule.tiny_potato);
+        ret.add(CrateModule.crate);
+        ret.add(MagnetsModule.magnet);
         //Experimental
         return ret;
     }

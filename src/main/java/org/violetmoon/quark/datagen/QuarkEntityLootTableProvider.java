@@ -1,8 +1,11 @@
 package org.violetmoon.quark.datagen;
 
 import net.minecraft.advancements.critereon.EntityPredicate;
+import net.minecraft.advancements.critereon.LocationPredicate;
 import net.minecraft.advancements.critereon.NbtPredicate;
+import net.minecraft.core.Holder;
 import net.minecraft.core.HolderLookup;
+import net.minecraft.core.HolderOwner;
 import net.minecraft.data.loot.EntityLootSubProvider;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.EntityType;
@@ -19,12 +22,10 @@ import net.minecraft.world.level.storage.loot.predicates.*;
 import net.minecraft.world.level.storage.loot.providers.number.ConstantValue;
 import net.minecraft.world.level.storage.loot.providers.number.UniformGenerator;
 import org.jetbrains.annotations.NotNull;
-import org.violetmoon.quark.content.mobs.client.model.StonelingModel;
-import org.violetmoon.quark.content.mobs.client.model.ToretoiseModel;
 import org.violetmoon.quark.content.mobs.entity.Stoneling;
-import org.violetmoon.quark.content.mobs.entity.Toretoise;
 import org.violetmoon.quark.content.mobs.module.*;
 import org.violetmoon.quark.content.tools.module.PathfinderMapsModule;
+import org.violetmoon.quark.content.world.module.GlimmeringWealdModule;
 
 import java.util.List;
 import java.util.stream.Stream;
@@ -107,8 +108,11 @@ public class QuarkEntityLootTableProvider extends EntityLootSubProvider {
                         .when(LootItemKilledByPlayerCondition.killedByPlayer())
                         .when(LootItemEntityPropertyCondition.hasProperties(LootContext.EntityTarget.THIS, EntityPredicate.Builder.entity().nbt(new NbtPredicate((stonelingNotMade)))))
                         .when(LootItemRandomChanceWithEnchantedBonusCondition.randomChanceAndLootingBoost(this.registries, 0.08F, 0.02F))
+                        //.when(LocationCheck.checkLocation(LocationPredicate.Builder.inBiome(Holder.Reference.createStandAlone(new HolderOwner<>() {}, GlimmeringWealdModule.BIOME_KEY))))
+
                         //.when(InvertedLootItemCondition.invert(biomeCheck.)) //vanilla location predicate supports biome, but vanilla datagen has no biome check
                         //there is a quark:in_biome condition but maybe we should be using the vanilla one, just make our own biomeCheck - Train
+                        // I found it but I need to actually bootstrap the biomes for this and Im too lazy to right now. Ill revisit shortly
                 )
         );
 
