@@ -941,7 +941,7 @@
 	"block.quark.dripstone_bricks_vertical_slab": "윤나는 점적석 벽돌 세로 반 블록",
 	"block.quark.tuff_vertical_slab": "응회암 세로 반 블록",
 	"block.quark.polished_tuff_vertical_slab": "윤나는 응회암 세로 반 블록",
-	"block.quark.tuff_bricks_vertical_slab": "윤나는 응회암 벽돌 세로 반 블록",
+	"block.quark.tuff_brick_vertical_slab": "윤나는 응회암 벽돌 세로 반 블록",
 	"block.quark.dripstone_block_wall": "점적석 담장",
 	"block.quark.dripstone_bricks_wall": "윤나는 점적석 벽돌 담장",
 	"block.quark.tuff_wall": "응회암 담장",

@@ -1,0 +1,26 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "###",
+    "XXX",
+    "###"
+  ],
+  "key": {
+    "#": {
+      "item": "minecraft:warped_planks"
+    },
+    "X": {
+      "item": "minecraft:book"
+    }
+  },
+  "result": {
+    "id": "quark:warped_bookshelf",
+    "count": 1
+  },
+  "neoforge:conditions": [
+    {
+      "type": "zeta:flag",
+      "flag": "variant_bookshelves"
+    }
+  ]
+} 

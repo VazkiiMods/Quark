@@ -1,8 +1,13 @@
 package org.violetmoon.quark.content.tools.recipe;
 
+import com.mojang.serialization.MapCodec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.component.DataComponents;
+import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
@@ -28,6 +33,7 @@ import java.util.stream.Stream;
 public final class SmithingRuneRecipe extends SmithingTrimRecipe { // Extends to allow JEI to pick it up
 
 	public static final Serializer SERIALIZER = new Serializer();
+
 	private final Ingredient template;
 	private final Ingredient addition;
 	private final RuneColor runeColor;
@@ -114,4 +120,40 @@ public final class SmithingRuneRecipe extends SmithingTrimRecipe { // Extends to
 	public RecipeSerializer<?> getSerializer() {
 		return RecipeSerializer.SMITHING_TRIM;
 	}
+
+    public static class Serializer implements RecipeSerializer<SmithingRuneRecipe> {
+        public static final MapCodec<SmithingRuneRecipe> CODEC = RecordCodecBuilder.mapCodec(
+                inst -> inst.group(
+                        Ingredient.CODEC.fieldOf("template").forGetter(smithingRuneRecipe -> smithingRuneRecipe.template),
+                        Ingredient.CODEC.optionalFieldOf("addition", Ingredient.EMPTY).forGetter(smithingRuneRecipe -> smithingRuneRecipe.addition),
+                        RuneColor.RUNE_COLOR_CODEC.fieldOf("color").forGetter(smithingRuneRecipe -> smithingRuneRecipe.runeColor)
+                ).apply(inst, SmithingRuneRecipe::new)
+        );
+        public static final StreamCodec<RegistryFriendlyByteBuf, SmithingRuneRecipe> STREAM_CODEC = StreamCodec.of(
+                SmithingRuneRecipe.Serializer::toNetwork, SmithingRuneRecipe.Serializer::fromNetwork
+        );
+
+        @Override
+        public MapCodec<SmithingRuneRecipe> codec() {
+            return CODEC;
+        }
+
+        @Override
+        public StreamCodec<RegistryFriendlyByteBuf, SmithingRuneRecipe> streamCodec() {
+            return STREAM_CODEC;
+        }
+
+        private static SmithingRuneRecipe fromNetwork(RegistryFriendlyByteBuf registryFriendlyByteBuf) {
+            Ingredient template = Ingredient.CONTENTS_STREAM_CODEC.decode(registryFriendlyByteBuf);
+            RuneColor color = RuneColor.byName(ByteBufCodecs.stringUtf8(32).decode(registryFriendlyByteBuf));
+            Ingredient addition = Ingredient.CONTENTS_STREAM_CODEC.decode(registryFriendlyByteBuf);
+            return new SmithingRuneRecipe(template, addition, color);
+        }
+
+        private static void toNetwork(RegistryFriendlyByteBuf registryFriendlyByteBuf, SmithingRuneRecipe recipe) {
+            Ingredient.CONTENTS_STREAM_CODEC.encode(registryFriendlyByteBuf, recipe.template);
+            ByteBufCodecs.stringUtf8(32).encode(registryFriendlyByteBuf, recipe.runeColor.getSerializedName());
+            Ingredient.CONTENTS_STREAM_CODEC.encode(registryFriendlyByteBuf, recipe.addition);
+        }
+    }
 }

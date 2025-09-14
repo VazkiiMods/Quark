@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "item": "quark:glowberry_sack"
+    }
+  ],
+  "result": {
+    "id": "minecraft:glow_berries",
+    "count": 9
+  },
+  "neoforge:conditions": [
+    {
+      "type": "zeta:flag",
+        "flag": "glowberry_sack"
+    }
+  ]
+} 

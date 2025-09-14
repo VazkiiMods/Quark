@@ -1,0 +1,25 @@
+{
+  "type": "minecraft:stonecutting",
+  "ingredient": {
+    "item": "minecraft:polished_granite"
+  },
+  "result": {
+		"id": "quark:granite_bricks_stairs",
+  "count": 1
+},
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:and",
+      "values": [
+        {
+          "type": "zeta:flag",
+          "flag": "stone_bricks"
+        },
+        {
+          "type": "zeta:flag",
+          "flag": "granite"
+        }
+      ]
+    }
+  ]
+} 

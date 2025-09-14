@@ -1,0 +1,39 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "C": {
+      "item": "quark:orange_corundum"
+    },
+    "R": {
+      "item": "minecraft:redstone"
+    }
+  },
+  "pattern": [
+    " R ",
+    "RCR",
+    " R "
+  ],
+  "result": {
+    "id": "quark:orange_crystal_lamp",
+    "count": 1
+  },
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:and",
+      "values": [
+        {
+          "type": "zeta:flag",
+          "flag": "rainbow_lamps"
+        },
+        {
+          "type": "zeta:flag",
+          "flag": "corundum"
+        },
+        {
+          "type": "zeta:flag",
+          "flag": "rainbow_lamp_corundum"
+        }
+      ]
+    }
+  ]
+}

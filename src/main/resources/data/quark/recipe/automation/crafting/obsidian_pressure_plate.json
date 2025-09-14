@@ -1,0 +1,20 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "OO"
+  ],
+  "key": {
+    "O": {
+      "tag": "c:obsidian"
+    }
+  },
+  "result": {
+    "id": "quark:obsidian_pressure_plate"
+  },
+  "neoforge:conditions": [
+    {
+      "type": "zeta:flag",
+      "flag": "obsidian_plate"
+    }
+  ]
+}

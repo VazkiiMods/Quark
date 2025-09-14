@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "item": "quark:berry_sack"
+    }
+  ],
+  "result": {
+    "id": "minecraft:sweet_berries",
+    "count": 9
+  },
+  "neoforge:conditions": [
+    {
+      "type": "zeta:flag",
+        "flag": "berry_sack"
+    }
+  ]
+} 

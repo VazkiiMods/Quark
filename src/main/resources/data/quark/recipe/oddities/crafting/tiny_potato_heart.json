@@ -1,0 +1,40 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "H",
+    "P"
+  ],
+  "key": {
+    "H": {
+      "item": "quark:diamond_heart"
+    },
+    "P": {
+      "item": "minecraft:potato"
+    }
+  },
+  "result": {
+    "id": "quark:tiny_potato"
+  },
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:and",
+      "values": [
+        {
+          "type": "zeta:flag",
+          "flag": "tiny_potato"
+        },
+        {
+          "type": "zeta:flag",
+          "flag": "stonelings"
+        },
+        {
+          "type": "neoforge:not",
+          "value": {
+            "type": "zeta:flag",
+            "flag": "tiny_potato_never_uses_heart"
+          }
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,28 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    " S ",
+    "HXH",
+    " H "
+  ],
+  "key": {
+    "S": {
+      "tag": "c:string"
+    },
+    "X": {
+      "tag": "quark:seed_pouch_holdable"
+    },
+    "H": {
+      "tag": "c:leather"
+    }
+  },
+  "result": {
+    "id": "quark:seed_pouch"
+  },
+  "neoforge:conditions": [
+    {
+      "type": "zeta:flag",
+      "flag": "seed_pouch"
+    }
+  ]
+}

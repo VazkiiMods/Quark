@@ -1,0 +1,26 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "# #",
+    "#W#",
+    "# #"
+  ],
+  "key": {
+    "#": {
+      "tag": "c:rods/wooden"
+    },
+    "W": {
+      "item": "minecraft:mangrove_planks"
+    }
+  },
+  "result": {
+    "id": "quark:mangrove_ladder",
+    "count": 4
+  },
+  "neoforge:conditions": [
+    {
+      "type": "zeta:flag",
+      "flag": "variant_ladders"
+    }
+  ]
+}

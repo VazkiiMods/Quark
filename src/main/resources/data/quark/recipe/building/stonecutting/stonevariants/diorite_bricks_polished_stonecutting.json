@@ -1,0 +1,25 @@
+{
+  "type": "minecraft:stonecutting",
+  "ingredient": {
+    "item": "minecraft:polished_diorite"
+  },
+  "result": {
+		"id": "quark:diorite_bricks",
+  "count": 1
+},
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:and",
+      "values": [
+        {
+          "type": "zeta:flag",
+          "flag": "stone_bricks"
+        },
+        {
+          "type": "zeta:flag",
+          "flag": "diorite"
+        }
+      ]
+    }
+  ]
+} 

@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [{
+      "item": "quark:raw_iron_bricks"
+    }
+  ],
+  "result": {
+    "id": "minecraft:raw_iron",
+    "count": 9
+  },
+  "neoforge:conditions": [
+    {
+      "type": "zeta:flag",
+      "flag": "raw_metal_bricks"
+    }
+  ]
+} 

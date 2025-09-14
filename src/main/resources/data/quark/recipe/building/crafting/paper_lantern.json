@@ -1,0 +1,28 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "PSP",
+    "PGP",
+    "PSP"
+  ],
+  "key": {
+    "S": {
+      "item": "minecraft:bamboo"
+    },
+    "P": {
+      "item": "minecraft:paper"
+    },
+    "G": {
+      "tag": "c:dusts/glowstone"
+    }
+  },
+  "result": {
+    "id": "quark:paper_lantern"
+  },
+  "neoforge:conditions": [
+    {
+      "type": "zeta:flag",
+      "flag": "paper_decor"
+    }
+  ]
+} 

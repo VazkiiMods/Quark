@@ -1,0 +1,23 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "#  ",
+    "## ",
+    "###"
+  ],
+  "key": {
+    "#": {
+      "item": "quark:blossom_planks"
+    }
+  },
+  "result": {
+    "id": "quark:blossom_planks_stairs",
+    "count": 4
+  },
+  "neoforge:conditions": [
+    {
+      "type": "zeta:flag",
+      "flag": "blossom_trees"
+    }
+  ]
+} 

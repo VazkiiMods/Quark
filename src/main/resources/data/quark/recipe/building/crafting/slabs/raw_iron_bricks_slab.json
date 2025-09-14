@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "###"
+  ],
+  "key": {
+    "#": {
+      "item": "quark:raw_iron_bricks"
+    }
+  },
+  "result": {
+    "id": "quark:raw_iron_bricks_slab",
+    "count": 6
+  },
+  "neoforge:conditions": [
+    {
+      "type": "zeta:flag",
+      "flag": "raw_metal_bricks"
+    }
+  ]
+} 

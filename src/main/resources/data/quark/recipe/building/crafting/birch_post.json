@@ -1,0 +1,23 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "F",
+    "F",
+    "F"
+  ],
+  "key": {
+    "F": {
+      "item": "minecraft:birch_wood"
+    }
+  },
+  "result": {
+    "id": "quark:birch_post",
+    "count": 8
+  },
+  "neoforge:conditions": [
+    {
+      "type": "zeta:flag",
+      "flag": "wooden_posts"
+    }
+  ]
+}

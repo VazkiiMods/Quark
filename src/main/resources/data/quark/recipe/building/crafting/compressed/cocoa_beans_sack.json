@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "###",
+    "###",
+    "###"
+  ],
+  "key": {
+    "#": {
+      "item": "minecraft:cocoa_beans"
+    }
+  },
+  "result": {
+    "id": "quark:cocoa_beans_sack"
+  },
+  "neoforge:conditions": [
+    {
+      "type": "zeta:flag",
+      "flag": "cocoa_beans_sack"
+    }
+  ]
+}

@@ -1,0 +1,34 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "L",
+    "W"
+  ],
+  "key": {
+    "L": {
+      "item": "quark:orange_blossom_leaves"
+    },
+    "W": {
+      "tag": "quark:blossom_logs"
+    }
+  },
+  "result": {
+    "id": "quark:orange_blossom_hedge",
+    "count": 2
+  },
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:and",
+      "values": [
+        {
+          "type": "zeta:flag",
+          "flag": "hedges"
+        },
+        {
+          "type": "zeta:flag",
+          "flag": "blossom_trees"
+        }
+      ]
+    }
+  ]
+}

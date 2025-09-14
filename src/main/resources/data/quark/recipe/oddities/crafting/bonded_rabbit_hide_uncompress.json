@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "item": "quark:bonded_ravager_hide"
+    }
+  ],
+  "result": {
+    "id": "quark:ravager_hide",
+    "count": 9
+  },
+  "neoforge:conditions": [
+    {
+      "type": "zeta:flag",
+        "flag": "ravager_hide"
+    }
+  ]
+} 

@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "item": "quark:golden_carrot_crate"
+    }
+  ],
+  "result": {
+    "id": "minecraft:golden_carrot",
+    "count": 9
+  },
+  "neoforge:conditions": [
+    {
+      "type": "zeta:flag",
+        "flag": "golden_carrot_crate"
+    }
+  ]
+} 

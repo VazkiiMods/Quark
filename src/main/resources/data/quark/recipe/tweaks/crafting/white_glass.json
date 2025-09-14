@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "##",
+    "##"
+  ],
+  "key": {
+    "#": {
+      "item": "quark:white_shard"
+    }
+  },
+  "result": {
+    "id": "minecraft:white_stained_glass"
+  },
+  "group": "quark:glass_shard",
+  "neoforge:conditions": [
+    {
+      "type": "zeta:flag",
+      "flag": "glass_shard"
+    }
+  ]
+} 

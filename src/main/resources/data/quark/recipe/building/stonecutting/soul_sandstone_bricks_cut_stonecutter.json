@@ -1,0 +1,25 @@
+{
+  "type": "minecraft:stonecutting",
+  "ingredient": {
+    "item": "quark:cut_soul_sandstone"
+  },
+  "result": {
+		"id": "quark:soul_sandstone_bricks",
+  "count": 1
+},
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:and",
+      "values": [
+        {
+          "type": "zeta:flag",
+          "flag": "soul_sandstone"
+        },
+        {
+          "type": "zeta:flag",
+          "flag": "sandstone_bricks"
+        }
+      ]
+    }
+  ]
+}

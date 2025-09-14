@@ -1,0 +1,23 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "#  ",
+    "## ",
+    "###"
+  ],
+  "key": {
+    "#": {
+      "item": "quark:dirt_bricks"
+    }
+  },
+  "result": {
+    "id": "quark:dirt_bricks_stairs",
+    "count": 4
+  },
+  "neoforge:conditions": [
+    {
+      "type": "zeta:flag",
+      "flag": "dirt_bricks"
+    }
+  ]
+} 

@@ -1,0 +1,24 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "#W#",
+    "#W#"
+  ],
+  "key": {
+    "#": {
+      "tag": "c:ingots/nether_brick"
+    },
+    "W": {
+      "item": "minecraft:nether_bricks"
+    }
+  },
+  "result": {
+    "id": "quark:nether_brick_fence_gate"
+  },
+  "neoforge:conditions": [
+    {
+      "type": "zeta:flag",
+      "flag": "nether_brick_fence_gate"
+    }
+  ]
+}

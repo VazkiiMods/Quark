@@ -1216,7 +1216,7 @@
 	"block.quark.dripstone_bricks_vertical_slab": "Laje vertical de tijolos de espeleotema",
 	"block.quark.tuff_vertical_slab": "Laje vertical de tufo",
 	"block.quark.polished_tuff_vertical_slab": "Laje vertical de tufo polido",
-	"block.quark.tuff_bricks_vertical_slab": "Laje vertical de tijolos de tufo",
+	"block.quark.tuff_brick_vertical_slab": "Laje vertical de tijolos de tufo",
 	"block.quark.dripstone_block_wall": "Muro de espeleotema",
 	"block.quark.dripstone_bricks_wall": "Muro de tijolos de espeleotema",
 	"block.quark.tuff_wall": "Muro de tufo",

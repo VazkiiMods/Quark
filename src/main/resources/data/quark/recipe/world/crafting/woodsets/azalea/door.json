@@ -1,0 +1,24 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "group": "wooden_door",
+  "pattern": [
+    "##",
+    "##",
+    "##"
+  ],
+  "key": {
+    "#": {
+      "item": "quark:azalea_planks"
+    }
+  },
+  "result": {
+    "id": "quark:azalea_door",
+    "count": 3
+  },
+  "neoforge:conditions": [
+    {
+      "type": "zeta:flag",
+      "flag": "azalea_wood"
+    }
+  ]
+}

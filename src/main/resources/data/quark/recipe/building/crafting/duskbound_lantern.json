@@ -1,0 +1,26 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "DDD",
+    "DED",
+    "DDD"
+  ],
+  "key": {
+    "D": {
+      "item": "quark:duskbound_block"
+    },
+    "E": {
+      "item": "minecraft:ender_pearl"
+    }
+  },
+  "result": {
+    "id": "quark:duskbound_lantern",
+    "count": 4
+  },
+  "neoforge:conditions": [
+    {
+      "type": "zeta:flag",
+      "flag": "duskbound_blocks"
+    }
+  ]
+} 

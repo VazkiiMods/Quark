@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "##",
+    "##"
+  ],
+  "key": {
+    "#": {
+      "item": "minecraft:iron_bars"
+    }
+  },
+  "result": {
+    "id": "quark:grate",
+    "count": 1
+  },
+  "neoforge:conditions": [
+    {
+      "type": "zeta:flag",
+      "flag": "grate"
+    }
+  ]
+} 

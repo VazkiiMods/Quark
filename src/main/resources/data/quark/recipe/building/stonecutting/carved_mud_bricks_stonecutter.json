@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:stonecutting",
+  "ingredient": {
+    "item": "minecraft:mud_bricks"
+  },
+  "result": {
+		"id": "quark:carved_mud_bricks",
+  "count": 1
+},
+  "neoforge:conditions": [
+    {
+      "type": "zeta:flag",
+      "flag": "more_mud_blocks"
+    }
+  ]
+}

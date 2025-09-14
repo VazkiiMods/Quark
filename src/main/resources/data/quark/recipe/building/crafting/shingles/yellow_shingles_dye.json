@@ -1,0 +1,26 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "SSS",
+    "SDS",
+    "SSS"
+  ],
+  "key": {
+    "D": {
+      "tag": "c:dyes/yellow"
+    },
+    "S": {
+      "item": "quark:shingles"
+    }
+  },
+  "result": {
+    "id": "quark:yellow_shingles",
+    "count": 8
+  },
+  "neoforge:conditions": [
+    {
+      "type": "zeta:flag",
+      "flag": "shingles"
+    }
+  ]
+} 

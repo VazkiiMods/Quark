@@ -30,8 +30,6 @@
     "quark:shale_bricks_wall",
     "quark:shale_wall",
     "quark:soul_sandstone_bricks_wall",
-    "quark:soul_sandstone_wall",
-    "quark:tuff_bricks_wall",
-    "quark:tuff_wall"
+    "quark:soul_sandstone_wall"
   ]
 }

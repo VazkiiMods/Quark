@@ -1,0 +1,33 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "group": "dark_oak_chest",
+  "pattern": [
+    "###",
+    "# #",
+    "###"
+  ],
+  "key": {
+    "#": {
+      "tag": "minecraft:dark_oak_logs"
+    }
+  },
+  "result": {
+    "id": "quark:dark_oak_chest",
+    "count": 4
+  },
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:and",
+      "values": [
+        {
+          "type": "zeta:flag",
+          "flag": "wood_to_chest_recipes"
+        },
+        {
+          "type": "zeta:flag",
+          "flag": "variant_chests"
+        }
+      ]
+    }
+  ]
+} 

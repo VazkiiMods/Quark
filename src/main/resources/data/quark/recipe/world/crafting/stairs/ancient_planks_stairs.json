@@ -1,0 +1,23 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "#  ",
+    "## ",
+    "###"
+  ],
+  "key": {
+    "#": {
+      "item": "quark:ancient_planks"
+    }
+  },
+  "result": {
+    "id": "quark:ancient_planks_stairs",
+    "count": 4
+  },
+  "neoforge:conditions": [
+    {
+      "type": "zeta:flag",
+      "flag": "ancient_wood"
+    }
+  ]
+} 

@@ -1,0 +1,47 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "item": "quark:framed_glass"
+    },
+    {
+      "item": "quark:framed_glass"
+    },
+    {
+      "item": "quark:framed_glass"
+    },
+    {
+      "item": "quark:framed_glass"
+    },
+    {
+      "item": "quark:framed_glass"
+    },
+    {
+      "item": "quark:framed_glass"
+    },
+    {
+      "item": "quark:framed_glass"
+    },
+    {
+      "item": "quark:framed_glass"
+    },
+    {
+      "tag": "c:dyes/magenta"
+    }
+  ],
+  "result": {
+    "id": "quark:magenta_framed_glass",
+    "count": 8
+  },
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:and",
+      "values": [
+        {
+          "type": "zeta:flag",
+          "flag": "framed_glass"
+        }
+      ]
+    }
+  ]
+}

@@ -46,7 +46,6 @@
     "quark:polished_limestone_stairs",
     "quark:polished_myalite_stairs",
     "quark:polished_shale_stairs",
-    "quark:polished_tuff_stairs",
     "quark:purple_shingles_stairs",
     "quark:raw_copper_bricks_stairs",
     "quark:raw_gold_bricks_stairs",
@@ -62,8 +61,6 @@
     "quark:soul_sandstone_bricks_stairs",
     "quark:soul_sandstone_stairs",
     "quark:thatch_stairs",
-    "quark:tuff_bricks_stairs",
-    "quark:tuff_stairs",
     "quark:white_shingles_stairs",
     "quark:yellow_shingles_stairs"
   ]

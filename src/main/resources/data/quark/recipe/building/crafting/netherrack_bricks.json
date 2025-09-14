@@ -1,0 +1,25 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "C#",
+    "##"
+  ],
+  "key": {
+    "#": {
+      "item": "minecraft:netherrack"
+    },
+    "C": {
+      "item": "quark:cobblestone_bricks"
+    }
+  },
+  "result": {
+    "id": "quark:netherrack_bricks",
+    "count": 4
+  },
+  "neoforge:conditions": [
+    {
+      "type": "zeta:flag",
+      "flag": "netherrack_bricks"
+    }
+  ]
+} 

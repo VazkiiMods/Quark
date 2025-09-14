@@ -1,0 +1,18 @@
+{
+  "type": "quark:smithing_rune",
+  "template": {
+    "item": "quark:smithing_template_rune"
+  },
+  "addition": {
+    "tag": "c:dyes/white"
+  },
+  "color": {
+"color": "white"
+},
+  "neoforge:conditions": [
+    {
+      "type": "zeta:flag",
+      "flag": "color_runes"
+    }
+  ]
+}

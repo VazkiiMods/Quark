@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:stonecutting",
+  "ingredient": {
+    "item": "quark:raw_copper_bricks"
+  },
+  "result": {
+		"id": "quark:raw_copper_bricks_wall",
+  "count": 1
+},
+  "neoforge:conditions": [
+    {
+      "type": "zeta:flag",
+      "flag": "raw_metal_bricks"
+    }
+  ]
+}

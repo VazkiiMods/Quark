@@ -38,7 +38,7 @@ public class FallenLogGenerator extends Generator {
 
         int chance = biome.is(FallenLogsModule.reducedLogsTag) ? FallenLogsModule.sparseBiomeRarity : FallenLogsModule.rarity;
         if (rand.nextInt(chance) == 0) {
-            BlockPos pos = worldIn.getHeightmapPos(Types.WORLD_SURFACE_WG, center);
+            BlockPos pos = worldIn.getHeightmapPos(Types.OCEAN_FLOOR_WG, center);
             placeFallenLogAt(worldIn, pos);
         }
     }

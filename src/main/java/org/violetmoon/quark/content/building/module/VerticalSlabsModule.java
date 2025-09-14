@@ -100,9 +100,12 @@ public class VerticalSlabsModule extends ZetaModule {
 		}
 
 		Quark.ZETA.variantRegistry.slabs.values().forEach(b -> {
-			if(b instanceof IVerticalSlabProvider provider)
-				provider.getVerticalSlab(b, this);
-			else
+            /*if(b instanceof IVerticalSlabProvider provider) {
+                QuarkVerticalSlabBlock vertSlab = provider.getVerticalSlab(b, this);
+                //VerticalSlabsModule.blocks.put(b, vertSlab);
+            }
+
+			else*/
 				new QuarkVerticalSlabBlock(b, this);
 		});
 	}
@@ -162,9 +165,5 @@ public class VerticalSlabsModule extends ZetaModule {
 		}
 
 		return false;
-	}
-
-	public interface IVerticalSlabProvider {
-		QuarkVerticalSlabBlock getVerticalSlab(Block block, ZetaModule module);
 	}
 }

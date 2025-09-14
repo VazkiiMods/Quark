@@ -1,0 +1,25 @@
+{
+  "type": "minecraft:stonecutting",
+  "ingredient": {
+    "item": "minecraft:andesite"
+  },
+  "result": {
+		"id": "quark:andesite_pillar",
+  "count": 1
+},
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:and",
+      "values": [
+        {
+          "type": "zeta:flag",
+          "flag": "stone_pillar"
+        },
+        {
+          "type": "zeta:flag",
+          "flag": "andesite"
+        }
+      ]
+    }
+  ]
+} 

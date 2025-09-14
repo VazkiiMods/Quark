@@ -1206,7 +1206,7 @@
     "block.quark.dripstone_bricks_vertical_slab": "Vertikal polerad droppstenmurstensplatta",
     "block.quark.tuff_vertical_slab": "Vertikal tuffplatta",
     "block.quark.polished_tuff_vertical_slab": "Vertikal polerad tuffplatta",
-    "block.quark.tuff_bricks_vertical_slab": "Vertikal polerad tuffmurstensplatta",
+    "block.quark.tuff_brick_vertical_slab": "Vertikal polerad tuffmurstensplatta",
     "block.quark.dripstone_block_wall": "Droppstensmur",
     "block.quark.dripstone_bricks_wall": "Polerad droppstenmurstensmur",
     "block.quark.tuff_wall": "Tuffmur",

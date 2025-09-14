@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "II",
+    "II"
+  ],
+  "key": {
+    "I": {
+      "item": "minecraft:raw_copper_block"
+    }
+  },
+  "result": {
+    "id": "quark:raw_copper_bricks",
+    "count": 4
+  },
+  "neoforge:conditions": [
+    {
+      "type": "zeta:flag",
+      "flag": "raw_metal_bricks"
+    }
+  ]
+} 

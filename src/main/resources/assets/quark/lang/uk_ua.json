@@ -1220,7 +1220,7 @@
 	"block.quark.dripstone_bricks_vertical_slab": "Вертикальна плита з полірованої крапельної цегли",
 	"block.quark.tuff_vertical_slab": "Вертикальна туфова плита",
 	"block.quark.polished_tuff_vertical_slab": "Вертикальна плита з полірованого туфу",
-	"block.quark.tuff_bricks_vertical_slab": "Вертикальна плита з полірованої туфової цегли",
+	"block.quark.tuff_brick_vertical_slab": "Вертикальна плита з полірованої туфової цегли",
 	"block.quark.dripstone_block_wall": "Крапельна стіна",
 	"block.quark.dripstone_bricks_wall": "Стіна з полірованої крапельної цегли",
 	"block.quark.tuff_wall": "Стіна з туфу",

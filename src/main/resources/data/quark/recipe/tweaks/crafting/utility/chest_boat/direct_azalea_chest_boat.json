@@ -1,0 +1,34 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "group": "direct_chest_boat",
+  "pattern": [
+    "#X#",
+    "###"
+  ],
+  "key": {
+    "#": {
+      "item": "quark:azalea_planks"
+    },
+    "X": {
+      "tag": "c:chests/wooden"
+    }
+  },
+  "result": {
+    "id": "quark:azalea_chest_boat"
+  },
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:and",
+      "values": [
+        {
+          "type": "zeta:flag",
+          "flag": "direct_chest_boat"
+        },
+        {
+          "type": "zeta:flag",
+          "flag": "azalea_wood"
+        }  
+      ]
+    }
+  ]
+}

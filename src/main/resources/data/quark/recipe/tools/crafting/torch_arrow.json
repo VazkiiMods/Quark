@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "item": "minecraft:torch"
+    },
+    {
+      "item": "minecraft:arrow"
+    }
+  ],
+  "result": {
+    "id": "quark:torch_arrow",
+    "count": 1
+  },
+  "neoforge:conditions": [
+    {
+      "type": "zeta:flag",
+      "flag": "torch_arrow"
+    }
+  ]
+} 

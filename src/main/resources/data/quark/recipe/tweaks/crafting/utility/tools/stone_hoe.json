@@ -1,0 +1,25 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "XX",
+    " #",
+    " #"
+  ],
+  "key": {
+    "#": {
+      "tag": "c:rods/wooden"
+    },
+    "X": {
+      "tag": "quark:stone_tool_materials"
+    }
+  },
+  "result": {
+    "id": "minecraft:stone_hoe"
+  },
+  "neoforge:conditions": [
+    {
+      "type": "zeta:flag",
+      "flag": "better_stone_tools"
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "group": "planks",
+  "ingredients": [
+    {
+      "tag": "quark:ancient_logs"
+    }
+  ],
+  "result": {
+    "id": "quark:ancient_planks",
+    "count": 4
+  },
+  "neoforge:conditions": [
+    {
+      "type": "zeta:flag",
+      "flag": "ancient_wood"
+    }
+  ]
+}

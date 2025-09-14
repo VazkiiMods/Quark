@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:stonecutting",
+  "ingredient": {
+    "item": "quark:midori_block"
+  },
+  "result": {
+		"id": "quark:midori_block_vertical_slab",
+      "count": 2
+},
+  "neoforge:conditions": [
+    {
+      "type": "zeta:flag",
+      "flag": "vertical_slabs"
+    }
+  ]
+}

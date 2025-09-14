@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "##"
+  ],
+  "key": {
+    "#": {
+      "item": "minecraft:flowering_azalea_leaves"
+    }
+  },
+  "result": {
+    "id": "quark:flowering_azalea_leaf_carpet",
+    "count": 3
+  },
+  "neoforge:conditions": [
+    {
+      "type": "zeta:flag",
+      "flag": "leaf_carpet"
+    }
+  ]
+} 
