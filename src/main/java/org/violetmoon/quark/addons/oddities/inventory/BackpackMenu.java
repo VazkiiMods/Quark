@@ -116,16 +116,16 @@ public class BackpackMenu extends InventoryMenu {
 	// and was like yeah just take whatever you want lol
 	// https://github.com/CoFH/CoFHCore/blob/d4a79b078d257e88414f5eed598d57490ec8e97f/src/main/java/cofh/core/util/helpers/InventoryHelper.java
 	@Override
-	public boolean moveItemStackTo(ItemStack stack, int start, int length, boolean r) {
+	public boolean moveItemStackTo(ItemStack stack, int start, int length, boolean reversed) {
 		boolean successful = false;
-		int i = !r ? start : length - 1;
-		int iterOrder = !r ? 1 : -1;
+		int i = !reversed ? start : length - 1;
+		int iterOrder = !reversed ? 1 : -1;
 
 		Slot slot;
 		ItemStack existingStack;
 
 		if(stack.isStackable())
-			while(stack.getCount() > 0 && (!r && i < length || r && i >= start)) {
+			while(stack.getCount() > 0 && (!reversed && i < length || reversed && i >= start)) {
 				slot = slots.get(i);
 
 				existingStack = slot.getItem();
@@ -153,8 +153,8 @@ public class BackpackMenu extends InventoryMenu {
 				i += iterOrder;
 			}
 		if(stack.getCount() > 0) {
-			i = !r ? start : length - 1;
-			while(stack.getCount() > 0 && (!r && i < length || r && i >= start)) {
+			i = !reversed ? start : length - 1;
+			while(stack.getCount() > 0 && (!reversed && i < length || reversed && i >= start)) {
 				slot = slots.get(i);
 				existingStack = slot.getItem();
 

@@ -53,8 +53,7 @@ public class CrateBlock extends ZetaBlock implements EntityBlock {
 	public int getAnalogOutputSignal(@NotNull BlockState state, @NotNull Level world, @NotNull BlockPos pos) {
 		BlockEntity be = world.getBlockEntity(pos);
 		if(be instanceof CrateBlockEntity crate) {
-			var crateHandler = crate.itemHandler();
-			return (int) (Math.floor((crateHandler.displayTotal * 14.0) / crateHandler.getSlots()) + (crateHandler.displayTotal > 0 ? 1 : 0));
+			return (int) (Math.floor((crate.displayTotal * 14.0) / crate.getContainerSize()) + (crate.displayTotal > 0 ? 1 : 0));
 		}
 		return 0;
 	}
@@ -75,7 +74,7 @@ public class CrateBlock extends ZetaBlock implements EntityBlock {
 			BlockEntity be = worldIn.getBlockEntity(pos);
 			if(be instanceof CrateBlockEntity crate) {
 				if(player instanceof ServerPlayer serverPlayer)
-					serverPlayer.openMenu(crate);
+					serverPlayer.openMenu(crate, pos);
 
 				PiglinAi.angerNearbyPiglins(player, true);
 			}

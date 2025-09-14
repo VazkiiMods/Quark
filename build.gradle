@@ -38,6 +38,13 @@ if (System.getenv('BUILD_NUMBER') != null) {
 
 minecraft.accessTransformers.file rootProject.file('src/main/resources/META-INF/accesstransformer.cfg')
 
+subsystems {
+    parchment {
+        minecraftVersion = "1.21.1"
+        mappingsVersion = "2024.11.17"
+    }
+}
+
 runs {
     // applies to all the run configs below
     configureEach {
