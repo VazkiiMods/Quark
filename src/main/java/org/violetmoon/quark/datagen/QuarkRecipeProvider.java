@@ -288,7 +288,7 @@ public class QuarkRecipeProvider extends RecipeProvider implements IConditionBui
                     .unlockedBy("test", PlayerTrigger.TriggerInstance.tick())
                     .save(recipeOutput.withConditions(condition), "quark:building/crafting/vertslabs/" + slabName + "_vertical_slab");
         }
-            //walls
+            //walls (NOTE: has some from World Category)
         for(IZetaBlock baseBlock : Quark.ZETA.variantRegistry.walls.keySet()) {
             Block base = baseBlock.getBlock();
             ICondition condition = zCond("");
@@ -431,7 +431,41 @@ public class QuarkRecipeProvider extends RecipeProvider implements IConditionBui
 
             //stools (new 1.21 folder)
 
-            //misc building blocks (midori, raw metal bricks, rope, ironplate, paperwall/lantern, thatch)
+            //misc building blocks, loose files in building/crafting (midori, raw metal bricks, rope, ironplate, paperwall/lantern, thatch)
+        ShapedRecipeBuilder.shaped(RecipeCategory.BUILDING_BLOCKS, MoreBrickTypesModule.blocks.get(6), 4)
+                .pattern("C#")
+                .pattern("##")
+                .define('C', MoreBrickTypesModule.blocks.get(4))
+                .define('#', Blocks.BLACKSTONE)
+                .unlockedBy("test", PlayerTrigger.TriggerInstance.tick())
+                .save(recipeOutput.withConditions(zCond("blackstone_bricks")), "quark:building/crafting/blackstone_bricks");
+        ShapedRecipeBuilder.shaped(RecipeCategory.BUILDING_BLOCKS, CompressedBlocksModule.blaze_lantern)
+                //blaze lantern is *in* compressed blocks, but it is not *a* compressed block.
+                .pattern("BPB")
+                .pattern("PPP")
+                .pattern("BPB")
+                .define('B', Items.BLAZE_ROD)
+                .define('P', Items.BLAZE_POWDER)
+                .unlockedBy("test", PlayerTrigger.TriggerInstance.tick())
+                .save(recipeOutput.withConditions(zCond("blaze_lantern")), "quark:building/crafting/blaze_lantern");
+        ShapelessRecipeBuilder.shapeless(RecipeCategory.BUILDING_BLOCKS, MoreBrickTypesModule.blocks.get(0), 2)
+                .requires(Blocks.NETHER_BRICKS)
+                .requires(Blocks.WARPED_WART_BLOCK)
+                .unlockedBy("test", PlayerTrigger.TriggerInstance.tick())
+                .save(recipeOutput.withConditions(zCond("blue_nether_bricks")), "quark:building/crafting/blue_nether_bricks");
+        ShapedRecipeBuilder.shaped(RecipeCategory.BUILDING_BLOCKS, MoreMudBlocksModule.blocks.get(0), 2)
+                .pattern("##")
+                .pattern("##")
+                .define('#', Blocks.MUD_BRICK_SLAB)
+                .unlockedBy("test", PlayerTrigger.TriggerInstance.tick())
+                .save(recipeOutput.withConditions(zCond("more_mud_blocks")), "quark:building/crafting/carved_mud_bricks");
+        ShapedRecipeBuilder.shaped(RecipeCategory.BUILDING_BLOCKS, SoulSandstoneModule.blocks.get(1))
+                .pattern("#")
+                .pattern("#")
+                .define('#', Quark.ZETA.variantRegistry.slabs.get(SoulSandstoneModule.blocks.get(0)))
+                .unlockedBy("test", PlayerTrigger.TriggerInstance.tick())
+                .save(recipeOutput.withConditions(zCond("soul_sandstone")), "quark:building/crafting/chiseled_soul_sandstone");
+
         ShapedRecipeBuilder.shaped(RecipeCategory.BUILDING_BLOCKS, DuskboundBlocksModule.blocks.get(0), 16)
                 .pattern("PPP")
                 .pattern("POP")

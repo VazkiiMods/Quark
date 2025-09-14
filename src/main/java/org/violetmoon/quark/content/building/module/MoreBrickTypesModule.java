@@ -14,16 +14,20 @@ import org.violetmoon.zeta.event.load.ZRegister;
 import org.violetmoon.zeta.module.ZetaLoadModule;
 import org.violetmoon.zeta.module.ZetaModule;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.function.BooleanSupplier;
 
 @ZetaLoadModule(category = "building")
 public class MoreBrickTypesModule extends ZetaModule {
 
+	public static List<Block> blocks = new ArrayList<>();
+
 	@Config(flag = "blue_nether_bricks", description = "This also comes with a utility recipe for Red Nether Bricks")
-	public boolean enableBlueNetherBricks = true;
+	private static boolean enableBlueNetherBricks = true;
 
 	@Config(flag = "sandstone_bricks", description = "This also includes Red Sandstone Bricks and Soul Sandstone Bricks")
-	public boolean enableSandstoneBricks = true;
+	private static boolean enableSandstoneBricks = true;
 
 	@Config(flag = "cobblestone_bricks", description = "This also includes Mossy Cobblestone Bricks")
 	private static boolean enableCobblestoneBricks = true;
@@ -54,11 +58,12 @@ public class MoreBrickTypesModule extends ZetaModule {
 	}
 
 	private void add(ZRegister event, String name, Block parent, BooleanSupplier cond, Block placeBehind) {
-		event.getVariantRegistry().addSlabStairsWall((IZetaBlock) new ZetaBlock(name + "_bricks", this,
+		Block block = event.getVariantRegistry().addSlabStairsWall((IZetaBlock) new ZetaBlock(name + "_bricks", this,
 				BlockPropertyUtil.copyPropertySafe(parent)
 						.requiresCorrectToolForDrops())
 				.setCondition(cond)
 				.setCreativeTab(CreativeModeTabs.BUILDING_BLOCKS, placeBehind, true), null);
+		blocks.add(block);
 	}
 
 }
