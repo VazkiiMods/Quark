@@ -19,7 +19,7 @@
   ],
   "result": {
     "count": 2,
-    "item": "quark:smithing_template_rune"
+    "id": "quark:smithing_template_rune"
   },
   "neoforge:conditions": [
     {

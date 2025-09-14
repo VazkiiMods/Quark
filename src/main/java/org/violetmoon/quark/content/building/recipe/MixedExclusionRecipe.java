@@ -116,7 +116,7 @@ public class MixedExclusionRecipe implements CraftingRecipe {
                                 Codec.STRING.optionalFieldOf("group", "").forGetter(recipe -> recipe.group),
                                 ItemStack.STRICT_CODEC.fieldOf("output").forGetter(recipe -> recipe.output),
                                 TagKey.codec(Registries.ITEM).fieldOf("tag").forGetter(recipe -> recipe.tag),
-                                ItemStack.CODEC.fieldOf("placeholder").forGetter(recipe -> recipe.placeholder)
+                                ItemStack.CODEC.optionalFieldOf("placeholder", ItemStack.EMPTY).forGetter(recipe -> recipe.placeholder)
                         )
                         .apply(inst, MixedExclusionRecipe::new)
         );

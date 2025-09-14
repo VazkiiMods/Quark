@@ -111,7 +111,7 @@ public class CrateMenu extends AbstractContainerMenu {
                 existingStack = slot.getItem();
 
                 if(!existingStack.isEmpty()) {
-                    int maxStack = Math.min(stack.getMaxStackSize(), slot.getMaxStackSize());
+                    int maxStack = Math.min(Math.min(stack.getMaxStackSize(), slot.getMaxStackSize()), slot instanceof CrateSlot ? CrateModule.maxItems - crate.getTotal() : 64);
                     int rmv = Math.min(maxStack, stack.getCount());
 
                     if(slot.mayPlace(cloneStack(stack, rmv)) && existingStack.getItem().equals(stack.getItem()) && ItemStack.isSameItemSameComponents(stack, existingStack)) {
@@ -136,14 +136,14 @@ public class CrateMenu extends AbstractContainerMenu {
             }
 
         // Second pass, after marged, if any remaining, try to insert into empty slots
-        if(stack.getCount() > 0) {
+        if(!stack.isEmpty()) {
             i = reverse ? (length - 1) : start;
-            while(stack.getCount() > 0 && (!reverse && i < length || reverse && i >= start)) {
+            while(!stack.isEmpty() && (!reverse && i < length || reverse && i >= start) && (!(slots.get(i) instanceof CrateSlot) || CrateModule.maxItems - crate.getTotal() > 0)) {
                 slot = slots.get(i);
                 existingStack = slot.getItem();
 
                 if(existingStack.isEmpty()) {
-                    int maxStack = Math.min(stack.getMaxStackSize(), slot.getMaxStackSize());
+                    int maxStack = Math.min(Math.min(stack.getMaxStackSize(), slot.getMaxStackSize()), slot instanceof CrateSlot ? CrateModule.maxItems - crate.getTotal() : 64);
                     int rmv = Math.min(maxStack, stack.getCount());
 
                     if(slot.mayPlace(cloneStack(stack, rmv))) {
@@ -237,6 +237,27 @@ public class CrateMenu extends AbstractContainerMenu {
 			int index = getSlotIndex();
 			return index >= scroll && index < scroll + displayedSlots;
 		}
+
+        //todo: Could be made a mixin for better cross-mod support
+        @Override
+        public ItemStack safeInsert(ItemStack stack, int increment) {
+            if (!stack.isEmpty() && this.mayPlace(stack)) {
+                ItemStack itemstack = this.getItem();
+                int amount = Math.max(Math.min(Math.min(increment, stack.getCount()), CrateModule.maxItems - ((CrateBlockEntity)container).getTotal()), 0);
+                if (itemstack.isEmpty()) {
+                    this.setByPlayer(stack.split(amount));
+                } else if (ItemStack.isSameItemSameComponents(itemstack, stack)) {
+                    stack.shrink(amount);
+                    itemstack.grow(amount);
+                    this.setByPlayer(itemstack);
+                }
+
+                ((CrateBlockEntity)container).refreshCachedTotal();
+                return stack;
+            } else {
+                return stack;
+            }
+        }
 
         @Override
         public boolean mayPlace(ItemStack stack) {

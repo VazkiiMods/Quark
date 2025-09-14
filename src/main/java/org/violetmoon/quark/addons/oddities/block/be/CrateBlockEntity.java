@@ -110,6 +110,11 @@ public class CrateBlockEntity extends BaseContainerBlockEntity implements Worldl
     }
 
     @Override
+    public boolean canPlaceItem(int slot, ItemStack stack) {
+        return super.canPlaceItem(slot, stack);
+    }
+
+    @Override
     public int[] getSlotsForFace(@NotNull Direction direction) {
         int slotCount = items.size();
         if(visibleSlots.length != slotCount) {
@@ -126,9 +131,10 @@ public class CrateBlockEntity extends BaseContainerBlockEntity implements Worldl
     }
 
     public void setItem(int slot, ItemStack stack) {
+        ItemStack oldItem = getItem(slot);
         super.setItem(slot, stack);
 
-        changeTotal(stack.getCount());
+        changeTotal(oldItem, stack);
     }
 
     @NotNull
@@ -141,11 +147,16 @@ public class CrateBlockEntity extends BaseContainerBlockEntity implements Worldl
         return oldStack;
     }
 
+    @Override
+    public ItemStack removeItemNoUpdate(int slot) {
+        ItemStack stack = super.removeItemNoUpdate(slot);
+        changeTotal(stack, getItem(slot));
+        return stack;
+    }
+
     public ItemStack removeItem(int slot) {
         return removeItem(slot, 64);
     }
-
-
 
     @Override
     public int getContainerSize() {
@@ -163,7 +174,7 @@ public class CrateBlockEntity extends BaseContainerBlockEntity implements Worldl
         needsUpdate = true;
     }
 
-    private int getTotal() {
+    public int getTotal() {
         if(cachedTotal != -1)
             return cachedTotal;
 
@@ -173,6 +184,11 @@ public class CrateBlockEntity extends BaseContainerBlockEntity implements Worldl
 
         cachedTotal = count;
         return count;
+    }
+
+    public void refreshCachedTotal() {
+        cachedTotal = -1;
+        getTotal();
     }
 
     public int getSlotLimit(int slot) {
@@ -195,6 +211,7 @@ public class CrateBlockEntity extends BaseContainerBlockEntity implements Worldl
     @Override
     protected void setItems(@NotNull NonNullList<ItemStack> list) {
         this.items = list;
+        cachedTotal = -1;
     }
 
 
@@ -204,8 +221,6 @@ public class CrateBlockEntity extends BaseContainerBlockEntity implements Worldl
     }
 
     public void recalculate() {
-        if(!needsUpdate)
-            return;
         needsUpdate = false;
 
         displayTotal = 0;

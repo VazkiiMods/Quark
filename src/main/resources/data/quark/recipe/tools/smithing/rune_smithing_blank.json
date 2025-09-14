@@ -3,6 +3,9 @@
   "template": {
     "item": "quark:smithing_template_rune"
   },
+  "color": {
+    "color": "blank"
+  },
   "neoforge:conditions": [
     {
       "type": "zeta:flag",
