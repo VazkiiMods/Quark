@@ -19,18 +19,19 @@ import org.violetmoon.quark.content.tweaks.recipe.ElytraDuplicationRecipe;
 import java.util.ArrayList;
 import java.util.List;
 
-public record ElytraDuplicationExtension<R extends CraftingRecipe>(ElytraDuplicationRecipe recipe) implements ICraftingCategoryExtension<R> {
+public class ElytraDuplicationExtension<R extends CraftingRecipe> implements ICraftingCategoryExtension<R> {
+    public ElytraDuplicationExtension() {}
 
 	@Override
 	public void setRecipe(RecipeHolder<R> recipeHolder, IRecipeLayoutBuilder builder, ICraftingGridHelper craftingGridHelper, IFocusGroup focuses) {
 		List<List<ItemStack>> inputLists = new ArrayList<>();
-		for(Ingredient input : recipe.getIngredients()) {
+		for(Ingredient input : recipeHolder.value().getIngredients()) {
 			ItemStack[] stacks = input.getItems();
 			List<ItemStack> expandedInput = List.of(stacks);
 			inputLists.add(expandedInput);
 		}
 		craftingGridHelper.createAndSetInputs(builder, VanillaTypes.ITEM_STACK, inputLists, 0, 0);
-		craftingGridHelper.createAndSetOutputs(builder, VanillaTypes.ITEM_STACK, Lists.newArrayList(recipe.getResultItem(QuarkClient.ZETA_CLIENT.hackilyGetCurrentClientLevelRegistryAccess())));
+		craftingGridHelper.createAndSetOutputs(builder, VanillaTypes.ITEM_STACK, Lists.newArrayList(recipeHolder.value().getResultItem(QuarkClient.ZETA_CLIENT.hackilyGetCurrentClientLevelRegistryAccess())));
 	}
 
 	@Override

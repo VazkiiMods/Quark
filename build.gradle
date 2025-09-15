@@ -128,7 +128,7 @@ dependencies {
     // compile against the JEI API but do not include it at runtime
     compileOnly("mezz.jei:jei-${config.mc_version}-neoforge-api:${deps.jei_version}")
     // at runtime, use the full JEI jar for NeoForge
-    //runtimeOnly("mezz.jei:jei-${config.mc_version}-neoforge:${deps.jei_version}")
+    runtimeOnly("mezz.jei:jei-${config.mc_version}-neoforge:${deps.jei_version}")
     // implementation fg.deobf("curse.maven:flan-forge-493246:${deps.flan}")
     implementation "curse.maven:lootr-361276:${deps.lootr}"
     // implementation fg.deobf("curse.maven:just-enough-resources-jer-240630:4689010")
@@ -137,7 +137,7 @@ dependencies {
     // runtimeOnly fg.deobf("curse.maven:woodworks-543610:5292418")
     // runtimeOnly fg.deobf("curse.maven:blueprint-382216:5292242")
     //runtimeOnly "curse.maven:farmers-delight-398521:5962800"
-    runtimeOnly "dev.emi:emi-neoforge:${deps.emi_version}"
+    //runtimeOnly "dev.emi:emi-neoforge:${deps.emi_version}"
 
     runtimeOnly "top.theillusivec4.curios:curios-neoforge:${deps.curios}"
     compileOnly "top.theillusivec4.curios:curios-neoforge:${deps.curios}:api"

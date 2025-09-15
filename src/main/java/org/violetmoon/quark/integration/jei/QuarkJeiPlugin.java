@@ -4,6 +4,8 @@ import mezz.jei.api.IModPlugin;
 import mezz.jei.api.JeiPlugin;
 import mezz.jei.api.constants.RecipeTypes;
 import mezz.jei.api.gui.handlers.IGuiContainerHandler;
+import mezz.jei.api.ingredients.subtypes.ISubtypeInterpreter;
+import mezz.jei.api.ingredients.subtypes.UidContext;
 import mezz.jei.api.recipe.IRecipeManager;
 import mezz.jei.api.recipe.RecipeType;
 import mezz.jei.api.recipe.vanilla.IJeiAnvilRecipe;
@@ -29,6 +31,7 @@ import net.minecraft.world.item.enchantment.EnchantmentInstance;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.violetmoon.quark.addons.oddities.block.be.MatrixEnchantingTableBlockEntity;
 import org.violetmoon.quark.addons.oddities.client.screen.BackpackInventoryScreen;
 import org.violetmoon.quark.addons.oddities.client.screen.CrateScreen;
@@ -65,13 +68,23 @@ public class QuarkJeiPlugin implements IModPlugin {
 
     @Override
     public void registerItemSubtypes(@NotNull ISubtypeRegistration registration) {
-        //registration.registerSubtypeInterpreter(AncientTomesModule.ancient_tome);
+        registration.registerSubtypeInterpreter(AncientTomesModule.ancient_tome, new ISubtypeInterpreter<ItemStack>() {
+            @Override
+            public @Nullable Object getSubtypeData(ItemStack ingredient, UidContext context) {
+                return ingredient;
+            }
+
+            @Override
+            public String getLegacyStringSubtypeInfo(ItemStack ingredient, UidContext context) {
+                return "ancient_tome";
+            }
+        });
     }
 
     @Override
     public void registerVanillaCategoryExtensions(@NotNull IVanillaCategoryExtensionRegistration registration) {
-        //registration.getCraftingCategory().addExtension(ElytraDuplicationRecipe.class, ElytraDuplicationExtension::new);
-        //registration.getCraftingCategory().addExtension(SlabToBlockRecipe.class, SlabToBlockExtension::new);
+        registration.getCraftingCategory().addExtension(ElytraDuplicationRecipe.class, new ElytraDuplicationExtension<>());
+        registration.getCraftingCategory().addExtension(SlabToBlockRecipe.class, new SlabToBlockExtension<>());
     }
 
     private boolean matrix() {

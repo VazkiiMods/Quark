@@ -17,7 +17,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map.Entry;
 
-public record SlabToBlockExtension<R extends CraftingRecipe>(SlabToBlockRecipe recipe) implements ICraftingCategoryExtension<R> {
+public class SlabToBlockExtension<R extends CraftingRecipe> implements ICraftingCategoryExtension<R> {
 
 	@Override
 	public void setRecipe(RecipeHolder<R> recipeHolder, IRecipeLayoutBuilder builder, ICraftingGridHelper craftingGridHelper, IFocusGroup focuses) {
