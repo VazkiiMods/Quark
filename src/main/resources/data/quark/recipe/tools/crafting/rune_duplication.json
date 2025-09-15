@@ -6,7 +6,7 @@
       "tag": "quark:corundum"
     },
     "C": {
-      "tag": "c:cobblestone/normal"
+      "tag": "c:cobblestones/normal"
     },
     "S": {
       "item": "quark:smithing_template_rune"

@@ -6,7 +6,7 @@
   ],
   "key": {
     "#": {
-      "tag": "c:ingots/nether_brick"
+      "tag": "c:bricks/nether"
     },
     "W": {
       "item": "minecraft:nether_bricks"
