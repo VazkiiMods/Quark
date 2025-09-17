@@ -1,0 +1,31 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "zeta:flag",
+      "flag": "gold_metal_button"
+    }
+  ],
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "quark:automation/crafting/gold_button"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    },
+    "test": {
+      "trigger": "minecraft:tick"
+    }
+  },
+  "requirements": [
+    [
+      "has_the_recipe",
+      "test"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "quark:automation/crafting/gold_button"
+    ]
+  }
+}

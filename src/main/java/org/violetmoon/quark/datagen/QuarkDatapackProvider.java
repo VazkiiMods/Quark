@@ -17,7 +17,7 @@ public class QuarkDatapackProvider extends DatapackBuiltinEntriesProvider {
 
     private static final RegistrySetBuilder BUILDER = new RegistrySetBuilder()
             .add(Registries.CONFIGURED_FEATURE, QuarkConfiguredFeatures::bootstrap)
-            .add(Registries.PLACED_FEATURE, QuarkPlacedFeatures::bootstrap)
+            //.add(Registries.PLACED_FEATURE, QuarkPlacedFeatures::bootstrap)
             .add(Registries.JUKEBOX_SONG, QuarkMusicDiscs::bootstrap);
             //.add(NeoForgeRegistries.Keys.BIOME_MODIFIERS, QuarkBiomeModifiers::bootstrap);
 

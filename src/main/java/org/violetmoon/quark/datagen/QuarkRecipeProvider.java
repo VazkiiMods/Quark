@@ -8,17 +8,18 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.data.PackOutput;
 import net.minecraft.data.recipes.*;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.tags.TagKey;
-import net.minecraft.world.item.DyeColor;
-import net.minecraft.world.item.DyeItem;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.Items;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.item.*;
+import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.StainedGlassBlock;
+import net.neoforged.neoforge.common.ItemAbilities;
 import net.neoforged.neoforge.common.Tags;
 import net.neoforged.neoforge.common.conditions.ICondition;
 import net.neoforged.neoforge.common.conditions.IConditionBuilder;
@@ -37,6 +38,7 @@ import org.violetmoon.quark.content.tweaks.module.GlassShardModule;
 import org.violetmoon.quark.content.world.module.*;
 import org.violetmoon.zeta.block.IZetaBlock;
 import org.violetmoon.zeta.config.FlagCondition;
+import org.violetmoon.zeta.util.MiscUtil;
 import org.violetmoon.zeta.util.VanillaWoods;
 
 import java.util.Map;
@@ -295,7 +297,7 @@ public class QuarkRecipeProvider extends RecipeProvider implements IConditionBui
             ICondition condition = zCond("");
             Block wallBlock = Quark.ZETA.variantRegistry.walls.get(baseBlock);
 
-            String dir = "quark:building/crafting/walls/";
+            String dir;
 
             //detect World walls
             if(base.getDescriptionId().contains("limestone") || base.getDescriptionId().contains("jasper") || base.getDescriptionId().contains("shale") ||
@@ -311,6 +313,9 @@ public class QuarkRecipeProvider extends RecipeProvider implements IConditionBui
                 }
                 else if(base.getDescriptionId().contains("limestone")){
                     condition = zCond("limestone");
+                }
+                else if(base.getDescriptionId().contains("shale")){
+                    condition = zCond("shale");
                 }
                 else if(base.getDescriptionId().contains("myalite")){
                     condition = zCond("myalite");
@@ -427,11 +432,77 @@ public class QuarkRecipeProvider extends RecipeProvider implements IConditionBui
             //leafcarpet (new 1.21 folder)
 
             //posts (new 1.21 folder)
+        i = 0;
+        for(VanillaWoods.Wood wood : VanillaWoods.ALL) {
+            if(wood.name().equals("bamboo")) { //bamboo has no wood block
+                ShapedRecipeBuilder.shaped(RecipeCategory.BUILDING_BLOCKS, WoodenPostsModule.blocks.get(i), 8)
+                        .pattern("F")
+                        .pattern("F")
+                        .pattern("F")
+                        .define('F', Blocks.BAMBOO_BLOCK)
+                        .unlockedBy("test", PlayerTrigger.TriggerInstance.tick())
+                        .save(recipeOutput.withConditions(zCond("wooden_posts")), "quark:building/crafting/posts/" + wood.name() + "_post");
+                i++;
 
+                ShapedRecipeBuilder.shaped(RecipeCategory.BUILDING_BLOCKS, WoodenPostsModule.blocks.get(i), 8)
+                        .pattern("F")
+                        .pattern("F")
+                        .pattern("F")
+                        .define('F', Blocks.STRIPPED_BAMBOO_BLOCK)
+                        .unlockedBy("test", PlayerTrigger.TriggerInstance.tick())
+                        .save(recipeOutput.withConditions(zCond("wooden_posts")), "quark:building/crafting/posts/stripped_" + wood.name() + "_post");
+                i++;
+            }
+            else
+            {
+                ShapedRecipeBuilder.shaped(RecipeCategory.BUILDING_BLOCKS, WoodenPostsModule.blocks.get(i), 8)
+                        .pattern("F")
+                        .pattern("F")
+                        .pattern("F")
+                        .define('F', wood.wood().asItem())
+                        .unlockedBy("test", PlayerTrigger.TriggerInstance.tick())
+                        .save(recipeOutput.withConditions(zCond("wooden_posts")), "quark:building/crafting/posts/" + wood.name() + "_post");
+                i++;
+
+                //zeta vanillawoods doesn't have stripped woods :(
+                Block stripped = DataUtil.axeStrip(wood.wood());
+                ShapedRecipeBuilder.shaped(RecipeCategory.BUILDING_BLOCKS, WoodenPostsModule.blocks.get(i), 8)
+                        .pattern("F")
+                        .pattern("F")
+                        .pattern("F")
+                        .define('F', stripped.asItem())
+                        .unlockedBy("test", PlayerTrigger.TriggerInstance.tick())
+                        .save(recipeOutput.withConditions(zCond("wooden_posts")), "quark:building/crafting/posts/stripped_" + wood.name() + "_post");
+                i++;
+            }
+        }
+        for(WoodSetHandler.WoodSet set : DataUtil.QuarkWoodSets){
+            ICondition cond = and(zCond("wooden_posts"), zCond(set.name + "_wood"));
+
+            ShapedRecipeBuilder.shaped(RecipeCategory.BUILDING_BLOCKS, set.post, 8)
+                    .pattern("F")
+                    .pattern("F")
+                    .pattern("F")
+                    .define('F', set.wood.asItem())
+                    .unlockedBy("test", PlayerTrigger.TriggerInstance.tick())
+                    .save(recipeOutput.withConditions(cond), "quark:building/crafting/posts/" + set.name + "_post");
+
+            ShapedRecipeBuilder.shaped(RecipeCategory.BUILDING_BLOCKS, set.strippedPost, 8)
+                    .pattern("F")
+                    .pattern("F")
+                    .pattern("F")
+                    .define('F', set.strippedWood.asItem())
+                    .unlockedBy("test", PlayerTrigger.TriggerInstance.tick())
+                    .save(recipeOutput.withConditions(cond), "quark:building/crafting/posts/stripped_" + set.name + "_post");
+        }
             //ladders (new 1.21 folder)
 
             //stools (new 1.21 folder)
-
+        i = 0;
+        for(DyeColor dye : MiscUtil.CREATIVE_COLOR_ORDER){
+            colorStools(StoolsModule.stools.get(i), dye, recipeOutput);
+            i++;
+        }
             //misc building blocks, loose files in building/crafting (midori, raw metal bricks, rope, ironplate, paperwall/lantern, thatch)
         ShapedRecipeBuilder.shaped(RecipeCategory.BUILDING_BLOCKS, MoreBrickTypesModule.blocks.get(6), 4)
                 .pattern("C#")
@@ -985,17 +1056,7 @@ public class QuarkRecipeProvider extends RecipeProvider implements IConditionBui
     }
 
     public static ShapedRecipeBuilder crystalLampRecipe(ItemLike output, CorundumColor corundumColor) {
-        Item dye = switch (corundumColor){
-            case RED -> Items.RED_DYE;
-            case ORANGE -> Items.ORANGE_DYE;
-            case YELLOW -> Items.YELLOW_DYE;
-            case GREEN -> Items.GREEN_DYE;
-            case BLUE -> Items.LIGHT_BLUE_DYE;
-            case INDIGO -> Items.BLUE_DYE;
-            case VIOLET -> Items.PINK_DYE;
-            case WHITE -> Items.WHITE_DYE;
-            case BLACK -> Items.BLACK_DYE;
-        };
+        Item dye = DataUtil.getDyeItemFromCorondumColor(corundumColor);
 
         return ShapedRecipeBuilder.shaped(RecipeCategory.REDSTONE, output)
                 .pattern(" D ")
@@ -1086,34 +1147,16 @@ public class QuarkRecipeProvider extends RecipeProvider implements IConditionBui
     }
 
     public static void colorShingles(ItemLike output, DyeColor color, RecipeOutput recipeOutput) {
-        //please excuse disgusting switch table
-        ItemLike terracotta = switch (color) {
-            case BLACK -> Blocks.BLACK_TERRACOTTA;
-            case BLUE -> Blocks.BLUE_TERRACOTTA;
-            case BROWN -> Blocks.BROWN_TERRACOTTA;
-            case YELLOW -> Blocks.YELLOW_TERRACOTTA;
-            case CYAN -> Blocks.CYAN_TERRACOTTA;
-            case GRAY -> Blocks.GRAY_TERRACOTTA;
-            case GREEN -> Blocks.GREEN_TERRACOTTA;
-            case WHITE -> Blocks.WHITE_TERRACOTTA;
-            case ORANGE -> Blocks.ORANGE_TERRACOTTA;
-            case MAGENTA -> Blocks.MAGENTA_TERRACOTTA;
-            case LIGHT_BLUE -> Blocks.LIGHT_BLUE_TERRACOTTA;
-            case LIME -> Blocks.LIME_TERRACOTTA;
-            case PINK -> Blocks.PINK_TERRACOTTA;
-            case LIGHT_GRAY -> Blocks.LIGHT_GRAY_TERRACOTTA;
-            case PURPLE -> Blocks.PURPLE_TERRACOTTA;
-            case RED -> Blocks.RED_TERRACOTTA;
-        };
+        Block terracotta = DataUtil.getTerrracottaFromDyeColor(color);
 
         //condition is passed in.
-        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, output, 2)
+        ShapedRecipeBuilder.shaped(RecipeCategory.BUILDING_BLOCKS, output, 2)
                 .pattern("##")
                 .define('#', terracotta)
                 .unlockedBy("test", PlayerTrigger.TriggerInstance.tick())
                 .save(recipeOutput, "quark:building/crafting/shingles/" + color.getName() + "_shingles");
 
-        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, output, 8)
+        ShapedRecipeBuilder.shaped(RecipeCategory.BUILDING_BLOCKS, output, 8)
                 .pattern("SSS")
                 .pattern("SDS")
                 .pattern("SSS")
@@ -1123,6 +1166,17 @@ public class QuarkRecipeProvider extends RecipeProvider implements IConditionBui
                 .save(recipeOutput, "quark:building/crafting/shingles/" + color.getName() + "_shingles_dye");
     }
 
+    public static void colorStools(ItemLike output, DyeColor color, RecipeOutput recipeOutput) {
+        Block wool = DataUtil.getWoolFromDyeColor(color);
+
+        ShapedRecipeBuilder.shaped(RecipeCategory.BUILDING_BLOCKS, output, 4)
+                .pattern("###")
+                .pattern("WWW")
+                .define('#', wool)
+                .define('W', ItemTags.WOODEN_SLABS)
+                .unlockedBy("test", PlayerTrigger.TriggerInstance.tick())
+                .save(recipeOutput.withConditions(zCond("stools")), "quark:building/crafting/stools/" + color.getName() + "_stool");
+    }
 
 
 }
