@@ -111,7 +111,7 @@ public class CrateBlockEntity extends BaseContainerBlockEntity implements Worldl
 
     @Override
     public boolean canPlaceItem(int slot, ItemStack stack) {
-        return super.canPlaceItem(slot, stack);
+        return super.canPlaceItem(slot, stack) && getSlotLimit(slot) > 0;
     }
 
     @Override
