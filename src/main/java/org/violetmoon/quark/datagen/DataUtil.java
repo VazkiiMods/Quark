@@ -1,5 +1,8 @@
 package org.violetmoon.quark.datagen;
 
+import net.minecraft.core.registries.Registries;
+import net.minecraft.tags.ItemTags;
+import net.minecraft.tags.TagKey;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.Item;
@@ -9,6 +12,7 @@ import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.neoforged.neoforge.common.ItemAbilities;
+import org.violetmoon.quark.base.Quark;
 import org.violetmoon.quark.base.handler.WoodSetHandler;
 import org.violetmoon.quark.base.util.CorundumColor;
 import org.violetmoon.quark.content.world.module.AncientWoodModule;
@@ -135,5 +139,44 @@ public class DataUtil {
             case PURPLE -> Blocks.PURPLE_TERRACOTTA;
             case RED -> Blocks.RED_TERRACOTTA;
         };
+    }
+
+    public static TagKey<Item> getLogTagFromLog(Block standardLog){
+        if(standardLog == Blocks.OAK_LOG){
+            return ItemTags.OAK_LOGS;
+        }
+        else if(standardLog == Blocks.SPRUCE_LOG){
+            return ItemTags.SPRUCE_LOGS;
+        }
+        else if(standardLog == Blocks.BIRCH_LOG){
+            return ItemTags.BIRCH_LOGS;
+        }
+        else if(standardLog == Blocks.JUNGLE_LOG){
+            return ItemTags.JUNGLE_LOGS;
+        }
+        else if(standardLog == Blocks.ACACIA_LOG){
+            return ItemTags.ACACIA_LOGS;
+        }
+        else if(standardLog == Blocks.DARK_OAK_LOG){
+            return ItemTags.DARK_OAK_LOGS;
+        }
+        else if(standardLog == Blocks.MANGROVE_LOG){
+            return ItemTags.MANGROVE_LOGS;
+        }
+        else if(standardLog == Blocks.CHERRY_LOG){
+            return ItemTags.CHERRY_LOGS;
+        }
+
+        else if(standardLog == AncientWoodModule.woodSet.wood){
+            return Quark.asTagKey(Registries.ITEM, "ancient_logs");
+        }
+        else if(standardLog == AzaleaWoodModule.woodSet.wood){
+            return Quark.asTagKey(Registries.ITEM, "azalea_logs");
+        }
+        else if(standardLog == BlossomTreesModule.woodSet.wood){
+            return Quark.asTagKey(Registries.ITEM, "blossom_logs");
+        }
+
+        return null;
     }
 }

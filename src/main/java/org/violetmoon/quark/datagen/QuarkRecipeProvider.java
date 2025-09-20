@@ -29,6 +29,7 @@ import org.violetmoon.quark.base.Quark;
 import org.violetmoon.quark.base.handler.WoodSetHandler;
 import org.violetmoon.quark.base.util.CorundumColor;
 import org.violetmoon.quark.content.automation.module.*;
+import org.violetmoon.quark.content.building.block.HedgeBlock;
 import org.violetmoon.quark.content.building.block.RainbowLampBlock;
 import org.violetmoon.quark.content.building.module.*;
 import org.violetmoon.quark.content.experimental.module.VariantSelectorModule;
@@ -427,7 +428,71 @@ public class QuarkRecipeProvider extends RecipeProvider implements IConditionBui
                 .define('B', Tags.Items.BOOKSHELVES)
                 .unlockedBy("test", PlayerTrigger.TriggerInstance.tick())
                 .save(recipeOutput.withConditions(zCond("variant_bookshelves")), "quark:building/crafting/bookshelves/lectern_with_variant_bookshelves");
-            //hedges (new 1.21 folder)
+            //hedges (new 1.21 folder) (TODO: test output)
+        i = 0;
+        for(VanillaWoods.Wood wood : VanillaWoods.OVERWORLD_WITH_TREE) {
+            Block hedge = HedgesModule.hedges.get(i);
+
+            ShapedRecipeBuilder.shaped(RecipeCategory.BUILDING_BLOCKS, hedge, 2)
+                    .pattern("L")
+                    .pattern("W")
+                    .define('L', wood.leaf())
+                    .define('W', DataUtil.getLogTagFromLog(wood.log()))
+                    .unlockedBy("test", PlayerTrigger.TriggerInstance.tick())
+                    .save(recipeOutput.withConditions(zCond("hedges")), "quark:building/crafting/hedges/" + wood.name() + "_hedge");
+            i++;
+        }
+        //azalea hedges
+        ShapedRecipeBuilder.shaped(RecipeCategory.BUILDING_BLOCKS, HedgesModule.hedges.get(8), 2)
+                .pattern("L")
+                .pattern("W")
+                .define('L', Blocks.AZALEA_LEAVES)
+                .define('W', DataUtil.getLogTagFromLog(AzaleaWoodModule.woodSet.log))
+                .unlockedBy("test", PlayerTrigger.TriggerInstance.tick())
+                .save(recipeOutput.withConditions(and(zCond("azalea_wood"), zCond("hedges"))), "quark:building/crafting/hedges/azalea_hedge");
+        ShapedRecipeBuilder.shaped(RecipeCategory.BUILDING_BLOCKS, HedgesModule.hedges.get(9), 2)
+                .pattern("L")
+                .pattern("W")
+                .define('L', Blocks.FLOWERING_AZALEA_LEAVES)
+                .define('W', DataUtil.getLogTagFromLog(AzaleaWoodModule.woodSet.log))
+                .unlockedBy("test", PlayerTrigger.TriggerInstance.tick())
+                .save(recipeOutput.withConditions(and(zCond("azalea_wood"), zCond("hedges"))), "quark:building/crafting/hedges/flowering_azalea_hedge");
+        //azalea hedges, but azalea wood type is disabled
+        ShapedRecipeBuilder.shaped(RecipeCategory.BUILDING_BLOCKS, HedgesModule.hedges.get(8), 2)
+                .pattern("L")
+                .pattern("W")
+                .define('L', Blocks.AZALEA_LEAVES)
+                .define('W', ItemTags.OAK_LOGS)
+                .unlockedBy("test", PlayerTrigger.TriggerInstance.tick())
+                .save(recipeOutput.withConditions(and(not(zCond("azalea_wood")), zCond("hedges"))), "quark:building/crafting/hedges/azalea_hedge_oak");
+        ShapedRecipeBuilder.shaped(RecipeCategory.BUILDING_BLOCKS, HedgesModule.hedges.get(9), 2)
+                .pattern("L")
+                .pattern("W")
+                .define('L', Blocks.FLOWERING_AZALEA_LEAVES)
+                .define('W', ItemTags.OAK_LOGS)
+                .unlockedBy("test", PlayerTrigger.TriggerInstance.tick())
+                .save(recipeOutput.withConditions(and(not(zCond("azalea_wood")), zCond("hedges"))), "quark:building/crafting/hedges/flowering_azalea_hedge_oak");
+        //ancient hedges
+        ShapedRecipeBuilder.shaped(RecipeCategory.BUILDING_BLOCKS, HedgesModule.hedges.get(15), 2)
+                .pattern("L")
+                .pattern("W")
+                .define('L', AncientWoodModule.ancient_leaves)
+                .define('W', DataUtil.getLogTagFromLog(AncientWoodModule.woodSet.log))
+                .unlockedBy("test", PlayerTrigger.TriggerInstance.tick())
+                .save(recipeOutput.withConditions(and(zCond("ancient_wood"), zCond("hedges"))), "quark:building/crafting/hedges/ancient_hedge");
+        //blossom hedges
+        i = 10;
+        for(BlossomTreesModule.BlossomTree tree : BlossomTreesModule.blossomTrees){
+            ShapedRecipeBuilder.shaped(RecipeCategory.BUILDING_BLOCKS, HedgesModule.hedges.get(i), 2)
+                    .pattern("L")
+                    .pattern("W")
+                    .define('L', tree.leaves)
+                    .define('W', DataUtil.getLogTagFromLog(BlossomTreesModule.woodSet.log))
+                    .unlockedBy("test", PlayerTrigger.TriggerInstance.tick())
+                    .save(recipeOutput.withConditions(and(zCond("ancient_wood"), zCond("hedges"))), "quark:building/crafting/hedges/" + tree.name + "_hedge");
+        }
+
+
 
             //leafcarpet (new 1.21 folder)
 
