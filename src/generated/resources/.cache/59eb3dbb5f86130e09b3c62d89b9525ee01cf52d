@@ -1,4 +1,4 @@
-// 1.21.1	2025-09-12T08:02:56.1772191	Loot Tables
+// 1.21.1	2025-09-20T12:14:30.7565624	Loot Tables
 321167e5d1e420c3799ebd55550623276a62d02f data/quark/loot_table/blocks/acacia_bookshelf.json
 78cf85302095b576b7eda6e9c83fd9141e777c3b data/quark/loot_table/blocks/acacia_chest.json
 2d740f286cb6b31376a3bb00878726966b38c064 data/quark/loot_table/blocks/acacia_hedge.json
@@ -740,9 +740,3 @@ b2fc443f7b9c08a67dae0e3cd8cb254d83e5f4c7 data/quark/loot_table/blocks/yellow_cor
 eabfd08fbda2db5178eb15572600fe16b2c7ceb9 data/quark/loot_table/blocks/yellow_shingles_stairs.json
 92e205819471a87001cc22dd53102bcc132ef776 data/quark/loot_table/blocks/yellow_shingles_vertical_slab.json
 fb913084a9fdba27874a928155711fdce76d1881 data/quark/loot_table/blocks/yellow_stool.json
-741c3514b864a4336718b3e12d63fb87ea15c628 data/quark/loot_table/entities/crab.json
-4459af029c0428900ceddc511b505c3b72639739 data/quark/loot_table/entities/forgotten.json
-66fe9cb5232f12cc81a0e4677c7591793347e379 data/quark/loot_table/entities/foxhound.json
-b38bd11a3612b3ea47d7949a4e18420c640a5f97 data/quark/loot_table/entities/stoneling.json
-2550a128102ce9ec256e17e7413ae3b93022da93 data/quark/loot_table/entities/toretoise.json
-3b562838ff07487ef23bd10c480f7543f6fcf0a9 data/quark/loot_table/entities/wraith.json

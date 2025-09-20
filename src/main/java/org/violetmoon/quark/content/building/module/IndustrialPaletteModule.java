@@ -63,9 +63,9 @@ public class IndustrialPaletteModule extends ZetaModule {
 				.pushReaction(PushReaction.DESTROY), false
 		).setCondition(ironLadderCond);
 
-        blocks.add(ironPlate);
+        blocks.add(ironPlate); //0
         blocks.add(rustyIronPlate);
         blocks.add(ironPillar);
-        blocks.add(ironLadder);
+        blocks.add(ironLadder); //3
 	}
 }

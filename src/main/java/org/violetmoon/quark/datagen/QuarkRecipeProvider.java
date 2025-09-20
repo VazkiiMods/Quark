@@ -8,18 +8,14 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.data.PackOutput;
 import net.minecraft.data.recipes.*;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.tags.TagKey;
-import net.minecraft.world.InteractionHand;
 import net.minecraft.world.item.*;
-import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.StainedGlassBlock;
-import net.neoforged.neoforge.common.ItemAbilities;
 import net.neoforged.neoforge.common.Tags;
 import net.neoforged.neoforge.common.conditions.ICondition;
 import net.neoforged.neoforge.common.conditions.IConditionBuilder;
@@ -29,7 +25,6 @@ import org.violetmoon.quark.base.Quark;
 import org.violetmoon.quark.base.handler.WoodSetHandler;
 import org.violetmoon.quark.base.util.CorundumColor;
 import org.violetmoon.quark.content.automation.module.*;
-import org.violetmoon.quark.content.building.block.HedgeBlock;
 import org.violetmoon.quark.content.building.block.RainbowLampBlock;
 import org.violetmoon.quark.content.building.module.*;
 import org.violetmoon.quark.content.experimental.module.VariantSelectorModule;
@@ -141,16 +136,31 @@ public class QuarkRecipeProvider extends RecipeProvider implements IConditionBui
                 .save(recipeOutput.withConditions(zCond("redstone_randomizer")), "quark:automation/crafting/redstone_randomizer");
         //etc
         //CATEGORY: Building
-            //chests
+            //chests (NOTE: has some from World Category)
         for (Map.Entry<Block, Block> chestEntry : VariantChestsModule.regularChests.entrySet()) {
-            chestRecipe(chestEntry.getValue().asItem(), chestEntry.getKey()).unlockedBy("test", PlayerTrigger.TriggerInstance.tick()).save(recipeOutput, "quark:building/chests/" + BuiltInRegistries.BLOCK.getKey(chestEntry.getValue()).getPath());
+            String dir = "quark:building/chests/" + BuiltInRegistries.BLOCK.getKey(chestEntry.getValue()).getPath();
+            for(WoodSetHandler.WoodSet set : DataUtil.QuarkWorldWoodSets){
+                if(chestEntry.getKey() == set.planks){
+                    dir = "quark:world/crafting/woodsets/" + set.name + "/" + set.name + "_chest";
+                }
+            }
+
+            chestRecipe(chestEntry.getValue().asItem(), chestEntry.getKey()).unlockedBy("test", PlayerTrigger.TriggerInstance.tick()).save(recipeOutput, dir);
         }
 
         for (Map.Entry<Block, Block> chestEntry : VariantChestsModule.trappedChests.entrySet()) {
-            trappedChestRecipe(chestEntry.getValue().asItem(), chestEntry.getKey()).unlockedBy("test", PlayerTrigger.TriggerInstance.tick()).save(recipeOutput, "quark:building/chests/" + BuiltInRegistries.BLOCK.getKey(chestEntry.getValue()).getPath());
-        }
+            String dir = "quark:building/chests/" + BuiltInRegistries.BLOCK.getKey(chestEntry.getValue()).getPath();
+            for(WoodSetHandler.WoodSet set : DataUtil.QuarkWorldWoodSets){
+                if(chestEntry.getKey() == set.planks){
+                    dir = "quark:world/crafting/woodsets/" + set.name + "/" + set.name + "_trapped_chest";
+                }
+            }
 
+            trappedChestRecipe(chestEntry.getValue(), DataUtil.getChestFromTrappedChest(chestEntry.getValue())).unlockedBy("test", PlayerTrigger.TriggerInstance.tick()).save(recipeOutput, dir);
+        }
+        //TODO 8 logs = 4 chests recipes; zCond("wood_to_chest_recipes")
         //TODO https://github.com/VazkiiMods/Quark/blob/master/src/main/resources/data/quark/recipes/tweaks/crafting/utility/chests/mixed_chest_wood_but_without_exclusions.json
+
             //compressed
         compressUncompress(Items.APPLE, CompressedBlocksModule.apple, recipeOutput, null, "apple_crate");
         compressUncompress(Items.BEETROOT, CompressedBlocksModule.beetroot, recipeOutput, null, "beetroot_crate");
@@ -371,7 +381,7 @@ public class QuarkRecipeProvider extends RecipeProvider implements IConditionBui
                     .unlockedBy("test", PlayerTrigger.TriggerInstance.tick())
                     .save(recipeOutput.withConditions(condition),  dir + BuiltInRegistries.BLOCK.getKey(base).getPath() + "_wall");
         }
-            //bookshelves (new 1.21 folder)
+            //bookshelves (new 1.21 folder) (NOTE: has some from World Category)
         ShapedRecipeBuilder.shaped(RecipeCategory.MISC, Blocks.BOOKSHELF)
                 .pattern("###")
                 .pattern("XXX")
@@ -402,15 +412,15 @@ public class QuarkRecipeProvider extends RecipeProvider implements IConditionBui
                 .define('#', AncientWoodModule.woodSet.planks)
                 .define('X', Items.BOOK)
                 .unlockedBy("test", PlayerTrigger.TriggerInstance.tick())
-                .save(recipeOutput.withConditions(and(zCond("variant_bookshelves"), zCond("ancient_wood"))), "quark:building/crafting/bookshelves/ancient_bookshelf");
+                .save(recipeOutput.withConditions(and(zCond("variant_bookshelves"), zCond("ancient_wood"))), "quark:world/crafting/woodsets/ancient/ancient_bookshelf");
         ShapedRecipeBuilder.shaped(RecipeCategory.MISC, AzaleaWoodModule.woodSet.bookshelf)
                 .pattern("###")
                 .pattern("XXX")
                 .pattern("###")
-                .define('#', AncientWoodModule.woodSet.planks)
+                .define('#', AzaleaWoodModule.woodSet.planks)
                 .define('X', Items.BOOK)
                 .unlockedBy("test", PlayerTrigger.TriggerInstance.tick())
-                .save(recipeOutput.withConditions(and(zCond("variant_bookshelves"), zCond("azalea_wood"))), "quark:building/crafting/bookshelves/azalea_bookshelf");
+                .save(recipeOutput.withConditions(and(zCond("variant_bookshelves"), zCond("azalea_wood"))), "quark:world/crafting/woodsets/ancient/azalea_bookshelf");
         ShapedRecipeBuilder.shaped(RecipeCategory.MISC, BlossomTreesModule.woodSet.bookshelf)
                 .pattern("###")
                 .pattern("XXX")
@@ -428,7 +438,7 @@ public class QuarkRecipeProvider extends RecipeProvider implements IConditionBui
                 .define('B', Tags.Items.BOOKSHELVES)
                 .unlockedBy("test", PlayerTrigger.TriggerInstance.tick())
                 .save(recipeOutput.withConditions(zCond("variant_bookshelves")), "quark:building/crafting/bookshelves/lectern_with_variant_bookshelves");
-            //hedges (new 1.21 folder) (TODO: test output)
+            //hedges (new 1.21 folder) (NOTE: has some from World Category)
         i = 0;
         for(VanillaWoods.Wood wood : VanillaWoods.OVERWORLD_WITH_TREE) {
             Block hedge = HedgesModule.hedges.get(i);
@@ -449,14 +459,14 @@ public class QuarkRecipeProvider extends RecipeProvider implements IConditionBui
                 .define('L', Blocks.AZALEA_LEAVES)
                 .define('W', DataUtil.getLogTagFromLog(AzaleaWoodModule.woodSet.log))
                 .unlockedBy("test", PlayerTrigger.TriggerInstance.tick())
-                .save(recipeOutput.withConditions(and(zCond("azalea_wood"), zCond("hedges"))), "quark:building/crafting/hedges/azalea_hedge");
+                .save(recipeOutput.withConditions(and(zCond("azalea_wood"), zCond("hedges"))), "quark:world/crafting/woodsets/azalea/azalea_hedge");
         ShapedRecipeBuilder.shaped(RecipeCategory.BUILDING_BLOCKS, HedgesModule.hedges.get(9), 2)
                 .pattern("L")
                 .pattern("W")
                 .define('L', Blocks.FLOWERING_AZALEA_LEAVES)
                 .define('W', DataUtil.getLogTagFromLog(AzaleaWoodModule.woodSet.log))
                 .unlockedBy("test", PlayerTrigger.TriggerInstance.tick())
-                .save(recipeOutput.withConditions(and(zCond("azalea_wood"), zCond("hedges"))), "quark:building/crafting/hedges/flowering_azalea_hedge");
+                .save(recipeOutput.withConditions(and(zCond("azalea_wood"), zCond("hedges"))), "quark:world/crafting/woodsets/azalea/flowering_azalea_hedge");
         //azalea hedges, but azalea wood type is disabled
         ShapedRecipeBuilder.shaped(RecipeCategory.BUILDING_BLOCKS, HedgesModule.hedges.get(8), 2)
                 .pattern("L")
@@ -479,7 +489,7 @@ public class QuarkRecipeProvider extends RecipeProvider implements IConditionBui
                 .define('L', AncientWoodModule.ancient_leaves)
                 .define('W', DataUtil.getLogTagFromLog(AncientWoodModule.woodSet.log))
                 .unlockedBy("test", PlayerTrigger.TriggerInstance.tick())
-                .save(recipeOutput.withConditions(and(zCond("ancient_wood"), zCond("hedges"))), "quark:building/crafting/hedges/ancient_hedge");
+                .save(recipeOutput.withConditions(and(zCond("ancient_wood"), zCond("hedges"))), "quark:world/crafting/woodsets/ancient/ancient_hedge");
         //blossom hedges
         i = 10;
         for(BlossomTreesModule.BlossomTree tree : BlossomTreesModule.blossomTrees){
@@ -489,14 +499,49 @@ public class QuarkRecipeProvider extends RecipeProvider implements IConditionBui
                     .define('L', tree.leaves)
                     .define('W', DataUtil.getLogTagFromLog(BlossomTreesModule.woodSet.log))
                     .unlockedBy("test", PlayerTrigger.TriggerInstance.tick())
-                    .save(recipeOutput.withConditions(and(zCond("ancient_wood"), zCond("hedges"))), "quark:building/crafting/hedges/" + tree.name + "_hedge");
+                    .save(recipeOutput.withConditions(and(zCond("blossom_trees"), zCond("hedges"))), "quark:world/crafting/woodsets/blossom/" + tree.name + "_hedge");
+            i++;
+        }
+            //leafcarpet (new 1.21 folder) (NOTE: has some from World Category)
+        i = 0;
+        for(VanillaWoods.Wood wood : VanillaWoods.OVERWORLD_WITH_TREE){ //0-7
+            Block carpet = LeafCarpetModule.carpets.get(i);
+            i++;
+            ShapedRecipeBuilder.shaped(RecipeCategory.BUILDING_BLOCKS, carpet, 3)
+                    .pattern("##")
+                    .define('#', wood.leaf())
+                    .unlockedBy("test", PlayerTrigger.TriggerInstance.tick())
+                    .save(recipeOutput.withConditions(zCond("leaf_carpet")), "quark:building/crafting/leafcarpet/" + wood.name() + "_leaf_carpet");
+        }
+        ShapedRecipeBuilder.shaped(RecipeCategory.BUILDING_BLOCKS, LeafCarpetModule.carpets.get(8), 3)
+                .pattern("##")
+                .define('#', Blocks.AZALEA_LEAVES)
+                .unlockedBy("test", PlayerTrigger.TriggerInstance.tick())
+                .save(recipeOutput.withConditions(zCond("leaf_carpet")), "quark:building/crafting/leafcarpet/azalea_leaf_carpet");
+        ShapedRecipeBuilder.shaped(RecipeCategory.BUILDING_BLOCKS, LeafCarpetModule.carpets.get(8), 3)
+                .pattern("##")
+                .define('#', Blocks.FLOWERING_AZALEA_LEAVES)
+                .unlockedBy("test", PlayerTrigger.TriggerInstance.tick())
+                .save(recipeOutput.withConditions(zCond("leaf_carpet")), "quark:building/crafting/leafcarpet/flowering_azalea_leaf_carpet");
+        //ancient carpet
+        ShapedRecipeBuilder.shaped(RecipeCategory.BUILDING_BLOCKS, LeafCarpetModule.carpets.get(15), 3)
+                .pattern("##")
+                .define('#', AncientWoodModule.ancient_leaves)
+                .unlockedBy("test", PlayerTrigger.TriggerInstance.tick())
+                .save(recipeOutput.withConditions(and(zCond("ancient_wood"), zCond("leaf_carpet"))), "quark:world/crafting/woodsets/ancient/ancient_leaf_carpet");
+        //blossom carpet
+        i = 10;
+        for(BlossomTreesModule.BlossomTree tree : BlossomTreesModule.blossomTrees) {
+            ShapedRecipeBuilder.shaped(RecipeCategory.BUILDING_BLOCKS, LeafCarpetModule.carpets.get(i), 3)
+                    .pattern("##")
+                    .define('#', tree.leaves)
+                    .unlockedBy("test", PlayerTrigger.TriggerInstance.tick())
+                    .save(recipeOutput.withConditions(and(zCond("blossom_trees"), zCond("leaf_carpet"))), "quark:world/crafting/woodsets/blossom/" + tree.name + "_leaf_carpet");
+            i++;
         }
 
 
-
-            //leafcarpet (new 1.21 folder)
-
-            //posts (new 1.21 folder)
+            //posts (new 1.21 folder) (NOTE: has some from World Category)
         i = 0;
         for(VanillaWoods.Wood wood : VanillaWoods.ALL) {
             if(wood.name().equals("bamboo")) { //bamboo has no wood block
@@ -541,8 +586,11 @@ public class QuarkRecipeProvider extends RecipeProvider implements IConditionBui
                 i++;
             }
         }
-        for(WoodSetHandler.WoodSet set : DataUtil.QuarkWoodSets){
+        for(WoodSetHandler.WoodSet set : DataUtil.QuarkWorldWoodSets){
             ICondition cond = and(zCond("wooden_posts"), zCond(set.name + "_wood"));
+            if(set == BlossomTreesModule.woodSet){
+                cond = and(zCond("wooden_posts"), zCond("blossom_trees"));
+            }
 
             ShapedRecipeBuilder.shaped(RecipeCategory.BUILDING_BLOCKS, set.post, 8)
                     .pattern("F")
@@ -550,7 +598,7 @@ public class QuarkRecipeProvider extends RecipeProvider implements IConditionBui
                     .pattern("F")
                     .define('F', set.wood.asItem())
                     .unlockedBy("test", PlayerTrigger.TriggerInstance.tick())
-                    .save(recipeOutput.withConditions(cond), "quark:building/crafting/posts/" + set.name + "_post");
+                    .save(recipeOutput.withConditions(cond), "quark:world/crafting/woodsets/" + set.name + "/" + set.name + "_post");
 
             ShapedRecipeBuilder.shaped(RecipeCategory.BUILDING_BLOCKS, set.strippedPost, 8)
                     .pattern("F")
@@ -558,10 +606,44 @@ public class QuarkRecipeProvider extends RecipeProvider implements IConditionBui
                     .pattern("F")
                     .define('F', set.strippedWood.asItem())
                     .unlockedBy("test", PlayerTrigger.TriggerInstance.tick())
-                    .save(recipeOutput.withConditions(cond), "quark:building/crafting/posts/stripped_" + set.name + "_post");
+                    .save(recipeOutput.withConditions(cond), "quark:world/crafting/woodsets/" + set.name + "/stripped_" + set.name + "_post");
         }
-            //ladders (new 1.21 folder)
+            //ladders (new 1.21 folder) (NOTE: has some from World Category)
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, Blocks.LADDER, 4)
+                .pattern("# #")
+                .pattern("#W#")
+                .pattern("# #")
+                .define('#', Items.STICK)
+                .define('W', Blocks.OAK_PLANKS)
+                .unlockedBy("test", PlayerTrigger.TriggerInstance.tick())
+                .save(recipeOutput.withConditions(zCond("variant_ladders")), "quark:building/crafting/ladders/oak_ladder");
+        i = 0;
+        for(VanillaWoods.Wood wood : VanillaWoods.NON_OAK){
+            ShapedRecipeBuilder.shaped(RecipeCategory.MISC, DataUtil.getLadderFromPlank(wood.planks()), 4)
+                    .pattern("# #")
+                    .pattern("#W#")
+                    .pattern("# #")
+                    .define('#', Items.STICK)
+                    .define('W', wood.planks())
+                    .unlockedBy("test", PlayerTrigger.TriggerInstance.tick())
+                    .save(recipeOutput.withConditions(zCond("variant_ladders")), "quark:building/crafting/ladders/" + wood.name() + "_ladder");
+            i++;
+        }
+        for(WoodSetHandler.WoodSet set : DataUtil.QuarkWorldWoodSets){
+            ICondition cond = and(zCond("variant_ladders"), zCond(set.name + "_wood"));
+            if(set == BlossomTreesModule.woodSet){
+                cond = and(zCond("variant_ladders"), zCond("blossom_trees"));
+            }
 
+            ShapedRecipeBuilder.shaped(RecipeCategory.MISC, set.ladder, 4)
+                    .pattern("# #")
+                    .pattern("#W#")
+                    .pattern("# #")
+                    .define('#', Items.STICK)
+                    .define('W', set.planks)
+                    .unlockedBy("test", PlayerTrigger.TriggerInstance.tick())
+                    .save(recipeOutput.withConditions(cond), "quark:world/crafting/woodsets/" + set.name + "/" + set.name + "_ladder");
+        }
             //stools (new 1.21 folder)
         i = 0;
         for(DyeColor dye : MiscUtil.CREATIVE_COLOR_ORDER){
@@ -569,6 +651,44 @@ public class QuarkRecipeProvider extends RecipeProvider implements IConditionBui
             i++;
         }
             //misc building blocks, loose files in building/crafting (midori, raw metal bricks, rope, ironplate, paperwall/lantern, thatch)
+        ShapedRecipeBuilder.shaped(RecipeCategory.BUILDING_BLOCKS, IndustrialPaletteModule.blocks.get(3), 3)
+                .pattern("N N")
+                .pattern("NIN")
+                .pattern("N N")
+                .define('N', Tags.Items.NUGGETS_IRON)
+                .define('I', Tags.Items.INGOTS_IRON)
+                .unlockedBy("test", PlayerTrigger.TriggerInstance.tick())
+                .save(recipeOutput.withConditions(zCond("iron_ladder")), "quark:building/crafting/iron_ladder");
+        ShapedRecipeBuilder.shaped(RecipeCategory.BUILDING_BLOCKS, IndustrialPaletteModule.blocks.get(0), 24)
+                .pattern("###")
+                .pattern("# #")
+                .pattern("###")
+                .define('#', Tags.Items.INGOTS_IRON)
+                .unlockedBy("test", PlayerTrigger.TriggerInstance.tick())
+                .save(recipeOutput.withConditions(zCond("iron_plates")), "quark:building/crafting/iron_plate");
+        ShapedRecipeBuilder.shaped(RecipeCategory.BUILDING_BLOCKS, IndustrialPaletteModule.blocks.get(1), 24)
+                .pattern("###")
+                .pattern("#W#")
+                .pattern("###")
+                .define('#', Tags.Items.INGOTS_IRON)
+                .define('W', Tags.Items.BUCKETS_WATER)
+                .unlockedBy("test", PlayerTrigger.TriggerInstance.tick())
+                .save(recipeOutput.withConditions(zCond("iron_plates")), "quark:building/crafting/rusty_iron_plate");
+        ShapedRecipeBuilder.shaped(RecipeCategory.BUILDING_BLOCKS, IndustrialPaletteModule.blocks.get(1), 8)
+                .pattern("###")
+                .pattern("#W#")
+                .pattern("###")
+                .define('#', IndustrialPaletteModule.blocks.get(0))
+                .define('W', Tags.Items.BUCKETS_WATER)
+                .unlockedBy("test", PlayerTrigger.TriggerInstance.tick())
+                .save(recipeOutput.withConditions(zCond("iron_plates")), "quark:building/crafting/rusty_iron_plate_from_iron_plate");
+        ShapedRecipeBuilder.shaped(RecipeCategory.BUILDING_BLOCKS, IndustrialPaletteModule.blocks.get(2), 1)
+                .pattern("#")
+                .pattern("#")
+                .define('#', Quark.ZETA.variantRegistry.slabs.get(IndustrialPaletteModule.blocks.get(0)))
+                .unlockedBy("test", PlayerTrigger.TriggerInstance.tick())
+                .save(recipeOutput.withConditions(zCond("iron_plates")), "quark:building/crafting/iron_pillar");
+
         ShapedRecipeBuilder.shaped(RecipeCategory.BUILDING_BLOCKS, MoreBrickTypesModule.blocks.get(6), 4)
                 .pattern("C#")
                 .pattern("##")
@@ -596,12 +716,6 @@ public class QuarkRecipeProvider extends RecipeProvider implements IConditionBui
                 .define('#', Blocks.MUD_BRICK_SLAB)
                 .unlockedBy("test", PlayerTrigger.TriggerInstance.tick())
                 .save(recipeOutput.withConditions(zCond("more_mud_blocks")), "quark:building/crafting/carved_mud_bricks");
-        ShapedRecipeBuilder.shaped(RecipeCategory.BUILDING_BLOCKS, SoulSandstoneModule.blocks.get(1))
-                .pattern("#")
-                .pattern("#")
-                .define('#', Quark.ZETA.variantRegistry.slabs.get(SoulSandstoneModule.blocks.get(0)))
-                .unlockedBy("test", PlayerTrigger.TriggerInstance.tick())
-                .save(recipeOutput.withConditions(zCond("soul_sandstone")), "quark:building/crafting/chiseled_soul_sandstone");
 
         ShapedRecipeBuilder.shaped(RecipeCategory.BUILDING_BLOCKS, DuskboundBlocksModule.blocks.get(0), 16)
                 .pattern("PPP")

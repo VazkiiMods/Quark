@@ -1,31 +1,29 @@
 package org.violetmoon.quark.datagen;
 
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.tags.TagKey;
-import net.minecraft.world.InteractionHand;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
-import net.minecraft.world.item.context.UseOnContext;
-import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
-import net.neoforged.neoforge.common.ItemAbilities;
 import org.violetmoon.quark.base.Quark;
 import org.violetmoon.quark.base.handler.WoodSetHandler;
 import org.violetmoon.quark.base.util.CorundumColor;
+import org.violetmoon.quark.content.building.module.VariantChestsModule;
+import org.violetmoon.quark.content.building.module.VariantLaddersModule;
 import org.violetmoon.quark.content.world.module.AncientWoodModule;
 import org.violetmoon.quark.content.world.module.AzaleaWoodModule;
 import org.violetmoon.quark.content.world.module.BlossomTreesModule;
 
-import java.util.ArrayList;
 import java.util.List;
 
 
 public class DataUtil {
 
-    static List<WoodSetHandler.WoodSet> QuarkWoodSets = List.of(AzaleaWoodModule.woodSet, AncientWoodModule.woodSet, BlossomTreesModule.woodSet);
+    static List<WoodSetHandler.WoodSet> QuarkWorldWoodSets = List.of(AzaleaWoodModule.woodSet, AncientWoodModule.woodSet, BlossomTreesModule.woodSet);
 
     public static Block axeStrip(Block block){
         if(block == Blocks.OAK_WOOD){
@@ -81,6 +79,39 @@ public class DataUtil {
             default -> throw new IllegalStateException("Unexpected axe strip block: " + block);
         };
          */
+    }
+
+    public static Block getLadderFromPlank(Block planks){
+        //the variantLadders list is out of order for some reason, world ladders start at pos 0
+        String plankKey = BuiltInRegistries.BLOCK.getKey(planks).toString();
+        String plankType = plankKey.replace("minecraft:", "").replace("quark:","").replace("_planks", "");
+
+        for(Block ladder : VariantLaddersModule.variantLadders){
+            String ladderKey = BuiltInRegistries.BLOCK.getKey(ladder).toString();
+            String ladderType = ladderKey.replace("minecraft:", "").replace("quark:","").replace("_ladder", "");
+
+            if(ladderType.equals(plankType)){
+                return ladder;
+            }
+        }
+
+        return null;
+    }
+
+    public static Block getChestFromTrappedChest(Block trappedChest){
+        String trappedKey = BuiltInRegistries.BLOCK.getKey(trappedChest).toString();
+        String trappedType = trappedKey.replace("minecraft:", "").replace("quark:","").replace("trapped_", "").replace("_chest", "");
+
+        for(Block regular : VariantChestsModule.regularChests.values()){
+            String regularKey = BuiltInRegistries.BLOCK.getKey(regular).toString();
+            String regularType = regularKey.replace("minecraft:", "").replace("quark:","").replace("_chest", "");
+
+            if(trappedType.equals(regularType)){
+                return regular;
+            }
+        }
+
+        return null;
     }
 
     public static Item getDyeItemFromCorondumColor(CorundumColor corundumColor){
@@ -167,13 +198,13 @@ public class DataUtil {
             return ItemTags.CHERRY_LOGS;
         }
 
-        else if(standardLog == AncientWoodModule.woodSet.wood){
+        else if(standardLog == AncientWoodModule.woodSet.log){
             return Quark.asTagKey(Registries.ITEM, "ancient_logs");
         }
-        else if(standardLog == AzaleaWoodModule.woodSet.wood){
+        else if(standardLog == AzaleaWoodModule.woodSet.log){
             return Quark.asTagKey(Registries.ITEM, "azalea_logs");
         }
-        else if(standardLog == BlossomTreesModule.woodSet.wood){
+        else if(standardLog == BlossomTreesModule.woodSet.log){
             return Quark.asTagKey(Registries.ITEM, "blossom_logs");
         }
 
