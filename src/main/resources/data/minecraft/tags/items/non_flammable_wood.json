@@ -8,6 +8,9 @@
 	"quark:warped_post",
 	"quark:crimson_post",
 	"quark:warped_bookshelf",
-	"quark:crimson_bookshelf"
+	"quark:crimson_bookshelf",
+	"quark:ancient_button",
+	"quark:azalea_button",
+	"quark:blossom_button"
   ]
 }
