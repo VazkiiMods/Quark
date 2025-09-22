@@ -261,7 +261,47 @@ public class QuarkRecipeProvider extends RecipeProvider implements IConditionBui
         slabBuilder(RecipeCategory.BUILDING_BLOCKS, Quark.ZETA.variantRegistry.slabs.get(DuskboundBlocksModule.blocks.get(0)), Ingredient.of(DuskboundBlocksModule.blocks.get(0)))
                 .unlockedBy(getHasName(DuskboundBlocksModule.blocks.get(0)), has(DuskboundBlocksModule.blocks.get(0)))
                 .save(recipeOutput.withConditions(zCond("duskbound_blocks")), "quark:building/crafting/slabs/duskbound_slab");
-            //stairs
+                //shingles slabs
+        slabBuilder(RecipeCategory.BUILDING_BLOCKS, Quark.ZETA.variantRegistry.slabs.get(ShinglesModule.blocks.getFirst()), Ingredient.of(ShinglesModule.blocks.getFirst()))
+                .unlockedBy(getHasName(ShinglesModule.blocks.getFirst()), has(ShinglesModule.blocks.getFirst()))
+                .save(recipeOutput.withConditions(zCond("shingles")), "quark:building/crafting/slabs/shingles_slab");
+        for(DyeColor dyeColor : ShinglesModule.blockMap.keySet()){
+            slabBuilder(RecipeCategory.BUILDING_BLOCKS, Quark.ZETA.variantRegistry.slabs.get(ShinglesModule.blockMap.get(dyeColor)), Ingredient.of(ShinglesModule.blockMap.get(dyeColor).getBlock().asItem()))
+                    .unlockedBy(getHasName(ShinglesModule.blockMap.get(dyeColor).getBlock().asItem()), has(ShinglesModule.blockMap.get(dyeColor).getBlock().asItem()))
+                    .save(recipeOutput.withConditions(zCond("shingles")), "quark:building/crafting/slabs/" + dyeColor.getName() + "_shingles_slab");
+        }
+                //more bricks slabs
+        slabBuilder(RecipeCategory.BUILDING_BLOCKS, Quark.ZETA.variantRegistry.slabs.get(MoreBrickTypesModule.blocks.get(0)), Ingredient.of(MoreBrickTypesModule.blocks.get(0)))
+                .unlockedBy(getHasName(MoreBrickTypesModule.blocks.get(0)), has(MoreBrickTypesModule.blocks.get(0)))
+                .save(recipeOutput.withConditions(zCond("blue_nether_bricks")), "quark:building/crafting/slabs/blue_nether_bricks_slab");
+        slabBuilder(RecipeCategory.BUILDING_BLOCKS, Quark.ZETA.variantRegistry.slabs.get(MoreBrickTypesModule.blocks.get(1)), Ingredient.of(MoreBrickTypesModule.blocks.get(1)))
+                .unlockedBy(getHasName(MoreBrickTypesModule.blocks.get(1)), has(MoreBrickTypesModule.blocks.get(1)))
+                .save(recipeOutput.withConditions(zCond("sandstone_bricks")), "quark:building/crafting/slabs/sandstone_bricks_slab");
+        slabBuilder(RecipeCategory.BUILDING_BLOCKS, Quark.ZETA.variantRegistry.slabs.get(MoreBrickTypesModule.blocks.get(2)), Ingredient.of(MoreBrickTypesModule.blocks.get(2)))
+                .unlockedBy(getHasName(MoreBrickTypesModule.blocks.get(2)), has(MoreBrickTypesModule.blocks.get(2)))
+                .save(recipeOutput.withConditions(zCond("sandstone_bricks")), "quark:building/crafting/slabs/red_sandstone_bricks_slab");
+        slabBuilder(RecipeCategory.BUILDING_BLOCKS, Quark.ZETA.variantRegistry.slabs.get(MoreBrickTypesModule.blocks.get(3)), Ingredient.of(MoreBrickTypesModule.blocks.get(3)))
+                .unlockedBy(getHasName(MoreBrickTypesModule.blocks.get(3)), has(MoreBrickTypesModule.blocks.get(3)))
+                .save(recipeOutput.withConditions(and(zCond("soul_sandstone"), zCond("sandstone_bricks"))), "quark:building/crafting/slabs/soul_sandstone_bricks_slab");
+        slabBuilder(RecipeCategory.BUILDING_BLOCKS, Quark.ZETA.variantRegistry.slabs.get(MoreBrickTypesModule.blocks.get(4)), Ingredient.of(MoreBrickTypesModule.blocks.get(4)))
+                .unlockedBy(getHasName(MoreBrickTypesModule.blocks.get(4)), has(MoreBrickTypesModule.blocks.get(4)))
+                .save(recipeOutput.withConditions(zCond("cobblestone_bricks")), "quark:building/crafting/slabs/cobblestone_bricks_slab");
+        slabBuilder(RecipeCategory.BUILDING_BLOCKS, Quark.ZETA.variantRegistry.slabs.get(MoreBrickTypesModule.blocks.get(5)), Ingredient.of(MoreBrickTypesModule.blocks.get(5)))
+                .unlockedBy(getHasName(MoreBrickTypesModule.blocks.get(5)), has(MoreBrickTypesModule.blocks.get(5)))
+                .save(recipeOutput.withConditions(zCond("cobblestone_bricks")), "quark:building/crafting/slabs/mossy_cobblestone_bricks_slab");
+        slabBuilder(RecipeCategory.BUILDING_BLOCKS, Quark.ZETA.variantRegistry.slabs.get(MoreBrickTypesModule.blocks.get(6)), Ingredient.of(MoreBrickTypesModule.blocks.get(6)))
+                .unlockedBy(getHasName(MoreBrickTypesModule.blocks.get(6)), has(MoreBrickTypesModule.blocks.get(6)))
+                .save(recipeOutput.withConditions(zCond("blackstone_bricks")), "quark:building/crafting/slabs/blackstone_bricks_slab");
+        slabBuilder(RecipeCategory.BUILDING_BLOCKS, Quark.ZETA.variantRegistry.slabs.get(MoreBrickTypesModule.blocks.get(7)), Ingredient.of(MoreBrickTypesModule.blocks.get(7)))
+                .unlockedBy(getHasName(MoreBrickTypesModule.blocks.get(7)), has(MoreBrickTypesModule.blocks.get(7)))
+                .save(recipeOutput.withConditions(zCond("dirt_bricks")), "quark:building/crafting/slabs/dirt_bricks_slab");
+        slabBuilder(RecipeCategory.BUILDING_BLOCKS, Quark.ZETA.variantRegistry.slabs.get(MoreBrickTypesModule.blocks.get(8)), Ingredient.of(MoreBrickTypesModule.blocks.get(8)))
+                .unlockedBy(getHasName(MoreBrickTypesModule.blocks.get(8)), has(MoreBrickTypesModule.blocks.get(8)))
+                .save(recipeOutput.withConditions(zCond("netherrack_bricks")), "quark:building/crafting/slabs/netherrack_bricks_slab");
+        
+
+
+        //stairs
         stairBuilder(Quark.ZETA.variantRegistry.stairs.get(DuskboundBlocksModule.blocks.get(0)), Ingredient.of(DuskboundBlocksModule.blocks.get(0)))
                 .unlockedBy(getHasName(DuskboundBlocksModule.blocks.get(0)), has(DuskboundBlocksModule.blocks.get(0)))
                 .save(recipeOutput.withConditions(zCond("duskbound_blocks")), "quark:building/crafting/stairs/duskbound_stairs");
@@ -363,9 +403,8 @@ public class QuarkRecipeProvider extends RecipeProvider implements IConditionBui
                 } else if (base.getDescriptionId().contains("sandstone_bricks")) {
                     condition = zCond("sandstone_bricks");
                 } else if (base.getDescriptionId().contains("soul_sandstone")) {
-                    condition = zCond("soul_sandstone");
+                    condition = and(zCond("soul_sandstone"), zCond("sandstone_bricks"));
                 }
-                //should soul sandstone bricks be sandstone_bricks and soul_sandstone? they aren't in 1.20.
                 else if (base.getDescriptionId().contains("tuff")) {
                     condition = zCond("tuff");
                 } else if (base.getDescriptionId().contains("tuff")) {
