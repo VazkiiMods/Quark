@@ -298,8 +298,28 @@ public class QuarkRecipeProvider extends RecipeProvider implements IConditionBui
         slabBuilder(RecipeCategory.BUILDING_BLOCKS, Quark.ZETA.variantRegistry.slabs.get(MoreBrickTypesModule.blocks.get(8)), Ingredient.of(MoreBrickTypesModule.blocks.get(8)))
                 .unlockedBy(getHasName(MoreBrickTypesModule.blocks.get(8)), has(MoreBrickTypesModule.blocks.get(8)))
                 .save(recipeOutput.withConditions(zCond("netherrack_bricks")), "quark:building/crafting/slabs/netherrack_bricks_slab");
-        
-
+                //soul sandstone slabs
+        slabBuilder(RecipeCategory.BUILDING_BLOCKS, Quark.ZETA.variantRegistry.slabs.get(SoulSandstoneModule.blocks.get(0)), Ingredient.of(SoulSandstoneModule.blocks.get(0)))
+                .unlockedBy(getHasName(SoulSandstoneModule.blocks.get(0)), has(SoulSandstoneModule.blocks.get(0)))
+                //chiseled soul sandstone has no slab variant.
+                .save(recipeOutput.withConditions(zCond("soul_sandstone")), "quark:building/crafting/slabs/soul_sandstone_slab");
+        slabBuilder(RecipeCategory.BUILDING_BLOCKS, Quark.ZETA.variantRegistry.slabs.get(SoulSandstoneModule.blocks.get(2)), Ingredient.of(SoulSandstoneModule.blocks.get(2)))
+                .unlockedBy(getHasName(SoulSandstoneModule.blocks.get(2)), has(SoulSandstoneModule.blocks.get(2)))
+                .save(recipeOutput.withConditions(zCond("soul_sandstone")), "quark:building/crafting/slabs/cut_soul_sandstone_slab");
+        slabBuilder(RecipeCategory.BUILDING_BLOCKS, Quark.ZETA.variantRegistry.slabs.get(SoulSandstoneModule.blocks.get(3)), Ingredient.of(SoulSandstoneModule.blocks.get(3)))
+                .unlockedBy(getHasName(SoulSandstoneModule.blocks.get(3)), has(SoulSandstoneModule.blocks.get(3)))
+                .save(recipeOutput.withConditions(zCond("soul_sandstone")), "quark:building/crafting/slabs/smooth_soul_sandstone_slab");
+                //raw ore bricks slabs
+        slabBuilder(RecipeCategory.BUILDING_BLOCKS, Quark.ZETA.variantRegistry.slabs.get(RawMetalBricksModule.blocks.get(0)), Ingredient.of(MoreBrickTypesModule.blocks.get(0)))
+                .unlockedBy(getHasName(MoreBrickTypesModule.blocks.get(0)), has(MoreBrickTypesModule.blocks.get(0)))
+                .save(recipeOutput.withConditions(zCond("raw_metal_bricks")), "quark:building/crafting/slabs/raw_iron_bricks_slab");
+        slabBuilder(RecipeCategory.BUILDING_BLOCKS, Quark.ZETA.variantRegistry.slabs.get(RawMetalBricksModule.blocks.get(1)), Ingredient.of(MoreBrickTypesModule.blocks.get(1)))
+                .unlockedBy(getHasName(MoreBrickTypesModule.blocks.get(1)), has(MoreBrickTypesModule.blocks.get(1)))
+                .save(recipeOutput.withConditions(zCond("raw_metal_bricks")), "quark:building/crafting/slabs/raw_gold_bricks_slab");
+        slabBuilder(RecipeCategory.BUILDING_BLOCKS, Quark.ZETA.variantRegistry.slabs.get(RawMetalBricksModule.blocks.get(2)), Ingredient.of(MoreBrickTypesModule.blocks.get(2)))
+                .unlockedBy(getHasName(MoreBrickTypesModule.blocks.get(2)), has(MoreBrickTypesModule.blocks.get(2)))
+                .save(recipeOutput.withConditions(zCond("raw_metal_bricks")), "quark:building/crafting/slabs/raw_copper_bricks_slab");
+                //TODO more stone variants slabs here
 
         //stairs
         stairBuilder(Quark.ZETA.variantRegistry.stairs.get(DuskboundBlocksModule.blocks.get(0)), Ingredient.of(DuskboundBlocksModule.blocks.get(0)))
@@ -352,15 +372,11 @@ public class QuarkRecipeProvider extends RecipeProvider implements IConditionBui
 
             //detect World walls
             if(base.getDescriptionId().contains("limestone") || base.getDescriptionId().contains("jasper") || base.getDescriptionId().contains("shale") ||
-                    base.getDescriptionId().contains("myalite") || base.getDescriptionId().contains("myalite") ||base.getDescriptionId().contains("permafrost") ||
-                    base.getDescriptionId().contains("andesite") || base.getDescriptionId().contains("diorite") ||base.getDescriptionId().contains("granite")){
+                    base.getDescriptionId().contains("myalite") || base.getDescriptionId().contains("myalite") ||base.getDescriptionId().contains("permafrost")){
 
                 dir = "quark:world/crafting/walls/";
-                if(base.getDescriptionId().contains("andesite") || base.getDescriptionId().contains("diorite") ||base.getDescriptionId().contains("granite")){
-                    condition = zCond("more_stone_variants");
-                }
-                else if(base.getDescriptionId().contains("jasper")){
-                    condition = zCond("limestone");
+                if(base.getDescriptionId().contains("jasper")){
+                    condition = zCond("jasper");
                 }
                 else if(base.getDescriptionId().contains("limestone")){
                     condition = zCond("limestone");
