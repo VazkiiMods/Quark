@@ -223,22 +223,6 @@ public class ColorRunesModule extends ZetaModule {
         }
     }
 
-	public static void appendRuneText(ItemStack stack, List<Component> components, Component upgradeTitle) {
-		RuneColor color = getAppliedStackColor(stack);
-		if (color != null) {
-			if (!components.contains(upgradeTitle))
-				components.add(upgradeTitle);
-
-			MutableComponent baseComponent = Component.translatable("rune.quark." + color.getName());
-
-			if (color == RuneColor.RAINBOW)
-				components.add(CommonComponents.space().append(extremeRainbow(baseComponent)));
-			else
-				components.add(CommonComponents.space().append(baseComponent
-						.withStyle((style) -> style.withColor(color.getTextColor()))));
-		}
-	}
-
 	@ZetaLoadModule(clientReplacement = true)
 	public static class Client extends ColorRunesModule {
 
@@ -274,6 +258,5 @@ public class ColorRunesModule extends ZetaModule {
 			RuneColor color = changeColor();
 			return color != null ? map.get(color) : vanilla.get();
 		}
-
 	}
 }
