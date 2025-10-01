@@ -106,7 +106,6 @@ public class CrabsModule extends ZetaModule {
 		crab_shell = new ZetaItem("crab_shell", this, new Item.Properties())
 				.setCondition(() -> enableBrewing).setCreativeTab(CreativeModeTabs.INGREDIENTS, Items.RABBIT_FOOT, false);
 
-		crab_bucket = new ZetaMobBucketItem(crabType, Fluids.WATER, QuarkSounds.BUCKET_EMPTY_CRAB, "crab_bucket", this);
 
 		resilience = new ZetaEffect(Quark.ZETA, "resilience", MobEffectCategory.BENEFICIAL, 0x5b1a04);
 		resilience.addAttributeModifier(Attributes.KNOCKBACK_RESISTANCE, Quark.asResource("resilience_knockback_resistance"), 0.5, AttributeModifier.Operation.ADD_VALUE);
@@ -118,8 +117,9 @@ public class CrabsModule extends ZetaModule {
 				.clientTrackingRange(8)
 				.build("crab");
 		Quark.ZETA.registry.register(crabType, "crab", Registries.ENTITY_TYPE);
+        crab_bucket = new ZetaMobBucketItem(crabType, Fluids.WATER, QuarkSounds.BUCKET_EMPTY_CRAB, "crab_bucket", this);
 
-		Quark.ZETA.entitySpawn.registerSpawn(crabType, MobCategory.CREATURE, SpawnPlacementTypes.ON_GROUND, Types.MOTION_BLOCKING_NO_LEAVES, Crab::spawnPredicate, spawnConfig);
+        Quark.ZETA.entitySpawn.registerSpawn(crabType, MobCategory.CREATURE, SpawnPlacementTypes.ON_GROUND, Types.MOTION_BLOCKING_NO_LEAVES, Crab::spawnPredicate, spawnConfig);
 		Quark.ZETA.entitySpawn.addEgg(this, crabType, 0x893c22, 0x916548, spawnConfig);
 
 		event.getAdvancementModifierRegistry().addModifier(new FuriousCocktailModifier(this, () -> enableBrewing, Set.of(Holder.direct(resilience)))

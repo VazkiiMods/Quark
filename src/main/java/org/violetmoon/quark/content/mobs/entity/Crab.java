@@ -221,9 +221,9 @@ public class Crab extends Animal implements IEntityWithComplexSpawn, Bucketable 
 
 				for(int[] aint1 : aint) {
 					mutPos.set(blockpos.getX() + aint1[0] * scale, blockpos.getY(), blockpos.getZ() + aint1[1] * scale);
-					double d0 = this.level().getBlockFloorHeight(mutPos);
-					if(DismountHelper.isBlockFloorValid(d0)) {
-						Vec3 vec3 = Vec3.upFromBottomCenterOf(mutPos, d0);
+					double blockFloorHeight = this.level().getBlockFloorHeight(mutPos);
+					if(DismountHelper.isBlockFloorValid(blockFloorHeight)) {
+						Vec3 vec3 = Vec3.upFromBottomCenterOf(mutPos, blockFloorHeight);
 						if(DismountHelper.canDismountTo(this.level(), entity, aabb.move(vec3))) {
 							entity.setPose(pose);
 							return vec3;
