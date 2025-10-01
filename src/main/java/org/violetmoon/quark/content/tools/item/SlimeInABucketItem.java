@@ -33,6 +33,8 @@ import org.violetmoon.zeta.module.ZetaModule;
 import org.violetmoon.zeta.registry.CreativeTabManager;
 import org.violetmoon.zeta.util.ItemNBTHelper;
 
+import java.util.UUID;
+
 public class SlimeInABucketItem extends ZetaItem {
 
 	public static final String TAG_ENTITY_DATA = "slime_nbt";
@@ -64,18 +66,18 @@ public class SlimeInABucketItem extends ZetaItem {
 	public InteractionResult useOn(UseOnContext context) {
 		BlockPos pos = context.getClickedPos();
 		Direction facing = context.getClickedFace();
-		Level worldIn = context.getLevel();
-		Player playerIn = context.getPlayer();
+		Level level = context.getLevel();
+		Player player = context.getPlayer();
 		InteractionHand hand = context.getHand();
 
 		double x = pos.getX() + 0.5 + facing.getStepX();
 		double y = pos.getY() + 0.5 + facing.getStepY();
 		double z = pos.getZ() + 0.5 + facing.getStepZ();
 
-		if(!worldIn.isClientSide) {
-			Slime slime = new Slime(EntityType.SLIME, worldIn);
+		if(!level.isClientSide) {
+			Slime slime = new Slime(EntityType.SLIME, level);
 
-			CompoundTag data = ItemNBTHelper.getCompound(playerIn.getItemInHand(hand), TAG_ENTITY_DATA, true);
+			CompoundTag data = ItemNBTHelper.getCompound(player.getItemInHand(hand), TAG_ENTITY_DATA, true);
 			if(data != null)
 				slime.load(data);
 			else {
@@ -85,18 +87,20 @@ public class SlimeInABucketItem extends ZetaItem {
 			}
 
 			slime.setPos(x, y, z);
+            if (player.getAbilities().instabuild)
+                slime.setUUID(UUID.randomUUID());
 
-			worldIn.gameEvent(playerIn, GameEvent.ENTITY_PLACE, slime.position());
-			worldIn.addFreshEntity(slime);
-			playerIn.swing(hand);
+			level.gameEvent(player, GameEvent.ENTITY_PLACE, slime.position());
+            level.addFreshEntity(slime);
+			player.swing(hand);
 		}
 
-		worldIn.playSound(playerIn, pos, SoundEvents.BUCKET_EMPTY, SoundSource.NEUTRAL, 1.0F, 1.0F);
+		level.playSound(player, pos, SoundEvents.BUCKET_EMPTY, SoundSource.NEUTRAL, 1.0F, 1.0F);
 
-		if(!playerIn.getAbilities().instabuild)
-			playerIn.setItemInHand(hand, new ItemStack(Items.BUCKET));
+		if(!player.getAbilities().instabuild)
+			player.setItemInHand(hand, new ItemStack(Items.BUCKET));
 
-		return InteractionResult.sidedSuccess(worldIn.isClientSide);
+		return InteractionResult.sidedSuccess(level.isClientSide);
 	}
 
 	@NotNull
