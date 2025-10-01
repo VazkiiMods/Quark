@@ -25,6 +25,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import org.violetmoon.quark.content.client.hax.PseudoAccessorItemStack;
 import org.violetmoon.quark.content.client.resources.AttributeSlot;
 import org.violetmoon.quark.content.tools.module.AncientTomesModule;
+import org.violetmoon.quark.content.tools.module.ColorRunesModule;
 import org.violetmoon.quark.content.tweaks.module.GoldToolsHaveFortuneModule;
 
 import java.util.HashMap;
@@ -61,6 +62,14 @@ public abstract class ItemStackMixin implements PseudoAccessorItemStack {
 	private void overwriteTooltip(Item.TooltipContext context, Player player, TooltipFlag flag, CallbackInfoReturnable<List<Component>> cir) {
 		GoldToolsHaveFortuneModule.modifyTooltip((ItemStack) (Object) this, cir.getReturnValue(), context.registries());
 	}
+
+    @Inject(method = "getTooltipLines", at = @At(value = "INVOKE",
+            target = "Lnet/minecraft/world/item/ItemStack;addToTooltip(Lnet/minecraft/core/component/DataComponentType;Lnet/minecraft/world/item/Item$TooltipContext;Ljava/util/function/Consumer;Lnet/minecraft/world/item/TooltipFlag;)V",
+            ordinal = 2))
+    private void addRuneTooltip(Item.TooltipContext tooltipContext, Player player, TooltipFlag tooltipFlag, CallbackInfoReturnable<List<Component>> cir,
+                                @Local List<Component> list) {
+        ColorRunesModule.appendRuneTooltip((ItemStack) ((Object) this), list);
+    }
 
 	@Override
 	public Map<AttributeSlot, Multimap<Attribute, AttributeModifier>> quark$getCapturedAttributes() {

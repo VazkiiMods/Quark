@@ -17,11 +17,11 @@ import net.minecraft.world.entity.projectile.ThrownTrident;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.item.armortrim.ArmorTrim;
 import net.minecraft.world.level.storage.loot.BuiltInLootTables;
 import net.minecraft.world.level.storage.loot.entries.LootItem;
 import net.minecraft.world.level.storage.loot.entries.LootPoolEntryContainer;
 import org.jetbrains.annotations.Nullable;
-import org.violetmoon.quark.api.IRuneColorProvider;
 import org.violetmoon.quark.base.Quark;
 import org.violetmoon.quark.base.components.QuarkDataComponents;
 import org.violetmoon.quark.base.network.message.UpdateTridentMessage;
@@ -30,6 +30,7 @@ import org.violetmoon.quark.content.tools.client.render.GlintRenderTypes;
 import org.violetmoon.quark.content.tools.item.RuneItem;
 import org.violetmoon.quark.content.tools.recipe.SmithingRuneRecipe;
 import org.violetmoon.quark.mixin.mixins.accessor.AccessorAbstractArrow;
+import org.violetmoon.quark.mixin.mixins.accessor.AccessorArmorTrim;
 import org.violetmoon.zeta.advancement.ManualTrigger;
 import org.violetmoon.zeta.config.Config;
 import org.violetmoon.zeta.event.bus.LoadEvent;
@@ -201,6 +202,26 @@ public class ColorRunesModule extends ZetaModule {
 		return component.withStyle((s) -> s.withColor(
 			TextColor.fromRgb(Mth.hsvToRgb((time + shift) * 2 % 360 / 360F, 1F, 1F))));
 	}
+
+    public static void appendRuneTooltip(ItemStack stack, List<Component> components) {
+        ArmorTrim component = stack.get(DataComponents.TRIM);
+
+        if (component != null && ((AccessorArmorTrim) component).showInTooltip()) {
+            RuneColor color = ColorRunesModule.getAppliedStackColor(stack);
+            if (color != null) {
+                if (!components.contains(AccessorArmorTrim.getUPGRADE_TITLE())) {
+                    components.add(AccessorArmorTrim.getUPGRADE_TITLE());
+                }
+
+                MutableComponent baseComponent = Component.translatable("rune.quark." + color.getName());
+                if (color == RuneColor.RAINBOW) {
+                    components.add(CommonComponents.space().append(ColorRunesModule.extremeRainbow(baseComponent)));
+                } else {
+                    components.add(CommonComponents.space().append(baseComponent.withStyle((style) -> style.withColor(color.getTextColor()))));
+                }
+            }
+        }
+    }
 
 	public static void appendRuneText(ItemStack stack, List<Component> components, Component upgradeTitle) {
 		RuneColor color = getAppliedStackColor(stack);
