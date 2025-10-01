@@ -1,14 +1,14 @@
 {
-    "parent": "item/generated",
-    "textures": { 
-        "layer0": "quark:item/pathfinders_quill"
-    },
-    "overrides": [
-        {
-            "predicate": {
-                "has_biome": 1
-            },
-            "model": "quark:item/pathfinders_quill_with_biome"
-        }
-    ]
+  "parent": "item/generated",
+  "textures": {
+    "layer0": "quark:item/pathfinders_quill"
+  },
+  "overrides": [
+    {
+      "model": "quark:item/pathfinders_quill_with_biome",
+      "predicate": {
+        "quark:has_biome": 1
+      }
+    }
+  ]
 }

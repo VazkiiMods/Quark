@@ -1,11 +1,7 @@
 package org.violetmoon.quark.content.tools.item;
 
 import net.minecraft.ChatFormatting;
-import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
-import net.minecraft.core.GlobalPos;
-import net.minecraft.core.Holder;
-import net.minecraft.core.QuartPos;
+import net.minecraft.core.*;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
@@ -20,12 +16,7 @@ import net.minecraft.world.InteractionResult;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.CreativeModeTabs;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
-import net.minecraft.world.item.MapItem;
-import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.item.*;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.biome.BiomeSource;
@@ -47,27 +38,18 @@ import org.violetmoon.zeta.item.ZetaItem;
 import org.violetmoon.zeta.module.ZetaModule;
 import org.violetmoon.zeta.registry.CreativeTabManager;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 public class PathfindersQuillItem extends ZetaItem implements CreativeTabManager.AppendsUniquely {
 
-	private static final Direction[] DIRECTIONS = new Direction[] { Direction.EAST, Direction.SOUTH, Direction.WEST, Direction.NORTH };
-
-	protected static final String TAG_POS_X = "searchPosX";
-	protected static final String TAG_POS_Z = "searchPosZ";
-	protected static final String TAG_POS_LEG = "searchPosLeg";
-	protected static final String TAG_POS_LEG_INDEX = "searchPosLegIndex";
+    private static final Direction[] DIRECTIONS = new Direction[] {Direction.EAST, Direction.SOUTH, Direction.WEST, Direction.NORTH};
 
 	public PathfindersQuillItem(ZetaModule module, Item.Properties properties) {
 		super("pathfinders_quill", module, properties);
-		CreativeTabManager.addToCreativeTabNextTo(CreativeModeTabs.TOOLS_AND_UTILITIES, this, Items.MAP, false);
+        CreativeTabManager.addToCreativeTabNextTo(CreativeModeTabs.TOOLS_AND_UTILITIES, this, Items.MAP, false);
 	}
 
 	public PathfindersQuillItem(ZetaModule module) {
@@ -355,7 +337,6 @@ public class PathfindersQuillItem extends ZetaItem implements CreativeTabManager
 	public ItemStack createMap(ServerLevel level, BlockPos targetPos, ResourceLocation target, ItemStack original) {
 		int color = getOverlayColor(original);
 		Component biomeComponent = Component.translatable("biome." + target.getNamespace() + "." + target.getPath());
-
 		ItemStack stack = MapItem.create(level, targetPos.getX(), targetPos.getZ(), (byte) 2, true, true);
 
 		MapItem.renderBiomePreviewMap(level, stack);
@@ -390,27 +371,26 @@ public class PathfindersQuillItem extends ZetaItem implements CreativeTabManager
 		}
 
 		if(!generatedWeald &&
-				Quark.ZETA.modules.isEnabled(StonelingsModule.class) &&
-				Quark.ZETA.modules.isEnabled(GlimmeringWealdModule.class) &&
-				StonelingsModule.wealdPathfinderMaps) {
+                Quark.ZETA.modules.isEnabled(StonelingsModule.class) &&
+                Quark.ZETA.modules.isEnabled(GlimmeringWealdModule.class) &&
+                StonelingsModule.wealdPathfinderMaps) {
 
 			items.add(forBiome(GlimmeringWealdModule.BIOME_NAME.toString(), 0x317546));
 		}
-
 		return items;
 	}
 
 	@Override
 	@OnlyIn(Dist.CLIENT)
-	public void appendHoverText(ItemStack stack, TooltipContext p_339594_, List<Component> comps, TooltipFlag flags) {
+	public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> components, TooltipFlag flags) {
 		ResourceLocation biome = this.getTarget(stack);
 		if(biome != null) {
 			if(Optional.ofNullable(stack.get(QuarkDataComponents.IS_SEARCHING)).orElse(false))
-				comps.add(getSearchingComponent().withStyle(ChatFormatting.BLUE));
+				components.add(getSearchingComponent().withStyle(ChatFormatting.BLUE));
 
-			comps.add(Component.translatable("biome." + biome.getNamespace() + "." + biome.getPath()).withStyle(ChatFormatting.GRAY));
+			components.add(Component.translatable("biome." + biome.getNamespace() + "." + biome.getPath()).withStyle(ChatFormatting.GRAY));
 		} else
-			comps.add(Component.translatable("quark.misc.quill_blank").withStyle(ChatFormatting.GRAY));
+			components.add(Component.translatable("quark.misc.quill_blank").withStyle(ChatFormatting.GRAY));
 	}
 
 	//new concurrent search stuff. Experimental
