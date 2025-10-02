@@ -123,7 +123,7 @@ dependencies {
 
     //implementation(jarJar("net.createmod.ponder:Ponder-NeoForge-${config.mc_version}:${deps.ponder}")) { transitive = false }
 
-    implementation files ("localjars/Zeta-1.0-30.jar")
+    implementation files ("localjars/Zeta-1.1-1.jar")
     compileOnly "com.github.glitchfiend:TerraBlender-neoforge:${deps.terrablender}"
     // compile against the JEI API but do not include it at runtime
     compileOnly("mezz.jei:jei-${config.mc_version}-neoforge-api:${deps.jei_version}")
