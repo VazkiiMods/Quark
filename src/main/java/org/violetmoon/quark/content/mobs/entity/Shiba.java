@@ -145,12 +145,12 @@ public class Shiba extends TamableAnimal {
 	}
 
 	public boolean hasLineOfSight(BlockPos pos, double maxRange) {
-		Vec3 vec3 = new Vec3(this.getX(), this.getEyeY(), this.getZ());
-		Vec3 vec31 = new Vec3(pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5);
-		if(vec31.distanceTo(vec3) > maxRange) {
+		Vec3 currentPos = new Vec3(this.getX(), this.getEyeY(), this.getZ());
+		Vec3 targetPos = new Vec3(pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5);
+		if(targetPos.distanceTo(currentPos) > maxRange) {
 			return false;
 		} else {
-			return this.level().clip(new ClipContext(vec3, vec31, ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, this)).getType() == HitResult.Type.MISS;
+			return this.level().clip(new ClipContext(currentPos, targetPos, ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, this)).getType() == HitResult.Type.MISS;
 		}
 	}
 

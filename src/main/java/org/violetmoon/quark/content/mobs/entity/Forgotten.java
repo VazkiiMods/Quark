@@ -120,7 +120,7 @@ public class Forgotten extends Skeleton {
 		return FORGOTTEN_LOOT_TABLE;
 	}
 
-	@Override
+    @Override
 	public void addAdditionalSaveData(@NotNull CompoundTag compound) {
 		super.addAdditionalSaveData(compound);
 
@@ -135,11 +135,6 @@ public class Forgotten extends Skeleton {
 
 		CompoundTag sheathed = compound.getCompound("sheathed");
 		entityData.set(SHEATHED_ITEM, ItemStack.parseOptional(level().registryAccess(), sheathed));
-	}
-
-	@Override
-	public double getEyeY() {
-		return 2.1D;
 	}
 
 	@Override
