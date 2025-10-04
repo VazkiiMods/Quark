@@ -341,7 +341,47 @@ public class QuarkRecipeProvider extends RecipeProvider implements IConditionBui
                 .save(recipeOutput.withConditions(zCond("dripstone")), "quark:building/crafting/stonevariants/polished_dripstone");
         //no polished tuff/tuff bricks, they are vanilla now
 
-            //vertplanks
+            //vertplanks (world category vertplanks next)
+        int i = 0;
+        for(VanillaWoods.Wood type : VanillaWoods.ALL){
+            ShapedRecipeBuilder.shaped(RecipeCategory.BUILDING_BLOCKS, VerticalPlanksModule.blocks.get(i), 3)
+                    .pattern("#")
+                    .pattern("#")
+                    .pattern("#")
+                    .define('#', type.planks())
+                    .unlockedBy("obtained_planks", InventoryChangeTrigger.TriggerInstance.hasItems(type.planks()))
+                    .save(recipeOutput.withConditions(zCond("vertical_planks")), "quark:building/crafting/vertplanks/vertical_" + type.name() + "_planks");
+
+            ShapelessRecipeBuilder.shapeless(RecipeCategory.BUILDING_BLOCKS, type.planks())
+                    .requires(VerticalPlanksModule.blocks.get(i))
+                    .unlockedBy("obtained_vertical_planks", InventoryChangeTrigger.TriggerInstance.hasItems(VerticalPlanksModule.blocks.get(i)))
+                    .save(recipeOutput.withConditions(zCond("vertical_planks")), "quark:building/crafting/vertplanks/vertical_" + type.name() + "_planks_revert");
+            i++;
+        }
+
+        i = 0;
+        //WORLD category vertplanks
+        for(WoodSetHandler.WoodSet set : DataUtil.QuarkWorldWoodSets){
+            ICondition cond = and(zCond("vertical_planks"), zCond(set.name + "_wood"));
+            if(set == BlossomTreesModule.woodSet){
+                cond = and(zCond("vertical_planks"), zCond("blossom_trees"));
+            }
+
+            ShapedRecipeBuilder.shaped(RecipeCategory.BUILDING_BLOCKS, VerticalPlanksModule.blocks.get(i), 3)
+                    .pattern("#")
+                    .pattern("#")
+                    .pattern("#")
+                    .define('#', set.planks)
+                    .unlockedBy("obtained_planks", InventoryChangeTrigger.TriggerInstance.hasItems(set.planks))
+                    .save(recipeOutput.withConditions(cond), "quark:world/crafting/woodsets/" + set.name + "/vertical_" + set.name + "_planks");
+
+            ShapelessRecipeBuilder.shapeless(RecipeCategory.BUILDING_BLOCKS, set.planks)
+                    .requires(VerticalPlanksModule.blocks.get(i))
+                    .unlockedBy("obtained_vertical_planks", InventoryChangeTrigger.TriggerInstance.hasItems(VerticalPlanksModule.blocks.get(i)))
+                    .save(recipeOutput.withConditions(cond), "quark:world/crafting/woodsets/" + set.name + "/vertical_" + set.name + "_planks_revert");
+            i++;
+        }
+
 
             //vertslabs
         for(Block slab : VerticalSlabsModule.blocks.keySet()) {
@@ -352,6 +392,9 @@ public class QuarkRecipeProvider extends RecipeProvider implements IConditionBui
             }
             else if(slab.getDescriptionId().contains("azalea")){
                 condition = and(zCond("vertical_slabs"), zCond("azalea_wood"));
+            }
+            else if(slab.getDescriptionId().contains("blossom")){
+                condition = and(zCond("vertical_slabs"), zCond("blossom_trees"));
             }
 
             //probably more config-dependent vert slabs
@@ -446,7 +489,7 @@ public class QuarkRecipeProvider extends RecipeProvider implements IConditionBui
                 .unlockedBy("test", PlayerTrigger.TriggerInstance.tick())
                 .save(recipeOutput.withConditions(zCond("variant_bookshelves")), "quark:building/crafting/bookshelves/oak_bookshelf");
         //vanilla wood variant bookshelves
-        int i = 0;
+        i = 0;
         for(VanillaWoods.Wood type : VanillaWoods.NON_OAK){ //SPRUCE, BIRCH, JUNGLE, ACACIA, DARK_OAK, CRIMSON, WARPED, MANGROVE, BAMBOO, CHERRY
             String name = type.name();
             Block plank = type.planks();
