@@ -369,15 +369,15 @@ public class Crab extends Animal implements IEntityWithComplexSpawn, Bucketable 
 
 			var healthAttr = this.getAttribute(Attributes.MAX_HEALTH);
 			if(healthAttr != null)
-				healthAttr.addPermanentModifier(new AttributeModifier(Quark.asResource("Lightning Bonus"), 0.5, Operation.ADD_VALUE));
+				healthAttr.addPermanentModifier(new AttributeModifier(Quark.asResource("lightning_bonus"), 0.5, Operation.ADD_VALUE));
 
 			var speedAttr = this.getAttribute(Attributes.MOVEMENT_SPEED);
 			if(speedAttr != null)
-				speedAttr.addPermanentModifier(new AttributeModifier(Quark.asResource("Lightning Debuff"), -0.05, Operation.ADD_VALUE));
+				speedAttr.addPermanentModifier(new AttributeModifier(Quark.asResource("lightning_debuff"), -0.05, Operation.ADD_VALUE));
 
 			var armorAttr = this.getAttribute(Attributes.ARMOR);
 			if(armorAttr != null)
-				armorAttr.addPermanentModifier(new AttributeModifier(Quark.asResource("Lightning Bonus"), 0.125, Operation.ADD_VALUE));
+				armorAttr.addPermanentModifier(new AttributeModifier(Quark.asResource("lightning_bonus"), 0.125, Operation.ADD_VALUE));
 
 			float sizeModifier = Math.min(sizeMod + 1, 16);
 			this.entityData.set(SIZE_MODIFIER, sizeModifier);

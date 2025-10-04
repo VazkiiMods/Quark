@@ -19,6 +19,7 @@ import org.jetbrains.annotations.Nullable;
 
 import org.violetmoon.quark.base.Quark;
 import org.violetmoon.quark.base.QuarkClient;
+import org.violetmoon.quark.base.components.QuarkDataComponents;
 import org.violetmoon.quark.content.mobs.entity.Crab;
 import org.violetmoon.quark.content.mobs.module.CrabsModule;
 import org.violetmoon.quark.content.tools.module.SlimeInABucketModule;
@@ -101,10 +102,12 @@ public class BucketsShowInhabitantsModule extends ZetaModule {
 
 			@Override
 			public float call(@NotNull ItemStack stack, @Nullable ClientLevel level, @Nullable LivingEntity entity, int id) {
-				if(!isEnabled() || !featureEnabled.getAsBoolean() || !stack.has(DataComponents.BUCKET_ENTITY_DATA))
+				if(!isEnabled() || !featureEnabled.getAsBoolean() || ( !stack.has(DataComponents.BUCKET_ENTITY_DATA) && !stack.has(QuarkDataComponents.SLIME_NBT)))
 					return 0;
 
-				CompoundTag data = stack.get(DataComponents.BUCKET_ENTITY_DATA).copyTag();
+				CompoundTag data;
+                if (stack.has(DataComponents.BUCKET_ENTITY_DATA)) data = stack.get(DataComponents.BUCKET_ENTITY_DATA).copyTag();
+                else data = stack.get(QuarkDataComponents.SLIME_NBT).copyTag();
 				if(data != null && data.hasUUID("UUID")) {
 					UUID uuid = data.getUUID("UUID");
 					if(VariantAnimalTexturesModule.Client.isShiny(uuid))

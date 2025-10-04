@@ -63,10 +63,10 @@ public class QuarkBeaconBlockEntityRenderer {
 		float v2 = -1.0F + partAngle;
 		float v1 = (float) height * textureScale * (0.5F / beamRadius) + v2;
 
-		renderPart(matrixStackIn, bufferIn.getBuffer(RenderType.beaconBeam(textureLocation, alpha < 255)), colors, height, 0.0F, beamRadius, beamRadius, 0.0F, -beamRadius, 0.0F, 0.0F, -beamRadius, 0.0F, 1.0F, v1, v2);
+		renderPart(matrixStackIn, bufferIn.getBuffer(RenderType.beaconBeam(textureLocation, true)), FastColor.ARGB32.color(alpha, colors), height, 0.0F, beamRadius, beamRadius, 0.0F, -beamRadius, 0.0F, 0.0F, -beamRadius, 0.0F, 1.0F, v1, v2);
 		matrixStackIn.popPose();
 		v1 = (float) height * textureScale + v2;
-		renderPart(matrixStackIn, bufferIn.getBuffer(RenderType.beaconBeam(textureLocation, true)), FastColor.ARGB32.color(32, colors), height, -glowRadius, -glowRadius, glowRadius, -glowRadius, -glowRadius, glowRadius, glowRadius, glowRadius, 0.0F, 1.0F, v1, v2);
+		renderPart(matrixStackIn, bufferIn.getBuffer(RenderType.beaconBeam(textureLocation, true)), FastColor.ARGB32.color((int)(32f*(alpha/255f)), colors), height, -glowRadius, -glowRadius, glowRadius, -glowRadius, -glowRadius, glowRadius, glowRadius, glowRadius, 0.0F, 1.0F, v1, v2);
 		matrixStackIn.popPose();
 	}
 

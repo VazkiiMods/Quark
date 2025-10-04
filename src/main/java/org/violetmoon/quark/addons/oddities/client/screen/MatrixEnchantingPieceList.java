@@ -79,7 +79,7 @@ public class MatrixEnchantingPieceList extends ObjectSelectionList<MatrixEnchant
 			//Lerp func. A+(B-A)*T for the uninitiated. Goes between the highest and lowest ypos the scrollbar can be
 			int scrollbarYPos = (int) ((this.getY() + scrollbarSize) + (this.getHeight() - scrollbarSize) * (getScrollAmount() / getMaxScroll()));
 
-			guiGraphics.drawString(this.parent.getMinecraft().font, "getY: " + this.getY(),4,4,0xFFFFFF);
+			/*guiGraphics.drawString(this.parent.getMinecraft().font, "getY: " + this.getY(),4,4,0xFFFFFF);
 			guiGraphics.drawString(this.parent.getMinecraft().font, "getHeight: " + this.getHeight(),4,16,0xFFFFFF);
 			guiGraphics.drawString(this.parent.getMinecraft().font, "maxScrollHeight: " + maxScrollHeight,4,28,0xFFFFFF);
 			guiGraphics.drawString(this.parent.getMinecraft().font, "scrollbarStartX: " + scrollbarStartX,4,40,0xFFFFFF);
@@ -87,7 +87,7 @@ public class MatrixEnchantingPieceList extends ObjectSelectionList<MatrixEnchant
 			guiGraphics.drawString(this.parent.getMinecraft().font, "scrollbarSize: " + scrollbarSize,4,64,0xFFFFFF);
 			guiGraphics.drawString(this.parent.getMinecraft().font, "scrollbarYPos: " + scrollbarYPos,4,76,0xFFFFFF);
 			guiGraphics.drawString(this.parent.getMinecraft().font, "maxPos: " + getMaxPosition(),4,88,0xFFFFFF);
-			guiGraphics.drawString(this.parent.getMinecraft().font, "scrollAmount: " + getScrollAmount(),4,100,0xFFFFFF);
+			guiGraphics.drawString(this.parent.getMinecraft().font, "scrollAmount: " + getScrollAmount(),4,100,0xFFFFFF);*/
 
 			guiGraphics.fill(scrollbarStartX, this.getY()+getHeight(), scrollbarEndX, getY(), 0xFF000000);
 			guiGraphics.fill(scrollbarStartX, (scrollbarYPos - scrollbarSize), scrollbarEndX, scrollbarYPos, 0xFF818181);

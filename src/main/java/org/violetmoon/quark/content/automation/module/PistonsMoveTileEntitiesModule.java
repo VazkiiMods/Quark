@@ -56,6 +56,7 @@ public class PistonsMoveTileEntitiesModule extends ZetaModule {
 	public static List<String> movementBlacklist = Lists.newArrayList(
             "minecraft:spawner",
             "minecraft:trial_spawner",
+            "minecraft:vault",
             "integrateddynamics:cable",
             "randomthings:blockbreaker",
             "minecraft:ender_chest",

@@ -2,10 +2,12 @@ package org.violetmoon.quark.base.components;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import net.minecraft.client.Minecraft;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.NotNull;
+import org.violetmoon.quark.base.Quark;
 
 public record ItemWrapperComponent(ItemStack stack) {
     public static final Codec<ItemWrapperComponent> CODEC = RecordCodecBuilder.create(
@@ -17,13 +19,13 @@ public record ItemWrapperComponent(ItemStack stack) {
     public static final StreamCodec<RegistryFriendlyByteBuf, ItemWrapperComponent> STREAM_CODEC = new StreamCodec<>() {
         @Override
         public @NotNull ItemWrapperComponent decode(@NotNull RegistryFriendlyByteBuf buf) {
-            ItemStack realStack = ItemStack.STREAM_CODEC.decode(buf);
+            ItemStack realStack = ItemStack.OPTIONAL_STREAM_CODEC.decode(buf);
             return new ItemWrapperComponent(realStack);
         }
 
         @Override
         public void encode(@NotNull RegistryFriendlyByteBuf buf, ItemWrapperComponent component) {
-            ItemStack.STREAM_CODEC.encode(buf, component.stack);
+            ItemStack.OPTIONAL_STREAM_CODEC.encode(buf, component.stack);
         }
     };
 }

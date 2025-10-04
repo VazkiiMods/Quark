@@ -4,6 +4,7 @@ import net.minecraft.client.renderer.item.ItemProperties;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
@@ -115,7 +116,7 @@ public class CompassesWorkEverywhereModule extends ZetaModule {
 	}
 
 	public static boolean isCompassCalculated(ItemStack stack) {
-		return Boolean.TRUE.equals(stack.get(QuarkDataComponents.WAS_IN_NETHER));
+		return stack.has(QuarkDataComponents.IS_COMPASS_CALCULATED) && Boolean.TRUE.equals(stack.get(QuarkDataComponents.IS_COMPASS_CALCULATED));
 	}
 
 	@ZetaLoadModule(clientReplacement = true)
@@ -126,11 +127,12 @@ public class CompassesWorkEverywhereModule extends ZetaModule {
 			e.enqueueWork(() -> {
 				if(!isEnabled()) return;
 
+                // We probably shouldn't be doing it like this BUT eh
 				if(enableCompassNerf || enableNether || enableEnd)
-					ItemProperties.register(Items.COMPASS, Quark.asResource("angle"), new CompassAnglePropertyFunction());
+					ItemProperties.register(Items.COMPASS, ResourceLocation.withDefaultNamespace("angle"), new CompassAnglePropertyFunction());
 
 				if(enableClockNerf)
-					ItemProperties.register(Items.CLOCK, Quark.asResource("time"), new ClockTimePropertyFunction());
+					ItemProperties.register(Items.CLOCK, ResourceLocation.withDefaultNamespace("time"), new ClockTimePropertyFunction());
 			});
 		}
 

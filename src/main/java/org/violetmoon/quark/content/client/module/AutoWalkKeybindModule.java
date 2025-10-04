@@ -73,10 +73,10 @@ public class AutoWalkKeybindModule extends ZetaModule {
 				int y = hudHeight;
 
 				String displayMessage = message;
-				int dots = (int) ((Minecraft.getInstance().getTimer().getGameTimeDeltaTicks() / 10) % 2);
+				int dots = (int) ((Minecraft.getInstance().getTimer().getGameTimeDeltaTicks()*2));
 				switch(dots) {
-				case 0 -> displayMessage = "OoO " + message + " oOo";
-				case 1 -> displayMessage = "oOo " + message + " OoO";
+				    case 0 -> displayMessage = "OoO " + message + " oOo";
+				    case 1 -> displayMessage = "oOo " + message + " OoO";
 				}
 
 				guiGraphics.drawString(mc.font, displayMessage, x, y, 0xFFFFFFFF, true);
