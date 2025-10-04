@@ -122,6 +122,9 @@ public class HoeHarvestingModule extends ZetaModule {
 		else if(state.getBlock() instanceof CropBlock crop){
 			isHarvestable = state.equals(crop.getStateForAge(crop.getMaxAge())); //only harvest full crops
 		}
+		else if(state.getBlock() instanceof CocoaBlock){
+			isHarvestable = state.getValue(CocoaBlock.AGE) == 2; //only harvest full cocoa
+		}
 		//TODO more crop types?
 		else if(state.getBlock() instanceof LeavesBlock){
 			if(state.getValue(LeavesBlock.PERSISTENT)){
