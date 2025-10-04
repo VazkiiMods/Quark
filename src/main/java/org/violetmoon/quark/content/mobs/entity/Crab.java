@@ -81,7 +81,7 @@ public class Crab extends Animal implements IEntityWithComplexSpawn, Bucketable 
 	public static final int COLORS = 3;
 	public static final ResourceKey<LootTable> CRAB_LOOT_TABLE = Quark.asResourceKey(Registries.LOOT_TABLE, "entities/crab");
 
-	private static final EntityDataAccessor<Float> SIZE_MODIFIER = SynchedEntityData.defineId(Crab.class, EntityDataSerializers.FLOAT);
+	private static final EntityDataAccessor<Float> SIZE_MODIFIER = SynchedEntityData.defineId(Crab.class, EntityDataSerializers.FLOAT); //TODO replace with scale attribute.
 	private static final EntityDataAccessor<Integer> VARIANT = SynchedEntityData.defineId(Crab.class, EntityDataSerializers.INT);
 	private static final EntityDataAccessor<Boolean> RAVING = SynchedEntityData.defineId(Crab.class, EntityDataSerializers.BOOLEAN);
 	private static final EntityDataAccessor<Boolean> FROM_BUCKET = SynchedEntityData.defineId(Crab.class, EntityDataSerializers.BOOLEAN);
@@ -310,19 +310,21 @@ public class Crab extends Animal implements IEntityWithComplexSpawn, Bucketable 
 			setRaving(false);
 			jukeboxPosition = null;
 		}
+
+		if(!level().isClientSide){
+			recalculateStepHeight();
+		}
 	}
 
 	//Todo: Double check this doesnt cause any issues
-	/*
-	@Override
-	public float getStepHeight() { //TODO figure out when to recalculate attribute -Partonetrain
+	public void recalculateStepHeight() {
 		float baseStep = isInWater() ? 1F : 0.6F;
 		AttributeInstance stepHeightAttribute = getAttribute(Attributes.STEP_HEIGHT);
-		if(stepHeightAttribute != null)
-			return (float) Math.max(0, baseStep + stepHeightAttribute.getValue());
-		return baseStep;
+		if(stepHeightAttribute != null) {
+			stepHeightAttribute.removeModifier(Quark.asResource("step_height"));
+			stepHeightAttribute.addPermanentModifier(new AttributeModifier(Quark.asResource("step_height"), Math.max(0, baseStep + stepHeightAttribute.getValue()), Operation.ADD_VALUE));
+		}
 	}
-	 */
 
 	//Todo: Double check this doesnt cause any issues
 	/*
@@ -369,15 +371,15 @@ public class Crab extends Animal implements IEntityWithComplexSpawn, Bucketable 
 
 			var healthAttr = this.getAttribute(Attributes.MAX_HEALTH);
 			if(healthAttr != null)
-				healthAttr.addPermanentModifier(new AttributeModifier(Quark.asResource("Lightning Bonus"), 0.5, Operation.ADD_VALUE));
+				healthAttr.addPermanentModifier(new AttributeModifier(Quark.asResource("lightning_max_health_bonus_" + sizeMod), 0.5, Operation.ADD_VALUE));
 
 			var speedAttr = this.getAttribute(Attributes.MOVEMENT_SPEED);
 			if(speedAttr != null)
-				speedAttr.addPermanentModifier(new AttributeModifier(Quark.asResource("Lightning Debuff"), -0.05, Operation.ADD_VALUE));
+				speedAttr.addPermanentModifier(new AttributeModifier(Quark.asResource("lightning_speed_debuff_" + sizeMod), -0.05, Operation.ADD_MULTIPLIED_TOTAL));
 
 			var armorAttr = this.getAttribute(Attributes.ARMOR);
 			if(armorAttr != null)
-				armorAttr.addPermanentModifier(new AttributeModifier(Quark.asResource("Lightning Bonus"), 0.125, Operation.ADD_VALUE));
+				armorAttr.addPermanentModifier(new AttributeModifier(Quark.asResource("lightning_armor_bonus_" + sizeMod), 0.125, Operation.ADD_VALUE));
 
 			float sizeModifier = Math.min(sizeMod + 1, 16);
 			this.entityData.set(SIZE_MODIFIER, sizeModifier);
