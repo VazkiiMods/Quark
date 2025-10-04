@@ -3,16 +3,13 @@ package org.violetmoon.quark.datagen;
 import net.minecraft.advancements.critereon.EntityPredicate;
 import net.minecraft.advancements.critereon.LocationPredicate;
 import net.minecraft.advancements.critereon.NbtPredicate;
-import net.minecraft.core.Holder;
 import net.minecraft.core.HolderLookup;
-import net.minecraft.core.HolderOwner;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.data.loot.EntityLootSubProvider;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.flag.FeatureFlags;
 import net.minecraft.world.item.Items;
-import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.storage.loot.LootContext;
 import net.minecraft.world.level.storage.loot.LootPool;
@@ -29,13 +26,14 @@ import org.violetmoon.quark.content.mobs.entity.Stoneling;
 import org.violetmoon.quark.content.mobs.module.*;
 import org.violetmoon.quark.content.tools.module.PathfinderMapsModule;
 import org.violetmoon.quark.content.world.module.GlimmeringWealdModule;
+import org.violetmoon.zeta.config.FlagLootCondition;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Stream;
 
 public class QuarkEntityLootTableProvider extends EntityLootSubProvider {
     //TODO config conditions
-    //and pool names possibly? not sure if they are convention
 
     static CompoundTag stonelingNotMade = new CompoundTag();
     static {
@@ -56,6 +54,7 @@ public class QuarkEntityLootTableProvider extends EntityLootSubProvider {
                     .add(LootItem.lootTableItem(CrabsModule.crab_shell))
                     .when(LootItemKilledByPlayerCondition.killedByPlayer())
                     .when(LootItemRandomChanceWithEnchantedBonusCondition.randomChanceAndLootingBoost(this.registries, 0.25F, 0.03F))
+                    //condition: "crab_brewing"
                 )
                 .withPool(LootPool.lootPool()
                         .setRolls(ConstantValue.exactly(1))
@@ -102,13 +101,13 @@ public class QuarkEntityLootTableProvider extends EntityLootSubProvider {
                 .withPool(LootPool.lootPool()
                         .setRolls(ConstantValue.exactly(1))
                         .add(LootItem.lootTableItem(StonelingsModule.diamondHeart))
-                        //condition: stoneling_drop_diamond_heart config
+                        //condition: "stoneling_drop_diamond_heart"
                 ).withPool(LootPool.lootPool()
                         .setRolls(ConstantValue.exactly(1))
                         .add(LootItem.lootTableItem(PathfinderMapsModule.pathfinders_quill))
-                        //condition: pathfinder_maps
-                        //condition: glimmering_weald
-                        //condition: stoneling_weald_pathfinder
+                        //condition: "pathfinder_maps"
+                        //condition: "glimmering_weald"
+                        //condition: "stoneling_weald_pathfinder"
                         .when(LootItemKilledByPlayerCondition.killedByPlayer())
                         .when(LootItemEntityPropertyCondition.hasProperties(LootContext.EntityTarget.THIS, EntityPredicate.Builder.entity().nbt(new NbtPredicate((stonelingNotMade)))))
                         .when(LootItemRandomChanceWithEnchantedBonusCondition.randomChanceAndLootingBoost(this.registries, 0.08F, 0.02F))

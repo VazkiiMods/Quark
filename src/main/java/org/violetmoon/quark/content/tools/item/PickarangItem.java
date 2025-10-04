@@ -163,4 +163,11 @@ public class PickarangItem extends ZetaItem {
 	public int getEnchantmentValue() {
 		return type.pickaxeEquivalent != null ? type.pickaxeEquivalent.getEnchantmentValue() : 0;
 	}
+
+	@Override
+	public boolean supportsEnchantment(@NotNull ItemStack stack, Holder<Enchantment> enchantment) {
+		if (enchantment.is(Enchantments.PIERCING))
+			return true;
+		return super.supportsEnchantment(stack, enchantment);
+	}
 }

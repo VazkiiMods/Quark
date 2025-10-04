@@ -16,7 +16,7 @@ import java.util.concurrent.CompletableFuture;
 
 public class QuarkItemTagProvider extends ItemTagsProvider {
 
-
+    //1.21: we don't need these, the 1.20 item tags work
     public QuarkItemTagProvider(PackOutput output, CompletableFuture<HolderLookup.Provider> lookupProvider, CompletableFuture<TagLookup<Block>> blockTags, String modId, @Nullable ExistingFileHelper existingFileHelper) {
         super(output, lookupProvider, blockTags, Quark.MOD_ID, existingFileHelper);
     }

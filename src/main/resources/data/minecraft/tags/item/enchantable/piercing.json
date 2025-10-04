@@ -1,0 +1,10 @@
+{
+  "values": [
+    "#quark:pickarangs",
+    "minecraft:crossbow",
+    {
+      "required": false,
+      "id": "#c:tools/crossbow"
+    }
+  ]
+}
