@@ -2,6 +2,7 @@ package org.violetmoon.quark.content.client.module;
 
 import com.mojang.blaze3d.platform.Window;
 
+import net.minecraft.Util;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.OptionInstance;
@@ -9,7 +10,6 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.player.Input;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.resources.language.I18n;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
@@ -25,6 +25,8 @@ import org.violetmoon.zeta.event.bus.LoadEvent;
 import org.violetmoon.zeta.event.bus.PlayEvent;
 import org.violetmoon.zeta.module.ZetaLoadModule;
 import org.violetmoon.zeta.module.ZetaModule;
+
+import java.util.concurrent.TimeUnit;
 
 @ZetaLoadModule(category = "client")
 public class AutoWalkKeybindModule extends ZetaModule {
@@ -73,8 +75,9 @@ public class AutoWalkKeybindModule extends ZetaModule {
 				int y = hudHeight;
 
 				String displayMessage = message;
-				int dots = (int) ((Minecraft.getInstance().getTimer().getGameTimeDeltaTicks()*2));
-				switch(dots) {
+
+				int time = (int) ((Util.timeSource.get(TimeUnit.MILLISECONDS) / 500) % 2);
+				switch (time) {
 				    case 0 -> displayMessage = "OoO " + message + " oOo";
 				    case 1 -> displayMessage = "oOo " + message + " OoO";
 				}

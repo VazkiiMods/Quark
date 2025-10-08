@@ -3,7 +3,7 @@
   "category": "redstone",
   "ingredients": [
     {
-      "item": "minecraft:prismarine"
+      "item": "quark:prismarine"
     },
     {
       "item": "minecraft:tripwire_hook"

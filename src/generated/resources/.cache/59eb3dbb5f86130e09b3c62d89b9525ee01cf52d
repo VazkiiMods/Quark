@@ -1,4 +1,4 @@
-// 1.21.1	2025-09-20T12:14:30.7565624	Loot Tables
+// 1.21.1	2025-10-08T13:38:44.3460482	Loot Tables
 321167e5d1e420c3799ebd55550623276a62d02f data/quark/loot_table/blocks/acacia_bookshelf.json
 78cf85302095b576b7eda6e9c83fd9141e777c3b data/quark/loot_table/blocks/acacia_chest.json
 2d740f286cb6b31376a3bb00878726966b38c064 data/quark/loot_table/blocks/acacia_hedge.json
@@ -25,7 +25,7 @@ f42b9505d7ac1906e9b1c38a9c32bba99c2a4c1a data/quark/loot_table/blocks/ancient_pl
 371a64a747e6e1e7691ca73ef1c1e126899e75a6 data/quark/loot_table/blocks/ancient_post.json
 96fdbf293137251af24122497641c85d898f6a2b data/quark/loot_table/blocks/ancient_pressure_plate.json
 acff93f94597f340eb7c0a802af2d409e2f8a26b data/quark/loot_table/blocks/ancient_sapling.json
-8bd516a52de4c2a97ba62ed4d1e9c8969799d7b2 data/quark/loot_table/blocks/ancient_sign.json
+7e06060f60b64c5876e4df264aa3882d64de88de data/quark/loot_table/blocks/ancient_sign.json
 43bffdc274709161a400d5146c3910d4395c230b data/quark/loot_table/blocks/ancient_trapdoor.json
 53594cdb396361254c6295c90d9cbe7ad4987057 data/quark/loot_table/blocks/ancient_wood.json
 1813cc283daf10a584de40ebc737375740954ad8 data/quark/loot_table/blocks/andesite_bricks.json
@@ -53,7 +53,7 @@ b24d7b4ee53435e7ff42a56a03d65284e5b6e49f data/quark/loot_table/blocks/azalea_pla
 17062469a15c219c7395dd4ebe2edf6c963ffc17 data/quark/loot_table/blocks/azalea_planks_vertical_slab.json
 0c6f7146f9cece5c5c21235d0ace08f2d8a0f9d4 data/quark/loot_table/blocks/azalea_post.json
 362d24280a0c9855947efe848084a8efd64b0af6 data/quark/loot_table/blocks/azalea_pressure_plate.json
-7b7bf5efb6434c8bcd78d785026b10e5421c1ab5 data/quark/loot_table/blocks/azalea_sign.json
+11f0ee05f418a5e3e93dc69cdb9a72eaae181cce data/quark/loot_table/blocks/azalea_sign.json
 501c63e5632fe93c44737ef755e3dce3797d7122 data/quark/loot_table/blocks/azalea_trapdoor.json
 c47123dda676f771269efc18ac3d775766b514d0 data/quark/loot_table/blocks/azalea_wood.json
 d8e408c1b073b7ed747e9d4833e6bd9a46483dc7 data/quark/loot_table/blocks/bamboo_bookshelf.json
@@ -107,7 +107,7 @@ cbb578a2ab9e0bbef2e32fe6bd2b959d24d0179c data/quark/loot_table/blocks/blossom_pl
 fbe557b9e314cbd5a4beaa5ecf0372b63140474e data/quark/loot_table/blocks/blossom_planks_vertical_slab.json
 27e7293338f488207790c2b4682b2dc8e6c2f3a6 data/quark/loot_table/blocks/blossom_post.json
 25f473c550bbd386593544f1a74ad27af4502fcd data/quark/loot_table/blocks/blossom_pressure_plate.json
-16139c700998e93fe425ae808d70bf1e108bb4b8 data/quark/loot_table/blocks/blossom_sign.json
+fdfc6ac00c9d87460c2394bdcd463de7a0577477 data/quark/loot_table/blocks/blossom_sign.json
 deb03a5a435370fe80131d0989772b03104f5394 data/quark/loot_table/blocks/blossom_trapdoor.json
 6fb21e7cb7baeb49b8994aeacf4e4b989831f9a5 data/quark/loot_table/blocks/blossom_wood.json
 3dd0a305dd052ab4b616f1d360bb9a8f1218bae6 data/quark/loot_table/blocks/blue_blossom_hedge.json

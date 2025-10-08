@@ -21,7 +21,7 @@ public class CrabModel extends EntityModel<Crab> {
 
 	private float wiggleX = 0;
 	private float wiggleY = 0;
-	private float crabSize = 0;
+	private float yungModifier = 0;
 
 	public ModelPart group;
 	public ModelPart body;
@@ -179,9 +179,9 @@ public class CrabModel extends EntityModel<Crab> {
 		wiggleX = 0.0f;
 		wiggleY = 0.0f;
 
-		crabSize = crab.getSizeModifier();
+        yungModifier = 1f;
 		if(young)
-			crabSize /= 2;
+			yungModifier = 0.5f;
 
 		if(crab.isRaving()) {
 			float crabRaveBPM = 125F / 4;
@@ -209,8 +209,8 @@ public class CrabModel extends EntityModel<Crab> {
 	@Override
 	public void renderToBuffer(PoseStack matrix, @NotNull VertexConsumer vb, int packedLightIn, int packedOverlayIn, int color) {
 		matrix.pushPose();
-		matrix.translate(0, 1.5 - crabSize * 1.5, 0);
-		matrix.scale(crabSize, crabSize, crabSize);
+		matrix.translate(0, 1.5 - yungModifier * 1.5, 0);
+		matrix.scale(yungModifier, yungModifier, yungModifier);
 		matrix.mulPose(Axis.YP.rotationDegrees(90F));
 		matrix.translate(wiggleX, wiggleY, 0);
 		group.render(matrix, vb, packedLightIn, packedOverlayIn, color);

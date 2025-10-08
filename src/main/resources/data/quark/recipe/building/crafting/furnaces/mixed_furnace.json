@@ -1,6 +1,15 @@
 {
   "type": "quark:mixed_exclusion",
-  "subtype": "furnace",
+  "group": "furnace",
+  "output": {
+    "id": "minecraft:furnace",
+    "count": 1
+  },
+  "tag": "#minecraft:stone_crafting_materials",
+  "placeholder": {
+    "id": "minecraft:cobblestone",
+    "count": 1
+  },
   "neoforge:conditions": [
     {
       "type": "zeta:flag",

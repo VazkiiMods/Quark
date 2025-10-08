@@ -1,6 +1,15 @@
 {
   "type": "quark:mixed_exclusion",
-  "subtype": "chest",
+  "group": "chest",
+  "output": {
+    "id": "minecraft:chest",
+    "count": 1
+  },
+  "tag": "#minecraft:planks",
+  "placeholder": {
+    "id": "minecraft:oak_planks",
+    "count": 1
+  },
   "neoforge:conditions": [
     {
       "type": "zeta:flag",

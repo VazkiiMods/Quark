@@ -11,7 +11,7 @@
       "entries": [
         {
           "type": "minecraft:item",
-          "name": "quark:blossom_hanging_sign"
+          "name": "quark:blossom_sign"
         }
       ],
       "rolls": 1.0

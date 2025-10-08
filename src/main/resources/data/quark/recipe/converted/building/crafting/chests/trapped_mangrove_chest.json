@@ -3,7 +3,7 @@
   "category": "redstone",
   "ingredients": [
     {
-      "item": "minecraft:mangrove_planks"
+      "item": "quark:mangrove_chest"
     },
     {
       "item": "minecraft:tripwire_hook"

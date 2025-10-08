@@ -1,5 +1,6 @@
 package org.violetmoon.quark.addons.oddities.inventory;
 
+import net.minecraft.Util;
 import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
@@ -12,11 +13,14 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.enchantment.EnchantmentInstance;
 import net.minecraft.world.level.Level;
 import net.neoforged.neoforge.common.Tags;
 import org.jetbrains.annotations.NotNull;
 import org.violetmoon.quark.addons.oddities.block.be.MatrixEnchantingTableBlockEntity;
 import org.violetmoon.quark.addons.oddities.module.MatrixEnchantingModule;
+
+import java.util.List;
 
 public class MatrixEnchantingMenu extends AbstractContainerMenu {
 
@@ -32,7 +36,7 @@ public class MatrixEnchantingMenu extends AbstractContainerMenu {
 			public int getMaxStackSize() {
 				return 1;
 			}
-		});
+        });
 
 		// Lapis Slot
 		addSlot(new Slot(tile, 1, 15, 44) {
@@ -75,7 +79,9 @@ public class MatrixEnchantingMenu extends AbstractContainerMenu {
 	}
 
 	private void finish(Player player, ItemStack stack) {
-		enchanter.setItem(0, ItemStack.EMPTY);
+		if (!player.level().isClientSide()) {
+            enchanter.setItem(0, ItemStack.EMPTY);
+        }
 
 		player.awardStat(Stats.ENCHANT_ITEM);
 

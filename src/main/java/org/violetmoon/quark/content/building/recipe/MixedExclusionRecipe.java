@@ -1,7 +1,6 @@
 package org.violetmoon.quark.content.building.recipe;
 
-import com.mojang.serialization.Codec;
-import com.mojang.serialization.MapCodec;
+import com.mojang.serialization.*;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.core.HolderLookup;
@@ -12,12 +11,16 @@ import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.tags.ItemTags;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.*;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
+
+import java.util.stream.Stream;
 
 public class MixedExclusionRecipe implements CraftingRecipe {
     public static final MixedExclusionRecipe.Serializer SERIALIZER = new MixedExclusionRecipe.Serializer();
@@ -105,6 +108,20 @@ public class MixedExclusionRecipe implements CraftingRecipe {
         return ingredients;
     }
 
+    public static MixedExclusionRecipe forChest(String group, boolean log) {
+        ItemStack output = new ItemStack(Items.CHEST, (log ? 4 : 1));
+        TagKey<Item> tag = (log ? ItemTags.LOGS : ItemTags.PLANKS);
+        ItemStack placeholder = new ItemStack(log ? Items.OAK_LOG : Items.OAK_PLANKS);
+        return new MixedExclusionRecipe(group, output, tag, placeholder);
+    }
+
+    public static MixedExclusionRecipe forFurnace(String group) {
+        ItemStack output = new ItemStack(Items.FURNACE);
+        TagKey<Item> tag = ItemTags.STONE_CRAFTING_MATERIALS;
+        ItemStack placeholder = new ItemStack(Items.COBBLESTONE);
+        return new MixedExclusionRecipe(group, output, tag, placeholder);
+    }
+
     @Override
     public boolean isSpecial() {
         return true;
@@ -120,6 +137,7 @@ public class MixedExclusionRecipe implements CraftingRecipe {
                         )
                         .apply(inst, MixedExclusionRecipe::new)
         );
+
         public static final StreamCodec<RegistryFriendlyByteBuf, MixedExclusionRecipe> STREAM_CODEC = new StreamCodec<>() {
             @Override
             public @NotNull MixedExclusionRecipe decode(RegistryFriendlyByteBuf buf) {
@@ -151,6 +169,15 @@ public class MixedExclusionRecipe implements CraftingRecipe {
         @Override
         public @NotNull StreamCodec<RegistryFriendlyByteBuf, MixedExclusionRecipe> streamCodec() {
             return STREAM_CODEC;
+        }
+
+        private static MixedExclusionRecipe forType(String type) {
+            return switch(type) {
+                case "chest" -> MixedExclusionRecipe.forChest(type, false);
+                case "chest4" -> MixedExclusionRecipe.forChest(type, true);
+                case "furnace" -> MixedExclusionRecipe.forFurnace(type);
+                default -> null;
+            };
         }
     }
 }

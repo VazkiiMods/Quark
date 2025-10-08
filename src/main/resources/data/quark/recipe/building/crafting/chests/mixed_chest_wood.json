@@ -1,7 +1,16 @@
 {
   "type": "quark:mixed_exclusion",
-  "subtype": "chest4",
-  "conditions": [
+  "group": "chest4",
+  "output": {
+    "id": "minecraft:chest",
+    "count": 4
+  },
+  "tag": "#minecraft:logs",
+  "placeholder": {
+    "id": "minecraft:oak_log",
+    "count": 1
+  },
+  "neoforge:conditions": [
     {
       "type": "neoforge:and",
       "values": [

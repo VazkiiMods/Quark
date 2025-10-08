@@ -73,6 +73,7 @@ import org.violetmoon.quark.base.components.QuarkDataComponents;
 import org.violetmoon.quark.base.handler.QuarkSounds;
 import org.violetmoon.quark.content.mobs.ai.RaveGoal;
 import org.violetmoon.quark.content.mobs.module.CrabsModule;
+import org.w3c.dom.Attr;
 
 import java.util.function.BiConsumer;
 
@@ -81,7 +82,6 @@ public class Crab extends Animal implements IEntityWithComplexSpawn, Bucketable 
 	public static final int COLORS = 3;
 	public static final ResourceKey<LootTable> CRAB_LOOT_TABLE = Quark.asResourceKey(Registries.LOOT_TABLE, "entities/crab");
 
-	private static final EntityDataAccessor<Float> SIZE_MODIFIER = SynchedEntityData.defineId(Crab.class, EntityDataSerializers.FLOAT); //TODO replace with scale attribute.
 	private static final EntityDataAccessor<Integer> VARIANT = SynchedEntityData.defineId(Crab.class, EntityDataSerializers.INT);
 	private static final EntityDataAccessor<Boolean> RAVING = SynchedEntityData.defineId(Crab.class, EntityDataSerializers.BOOLEAN);
 	private static final EntityDataAccessor<Boolean> FROM_BUCKET = SynchedEntityData.defineId(Crab.class, EntityDataSerializers.BOOLEAN);
@@ -94,18 +94,12 @@ public class Crab extends Animal implements IEntityWithComplexSpawn, Bucketable 
 	private final DynamicGameEventListener<JukeboxListener> dynamicJukeboxListener;
 
 	public Crab(EntityType<? extends Crab> type, Level worldIn) {
-		this(type, worldIn, 1);
-	}
+        super(type, worldIn);
+        this.setPathfindingMalus(PathType.LAVA, -1.0F);
 
-	public Crab(EntityType<? extends Crab> type, Level worldIn, float sizeModifier) {
-		super(type, worldIn);
-		this.setPathfindingMalus(PathType.LAVA, -1.0F);
-		if(sizeModifier != 1)
-			entityData.set(SIZE_MODIFIER, sizeModifier);
-
-		PositionSource source = new EntityPositionSource(this, this.getEyeHeight());
-		this.dynamicJukeboxListener = new DynamicGameEventListener<>(new JukeboxListener(source, GameEvent.JUKEBOX_PLAY.value().notificationRadius()));
-	}
+        PositionSource source = new EntityPositionSource(this, this.getEyeHeight());
+        this.dynamicJukeboxListener = new DynamicGameEventListener<>(new JukeboxListener(source, GameEvent.JUKEBOX_PLAY.value().notificationRadius()));
+    }
 
 	@Override
 	public boolean fromBucket() {
@@ -176,7 +170,6 @@ public class Crab extends Animal implements IEntityWithComplexSpawn, Bucketable 
 	protected void defineSynchedData(SynchedEntityData.Builder builder) {
 		super.defineSynchedData(builder);
 
-		builder.define(SIZE_MODIFIER, 1f);
 		builder.define(VARIANT, -1);
 		builder.define(RAVING, false);
 		builder.define(FROM_BUCKET, false);
@@ -185,7 +178,7 @@ public class Crab extends Animal implements IEntityWithComplexSpawn, Bucketable 
 	@NotNull
 	@Override
 	public InteractionResult mobInteract(@NotNull Player player, @NotNull InteractionHand hand) {
-		if(getSizeModifier() >= 2) {
+		if(getScale() >= 2) {
 			if(!this.isFood(player.getItemInHand(hand)) && !this.isVehicle() && !player.isSecondaryUseActive()) {
 				if(!this.level().isClientSide)
 					player.startRiding(this);
@@ -202,8 +195,8 @@ public class Crab extends Animal implements IEntityWithComplexSpawn, Bucketable 
 	}
 
 	@Override
-	public Vec3 getPassengerRidingPosition(Entity entity) {
-		return super.getPassengerRidingPosition(entity).scale(1 / (0.75 * 0.9));
+    protected Vec3 getPassengerAttachmentPoint(Entity entity, EntityDimensions dimensions, float partialTick) {
+		return super.getPassengerAttachmentPoint(entity, dimensions, partialTick);
 	}
 
 	@NotNull
@@ -252,10 +245,6 @@ public class Crab extends Animal implements IEntityWithComplexSpawn, Bucketable 
 	@Override
 	protected SoundEvent getHurtSound(@NotNull DamageSource source) {
 		return QuarkSounds.ENTITY_CRAB_HURT;
-	}
-
-	public float getSizeModifier() {
-		return entityData.get(SIZE_MODIFIER);
 	}
 
 	@Override
@@ -353,12 +342,12 @@ public class Crab extends Animal implements IEntityWithComplexSpawn, Bucketable 
 				source == sources.cactus() ||
 				source == sources.sweetBerryBush() ||
 				source == sources.lightningBolt() ||
-				getSizeModifier() > 1 && source.is(DamageTypes.IN_FIRE) || source.is(DamageTypes.ON_FIRE);
+				getScale() > 1 && source.is(DamageTypes.IN_FIRE) || source.is(DamageTypes.ON_FIRE);
 	}
 
 	@Override
 	public boolean fireImmune() {
-		return super.fireImmune() || getSizeModifier() > 1;
+		return super.fireImmune() || getScale() > 1;
 	}
 
 	@Override
@@ -366,7 +355,7 @@ public class Crab extends Animal implements IEntityWithComplexSpawn, Bucketable 
 		if(lightningCooldown > 0 || level().isClientSide)
 			return;
 
-		float sizeMod = getSizeModifier();
+		float sizeMod = getScale();
 		if(sizeMod <= 15) {
 
 			var healthAttr = this.getAttribute(Attributes.MAX_HEALTH);
@@ -381,8 +370,10 @@ public class Crab extends Animal implements IEntityWithComplexSpawn, Bucketable 
 			if(armorAttr != null)
 				armorAttr.addPermanentModifier(new AttributeModifier(Quark.asResource("lightning_armor_bonus_" + sizeMod), 0.125, Operation.ADD_VALUE));
 
-			float sizeModifier = Math.min(sizeMod + 1, 16);
-			this.entityData.set(SIZE_MODIFIER, sizeModifier);
+			float scale = Math.min(sizeMod + 1, 16);
+            var scaleAttr = this.getAttribute(Attributes.SCALE);
+            if (scaleAttr != null)
+                scaleAttr.addOrReplacePermanentModifier(new AttributeModifier(Quark.asResource("lightning_size_increase"), scale, Operation.ADD_VALUE));
 			refreshDimensions();
 
 			lightningCooldown = 150;
@@ -391,14 +382,14 @@ public class Crab extends Animal implements IEntityWithComplexSpawn, Bucketable 
 
 	@Override
 	public void push(@NotNull Entity entityIn) {
-		if(getSizeModifier() <= 1)
+		if (getScale() <= 1)
 			super.push(entityIn);
 	}
 
 	@Override
 	protected void doPush(@NotNull Entity entityIn) {
 		super.doPush(entityIn);
-		if(level().getDifficulty() != Difficulty.PEACEFUL && !noSpike && !hasPassenger(entityIn))
+		if (level().getDifficulty() != Difficulty.PEACEFUL && !noSpike && !hasPassenger(entityIn))
 			if(entityIn instanceof LivingEntity && !(entityIn instanceof Crab))
 				entityIn.hurt(level().damageSources().cactus(), 1f);
 	}
@@ -459,9 +450,6 @@ public class Crab extends Animal implements IEntityWithComplexSpawn, Bucketable 
 
 	@Override
 	public void onSyncedDataUpdated(@NotNull EntityDataAccessor<?> parameter) {
-		if(parameter.equals(SIZE_MODIFIER))
-			refreshDimensions();
-
 		super.onSyncedDataUpdated(parameter);
 	}
 
@@ -469,16 +457,6 @@ public class Crab extends Animal implements IEntityWithComplexSpawn, Bucketable 
 	@Override
 	public Packet<ClientGamePacketListener> getAddEntityPacket(ServerEntity entity) {
 		return new ClientboundAddEntityPacket(this, entity);
-	}
-
-	@Override
-	public void writeSpawnData(RegistryFriendlyByteBuf buffer) {
-		buffer.writeFloat(getSizeModifier());
-	}
-
-	@Override
-	public void readSpawnData(RegistryFriendlyByteBuf buffer) {
-		entityData.set(SIZE_MODIFIER, buffer.readFloat());
 	}
 
 	@Override
@@ -490,7 +468,10 @@ public class Crab extends Animal implements IEntityWithComplexSpawn, Bucketable 
 
 		if(compound.contains("EnemyCrabRating")) {
 			float sizeModifier = compound.getFloat("EnemyCrabRating");
-			entityData.set(SIZE_MODIFIER, sizeModifier);
+            var scaleAttr = this.getAttribute(Attributes.SCALE);
+            if (scaleAttr != null)
+                scaleAttr.addOrReplacePermanentModifier(new AttributeModifier(Quark.asResource("lightning_size_increase"), sizeModifier, Operation.ADD_VALUE));
+            refreshDimensions();
 		}
 
 		if(compound.contains("Variant"))
@@ -502,14 +483,23 @@ public class Crab extends Animal implements IEntityWithComplexSpawn, Bucketable 
 	@Override
 	public void addAdditionalSaveData(@NotNull CompoundTag compound) {
 		super.addAdditionalSaveData(compound);
-		compound.putFloat("EnemyCrabRating", getSizeModifier());
 		compound.putInt("LightningCooldown", lightningCooldown);
 		compound.putInt("Variant", entityData.get(VARIANT));
 		compound.putBoolean("NoSpike", noSpike);
 		compound.putBoolean("FromBucket", this.fromBucket());
 	}
 
-	public class JukeboxListener implements GameEventListener {
+    @Override
+    public void writeSpawnData(RegistryFriendlyByteBuf additionalData) {
+
+    }
+
+    @Override
+    public void readSpawnData(RegistryFriendlyByteBuf additionalData) {
+
+    }
+
+    public class JukeboxListener implements GameEventListener {
 		private final PositionSource listenerSource;
 		private final int listenerRadius;
 

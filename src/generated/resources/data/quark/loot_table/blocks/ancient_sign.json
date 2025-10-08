@@ -11,7 +11,7 @@
       "entries": [
         {
           "type": "minecraft:item",
-          "name": "quark:ancient_hanging_sign"
+          "name": "quark:ancient_sign"
         }
       ],
       "rolls": 1.0

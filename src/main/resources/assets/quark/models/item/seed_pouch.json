@@ -6,7 +6,7 @@
     "overrides": [
         {
             "predicate": {
-                "pouch_items": 0.00000001
+                "quark:pouch_items": 0.00000001
             },
             "model": "quark:item/seed_pouch_items"
         }

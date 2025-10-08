@@ -3,7 +3,7 @@
   "category": "redstone",
   "ingredients": [
     {
-      "item": "quark:blossom_planks"
+      "item": "quark:blossom_chest"
     },
     {
       "item": "minecraft:tripwire_hook"

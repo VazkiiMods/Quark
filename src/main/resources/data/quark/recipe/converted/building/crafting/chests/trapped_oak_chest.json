@@ -3,7 +3,7 @@
   "category": "redstone",
   "ingredients": [
     {
-      "item": "minecraft:oak_planks"
+      "item": "quark:oak_chest"
     },
     {
       "item": "minecraft:tripwire_hook"

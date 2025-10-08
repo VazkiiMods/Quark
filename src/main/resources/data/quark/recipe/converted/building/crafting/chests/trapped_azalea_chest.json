@@ -3,7 +3,7 @@
   "category": "redstone",
   "ingredients": [
     {
-      "item": "quark:azalea_planks"
+      "item": "quark:azalea_chest"
     },
     {
       "item": "minecraft:tripwire_hook"
