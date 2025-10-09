@@ -185,8 +185,9 @@ public class PipeBlockEntity extends SimpleInventoryBlockEntity {
 			item.timeInWorld = time;
 			if(getComparatorOutput() != currentOut)
 				level.updateNeighbourForOutputSignal(getBlockPos(), getBlockState().getBlock());
-		} else
-			queuedItems.add(item);
+		} else {
+            queuedItems.add(item);
+        }
 
 		return true;
 	}

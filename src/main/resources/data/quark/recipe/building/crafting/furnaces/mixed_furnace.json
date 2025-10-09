@@ -5,7 +5,7 @@
     "id": "minecraft:furnace",
     "count": 1
   },
-  "tag": "#minecraft:stone_crafting_materials",
+  "tag": "minecraft:stone_crafting_materials",
   "placeholder": {
     "id": "minecraft:cobblestone",
     "count": 1

@@ -5,7 +5,7 @@
     "id": "minecraft:chest",
     "count": 1
   },
-  "tag": "#minecraft:planks",
+  "tag": "minecraft:planks",
   "placeholder": {
     "id": "minecraft:oak_planks",
     "count": 1

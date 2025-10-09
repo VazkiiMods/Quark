@@ -74,7 +74,7 @@ public class MixedExclusionRecipe implements CraftingRecipe {
 
     @Override
     public boolean matches(CraftingInput input, @NotNull Level level) {
-        if(input.getItem(4).isEmpty()) {
+        if(input.size() == 9 && input.getItem(4).isEmpty()) {
             ItemStack first = null;
             boolean foundDifference = false;
 

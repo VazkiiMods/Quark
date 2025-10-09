@@ -5,7 +5,7 @@
     "id": "minecraft:chest",
     "count": 4
   },
-  "tag": "#minecraft:logs",
+  "tag": "minecraft:logs",
   "placeholder": {
     "id": "minecraft:oak_log",
     "count": 1
