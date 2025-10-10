@@ -5,9 +5,11 @@ import net.minecraft.core.Direction;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.stats.Stats;
+import net.minecraft.tags.BlockTags;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.ItemInteractionResult;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.*;
@@ -24,9 +26,11 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
+import net.minecraft.world.level.entity.EntityTypeTest;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.level.material.PushReaction;
+import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.CollisionContext;
@@ -38,6 +42,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.violetmoon.quark.content.automation.module.PistonsMoveTileEntitiesModule;
 import org.violetmoon.quark.content.building.module.RopeModule;
+import org.violetmoon.zeta.block.SimpleFluidloggedBlock;
 import org.violetmoon.zeta.block.ZetaBlock;
 import org.violetmoon.zeta.item.ZetaBlockItem;
 import org.violetmoon.zeta.module.ZetaModule;
@@ -217,7 +222,7 @@ public class RopeBlock extends ZetaBlock implements IZetaBlockItemProvider, Simp
 			}
 
 			endRope = true;
-			wasAirAtEnd = world.isEmptyBlock(pos);
+			wasAirAtEnd = world.isEmptyBlock(pos) || world.getBlockState(pos).getBlock() instanceof LiquidBlock;
 		} while(true);
 
 		if(can) {
@@ -254,6 +259,8 @@ public class RopeBlock extends ZetaBlock implements IZetaBlockItemProvider, Simp
 
 	private void moveBlock(Level world, BlockPos srcPos, BlockPos dstPos) {
 		BlockState state = world.getBlockState(srcPos);
+        //zif (!state.getFluidState().is(Fluids.EMPTY)) return;
+
 		Block block = state.getBlock();
 
 		if(state.getDestroySpeed(world, srcPos) == -1 || !state.canSurvive(world, dstPos) || state.isAir() || state.getBlock() instanceof LiquidBlock ||
@@ -285,7 +292,11 @@ public class RopeBlock extends ZetaBlock implements IZetaBlockItemProvider, Simp
 			}
 		}
 		world.updateNeighborsAt(dstPos, state.getBlock());
-	}
+        for (Entity entity : world.getEntities(null, new AABB(srcPos.above()))) {
+            entity.teleportRelative(0 ,dstPos.getY() - srcPos.getY(), 0);
+        }
+
+    }
 
 	@Override
 	public boolean canSurvive(@NotNull BlockState state, LevelReader worldIn, BlockPos pos) {

@@ -68,7 +68,7 @@ public class DefaultMoveActions {
 
 			FakePlayer player = FakePlayerFactory.get(level, FAKE_PLAYER_PROFILE);
 			ItemStack tool = Items.IRON_PICKAXE.getDefaultInstance();
-			tool.enchant(level.registryAccess().holderOrThrow(Registries.ENCHANTMENT).value().getHolderOrThrow(Enchantments.SILK_TOUCH), 1);
+			tool.enchant(level.registryAccess().registry(Registries.ENCHANTMENT).get().getHolderOrThrow(Enchantments.SILK_TOUCH), 1);
 			player.setItemInHand(InteractionHand.MAIN_HAND, tool);
 
 			BlockEntity blockentity = blockstate.hasBlockEntity() ? level.getBlockEntity(pPos) : null;
