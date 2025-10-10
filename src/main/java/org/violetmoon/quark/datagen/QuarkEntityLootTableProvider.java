@@ -3,6 +3,7 @@ package org.violetmoon.quark.datagen;
 import net.minecraft.advancements.critereon.EntityPredicate;
 import net.minecraft.advancements.critereon.LocationPredicate;
 import net.minecraft.advancements.critereon.NbtPredicate;
+import net.minecraft.core.HolderGetter;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.data.loot.EntityLootSubProvider;
@@ -10,7 +11,10 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.flag.FeatureFlags;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.item.enchantment.Enchantment;
+import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.biome.Biome;
+import net.minecraft.world.level.biome.Biomes;
 import net.minecraft.world.level.storage.loot.LootContext;
 import net.minecraft.world.level.storage.loot.LootPool;
 import net.minecraft.world.level.storage.loot.LootTable;
@@ -22,6 +26,7 @@ import net.minecraft.world.level.storage.loot.predicates.*;
 import net.minecraft.world.level.storage.loot.providers.number.ConstantValue;
 import net.minecraft.world.level.storage.loot.providers.number.UniformGenerator;
 import org.jetbrains.annotations.NotNull;
+import org.violetmoon.quark.base.Quark;
 import org.violetmoon.quark.content.mobs.entity.Stoneling;
 import org.violetmoon.quark.content.mobs.module.*;
 import org.violetmoon.quark.content.tools.module.PathfinderMapsModule;
@@ -47,7 +52,9 @@ public class QuarkEntityLootTableProvider extends EntityLootSubProvider {
 
     @Override
     public void generate() {
-        HolderLookup.RegistryLookup<Biome> registrylookup = this.registries.lookupOrThrow(Registries.BIOME);
+        HolderGetter<Biome> biomeLookup = this.registries.asGetterLookup().lookupOrThrow(Registries.BIOME);
+
+
         add(CrabsModule.crabType, LootTable.lootTable()
                 .withPool(LootPool.lootPool()
                     .setRolls(ConstantValue.exactly(1))
@@ -111,7 +118,7 @@ public class QuarkEntityLootTableProvider extends EntityLootSubProvider {
                         .when(LootItemKilledByPlayerCondition.killedByPlayer())
                         .when(LootItemEntityPropertyCondition.hasProperties(LootContext.EntityTarget.THIS, EntityPredicate.Builder.entity().nbt(new NbtPredicate((stonelingNotMade)))))
                         .when(LootItemRandomChanceWithEnchantedBonusCondition.randomChanceAndLootingBoost(this.registries, 0.08F, 0.02F))
-                        .when(LocationCheck.checkLocation(LocationPredicate.Builder.inBiome(registrylookup.getOrThrow(GlimmeringWealdModule.BIOME_KEY))))
+                        .when(LocationCheck.checkLocation(LocationPredicate.Builder.inBiome(biomeLookup.getOrThrow(GlimmeringWealdModule.BIOME_KEY))))
 
                         //.when(InvertedLootItemCondition.invert(biomeCheck.)) //vanilla location predicate supports biome, but vanilla datagen has no biome check
                         //there is a quark:in_biome condition but maybe we should be using the vanilla one, just make our own biomeCheck - Train
