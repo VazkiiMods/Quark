@@ -44,6 +44,7 @@
     "NetherFortressPiecesMixin",
     "NetherFortressPiecesMixin$CastleEntranceMixin",
     "OverworldBiomeBuilderMixin",
+    "accessor.AccessorOverworldBiomes",
     "PigMixin",
     "PistonBaseBlockMixin",
     "PistonMovingBlockEntityMixin",

@@ -13,6 +13,7 @@ import net.minecraft.world.level.biome.Climate;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.ComposterBlock;
+import net.minecraft.world.level.levelgen.feature.Feature;
 import net.minecraft.world.level.levelgen.placement.PlacedFeature;
 import org.violetmoon.quark.base.Quark;
 import org.violetmoon.quark.content.world.block.GlowLichenGrowthBlock;
@@ -35,6 +36,9 @@ public class GlimmeringWealdModule extends ZetaModule {
 
     public static final ResourceLocation BIOME_NAME = Quark.asResource("glimmering_weald");
     public static final ResourceKey<Biome> BIOME_KEY = Quark.asResourceKey(Registries.BIOME, "glimmering_weald");
+
+	public static ResourceKey<PlacedFeature> GLOW_SHROOMS_FEATURE = Quark.asResourceKey(Registries.PLACED_FEATURE, "glow_shrooms");
+	public static ResourceKey<PlacedFeature> GLOW_SHROOMS_EXTRAS_FEATURE = Quark.asResourceKey(Registries.PLACED_FEATURE, "glow_shrooms_extras");
 
     public static GlowShroomsFeature glow_shrooms_feature;
     public static GlowExtrasFeature glow_shrooms_extra_feature;
@@ -87,11 +91,9 @@ public class GlimmeringWealdModule extends ZetaModule {
 
         // Feature
         glow_shrooms_feature = new GlowShroomsFeature();
-        event.getRegistry().register(glow_shrooms_feature, "glow_shrooms", Registries.FEATURE);
+        event.getRegistry().register(glow_shrooms_feature, GLOW_SHROOMS_FEATURE.location(), Registries.FEATURE);
         glow_shrooms_extra_feature = new GlowExtrasFeature();
-        event.getRegistry().register(glow_shrooms_extra_feature, "glow_shrooms_extras", Registries.FEATURE);
-
-
+        event.getRegistry().register(glow_shrooms_extra_feature, GLOW_SHROOMS_EXTRAS_FEATURE.location(), Registries.FEATURE);
     }
 
     @LoadEvent

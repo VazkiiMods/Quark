@@ -76,8 +76,9 @@ runs {
     data {
         workingDirectory project.file('runs/data')
         programArguments '--mod', 'quark', // insert your own mod id
+                '--all',
                 '--output', file('src/generated/resources').getAbsolutePath(),
-                '--all'
+                '--existing', file('src/main/resources').getAbsolutePath()
     }
 }
 
