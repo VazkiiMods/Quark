@@ -74,7 +74,7 @@ public class MagnetBlockEntity extends BlockEntity {
         }
 
         //particles
-        if (level.isClientSide && !state.getValue(MagnetBlock.WAXED)){
+        if (!state.getValue(MagnetBlock.WAXED)){
 
             double particleMotion = 0.06 * magnitude;
             double particleChance = 0.2;
