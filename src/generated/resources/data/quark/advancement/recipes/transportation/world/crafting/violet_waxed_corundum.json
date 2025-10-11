@@ -1,0 +1,38 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "zeta:flag",
+      "flag": "corundum"
+    }
+  ],
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "quark:world/crafting/violet_waxed_corundum"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    },
+    "has_violet_corundum": {
+      "conditions": {
+        "items": [
+          {
+            "items": "quark:violet_corundum"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "requirements": [
+    [
+      "has_the_recipe",
+      "has_violet_corundum"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "quark:world/crafting/violet_waxed_corundum"
+    ]
+  }
+}

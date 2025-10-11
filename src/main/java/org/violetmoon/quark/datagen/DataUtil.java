@@ -2,6 +2,7 @@ package org.violetmoon.quark.datagen;
 
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.tags.TagKey;
@@ -142,6 +143,16 @@ public class DataUtil {
         }
 
         return null;
+    }
+
+    public static Item getChestBoatFromPlank(Block planks){
+        String plankKey = BuiltInRegistries.BLOCK.getKey(planks).toString();
+        if(plankKey.contains("bamboo")){
+            return Items.BAMBOO_CHEST_RAFT;
+        }
+        String boatKey = plankKey.replace("_planks", "_chest_boat");
+
+        return BuiltInRegistries.ITEM.get(ResourceLocation.parse(boatKey));
     }
 
     public static Block getChestFromTrappedChest(Block trappedChest){

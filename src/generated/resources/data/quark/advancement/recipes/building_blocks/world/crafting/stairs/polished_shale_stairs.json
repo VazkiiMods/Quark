@@ -1,0 +1,38 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "zeta:flag",
+      "flag": "shale"
+    }
+  ],
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_polished_shale": {
+      "conditions": {
+        "items": [
+          {
+            "items": "quark:polished_shale"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "quark:world/crafting/stairs/polished_shale_stairs"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    }
+  },
+  "requirements": [
+    [
+      "has_the_recipe",
+      "has_polished_shale"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "quark:world/crafting/stairs/polished_shale_stairs"
+    ]
+  }
+}

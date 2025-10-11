@@ -1,13 +1,8 @@
 {
   "neoforge:conditions": [
     {
-      "type": "neoforge:and",
-      "values": [
-        {
-          "type": "zeta:flag",
-          "flag": "azalea_wood"
-        }
-      ]
+      "type": "zeta:flag",
+      "flag": "azalea_wood"
     }
   ],
   "parent": "minecraft:recipes/root",

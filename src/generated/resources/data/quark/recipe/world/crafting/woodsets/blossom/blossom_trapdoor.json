@@ -1,13 +1,8 @@
 {
   "neoforge:conditions": [
     {
-      "type": "neoforge:and",
-      "values": [
-        {
-          "type": "zeta:flag",
-          "flag": "blossom_trees"
-        }
-      ]
+      "type": "zeta:flag",
+      "flag": "blossom_trees"
     }
   ],
   "type": "minecraft:crafting_shaped",

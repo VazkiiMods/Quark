@@ -67,8 +67,8 @@ public class PermafrostModule extends ZetaModule {
 		CreativeTabManager.endDaisyChain();
 
 		((PermafrostStyle) generationSettings.style).setBlock(permafrost.defaultBlockState());
-        blocks.add(permafrost);
-        blocks.add(permafrostBricks);
+        blocks.add(permafrost); //0
+        blocks.add(permafrostBricks); //1
 	}
 
 	@LoadEvent

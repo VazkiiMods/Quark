@@ -1,0 +1,38 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "zeta:flag",
+      "flag": "myalite"
+    }
+  ],
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_polished_myalite": {
+      "conditions": {
+        "items": [
+          {
+            "items": "quark:polished_myalite"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "quark:world/crafting/stairs/polished_myalite_stairs"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    }
+  },
+  "requirements": [
+    [
+      "has_the_recipe",
+      "has_polished_myalite"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "quark:world/crafting/stairs/polished_myalite_stairs"
+    ]
+  }
+}

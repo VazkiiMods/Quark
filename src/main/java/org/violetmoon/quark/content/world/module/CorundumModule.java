@@ -168,4 +168,12 @@ public class CorundumModule extends ZetaModule {
 		return CorundumModule.crystals.get(corundumColor.ordinal());
 	}
 
+	public static Block getWaxedCrystal(CorundumColor corundumColor){
+		return CorundumModule.waxedCrystals.get(corundumColor.ordinal());
+	}
+
+	public static Block getPane(CorundumColor corundumColor){
+		return CorundumModule.panes.get(corundumColor.ordinal());
+	}
+
 }

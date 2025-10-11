@@ -71,7 +71,7 @@ import static org.violetmoon.quark.content.world.module.NewStoneTypesModule.*;
 
 public class Stoneling extends PathfinderMob {
 
-	public static final ResourceKey<LootTable> CARRY_LOOT_TABLE = Quark.asResourceKey(Registries.LOOT_TABLE, "stoneling_carry");
+	public static final ResourceKey<LootTable> CARRY_LOOT_TABLE = Quark.asResourceKey(Registries.LOOT_TABLE, "misc/stoneling_carry");
 
 	private static final EntityDataAccessor<ItemStack> CARRYING_ITEM = SynchedEntityData.defineId(Stoneling.class, EntityDataSerializers.ITEM_STACK);
 	private static final EntityDataAccessor<Byte> VARIANT = SynchedEntityData.defineId(Stoneling.class, EntityDataSerializers.BYTE);
