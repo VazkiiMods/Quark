@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    {
+      "item": "quark:nether_wart_sack"
+    }
+  ],
+  "result": {
+    "count": 9,
+    "id": "minecraft:nether_wart"
+  }
+}

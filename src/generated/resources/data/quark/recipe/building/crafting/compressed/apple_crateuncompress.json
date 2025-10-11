@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    {
+      "item": "quark:apple_crate"
+    }
+  ],
+  "result": {
+    "count": 9,
+    "id": "minecraft:apple"
+  }
+}

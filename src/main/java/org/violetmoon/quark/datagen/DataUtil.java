@@ -2,6 +2,7 @@ package org.violetmoon.quark.datagen;
 
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
+import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.DyeColor;
@@ -79,6 +80,51 @@ public class DataUtil {
             default -> throw new IllegalStateException("Unexpected axe strip block: " + block);
         };
          */
+    }
+
+    public static TagKey<Item> getLogTagFromPlank(Block block){
+        if(block == Blocks.OAK_PLANKS){
+            return ItemTags.OAK_LOGS;
+        }
+        else if(block == Blocks.SPRUCE_PLANKS){
+            return ItemTags.SPRUCE_LOGS;
+        }
+        else if(block == Blocks.BIRCH_PLANKS){
+            return ItemTags.BIRCH_LOGS;
+        }
+        else if(block == Blocks.JUNGLE_PLANKS){
+            return ItemTags.JUNGLE_LOGS;
+        }
+        else if(block == Blocks.ACACIA_PLANKS){
+            return ItemTags.ACACIA_LOGS;
+        }
+        else if(block == Blocks.DARK_OAK_PLANKS){
+            return ItemTags.DARK_OAK_LOGS;
+        }
+        else if(block == Blocks.MANGROVE_PLANKS){
+            return ItemTags.MANGROVE_LOGS;
+        }
+        else if(block == Blocks.CHERRY_PLANKS){
+            return ItemTags.CHERRY_LOGS;
+        }
+        else if(block == Blocks.CRIMSON_PLANKS){
+            return ItemTags.CRIMSON_STEMS;
+        }
+        else if(block == Blocks.WARPED_PLANKS){
+            return ItemTags.WARPED_STEMS;
+        }
+
+        else if(block == AncientWoodModule.woodSet.planks){
+            return TagKey.create(Registries.ITEM, Quark.asResource("ancient_logs"));
+        }
+        else if(block == AzaleaWoodModule.woodSet.planks){
+            return TagKey.create(Registries.ITEM, Quark.asResource("azalea_logs"));
+        }
+        else if(block == BlossomTreesModule.woodSet.planks){
+            return TagKey.create(Registries.ITEM, Quark.asResource("blossom_logs"));
+        }
+
+        return null;
     }
 
     public static Block getLadderFromPlank(Block planks){

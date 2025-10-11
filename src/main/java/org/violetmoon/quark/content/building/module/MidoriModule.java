@@ -27,7 +27,7 @@ import java.util.List;
 public class MidoriModule extends ZetaModule {
 	public static List<Block> blocks = new ArrayList<>();
 
-	private static Item moss_paste;
+	public static Item moss_paste;
 
 	@LoadEvent
 	public final void register(ZRegister event) {
@@ -41,9 +41,9 @@ public class MidoriModule extends ZetaModule {
 
 		CreativeTabManager.daisyChain();
 		Block midori = new ZetaBlock("midori_block", this, props).setCreativeTab(CreativeModeTabs.BUILDING_BLOCKS, Blocks.COAL_BLOCK, true);
-		blocks.add(midori);
+		blocks.add(midori); //0
 		Block pillar = new ZetaPillarBlock("midori_pillar", this, props).setCreativeTab(CreativeModeTabs.BUILDING_BLOCKS);
-		blocks.add(pillar);
+		blocks.add(pillar); //1
 		event.getVariantRegistry().addSlabAndStairs((IZetaBlock) midori, null);
 		CreativeTabManager.endDaisyChain();
 	}

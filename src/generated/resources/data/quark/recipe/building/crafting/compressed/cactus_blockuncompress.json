@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    {
+      "item": "quark:cactus_block"
+    }
+  ],
+  "result": {
+    "count": 9,
+    "id": "minecraft:cactus"
+  }
+}

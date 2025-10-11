@@ -1,0 +1,47 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:and",
+      "values": [
+        {
+          "type": "zeta:flag",
+          "flag": "granite"
+        },
+        {
+          "type": "zeta:flag",
+          "flag": "more_stone_variants"
+        }
+      ]
+    }
+  ],
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_granite_bricks": {
+      "conditions": {
+        "items": [
+          {
+            "items": "quark:granite_bricks"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "quark:building/crafting/stairs/granite_bricks_stairs"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    }
+  },
+  "requirements": [
+    [
+      "has_the_recipe",
+      "has_granite_bricks"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "quark:building/crafting/stairs/granite_bricks_stairs"
+    ]
+  }
+}

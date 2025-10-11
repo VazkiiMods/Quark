@@ -1,0 +1,52 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:and",
+      "values": [
+        {
+          "type": "zeta:flag",
+          "flag": "tiny_potato"
+        },
+        {
+          "type": "neoforge:or",
+          "values": [
+            {
+              "type": "zeta:flag",
+              "flag": "tiny_potato_never_uses_heart"
+            },
+            {
+              "type": "neoforge:not",
+              "value": {
+                "type": "zeta:flag",
+                "flag": "stonelings"
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "D": [
+      {
+        "item": "minecraft:diamond"
+      },
+      {
+        "item": "minecraft:emerald"
+      }
+    ],
+    "P": {
+      "item": "minecraft:potato"
+    }
+  },
+  "pattern": [
+    "D",
+    "P"
+  ],
+  "result": {
+    "count": 1,
+    "id": "quark:tiny_potato"
+  }
+}

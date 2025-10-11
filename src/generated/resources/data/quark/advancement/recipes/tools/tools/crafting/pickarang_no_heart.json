@@ -1,0 +1,52 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:and",
+      "values": [
+        {
+          "type": "zeta:flag",
+          "flag": "pickarang"
+        },
+        {
+          "type": "neoforge:or",
+          "values": [
+            {
+              "type": "zeta:flag",
+              "flag": "pickarang_never_uses_heart"
+            },
+            {
+              "type": "neoforge:not",
+              "value": {
+                "type": "zeta:flag",
+                "flag": "stonelings"
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "quark:tools/crafting/pickarang_no_heart"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    },
+    "test": {
+      "trigger": "minecraft:tick"
+    }
+  },
+  "requirements": [
+    [
+      "has_the_recipe",
+      "test"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "quark:tools/crafting/pickarang_no_heart"
+    ]
+  }
+}

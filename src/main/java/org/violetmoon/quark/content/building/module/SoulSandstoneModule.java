@@ -38,10 +38,10 @@ public class SoulSandstoneModule extends ZetaModule {
         event.getVariantRegistry().addSlabAndStairs((IZetaBlock) smoothSoulSandstone, null);
 		CreativeTabManager.endDaisyChain();
 
-        blocks.add(soulSandstone);
-        blocks.add(chiseledSoulSandstone);
-        blocks.add(cutSoulSandstone);
-        blocks.add(smoothSoulSandstone);
+        blocks.add(soulSandstone); //0
+        blocks.add(chiseledSoulSandstone); //1
+        blocks.add(cutSoulSandstone); //2
+        blocks.add(smoothSoulSandstone); //3
 	}
 
 }

@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    {
+      "item": "quark:cocoa_beans_sack"
+    }
+  ],
+  "result": {
+    "count": 9,
+    "id": "minecraft:cocoa_beans"
+  }
+}

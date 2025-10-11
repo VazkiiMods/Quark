@@ -43,7 +43,7 @@ public class QuarkDatagen {
 		lookupProvider = quarkDatapackProvider.getRegistryProvider();
 		generator.addProvider(event.includeServer(), quarkDatapackProvider);
 
-        //generator.addProvider(event.includeServer(), new QuarkRecipeProvider(packOutput, lookupProvider)); //enabling and disabling this as-needed to test datagen
+        generator.addProvider(event.includeServer(), new QuarkRecipeProvider(packOutput, lookupProvider)); //enabling and disabling this as-needed to test datagen
         generator.addProvider(event.includeServer(), new LootTableProvider(packOutput, Collections.emptySet(),
                 List.of(
                         new LootTableProvider.SubProviderEntry(QuarkBlockLootTableProvider::new, LootContextParamSets.BLOCK),
