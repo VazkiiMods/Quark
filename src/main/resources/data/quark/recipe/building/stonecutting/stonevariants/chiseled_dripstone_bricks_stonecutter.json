@@ -1,0 +1,29 @@
+{
+  "type": "minecraft:stonecutting",
+  "ingredient": {
+    "item": "minecraft:dripstone_block"
+  },
+  "result": {
+		"id": "quark:chiseled_dripstone_bricks",
+  "count": 1
+},
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:and",
+      "values": [
+        {
+          "type": "zeta:flag",
+          "flag": "stone_bricks"
+        },
+        {
+          "type": "zeta:flag",
+          "flag": "stone_chiseled"
+        },
+        {
+          "type": "zeta:flag",
+          "flag": "dripstone"
+        }
+      ]
+    }
+  ]
+}

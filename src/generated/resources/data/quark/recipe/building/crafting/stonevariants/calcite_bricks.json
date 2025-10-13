@@ -15,7 +15,7 @@
     }
   ],
   "type": "minecraft:crafting_shaped",
-  "category": "misc",
+  "category": "building",
   "key": {
     "#": {
       "item": "quark:polished_calcite"

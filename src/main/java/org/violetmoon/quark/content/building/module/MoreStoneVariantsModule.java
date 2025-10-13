@@ -49,6 +49,7 @@ public class MoreStoneVariantsModule extends ZetaModule {
 		polishedCalcite = expandVanillaStone(event, this, Blocks.CALCITE, "calcite"); //not in the blocks list!
 		polishedDripstone = expandVanillaStone(event, this, Blocks.DRIPSTONE_BLOCK, "dripstone");
 
+		//brick, chiseled, than pillar.
 		add(event, "granite", MapColor.DIRT, SoundType.STONE, Blocks.POLISHED_GRANITE, BooleanSuppliers.TRUE); //blocks 0-2
 		add(event, "diorite", MapColor.QUARTZ, SoundType.STONE, Blocks.POLISHED_DIORITE, BooleanSuppliers.TRUE); //block 3-5
 		add(event, "andesite", MapColor.STONE, SoundType.STONE, Blocks.POLISHED_ANDESITE, BooleanSuppliers.TRUE); //block 6-8

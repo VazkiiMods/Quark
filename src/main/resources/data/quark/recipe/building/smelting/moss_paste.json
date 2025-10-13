@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:smelting",
+  "ingredient": {
+    "item": "minecraft:moss_block"
+  },
+  "result": {
+		"id": "quark:moss_paste"
+},
+ "experience": 1.0,
+  "cookingtime": 200,
+  "neoforge:conditions": [
+    {
+      "type": "zeta:flag",
+      "flag": "midori"
+    }
+  ]
+}

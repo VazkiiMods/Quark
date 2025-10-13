@@ -1,0 +1,44 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:and",
+      "values": [
+        {
+          "type": "zeta:flag",
+          "flag": "andesite"
+        },
+        {
+          "type": "zeta:flag",
+          "flag": "stone_chiseled"
+        },
+        {
+          "type": "zeta:flag",
+          "flag": "stone_bricks"
+        }
+      ]
+    }
+  ],
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "quark:building/crafting/stonevariants/chiseled_andesite_bricks"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    },
+    "test": {
+      "trigger": "minecraft:tick"
+    }
+  },
+  "requirements": [
+    [
+      "has_the_recipe",
+      "test"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "quark:building/crafting/stonevariants/chiseled_andesite_bricks"
+    ]
+  }
+}

@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:stonecutting",
+  "ingredient": {
+    "item": "quark:rusty_iron_plate"
+  },
+  "result": {
+		"id": "quark:rusty_iron_plate_slab",
+      "count": 2
+},
+  "neoforge:conditions": [
+    {
+      "type": "zeta:flag",
+      "flag": "iron_plates"
+    }
+  ]
+}

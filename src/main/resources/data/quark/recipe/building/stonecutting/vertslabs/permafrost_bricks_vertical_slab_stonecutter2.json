@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:stonecutting",
+  "ingredient": {
+    "item": "quark:permafrost"
+  },
+  "result": {
+		"id": "quark:permafrost_bricks_vertical_slab",
+      "count": 2
+},
+  "neoforge:conditions": [
+    {
+      "type": "zeta:flag",
+      "flag": "vertical_slabs"
+    }
+  ]
+}

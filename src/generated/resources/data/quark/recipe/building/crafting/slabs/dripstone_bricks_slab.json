@@ -10,6 +10,10 @@
         {
           "type": "zeta:flag",
           "flag": "more_stone_variants"
+        },
+        {
+          "type": "zeta:flag",
+          "flag": "stone_bricks"
         }
       ]
     }

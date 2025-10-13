@@ -1,0 +1,15 @@
+{
+  "type": "quark:smithing_rune",
+  "template": {
+    "item": "quark:smithing_template_rune"
+  },
+  "color": {
+    "color": "blank"
+  },
+  "neoforge:conditions": [
+    {
+      "type": "zeta:flag",
+      "flag": "color_runes"
+    }
+  ]
+}

@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:stonecutting",
+  "ingredient": {
+    "item": "quark:polished_dripstone"
+  },
+  "result": {
+		"id": "quark:polished_dripstone_slab",
+      "count": 2
+},
+  "neoforge:conditions": [
+    {
+      "type": "zeta:flag",
+      "flag": "dripstone"
+    }
+  ]
+}

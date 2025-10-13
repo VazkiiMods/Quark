@@ -1,0 +1,25 @@
+{
+  "type": "minecraft:stonecutting",
+  "ingredient": {
+    "item": "quark:jasper"
+  },
+  "result": {
+		"id": "quark:jasper_bricks_slab",
+      "count": 2
+},
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:and",
+      "values": [
+        {
+          "type": "zeta:flag",
+          "flag": "stone_bricks"
+        },
+        {
+          "type": "zeta:flag",
+          "flag": "jasper"
+        }
+      ]
+    }
+  ]
+} 

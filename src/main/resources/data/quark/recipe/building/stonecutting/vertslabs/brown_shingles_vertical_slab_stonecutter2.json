@@ -1,0 +1,25 @@
+{
+  "type": "minecraft:stonecutting",
+  "ingredient": {
+    "item": "minecraft:brown_terracotta"
+  },
+  "result": {
+		"id": "quark:brown_shingles_vertical_slab",
+      "count": 2
+},
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:and",
+      "values": [
+        {
+          "type": "zeta:flag",
+          "flag": "shingles"
+        },
+        {
+          "type": "zeta:flag",
+          "flag": "vertical_slabs"
+        }
+      ]
+    }
+  ]
+}
