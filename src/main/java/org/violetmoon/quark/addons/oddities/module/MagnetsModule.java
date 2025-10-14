@@ -88,10 +88,10 @@ public class MagnetsModule extends ZetaModule {
         magnetizedBlockType = BlockEntityType.Builder.of(MagnetizedBlockBlockEntity::new, magnetized_block).build(null);
         event.getRegistry().register(magnetizedBlockType, "magnetized_block", Registries.BLOCK_ENTITY_TYPE);
 
-        attractorParticle = new SimpleParticleType(false);
+        attractorParticle = new SimpleParticleType(true);
         event.getRegistry().register(attractorParticle, "attractor", Registries.PARTICLE_TYPE);
 
-        repulsorParticle = new SimpleParticleType(false);
+        repulsorParticle = new SimpleParticleType(true);
         event.getRegistry().register(repulsorParticle, "repulsor", Registries.PARTICLE_TYPE);
     }
 

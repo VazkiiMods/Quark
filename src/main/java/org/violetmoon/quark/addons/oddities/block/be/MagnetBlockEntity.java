@@ -2,6 +2,8 @@ package org.violetmoon.quark.addons.oddities.block.be;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.Entity;
@@ -74,7 +76,7 @@ public class MagnetBlockEntity extends BlockEntity {
         }
 
         //particles
-        if (!state.getValue(MagnetBlock.WAXED)){
+        if (level.isClientSide && !state.getValue(MagnetBlock.WAXED)){
 
             double particleMotion = 0.06 * magnitude;
             double particleChance = 0.2;

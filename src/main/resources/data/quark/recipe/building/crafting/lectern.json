@@ -1,18 +1,15 @@
 {
   "neoforge:conditions": [
     {
-      "type": "neoforge:not",
-      "value": {
-        "type": "zeta:flag",
-        "flag": "variant_bookshelves"
-      }
+      "type": "zeta:flag",
+      "flag": "variant_bookshelves"
     }
   ],
   "type": "minecraft:crafting_shaped",
   "category": "redstone",
   "key": {
     "B": {
-      "item": "minecraft:bookshelf"
+      "tag": "c:bookshelves"
     },
     "S": {
       "tag": "minecraft:wooden_slabs"

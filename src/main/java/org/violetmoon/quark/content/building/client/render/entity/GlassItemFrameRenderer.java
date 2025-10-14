@@ -152,11 +152,11 @@ public class GlassItemFrameRenderer extends EntityRenderer<GlassItemFrame> {
 					case STANDING_BEHIND -> angle += 180F;
 					case WALL_SIGN -> {
 						angle = 0;
-						matrix.translate(0.0, -0.3, 0.45);
+						matrix.translate(0.0, -0.3, 0.44);
 					}
 					case HANGING_FROM_WALL -> {
 						angle = 0;
-						matrix.translate(0.0, -0.52, -0.01);
+						matrix.translate(0.0, -0.52, -0.02);
 					}
 				}
 
@@ -193,7 +193,7 @@ public class GlassItemFrameRenderer extends EntityRenderer<GlassItemFrame> {
 						matrix.pushPose();
 						matrix.translate(0.0001F, -0.5001F, 0.55F);
 						matrix.scale(0.799999F, 0.399999F, 0.5F);
-						BannerRenderer.renderPatterns(matrix, buff, light, OverlayTexture.NO_OVERLAY, bannerModel, ModelBakery.BANNER_BASE, true, DyeColor.WHITE, patterns);
+						BannerRenderer.renderPatterns(matrix, buff, light, OverlayTexture.NO_OVERLAY, bannerModel, ModelBakery.BANNER_BASE, true, bannerItem.getColor(), patterns);
 						matrix.popPose();
 					} else {
 						if(stack.getItem() instanceof ShieldItem) {

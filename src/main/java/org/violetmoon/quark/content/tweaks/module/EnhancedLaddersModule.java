@@ -107,7 +107,7 @@ public class EnhancedLaddersModule extends ZetaModule {
 	public static boolean canSurviveTweak(boolean vanillaSurvive, BlockState state, LevelReader world, BlockPos pos) {
 		//With the freestanding feature enabled, ladders can survive if they are supported by a block (vanillaSurvive),
 		//or if they are underneath a ladder on the same wall.
-		if(vanillaSurvive)
+		if(vanillaSurvive && !world.getBlockState(pos.relative(state.getValue(FACING).getOpposite())).is(laddersBlockTag))
 			return true;
 
 		if(!staticEnabled || !allowFreestanding || !state.is(laddersBlockTag) || !state.hasProperty(FACING))

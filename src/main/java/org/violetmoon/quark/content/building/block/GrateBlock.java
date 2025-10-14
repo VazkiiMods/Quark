@@ -160,11 +160,15 @@ public class GrateBlock extends ZetaBlock implements SimpleFluidloggedBlock, ICr
 		super.neighborChanged(state, level, pos, updatedBlock, neighbor, isMoving);
 		if(!pos.below().equals(neighbor)) {
 			BlockState neighborState = level.getBlockState(neighbor);
-			if(neighborState.getFluidState().is(FluidTags.WATER) && fluidContained(state).isSame(Fluids.LAVA)) {
+			if (neighborState.getFluidState().is(FluidTags.WATER) && fluidContained(state).isSame(Fluids.LAVA)) {
 				level.destroyBlock(pos, true);
 				level.setBlock(pos, EventHooks.fireFluidPlaceBlockEvent(level, pos, neighbor, Blocks.OBSIDIAN.defaultBlockState()), 3);
 				level.levelEvent(LevelEvent.LAVA_FIZZ, pos, 0);
-			}
+			} else if (neighborState.getFluidState().is(FluidTags.LAVA) && fluidContained(state).isSame(Fluids.WATER)) {
+                level.destroyBlock(neighbor, true);
+                level.setBlock(neighbor, EventHooks.fireFluidPlaceBlockEvent(level, neighbor, pos, Blocks.OBSIDIAN.defaultBlockState()), 3);
+                level.levelEvent(LevelEvent.LAVA_FIZZ, neighbor, 0);
+            }
 		}
 	}
 

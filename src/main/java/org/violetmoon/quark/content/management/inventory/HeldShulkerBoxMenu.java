@@ -26,24 +26,29 @@ public class HeldShulkerBoxMenu extends AbstractContainerMenu implements ISortin
 		this(containerID, playerInventory, buf.readInt());
 	}
 
+    // Fun fact! Slots are order-sensitive! The more you know.
 	public HeldShulkerBoxMenu(int containerID, Inventory playerInventory, Container container, int blockedSlot) {
 		super(ExpandedItemInteractionsModule.heldShulkerBoxMenuType, containerID);
 		checkContainerSize(container, 27);
 		this.container = container;
 		this.player = playerInventory.player;
 		this.blockedSlot = blockedSlot;
-		container.startOpen(playerInventory.player);
+		container.startOpen(player);
 
-		for (int row = 0; row < 3; ++row) {
-			for (int column = 0; column < 9; ++column) {
-				int shulkerBoxSlot = column + row * 9;
-				int slot = shulkerBoxSlot + 9;
-				if (slot != blockedSlot) {
-					this.addSlot(new Slot(playerInventory, slot, 8 + column * 18, 84 + row * 18));
-				}
-				this.addSlot(new ShulkerBoxSlot(container, shulkerBoxSlot, 8 + column * 18, 18 + row * 18));
-			}
-		}
+        for (int row = 0; row < 3; row++) {
+            for (int column = 0; column < 9; column++) {
+                int slot = column + row * 9;
+                this.addSlot(new ShulkerBoxSlot(container, slot, 8 + column * 18, 18 + row * 18));
+            }
+        }
+
+        for (int row = 0; row < 3; row++) {
+            for (int column = 0; column < 9; column++) {
+                int slot = column + row * 9 + 9;
+                if (slot != blockedSlot)
+                    this.addSlot(new Slot(playerInventory, slot, 8 + column * 18, 84 + row * 18));
+            }
+        }
 
 		for (int slot = 0; slot < 9; ++slot) {
 			if (slot != blockedSlot) {
@@ -53,15 +58,15 @@ public class HeldShulkerBoxMenu extends AbstractContainerMenu implements ISortin
 	}
 
 	@Override
-	public boolean stillValid(Player player) {
-		return this.container.stillValid(player);
+	public boolean stillValid(Player checkedPlayer) {
+		return this.container.stillValid(checkedPlayer);
 	}
 
 	@Override
-	public ItemStack quickMoveStack(Player player, int slotIndex) {
+	public ItemStack quickMoveStack(Player checkedPlayer, int slotIndex) {
 		ItemStack copy = ItemStack.EMPTY;
 		Slot slot = this.slots.get(slotIndex);
-		if (slot.hasItem()) {
+		if (slot != null && slot.hasItem()) {
 			ItemStack stack = slot.getItem();
 			copy = stack.copy();
 			if (slotIndex < this.container.getContainerSize()) {
@@ -73,7 +78,7 @@ public class HeldShulkerBoxMenu extends AbstractContainerMenu implements ISortin
 			}
 
 			if(stack.isEmpty()) {
-				slot.set(ItemStack.EMPTY);
+				slot.setByPlayer(ItemStack.EMPTY);
 			} else {
 				slot.setChanged();
 			}
@@ -94,9 +99,9 @@ public class HeldShulkerBoxMenu extends AbstractContainerMenu implements ISortin
 	}
 
 	@Override
-	public void removed(Player player) {
-		super.removed(player);
-		this.container.stopOpen(player);
+	public void removed(Player checkedPlayer) {
+		super.removed(checkedPlayer);
+		this.container.stopOpen(checkedPlayer);
 	}
 
 	@Override

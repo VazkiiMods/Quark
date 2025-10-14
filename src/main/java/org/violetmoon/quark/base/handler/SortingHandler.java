@@ -146,7 +146,7 @@ public final class SortingHandler {
 
 		// Restore any items that shouldn't of been cleared.
 		for (int slot = 0; slot < container.getContainerSize(); slot++) {
-			if (slot < iStart || slot > iEnd) {
+			if (slot < iStart || slot >= iEnd) {
 				container.setItem(slot, containerCopy.get(slot));
 			}
 		}

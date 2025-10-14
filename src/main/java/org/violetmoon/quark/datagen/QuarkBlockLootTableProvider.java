@@ -82,7 +82,7 @@ public class QuarkBlockLootTableProvider extends BlockLootSubProvider {
         for(Block block : DuskboundBlocksModule.blocks)
             dropSelf(block);
         for(Block block : FramedGlassModule.glassBlocks)
-            dropWhenSilkTouch(block);
+            dropSelf(block);
         dropSelf(GoldBarsModule.gold_bars);
         for(Block block : HedgesModule.hedges)
             dropSelf(block);
