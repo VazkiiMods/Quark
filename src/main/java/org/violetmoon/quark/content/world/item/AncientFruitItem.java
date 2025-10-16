@@ -21,7 +21,7 @@ public class AncientFruitItem extends ZetaItem {
 	public AncientFruitItem(ZetaModule module) {
 		super("ancient_fruit", module, new Item.Properties()
 				.food(new FoodProperties.Builder().nutrition(4).saturationModifier(0.3F).alwaysEdible().build()));
-		CreativeTabManager.addToCreativeTabNextTo(CreativeModeTabs.FOOD_AND_DRINKS, this, Items.CHORUS_FRUIT, false);
+		CreativeTabManager.addNextToItem(CreativeModeTabs.FOOD_AND_DRINKS, this, Items.CHORUS_FRUIT, false);
 	}
 
 	@Override

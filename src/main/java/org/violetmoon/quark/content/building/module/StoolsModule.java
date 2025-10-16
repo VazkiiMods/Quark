@@ -43,15 +43,15 @@ public class StoolsModule extends ZetaModule {
 	@LoadEvent
 	public final void register(ZRegister event) {
 
-		CreativeTabManager.daisyChain();
+		CreativeTabManager.startChain(CreativeModeTabs.COLORED_BLOCKS, false, false, Blocks.PINK_BED);
 		for(DyeColor dye : MiscUtil.CREATIVE_COLOR_ORDER)
 			stools.add(new StoolBlock(this, dye));
-		CreativeTabManager.endDaisyChain();
+		CreativeTabManager.endChain();
 
-		CreativeTabManager.daisyChain();
-		for(StoolBlock s : stools)
+        CreativeTabManager.startChain(CreativeModeTabs.FUNCTIONAL_BLOCKS, false, false, Blocks.PINK_BED);
+        for(StoolBlock s : stools)
 			s.setCreativeTab(CreativeModeTabs.FUNCTIONAL_BLOCKS, Blocks.PINK_BED, false);
-		CreativeTabManager.endDaisyChain();
+		CreativeTabManager.endChain();
 
 		stoolEntity = EntityType.Builder.of(Stool::new, MobCategory.MISC)
 				.sized(6F / 16F, 0.5F)

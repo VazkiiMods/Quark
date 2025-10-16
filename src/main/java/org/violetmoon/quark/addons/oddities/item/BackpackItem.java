@@ -64,7 +64,7 @@ public class BackpackItem extends ArmorItem implements IZetaItem, IZetaItemExten
 
 		module.zeta().registry.registerItem(this.getItem(), "backpack");
 
-		CreativeTabManager.addToCreativeTabNextTo(CreativeModeTabs.TOOLS_AND_UTILITIES, this.getItem(), Items.SADDLE, true);
+		CreativeTabManager.addNextToItem(CreativeModeTabs.TOOLS_AND_UTILITIES, this.getItem(), Items.SADDLE, true);
 	}
 
 	/*@Override

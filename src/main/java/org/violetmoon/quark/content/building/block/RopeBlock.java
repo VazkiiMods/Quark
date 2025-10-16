@@ -281,7 +281,6 @@ public class RopeBlock extends ZetaBlock implements IZetaBlockItemProvider, Simp
 		BlockState nextState = Block.updateFromNeighbourShapes(state, world, dstPos);
 		if(nextState.getProperties().contains(BlockStateProperties.WATERLOGGED))
 			nextState = nextState.setValue(BlockStateProperties.WATERLOGGED, world.getFluidState(dstPos).getType() == Fluids.WATER);
-		world.setBlockAndUpdate(dstPos, nextState);
 
 		if(tile != null) {
 			BlockEntity target = BlockEntity.loadStatic(dstPos, state, tile.saveWithFullMetadata(world.registryAccess()), world.registryAccess());
@@ -291,7 +290,11 @@ public class RopeBlock extends ZetaBlock implements IZetaBlockItemProvider, Simp
 				target.setChanged();
 			}
 		}
-		world.updateNeighborsAt(dstPos, state.getBlock());
+
+        world.setBlockAndUpdate(dstPos, nextState);
+        nextState.handleNeighborChanged(world, dstPos, nextState.getBlock(), srcPos, true);
+
+        world.updateNeighborsAt(dstPos, state.getBlock());
         for (Entity entity : world.getEntities(null, new AABB(srcPos.above()))) {
             entity.teleportRelative(0 ,dstPos.getY() - srcPos.getY(), 0);
         }

@@ -27,7 +27,7 @@ public class SoulBeadItem extends ZetaItem {
 
 	public SoulBeadItem(ZetaModule module) {
 		super("soul_bead", module, new Item.Properties());
-		CreativeTabManager.addToCreativeTabNextTo(CreativeModeTabs.TOOLS_AND_UTILITIES, this, Items.ENDER_PEARL, true);
+		CreativeTabManager.addNextToItem(CreativeModeTabs.TOOLS_AND_UTILITIES, this, Items.ENDER_PEARL, true);
 	}
 
 	@NotNull

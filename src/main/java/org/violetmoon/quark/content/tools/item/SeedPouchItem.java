@@ -57,7 +57,7 @@ public class SeedPouchItem extends ZetaItem implements IUsageTickerOverride, ITr
 		super("seed_pouch", module,
 				new Item.Properties()
 						.stacksTo(1));
-		CreativeTabManager.addToCreativeTabNextTo(CreativeModeTabs.TOOLS_AND_UTILITIES, this, Items.LEAD, false);
+		CreativeTabManager.addNextToItem(CreativeModeTabs.TOOLS_AND_UTILITIES, this, Items.LEAD, false);
 	}
 
 	@Override

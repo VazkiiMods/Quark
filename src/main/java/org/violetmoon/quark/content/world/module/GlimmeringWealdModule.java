@@ -76,13 +76,14 @@ public class GlimmeringWealdModule extends ZetaModule {
 
     @LoadEvent
     public final void register(ZRegister event) {
-        CreativeTabManager.daisyChain();
+        CreativeTabManager.startChain(CreativeModeTabs.NATURAL_BLOCKS, false, false, Blocks.HANGING_ROOTS);
+
         glow_shroom = new GlowShroomBlock(this).setCreativeTab(CreativeModeTabs.NATURAL_BLOCKS, Blocks.HANGING_ROOTS, false);
         glow_shroom_block = new HugeGlowShroomBlock("glow_shroom_block", this, true);
         glow_shroom_stem = new HugeGlowShroomBlock("glow_shroom_stem", this, false);
         glow_shroom_ring = new GlowShroomRingBlock(this);
         glow_lichen_growth = new GlowLichenGrowthBlock(this);
-        CreativeTabManager.endDaisyChain();
+        CreativeTabManager.endChain();
 
 
         event.getVariantRegistry().addFlowerPot(glow_lichen_growth, "glow_lichen_growth", prop -> prop.lightLevel((state) -> 8));

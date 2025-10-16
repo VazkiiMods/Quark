@@ -31,7 +31,7 @@ public class TrowelItem extends ZetaItem implements IUsageTickerOverride {
 	public TrowelItem(ZetaModule module) {
 		super("trowel", module, new Item.Properties()
 				.durability(255));
-		CreativeTabManager.addToCreativeTabNextTo(CreativeModeTabs.TOOLS_AND_UTILITIES, this, Items.SHEARS, false);
+		CreativeTabManager.addNextToItem(CreativeModeTabs.TOOLS_AND_UTILITIES, this, Items.SHEARS, false);
 	}
 
 	@NotNull

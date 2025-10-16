@@ -13,6 +13,7 @@ package org.violetmoon.quark.content.building.module;
 import net.minecraft.world.item.CreativeModeTabs;
 
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
 import org.violetmoon.quark.content.building.block.BambooMatBlock;
 import org.violetmoon.quark.content.building.block.BambooMatCarpetBlock;
 import org.violetmoon.quark.content.building.block.PaperLanternBlock;
@@ -53,12 +54,12 @@ public class JapanesePaletteModule extends ZetaModule {
 		paperLanternSakura = new PaperLanternBlock("paper_lantern_sakura", this).setCondition(paperBlockCond);
 		blocks.add(paperLanternSakura.getBlock());
 
-		CreativeTabManager.daisyChain();
-		paperWall = new PaperWallBlock(paperLantern, "paper_wall").setCondition(paperBlockCond).setCreativeTab(CreativeModeTabs.BUILDING_BLOCKS, paperLantern.getBlock(), false);
+        CreativeTabManager.startChain(CreativeModeTabs.BUILDING_BLOCKS, false, false, paperLantern.getBlock());
+        paperWall = new PaperWallBlock(paperLantern, "paper_wall").setCondition(paperBlockCond).setCreativeTab(CreativeModeTabs.BUILDING_BLOCKS, paperLantern.getBlock(), false);
 		blocks.add(paperWall);
 		paperWallBig = new PaperWallBlock(paperLantern, "paper_wall_big").setCondition(paperBlockCond).setCreativeTab(CreativeModeTabs.BUILDING_BLOCKS, paperLantern.getBlock(), false);
 		blocks.add(paperWallBig);
-		CreativeTabManager.endDaisyChain();
+		CreativeTabManager.endChain();
 
 		paperWallSakura = new PaperWallBlock(paperLantern, "paper_wall_sakura").setCondition(paperBlockCond).setCreativeTab(CreativeModeTabs.BUILDING_BLOCKS, paperLanternSakura.getBlock(), false);
 		blocks.add(paperWallSakura);

@@ -1,5 +1,6 @@
 package org.violetmoon.quark.content.building.module;
 
+import net.minecraft.world.item.CreativeModeTabs;
 import net.minecraft.world.level.block.Blocks;
 
 import org.violetmoon.zeta.util.VanillaWoods;
@@ -26,13 +27,13 @@ public class VariantBookshelvesModule extends ZetaModule {
 
 	@LoadEvent
 	public final void register(ZRegister event) {
-		CreativeTabManager.daisyChain();
+		CreativeTabManager.startChain(CreativeModeTabs.FUNCTIONAL_BLOCKS, false, false, Blocks.BOOKSHELF);
 		for(Wood type : VanillaWoods.NON_OAK){
 			VariantBookshelfBlock bookshelf = new VariantBookshelfBlock(type.name(), this, !type.nether(), type.soundPlanks());
 			variantBookshelves.add(bookshelf);
 		}
 
-		CreativeTabManager.endDaisyChain();
+		CreativeTabManager.endChain();
 	}
 
 	@LoadEvent

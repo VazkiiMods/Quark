@@ -21,8 +21,8 @@ public class DuskboundBlocksModule extends ZetaModule {
 
 	@LoadEvent
 	public final void register(ZRegister event) {
-		CreativeTabManager.daisyChain();
-		Block duskbound = new ZetaBlock("duskbound_block", this, Block.Properties.ofFullCopy(Blocks.PURPUR_BLOCK)).setCreativeTab(CreativeModeTabs.BUILDING_BLOCKS, Blocks.COAL_BLOCK, true);
+        CreativeTabManager.startChain(CreativeModeTabs.BUILDING_BLOCKS, false, false, Blocks.COAL_BLOCK);
+        Block duskbound = new ZetaBlock("duskbound_block", this, Block.Properties.ofFullCopy(Blocks.PURPUR_BLOCK)).setCreativeTab(CreativeModeTabs.BUILDING_BLOCKS, Blocks.COAL_BLOCK, true);
 
 		Block duskbound_lantern = new ZetaBlock("duskbound_lantern", this,
 				Block.Properties.ofFullCopy(Blocks.PURPUR_BLOCK)
@@ -30,8 +30,8 @@ public class DuskboundBlocksModule extends ZetaModule {
 				.setCreativeTab(CreativeModeTabs.BUILDING_BLOCKS);
 
 
-		event.getVariantRegistry().addSlabAndStairs((IZetaBlock) duskbound, null);
-		CreativeTabManager.endDaisyChain();
+		event.getVariantRegistry().addSlabAndStairs((IZetaBlock) duskbound, CreativeModeTabs.BUILDING_BLOCKS);
+		CreativeTabManager.endChain();
         blocks.add(duskbound);
         blocks.add(duskbound_lantern);
 	}

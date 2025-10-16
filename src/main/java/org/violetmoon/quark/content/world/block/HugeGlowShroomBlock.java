@@ -38,7 +38,7 @@ public class HugeGlowShroomBlock extends HugeMushroomBlock implements IZetaBlock
 		this.glowing = glowing;
 
 		this.module.zeta().registry.registerBlock(this, name, true);
-		CreativeTabManager.addToCreativeTab(CreativeModeTabs.NATURAL_BLOCKS, this);
+		CreativeTabManager.addToTab(CreativeModeTabs.NATURAL_BLOCKS, this);
 	}
 
 	@Override

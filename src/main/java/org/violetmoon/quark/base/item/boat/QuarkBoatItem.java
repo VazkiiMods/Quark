@@ -42,7 +42,7 @@ public class QuarkBoatItem extends ZetaItem {
 
 		this.type = type;
 		this.chest = chest;
-		CreativeTabManager.addToCreativeTabNextTo(CreativeModeTabs.TOOLS_AND_UTILITIES, this, Blocks.RAIL, false);
+		CreativeTabManager.addNextToItem(CreativeModeTabs.TOOLS_AND_UTILITIES, this, Blocks.RAIL, false);
 	}
 
 	// Vanilla copy

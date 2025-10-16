@@ -77,7 +77,7 @@ public class MoreStoneVariantsModule extends ZetaModule {
 
 	public Block expandVanillaStone(ZRegister event, ZetaModule module, Block raw, String name) {
 		ZetaBlockWrapper wrap = new ZetaBlockWrapper(raw, this);
-		CreativeTabManager.addToCreativeTabNextTo(CreativeModeTabs.BUILDING_BLOCKS, wrap, Blocks.DEEPSLATE, true);
+		CreativeTabManager.addNextToItem(CreativeModeTabs.BUILDING_BLOCKS, wrap, Blocks.DEEPSLATE, true);
 
 		return NewStoneTypesModule.makeStone(event, module, raw, name, null, null, BooleanSuppliers.TRUE, null, ZetaBlock::new);
 	}
@@ -94,19 +94,20 @@ public class MoreStoneVariantsModule extends ZetaModule {
 				.sound(sound)
 				.strength(1.5F, 6.0F);
 
-		CreativeTabManager.daisyChain();
+		CreativeTabManager.startChain(CreativeModeTabs.BUILDING_BLOCKS, false, false, basePolished);
 		ZetaBlock bricks = (ZetaBlock) constr.make(name + "_bricks", this, props)
 				.setCondition(() -> cond.getAsBoolean() && enableBricks)
 				.setCreativeTab(CreativeModeTabs.BUILDING_BLOCKS, basePolished, false);
+        event.getVariantRegistry().addSlabStairsWall(bricks, CreativeModeTabs.BUILDING_BLOCKS);
         ZetaBlock chiseledBricks = (ZetaBlock) constr.make("chiseled_" + name + "_bricks", this, props)
 				.setCondition(() -> cond.getAsBoolean() && enableBricks && enableChiseledBricks)
 				.setCreativeTab(CreativeModeTabs.BUILDING_BLOCKS);
         ZetaPillarBlock pillar = (ZetaPillarBlock) pillarConstr.make(name + "_pillar", this, props)
 				.setCondition(() -> cond.getAsBoolean() && enablePillar)
 				.setCreativeTab(CreativeModeTabs.BUILDING_BLOCKS);
+        CreativeTabManager.endChain();
 
-		event.getVariantRegistry().addSlabStairsWall(bricks, null);
-		CreativeTabManager.endDaisyChain();
+
         blocks.add(bricks);
         blocks.add(chiseledBricks);
         blocks.add(pillar);

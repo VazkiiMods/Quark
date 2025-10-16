@@ -51,7 +51,7 @@ public class PermafrostModule extends ZetaModule {
 
 	@LoadEvent
 	public final void register(ZRegister event) {
-		CreativeTabManager.daisyChain();
+        CreativeTabManager.startChain(CreativeModeTabs.BUILDING_BLOCKS, false,true,Blocks.DEEPSLATE);
 		permafrost = (ZetaBlock) new ZetaBlock("permafrost", this,
 				OldMaterials.stone()
 						.mapColor(MapColor.COLOR_LIGHT_BLUE)
@@ -60,13 +60,14 @@ public class PermafrostModule extends ZetaModule {
 						.sound(SoundType.STONE))
 				.setCreativeTab(CreativeModeTabs.BUILDING_BLOCKS, Blocks.DEEPSLATE, true);
 
-		event.getVariantRegistry().addSlabStairsWall(permafrost, null);
         ZetaBlock permafrostBricks = (ZetaBlock) new ZetaBlock("permafrost_bricks", this,
                 BlockPropertyUtil.copyPropertySafe(permafrost)).setCreativeTab(CreativeModeTabs.BUILDING_BLOCKS);
-		event.getVariantRegistry().addSlabStairsWall(permafrostBricks, null);
-		CreativeTabManager.endDaisyChain();
+		CreativeTabManager.endChain();
 
-		((PermafrostStyle) generationSettings.style).setBlock(permafrost.defaultBlockState());
+        event.getVariantRegistry().addSlabStairsWall(permafrost, CreativeModeTabs.BUILDING_BLOCKS);
+        event.getVariantRegistry().addSlabStairsWall(permafrostBricks, CreativeModeTabs.BUILDING_BLOCKS);
+
+        ((PermafrostStyle) generationSettings.style).setBlock(permafrost.defaultBlockState());
         blocks.add(permafrost); //0
         blocks.add(permafrostBricks); //1
 	}

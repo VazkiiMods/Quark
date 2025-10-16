@@ -21,7 +21,7 @@ public class AncientTomeItem extends ZetaItem implements CreativeTabManager.Appe
 
 	public AncientTomeItem(ZetaModule module) {
 		super("ancient_tome", module, new Item.Properties().stacksTo(1).rarity(Rarity.UNCOMMON));
-		CreativeTabManager.addToCreativeTab(CreativeModeTabs.INGREDIENTS, this);
+		CreativeTabManager.addToTab(CreativeModeTabs.INGREDIENTS, this);
 	}
 
 	@Override

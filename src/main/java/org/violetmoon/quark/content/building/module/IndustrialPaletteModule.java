@@ -41,8 +41,9 @@ public class IndustrialPaletteModule extends ZetaModule {
 
 	@LoadEvent
 	public final void register(ZRegister event) {
-		CreativeTabManager.daisyChain();
-		Block.Properties props = Block.Properties.ofFullCopy(Blocks.IRON_BLOCK);
+        CreativeTabManager.startChain(CreativeModeTabs.BUILDING_BLOCKS, false, true, Blocks.CHAIN);
+
+        Block.Properties props = Block.Properties.ofFullCopy(Blocks.IRON_BLOCK);
 
 		BooleanSupplier ironPlateCond = () -> enableIronPlates;
 		BooleanSupplier ironLadderCond = () -> enableIronLadder;
@@ -54,7 +55,7 @@ public class IndustrialPaletteModule extends ZetaModule {
 
 		event.getVariantRegistry().addSlabAndStairs((IZetaBlock) ironPlate, null);
 		event.getVariantRegistry().addSlabAndStairs((IZetaBlock) rustyIronPlate, null);
-		CreativeTabManager.endDaisyChain();
+		CreativeTabManager.endChain();
 
 		Block ironLadder = new VariantLadderBlock("iron", this, Block.Properties.of()
 				.strength(0.8F)

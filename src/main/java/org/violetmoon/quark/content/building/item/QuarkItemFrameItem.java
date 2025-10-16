@@ -33,7 +33,7 @@ public class QuarkItemFrameItem extends ZetaItem {
 	public QuarkItemFrameItem(String name, ZetaModule module, TriFunction<? extends HangingEntity, Level, BlockPos, Direction> entityProvider) {
 		super(name, module, new Item.Properties());
 		this.entityProvider = entityProvider;
-		CreativeTabManager.addToCreativeTabNextTo(CreativeModeTabs.FUNCTIONAL_BLOCKS, this, Items.GLOW_ITEM_FRAME, false);
+		CreativeTabManager.addNextToItem(CreativeModeTabs.FUNCTIONAL_BLOCKS, this, Items.GLOW_ITEM_FRAME, false);
 	}
 
 	@NotNull

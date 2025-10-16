@@ -21,6 +21,7 @@ import net.minecraft.world.item.CreativeModeTabs;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.DispenserBlock;
 import org.jetbrains.annotations.Nullable;
 import org.violetmoon.quark.base.Quark;
@@ -79,14 +80,14 @@ public class ParrotEggsModule extends ZetaModule {
 				.build("parrot_egg");
 		Quark.ZETA.registry.register(parrotEggType, "parrot_egg", Registries.ENTITY_TYPE);
 
-		CreativeTabManager.daisyChain();
+        CreativeTabManager.startChain(CreativeModeTabs.INGREDIENTS, false,false, Items.EGG);
 		parrotEggs = new ArrayList<>();
 		for(Parrot.Variant variant : Parrot.Variant.values()) {
 			Item parrotEgg = new ParrotEggItem(variant, this).setCreativeTab(CreativeModeTabs.INGREDIENTS, Items.EGG, false);
 			parrotEggs.add(parrotEgg);
 			//DispenserBlock.registerBehavior(parrotEgg, new ProjectileDispenseBehavior(parrotEgg)); // TODO: Fix variant logic
 		}
-		CreativeTabManager.endDaisyChain();
+		CreativeTabManager.endChain();
 
 		throwParrotEggTrigger = event.getAdvancementModifierRegistry().registerManualTrigger("throw_parrot_egg");
 	}

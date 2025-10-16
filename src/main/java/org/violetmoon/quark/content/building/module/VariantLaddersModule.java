@@ -1,5 +1,6 @@
 package org.violetmoon.quark.content.building.module;
 
+import net.minecraft.world.item.CreativeModeTabs;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import org.violetmoon.quark.base.Quark;
@@ -30,10 +31,10 @@ public class VariantLaddersModule extends ZetaModule {
 
 	@LoadEvent
 	public final void register(ZRegister event) {
-		CreativeTabManager.daisyChain();
+		CreativeTabManager.startChain(CreativeModeTabs.FUNCTIONAL_BLOCKS, false, false, Blocks.LADDER);
 		for(Wood type : VanillaWoods.NON_OAK)
 			variantLadders.add(new VariantLadderBlock(type.name(), this, Block.Properties.ofFullCopy(Blocks.LADDER).sound(type.soundPlanks()), !type.nether()));
-		CreativeTabManager.endDaisyChain();
+		CreativeTabManager.endChain();
 	}
 
 	@LoadEvent

@@ -32,7 +32,7 @@ public class DiamondHeartItem extends ZetaItem {
 
 	public DiamondHeartItem(String regname, ZetaModule module, Properties properties) {
 		super(regname, module, properties);
-		CreativeTabManager.addToCreativeTabNextTo(CreativeModeTabs.TOOLS_AND_UTILITIES, this, Items.ENDER_PEARL, true);
+		CreativeTabManager.addNextToItem(CreativeModeTabs.TOOLS_AND_UTILITIES, this, Items.ENDER_PEARL, true);
 	}
 
 	@NotNull

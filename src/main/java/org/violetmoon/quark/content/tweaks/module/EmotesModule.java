@@ -298,7 +298,7 @@ public class EmotesModule extends ZetaModule {
 
 					stack.pushPose();
 					RenderSystem.setShader(GameRenderer::getPositionTexShader);
-					RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, transparency);
+					//RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, transparency);
 
 					RenderSystem.enableBlend();
 					RenderSystem.defaultBlendFunc();

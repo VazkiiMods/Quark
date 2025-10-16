@@ -82,7 +82,7 @@ public class WoodSetHandler {
 	}
 
 	public static WoodSet addWoodSet(ZRegister event, ZetaModule module, String name, MapColor color, MapColor barkColor, boolean flammable) {
-		CreativeTabManager.daisyChain();
+		CreativeTabManager.startChain(CreativeModeTabs.BUILDING_BLOCKS, false, true, Blocks.BAMBOO_BLOCK);
 
 		//TODO 1.20: maybe expose stuff like canOpenByHand, sound types, etc
 		// builder api might be in order since there's a lot of parameters now :skull:
@@ -92,7 +92,7 @@ public class WoodSetHandler {
 		WoodType type = WoodType.register(new WoodType(Quark.MOD_ID + ":" + name, setType));
 		WoodSet set = new WoodSet(name, module, type);
 
-		set.log = log(name + "_log", module, color, barkColor).setCreativeTab(CreativeModeTabs.BUILDING_BLOCKS, Blocks.BAMBOO_BLOCK, true);
+		set.log = log(name + "_log", module, color, barkColor).setCreativeTab(CreativeModeTabs.BUILDING_BLOCKS);
 		set.hollowLog = new HollowLogBlock(set.log, module, flammable).setCondition(() -> Quark.ZETA.modules.isEnabledOrOverlapping(HollowLogsModule.class));
 		
 		set.wood = new ZetaPillarBlock(name + "_wood", module, OldMaterials.wood().mapColor(barkColor).strength(2.0F).sound(SoundType.WOOD)).setCreativeTab(CreativeModeTabs.BUILDING_BLOCKS);
@@ -101,22 +101,22 @@ public class WoodSetHandler {
 
 		set.planks = new ZetaBlock(name + "_planks", module, OldMaterials.wood().mapColor(color).strength(2.0F, 3.0F).sound(SoundType.WOOD)).setCreativeTab(CreativeModeTabs.BUILDING_BLOCKS);
 
-		set.verticalPlanks = VerticalPlanksModule.add(name, set.planks, module).setCondition(() -> Quark.ZETA.modules.isEnabledOrOverlapping(VerticalPlanksModule.class));
-		set.slab = event.getVariantRegistry().addSlab((IZetaBlock) set.planks, null).getBlock();
-		set.stairs = event.getVariantRegistry().addStairs((IZetaBlock) set.planks, null).getBlock();
-
 		set.fence = new ZetaFenceBlock(name + "_fence", module, OldMaterials.wood().mapColor(color).strength(2.0F, 3.0F).sound(SoundType.WOOD));
 		set.fenceGate = new ZetaFenceGateBlock(name + "_fence_gate", module, type, OldMaterials.wood().mapColor(color).strength(2.0F, 3.0F).sound(SoundType.WOOD).forceSolidOn()).setCreativeTab(CreativeModeTabs.BUILDING_BLOCKS);
 
 		set.door = new ZetaDoorBlock(setType, name + "_door", module, OldMaterials.wood().mapColor(color).strength(3.0F).sound(SoundType.WOOD).noOcclusion());
 		set.trapdoor = new ZetaTrapdoorBlock(setType, name + "_trapdoor", module, OldMaterials.wood().mapColor(color).strength(3.0F).sound(SoundType.WOOD).noOcclusion().isValidSpawn((s, g, p, e) -> false));
 
-		set.pressurePlate = new ZetaPressurePlateBlock(name + "_pressure_plate", module, setType, OldMaterials.wood().mapColor(color).noCollission().strength(0.5F).sound(SoundType.WOOD));
-		set.button = new ZetaWoodenButtonBlock(setType, name + "_button", module, OldMaterials.decoration().noCollission().strength(0.5F).sound(SoundType.WOOD));
+		set.pressurePlate = new ZetaPressurePlateBlock(name + "_pressure_plate", module, setType, OldMaterials.wood().mapColor(color).noCollission().strength(0.5F).sound(SoundType.WOOD)).setCreativeTab(CreativeModeTabs.BUILDING_BLOCKS);
+		set.button = new ZetaWoodenButtonBlock(setType, name + "_button", module, OldMaterials.decoration().noCollission().strength(0.5F).sound(SoundType.WOOD)).setCreativeTab(CreativeModeTabs.BUILDING_BLOCKS);
 
-		CreativeTabManager.endDaisyChain();
+		CreativeTabManager.endChain();
 
-		((IZetaBlock) set.log).setCreativeTab(CreativeModeTabs.NATURAL_BLOCKS, Blocks.WARPED_STEM, false);
+        set.slab = event.getVariantRegistry().addSlab((IZetaBlock) set.planks, null).getBlock();
+        set.stairs = event.getVariantRegistry().addStairs((IZetaBlock) set.planks, null).getBlock();
+        set.verticalPlanks = VerticalPlanksModule.add(name, set.planks, module).setCondition(() -> Quark.ZETA.modules.isEnabledOrOverlapping(VerticalPlanksModule.class));
+
+        ((IZetaBlock) set.log).setCreativeTab(CreativeModeTabs.NATURAL_BLOCKS, Blocks.WARPED_STEM, false);
 
 		set.sign = new ZetaStandingSignBlock(name + "_sign", module, type, OldMaterials.wood().forceSolidOn().mapColor(color).noCollission().strength(1.0F).sound(SoundType.WOOD));
 		set.wallSign = new ZetaWallSignBlock(name + "_wall_sign", module, type, OldMaterials.wood().forceSolidOn().mapColor(color).noCollission().strength(1.0F).sound(SoundType.WOOD).lootFrom(() -> set.sign));

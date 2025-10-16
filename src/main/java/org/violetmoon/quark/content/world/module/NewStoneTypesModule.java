@@ -118,7 +118,7 @@ public class NewStoneTypesModule extends ZetaModule {
 					.requiresCorrectToolForDrops()
 					.strength(1.5F, 6.0F);
 
-		CreativeTabManager.daisyChain();
+        CreativeTabManager.startChain(CreativeModeTabs.BUILDING_BLOCKS, false,true,Blocks.DEEPSLATE);
 		Block normal;
 		if(isVanilla)
 			normal = raw;
@@ -133,9 +133,9 @@ public class NewStoneTypesModule extends ZetaModule {
 		else
 			polished.setCreativeTab(CreativeModeTabs.BUILDING_BLOCKS);
 
-		event.getVariantRegistry().addSlabStairsWall(normal instanceof IZetaBlock quarkBlock ? quarkBlock : new ZetaBlockWrapper(normal, module).setCondition(enabledCond), null);
-		event.getVariantRegistry().addSlabAndStairs(polished, null);
-		CreativeTabManager.endDaisyChain();
+        CreativeTabManager.endChain();
+        event.getVariantRegistry().addSlabStairsWall(normal instanceof IZetaBlock quarkBlock ? quarkBlock : new ZetaBlockWrapper(normal, module).setCondition(enabledCond), CreativeModeTabs.BUILDING_BLOCKS);
+		event.getVariantRegistry().addSlabAndStairs(polished, CreativeModeTabs.BUILDING_BLOCKS);
 
 		if(!isVanilla) {
 			((IZetaBlock) normal).setCreativeTab(CreativeModeTabs.NATURAL_BLOCKS, Blocks.PRISMARINE, true);

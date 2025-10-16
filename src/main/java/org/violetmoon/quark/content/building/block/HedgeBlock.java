@@ -66,7 +66,7 @@ public class HedgeBlock extends ZetaFenceBlock implements IZetaBlock, IZetaBlock
 		if(module == null) //auto registration below this line
 			return;
 
-		CreativeTabManager.addToCreativeTabNextTo(CreativeModeTabs.NATURAL_BLOCKS, this, leaf, false);
+		CreativeTabManager.addNextToItem(CreativeModeTabs.NATURAL_BLOCKS, this, leaf, false);
 		module.zeta().renderLayerRegistry.put(this, RenderLayerRegistry.Layer.CUTOUT);
 	}
 

@@ -32,7 +32,7 @@ public class AbacusItem extends ZetaItem {
 
 	public AbacusItem(ZetaModule module) {
 		super("abacus", module, new Item.Properties().stacksTo(1));
-		CreativeTabManager.addToCreativeTabNextTo(CreativeModeTabs.TOOLS_AND_UTILITIES, this, Items.SPYGLASS, true);
+		CreativeTabManager.addNextToItem(CreativeModeTabs.TOOLS_AND_UTILITIES, this, Items.SPYGLASS, true);
 	}
 
 	@NotNull

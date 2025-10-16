@@ -13,6 +13,7 @@ import org.violetmoon.zeta.event.bus.LoadEvent;
 import org.violetmoon.zeta.event.load.ZRegister;
 import org.violetmoon.zeta.module.ZetaLoadModule;
 import org.violetmoon.zeta.module.ZetaModule;
+import org.violetmoon.zeta.registry.CreativeTabManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -58,14 +59,18 @@ public class MoreBrickTypesModule extends ZetaModule {
 		add(event, "netherrack", Blocks.NETHERRACK, () -> enableNetherrackBricks && enableCobblestoneBricks, Blocks.NETHER_BRICKS); //8
 	}
 
-	private void add(ZRegister event, String name, Block parent, BooleanSupplier cond, Block placeBehind) {
+	private void add(ZRegister event, String name, Block parent, BooleanSupplier cond, Block placeBehind, boolean actuallyNoPlaceInFront) {
         ZetaBlock brickBlock = (ZetaBlock) new ZetaBlock(name + "_bricks", this,
                 BlockPropertyUtil.copyPropertySafe(parent)
                         .requiresCorrectToolForDrops())
                 .setCondition(cond)
-                .setCreativeTab(CreativeModeTabs.BUILDING_BLOCKS, placeBehind, true);
+                .setCreativeTab(CreativeModeTabs.BUILDING_BLOCKS, placeBehind, actuallyNoPlaceInFront);
         blocks.add(brickBlock);
-		event.getVariantRegistry().addSlabStairsWall(brickBlock, null);
+		event.getVariantRegistry().addSlabStairsWall(brickBlock, CreativeModeTabs.BUILDING_BLOCKS);
 	}
+
+    private void add(ZRegister event, String name, Block parent, BooleanSupplier cond, Block placeBehind) {
+        add(event, name, parent, cond, placeBehind, false);
+    }
 
 }

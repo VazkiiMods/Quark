@@ -47,7 +47,7 @@ public class SlimeInABucketItem extends ZetaItem {
 				new Item.Properties()
 						.stacksTo(1)
 						.craftRemainder(Items.BUCKET));
-		CreativeTabManager.addToCreativeTabNextTo(CreativeModeTabs.TOOLS_AND_UTILITIES, this, Items.TADPOLE_BUCKET, false);
+		CreativeTabManager.addNextToItem(CreativeModeTabs.TOOLS_AND_UTILITIES, this, Items.TADPOLE_BUCKET, false);
 	}
 
 	@Override

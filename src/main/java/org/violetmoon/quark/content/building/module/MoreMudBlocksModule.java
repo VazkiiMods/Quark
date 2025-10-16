@@ -26,14 +26,14 @@ public class MoreMudBlocksModule extends ZetaModule {
 	public final void register(ZRegister event) {
 		BlockBehaviour.Properties props = Properties.ofFullCopy(Blocks.MUD_BRICKS);
 
-		CreativeTabManager.daisyChain();
+		CreativeTabManager.startChain(CreativeModeTabs.BUILDING_BLOCKS, false, false, Blocks.MUD_BRICK_STAIRS);
 		Block carved = new ZetaBlock("carved_mud_bricks", this, props).setCreativeTab(CreativeModeTabs.BUILDING_BLOCKS, Blocks.MUD_BRICK_STAIRS, false);
 		blocks.add(carved);
 		Block pillar = new ZetaPillarBlock("mud_pillar", this, props).setCreativeTab(CreativeModeTabs.BUILDING_BLOCKS);
 		blocks.add(pillar);
 		Block lattice = new MudBrickLatticeBlock(this, props);
 		blocks.add(lattice);
-		CreativeTabManager.endDaisyChain();
+		CreativeTabManager.endChain();
 	}
 
 }

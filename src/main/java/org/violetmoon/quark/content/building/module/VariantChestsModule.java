@@ -107,15 +107,15 @@ public class VariantChestsModule extends ZetaModule {
 		makeChestBlocks("purpur", Blocks.PURPUR_BLOCK, null);
 		makeChestBlocks("prismarine", Blocks.PRISMARINE, null);
 
-		CreativeTabManager.daisyChain();
+		CreativeTabManager.startChain(CreativeModeTabs.FUNCTIONAL_BLOCKS, false, true, Blocks.CHEST);
 		for(Block regularChest : regularChests.values())
-			CreativeTabManager.addToCreativeTabNextTo(CreativeModeTabs.FUNCTIONAL_BLOCKS, regularChest, Blocks.CHEST, true);
-		CreativeTabManager.endDaisyChain();
+			CreativeTabManager.addNextToItem(CreativeModeTabs.FUNCTIONAL_BLOCKS, regularChest, Blocks.CHEST, true);
+		CreativeTabManager.endChain();
 
-		CreativeTabManager.daisyChain();
-		for(Block trappedChest : trappedChests.values())
-			CreativeTabManager.addToCreativeTabNextTo(CreativeModeTabs.REDSTONE_BLOCKS, trappedChest, Blocks.TRAPPED_CHEST, true);
-		CreativeTabManager.endDaisyChain();
+        CreativeTabManager.startChain(CreativeModeTabs.REDSTONE_BLOCKS, false, true, Blocks.TRAPPED_CHEST);
+        for(Block trappedChest : trappedChests.values())
+			CreativeTabManager.addNextToItem(CreativeModeTabs.REDSTONE_BLOCKS, trappedChest, Blocks.TRAPPED_CHEST, true);
+		CreativeTabManager.endChain();
 
 		StructureBlockReplacementHandler.addReplacement(this::getGenerationChestBlockState);
 	}

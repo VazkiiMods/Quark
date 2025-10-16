@@ -49,7 +49,7 @@ public class PathfindersQuillItem extends ZetaItem implements CreativeTabManager
 
 	public PathfindersQuillItem(ZetaModule module, Item.Properties properties) {
 		super("pathfinders_quill", module, properties);
-        CreativeTabManager.addToCreativeTabNextTo(CreativeModeTabs.TOOLS_AND_UTILITIES, this, Items.MAP, false);
+        CreativeTabManager.addNextToItem(CreativeModeTabs.TOOLS_AND_UTILITIES, this, Items.MAP, false);
 	}
 
 	public PathfindersQuillItem(ZetaModule module) {

@@ -87,8 +87,8 @@ public class CrabsModule extends ZetaModule {
 
 	@LoadEvent
 	public final void register(ZRegister event) {
-		CreativeTabManager.daisyChain();
-		crab_leg = new ZetaItem("crab_leg", this, new Item.Properties()
+        CreativeTabManager.startChain(CreativeModeTabs.FOOD_AND_DRINKS, false, false, Items.PUFFERFISH);
+        crab_leg = new ZetaItem("crab_leg", this, new Item.Properties()
 				.food(new FoodProperties.Builder()
 						.nutrition(1)
 						.saturationModifier(0.3F)
@@ -101,7 +101,7 @@ public class CrabsModule extends ZetaModule {
 						.saturationModifier(0.8F)
 						.build()))
 				.setCreativeTab(CreativeModeTabs.FOOD_AND_DRINKS);
-		CreativeTabManager.endDaisyChain();
+		CreativeTabManager.endChain();
 
 		crab_shell = new ZetaItem("crab_shell", this, new Item.Properties())
 				.setCondition(() -> enableBrewing).setCreativeTab(CreativeModeTabs.INGREDIENTS, Items.RABBIT_FOOT, false);

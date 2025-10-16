@@ -45,24 +45,24 @@ public class FramedGlassModule extends ZetaModule {
         glassBlocks.add(framed_glass);
         glassBlocks.add(framed_glass_pane);
 
-		CreativeTabManager.daisyChain();
-		for(DyeColor dye : MiscUtil.CREATIVE_COLOR_ORDER){
+        CreativeTabManager.startChain(CreativeModeTabs.BUILDING_BLOCKS, false, false, Blocks.PINK_STAINED_GLASS);
+        for(DyeColor dye : MiscUtil.CREATIVE_COLOR_ORDER){
 			Block block = new ZetaGlassBlock(dye.getName() + "_framed_glass", this, true, props).setCreativeTab(CreativeModeTabs.COLORED_BLOCKS, Blocks.PINK_STAINED_GLASS, false);
 			blockMap.put(dye, (IZetaBlock) block);
 			glassBlocks.add((Block) blockMap.get(dye));
             stainedFramedGlass.add(block);
 		}
-		CreativeTabManager.endDaisyChain();
+		CreativeTabManager.endChain();
 
-		CreativeTabManager.daisyChain();
-		for(DyeColor dye : MiscUtil.CREATIVE_COLOR_ORDER){
+        CreativeTabManager.startChain(CreativeModeTabs.BUILDING_BLOCKS, false, false, Blocks.PINK_STAINED_GLASS_PANE);
+        for(DyeColor dye : MiscUtil.CREATIVE_COLOR_ORDER){
 			Block block = new ZetaInheritedPaneBlock(blockMap.get(dye)).setCreativeTab(CreativeModeTabs.COLORED_BLOCKS, Blocks.PINK_STAINED_GLASS_PANE, false);
 			paneMap.put(dye, (IZetaBlock) block);
 			glassBlocks.add(block);
             stainedFramedGlassPanes.add(block);
 		}
 
-		CreativeTabManager.endDaisyChain();
+		CreativeTabManager.endChain();
 	}
 
 }

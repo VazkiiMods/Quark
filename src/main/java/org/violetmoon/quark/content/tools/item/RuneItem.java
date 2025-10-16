@@ -36,7 +36,7 @@ public class RuneItem extends ZetaSmithingTemplateItem implements IRuneColorProv
 		super(regname, module, RUNE_APPLIES_TO, RUNE_INGREDIENTS, RUNE_UPGRADE, RUNE_BASE_SLOT_DESCRIPTION, RUNE_ADDITIONS_SLOT_DESCRIPTION, anyToolIconList(),
 			List.of(EMPTY_SLOT_BLAZE_POWDER, EMPTY_SLOT_DYE, EMPTY_SLOT_NOTHING));
 
-		CreativeTabManager.addToCreativeTabNextTo(CreativeModeTabs.INGREDIENTS, this, Items.SPIRE_ARMOR_TRIM_SMITHING_TEMPLATE, false);
+		CreativeTabManager.addNextToItem(CreativeModeTabs.INGREDIENTS, this, Items.SPIRE_ARMOR_TRIM_SMITHING_TEMPLATE, false);
 	}
 
 	@Override

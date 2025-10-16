@@ -13,6 +13,7 @@ import com.google.common.collect.ImmutableSet;
 import net.minecraft.world.item.CreativeModeTabs;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockBehaviour.Properties;
+import org.violetmoon.zeta.registry.CreativeTabManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,14 +24,17 @@ public class RawMetalBricksModule extends ZetaModule {
 
 	@LoadEvent
 	public final void register(ZRegister event) {
-		IZetaBlock iron = (IZetaBlock) new ZetaBlock("raw_iron_bricks", this, Properties.ofFullCopy(Blocks.RAW_IRON_BLOCK)).setCreativeTab(CreativeModeTabs.BUILDING_BLOCKS, Blocks.IRON_BLOCK, false);
+        IZetaBlock iron = (IZetaBlock) new ZetaBlock("raw_iron_bricks", this, Properties.ofFullCopy(Blocks.RAW_IRON_BLOCK)).setCreativeTab(CreativeModeTabs.BUILDING_BLOCKS, Blocks.IRON_BLOCK, false);
 		blocks.add(iron.getBlock());
+        event.getVariantRegistry().addSlabStairsWall(iron, CreativeModeTabs.BUILDING_BLOCKS);
 		IZetaBlock gold = (IZetaBlock) new ZetaBlock("raw_gold_bricks", this, Properties.ofFullCopy(Blocks.RAW_GOLD_BLOCK)).setCreativeTab(CreativeModeTabs.BUILDING_BLOCKS, Blocks.GOLD_BLOCK, false);
 		blocks.add(gold.getBlock());
-		IZetaBlock copper = (IZetaBlock) new ZetaBlock("raw_copper_bricks", this, Properties.ofFullCopy(Blocks.RAW_COPPER_BLOCK)).setCreativeTab(CreativeModeTabs.BUILDING_BLOCKS, Blocks.COPPER_BLOCK, false);
+        event.getVariantRegistry().addSlabStairsWall(gold, CreativeModeTabs.BUILDING_BLOCKS);
+		IZetaBlock copper = (IZetaBlock) new ZetaBlock("raw_copper_bricks", this, Properties.ofFullCopy(Blocks.RAW_COPPER_BLOCK)).setCreativeTab(CreativeModeTabs.BUILDING_BLOCKS, Blocks.COPPER_BLOCK, true);
 		blocks.add(copper.getBlock());
+        event.getVariantRegistry().addSlabStairsWall(copper, CreativeModeTabs.BUILDING_BLOCKS);
 
-		ImmutableSet.of(iron, gold, copper).forEach(what -> event.getVariantRegistry().addSlabStairsWall(what, null));
+		//ImmutableSet.of(iron, gold, copper).forEach(what -> event.getVariantRegistry().addSlabStairsWall(what, CreativeModeTabs.BUILDING_BLOCKS));
 	}
 
 }
