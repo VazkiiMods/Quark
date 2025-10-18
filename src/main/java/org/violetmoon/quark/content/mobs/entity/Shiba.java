@@ -1,6 +1,7 @@
 package org.violetmoon.quark.content.mobs.entity;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.particles.ItemParticleOption;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.protocol.Packet;
@@ -13,7 +14,10 @@ import net.minecraft.server.level.ServerEntity;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.tags.DamageTypeTags;
 import net.minecraft.tags.ItemTags;
+import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.damagesource.DamageSource;
@@ -26,6 +30,8 @@ import net.minecraft.world.entity.projectile.AbstractArrow;
 import net.minecraft.world.entity.projectile.AbstractArrow.Pickup;
 import net.minecraft.world.item.*;
 import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.item.enchantment.EnchantmentEffectComponents;
+import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LightLayer;
@@ -256,8 +262,8 @@ public class Shiba extends TamableAnimal {
 	@NotNull
 	@Override
 	public InteractionResult mobInteract(Player player, @NotNull InteractionHand hand) {
-		ItemStack itemstack = player.getItemInHand(hand);
-		Item item = itemstack.getItem();
+		ItemStack heldItemStack = player.getItemInHand(hand);
+		Item item = heldItemStack.getItem();
 		Level level = this.level();
 		if(player.isDiscrete() && player.getMainHandItem().isEmpty()) {
 			if(hand == InteractionHand.MAIN_HAND && WantLoveGoal.canPet(this)) {
@@ -275,8 +281,10 @@ public class Shiba extends TamableAnimal {
 			boolean flag = this.isOwnedBy(player) || this.isTame() || item == Items.BONE && !this.isTame();
 			return flag ? InteractionResult.SUCCESS : InteractionResult.PASS;
 		} else {
+            boolean isPlayerOwner = this.isOwnedBy(player);
 			if(this.isTame()) {
 				ItemStack mouthItem = getMouthItem();
+
 				if(!mouthItem.isEmpty()) {
 					ItemStack copy = mouthItem.copy();
 					if(!player.addItem(copy))
@@ -291,49 +299,83 @@ public class Shiba extends TamableAnimal {
 					return InteractionResult.CONSUME;
 				}
 
-				if(this.isFood(itemstack) && this.getHealth() < this.getMaxHealth()) {
+				if(this.isFood(heldItemStack) && this.getHealth() < this.getMaxHealth()) {
 					if(!player.getAbilities().instabuild) {
-						itemstack.shrink(1);
+						heldItemStack.shrink(1);
 					}
 
-					this.heal((float) item.getFoodProperties(itemstack, this).nutrition());
+					this.heal((float) item.getFoodProperties(heldItemStack, this).nutrition());
 					return InteractionResult.CONSUME;
 				}
 
-				if(!(item instanceof DyeItem)) {
-					if(!itemstack.isEmpty() && mouthItem.isEmpty() && itemstack.getItem() instanceof SwordItem) {
-						ItemStack copy = itemstack.copy();
-						copy.setCount(1);
-						itemstack.setCount(itemstack.getCount() - 1);
 
-						setMouthItem(copy);
-						return InteractionResult.CONSUME;
-					}
+                if (item instanceof DyeItem dyeItem) {
+                    DyeColor dyecolor = dyeItem.getDyeColor();
+                    if (dyecolor != this.getCollarColor()) {
+                        this.setCollarColor(dyecolor);
+                        if (!player.getAbilities().instabuild) {
+                            heldItemStack.shrink(1);
+                        }
 
-					InteractionResult actionresulttype = super.mobInteract(player, hand);
-					if((!actionresulttype.consumesAction() || this.isBaby()) && this.isOwnedBy(player)) {
-						this.setOrderedToSit(!this.isOrderedToSit());
-						this.jumping = false;
-						this.navigation.stop();
-						this.setTarget(null);
-						return InteractionResult.CONSUME;
-					}
+                        return InteractionResult.CONSUME;
+                    }
+                }
 
-					return actionresulttype;
-				}
+                if (!heldItemStack.isEmpty() && mouthItem.isEmpty() && heldItemStack.getItem() instanceof SwordItem) {
+                    ItemStack copy = heldItemStack.copy();
+                    copy.setCount(1);
+                    heldItemStack.setCount(heldItemStack.getCount() - 1);
 
-				DyeColor dyecolor = ((DyeItem) item).getDyeColor();
-				if(dyecolor != this.getCollarColor()) {
-					this.setCollarColor(dyecolor);
-					if(!player.getAbilities().instabuild) {
-						itemstack.shrink(1);
-					}
+                    setMouthItem(copy);
+                    return InteractionResult.CONSUME;
+                }
 
-					return InteractionResult.CONSUME;
-				}
-			} else if(item == Items.BONE) {
+                if (heldItemStack.is(Items.WOLF_ARMOR) && this.isOwnedBy(player) && this.getBodyArmorItem().isEmpty() && !this.isBaby()) {
+                    this.setBodyArmorItem(heldItemStack.copyWithCount(1));
+                    heldItemStack.consume(1, player);
+
+                    return InteractionResult.SUCCESS;
+                }
+
+                if (heldItemStack.canPerformAction(net.neoforged.neoforge.common.ItemAbilities.SHEARS_REMOVE_ARMOR)
+                        && this.isOwnedBy(player) && this.hasArmor()
+                        && (!EnchantmentHelper.has(this.getBodyArmorItem(), EnchantmentEffectComponents.PREVENT_ARMOR_CHANGE) || player.isCreative())) {
+                    heldItemStack.hurtAndBreak(1, player, getSlotForHand(hand));
+                    this.playSound(SoundEvents.ARMOR_UNEQUIP_WOLF);
+                    ItemStack itemstack1 = this.getBodyArmorItem();
+                    this.setBodyArmorItem(ItemStack.EMPTY);
+                    this.spawnAtLocation(itemstack1);
+
+                    return InteractionResult.SUCCESS;
+                }
+
+                if (ArmorMaterials.ARMADILLO.value().repairIngredient().get().test(heldItemStack) && this.isInSittingPose()
+                        && this.hasArmor() && isPlayerOwner && this.getBodyArmorItem().isDamaged()) {
+                    heldItemStack.shrink(1);
+                    this.playSound(SoundEvents.WOLF_ARMOR_REPAIR);
+                    ItemStack bodyArmor = this.getBodyArmorItem();
+                    int repairValue = bodyArmor.getMaxDamage() / 8;
+                    bodyArmor.setDamageValue(Math.max(0, bodyArmor.getDamageValue() - repairValue));
+
+                    return InteractionResult.SUCCESS;
+                }
+
+                InteractionResult interactionResult = super.mobInteract(player, hand);
+
+                if ((!interactionResult.consumesAction() || this.isBaby()) && isPlayerOwner) {
+                    this.setOrderedToSit(!this.isOrderedToSit());
+                    this.jumping = false;
+                    this.navigation.stop();
+                    this.setTarget(null);
+                    return InteractionResult.CONSUME;
+                }
+
+                return interactionResult;
+
+
+            } else if(item == Items.BONE) {
 				if(!player.getAbilities().instabuild) {
-					itemstack.shrink(1);
+					heldItemStack.shrink(1);
 				}
 
 				if(this.random.nextInt(3) == 0 && !EventHooks.onAnimalTame(this, player)) {
@@ -380,8 +422,8 @@ public class Shiba extends TamableAnimal {
 	}
 
 	@Override
-	protected SoundEvent getHurtSound(@NotNull DamageSource damageSourceIn) {
-		return QuarkSounds.ENTITY_SHIBA_HURT;
+	protected SoundEvent getHurtSound(@NotNull DamageSource source) {
+		return this.canArmorAbsorb(source) ? SoundEvents.WOLF_ARMOR_DAMAGE : QuarkSounds.ENTITY_SHIBA_HURT;
 	}
 
 	@Override
@@ -404,4 +446,50 @@ public class Shiba extends TamableAnimal {
 		}
 		return wolfentity;
 	}
+
+    // WOLF ARMOR COPY STUFF
+
+    private boolean canArmorAbsorb(DamageSource damageSource) {
+        return this.hasArmor() && !damageSource.is(DamageTypeTags.BYPASSES_WOLF_ARMOR);
+    }
+
+    public boolean hasArmor() {
+        return this.getBodyArmorItem().is(Items.WOLF_ARMOR);
+    }
+
+    /**
+     * Deals damage to the entity. This will take the armor of the entity into consideration before damaging the health bar.
+     */
+    @Override
+    protected void actuallyHurt(DamageSource damageSource, float damageAmount) {
+        if (!this.canArmorAbsorb(damageSource)) {
+            super.actuallyHurt(damageSource, damageAmount);
+        } else {
+            ItemStack itemstack = this.getBodyArmorItem();
+            int i = itemstack.getDamageValue();
+            int j = itemstack.getMaxDamage();
+            itemstack.hurtAndBreak(Mth.ceil(damageAmount), this, EquipmentSlot.BODY);
+            if (Crackiness.WOLF_ARMOR.byDamage(i, j) != Crackiness.WOLF_ARMOR.byDamage(this.getBodyArmorItem())) {
+                this.playSound(SoundEvents.WOLF_ARMOR_CRACK);
+                if (this.level() instanceof ServerLevel serverlevel) {
+                    serverlevel.sendParticles(
+                            new ItemParticleOption(ParticleTypes.ITEM, Items.ARMADILLO_SCUTE.getDefaultInstance()),
+                            this.getX(),
+                            this.getY() + 1.0,
+                            this.getZ(),
+                            20,
+                            0.2,
+                            0.1,
+                            0.2,
+                            0.1
+                    );
+                }
+            }
+        }
+    }
+
+    @Override
+    protected void hurtArmor(DamageSource damageSource, float damageAmount) {
+        this.doHurtEquipment(damageSource, damageAmount, EquipmentSlot.BODY);
+    }
 }

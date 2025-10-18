@@ -5,10 +5,7 @@ import com.google.common.collect.ImmutableList;
 import net.minecraft.client.model.AgeableListModel;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.model.geom.PartPose;
-import net.minecraft.client.model.geom.builders.CubeListBuilder;
-import net.minecraft.client.model.geom.builders.LayerDefinition;
-import net.minecraft.client.model.geom.builders.MeshDefinition;
-import net.minecraft.client.model.geom.builders.PartDefinition;
+import net.minecraft.client.model.geom.builders.*;
 import net.minecraft.util.Mth;
 
 
@@ -48,7 +45,7 @@ public class FoxhoundModel extends AgeableListModel<Foxhound> {
 		fluff = body.getChild("fluff");
 	}
 
-	public static LayerDefinition createBodyLayer() {
+	public static LayerDefinition createBodyLayer(CubeDeformation cubeDeformation) {
 		MeshDefinition mesh = new MeshDefinition();
 		PartDefinition root = mesh.getRoot();
 
@@ -57,32 +54,32 @@ public class FoxhoundModel extends AgeableListModel<Foxhound> {
 		PartDefinition head = root.addOrReplaceChild("head",
 				CubeListBuilder.create()
 						.texOffs(0, 20)
-						.addBox(-4.0F, -3.0F, -6.0F, 8, 6, 6),
+						.addBox(-4.0F, -3.0F, -6.0F, 8, 6, 6, cubeDeformation),
 				PartPose.offsetAndRotation(0.0F, 14.5F, -5.5f, 0.0F, 1F, 0.0F));
 
 		head.addOrReplaceChild("rightEar",
 				CubeListBuilder.create()
 						.texOffs(0, 47)
-						.addBox(-4.0F, -5.0F, -5.0F, 2, 2, 3),
+						.addBox(-4.0F, -5.0F, -5.0F, 2, 2, 3, cubeDeformation),
 				PartPose.ZERO);
 
 		head.addOrReplaceChild("leftEar",
 				CubeListBuilder.create()
 						.texOffs(10, 47)
-						.addBox(2.0F, -5.0F, -5.0F, 2, 2, 3),
+						.addBox(2.0F, -5.0F, -5.0F, 2, 2, 3, cubeDeformation),
 				PartPose.ZERO);
 
 		head.addOrReplaceChild("snout",
 				CubeListBuilder.create()
 						.texOffs(29, 18)
-						.addBox(-2.0F, 1.0F, -10.0F, 4, 2, 4),
+						.addBox(-2.0F, 1.0F, -10.0F, 4, 2, 4, cubeDeformation),
 				PartPose.ZERO);
 
 
 		PartDefinition body = root.addOrReplaceChild("body",
 				CubeListBuilder.create()
 						.texOffs(0, 2)
-						.addBox(-4.0F, -12.0F, 0.0F, 8, 12, 6),
+						.addBox(-4.0F, -12.0F, 0.0F, 8, 12, 6, cubeDeformation),
 				PartPose.offsetAndRotation(0.0F, 17.0F, 6.5f, 1.5707963267948966F, 0.0F, 0.0F));
 
 		body.addOrReplaceChild("tail",
@@ -90,6 +87,8 @@ public class FoxhoundModel extends AgeableListModel<Foxhound> {
 						.texOffs(36, 16)
 						.addBox(-2.0F, -4.0F, 0.0F, 4, 5, 10),
 				PartPose.offsetAndRotation(0.0F, 0.0F, 1.5F, -1.3089969389957472F, 0.0F, 0.0F));
+
+        //CubeDeformation fluffControl = new CubeDeformation(0.0f);
 
 		body.addOrReplaceChild("fluff",
 				CubeListBuilder.create()
@@ -101,26 +100,26 @@ public class FoxhoundModel extends AgeableListModel<Foxhound> {
 		root.addOrReplaceChild("leftBackLeg",
 				CubeListBuilder.create()
 						.texOffs(36, 32)
-						.addBox(-1.5F, 0.0F, -1.5F, 3, 12, 3),
+						.addBox(-1.5F, 0.0F, -1.5F, 3, 12, 3, cubeDeformation),
 				PartPose.offsetAndRotation(3.0F, 12.0F, 4, 0.0F, 0.0F, 0.0F));
 
 		root.addOrReplaceChild("rightBackLeg",
 				CubeListBuilder.create()
 						.texOffs(24, 32)
-						.addBox(-1.5F, 0.0F, -1.5F, 3, 12, 3),
+						.addBox(-1.5F, 0.0F, -1.5F, 3, 12, 3, cubeDeformation),
 				PartPose.offsetAndRotation(-3.0F, 12.0F, 4, 0.0F, 0.0F, 0.0F));
 
 		root.addOrReplaceChild("rightFrontLeg",
 				CubeListBuilder.create()
 						.texOffs(0, 32)
-						.addBox(-1.5F, 0.0F, -1.5F, 3, 12, 3),
+						.addBox(-1.5F, 0.0F, -1.5F, 3, 12, 3, cubeDeformation),
 				PartPose.offsetAndRotation(-2.0F, 12.0F, -3.5f, 0.0F, 0.0F, 0.0F));
 
 
 		root.addOrReplaceChild("leftFrontLeg",
 				CubeListBuilder.create()
 						.texOffs(12, 32)
-						.addBox(-1.5F, 0.0F, -1.5F, 3, 12, 3),
+						.addBox(-1.5F, 0.0F, -1.5F, 3, 12, 3, cubeDeformation),
 				PartPose.offsetAndRotation(2.0F, 12.0F, -3.5f, 0.0F, 0.0F, 0.0F));
 
 
@@ -138,6 +137,11 @@ public class FoxhoundModel extends AgeableListModel<Foxhound> {
 		this.head.xRot = 0;
 		this.body.yRot = hound.getBodyRollAngle(partialTickTime, -0.16F);
 		this.tail.yRot = hound.getBodyRollAngle(partialTickTime, -0.2F);
+
+        if (this.fluff.visible && hound.hasArmor() )
+            this.fluff.visible = false;
+        else if (!this.fluff.visible && !hound.hasArmor())
+            this.fluff.visible = true;
 
 		if(hound.isSleeping()) {
 			this.head.setPos(1.0F, 20.5F, -5.5f);

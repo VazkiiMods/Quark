@@ -8,7 +8,7 @@
  * <p>
  * File Created @ [Jul 13, 2019, 13:31 AM (EST)]
  */
-package org.violetmoon.quark.content.mobs.client.layer;
+package org.violetmoon.quark.content.mobs.client.layer.foxhound;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.renderer.MultiBufferSource;

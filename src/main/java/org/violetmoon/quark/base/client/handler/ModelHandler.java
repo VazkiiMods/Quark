@@ -6,6 +6,7 @@ import net.minecraft.client.model.ChestBoatModel;
 import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.model.geom.ModelPart;
+import net.minecraft.client.model.geom.builders.CubeDeformation;
 import net.minecraft.client.model.geom.builders.LayerDefinition;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.Mob;
@@ -50,6 +51,9 @@ public class ModelHandler {
 	public static ModelLayerLocation forgotten_hat;
 	public static ModelLayerLocation backpack;
 
+    public static ModelLayerLocation foxhound_armor;
+    //public static ModelLayerLocation shiba_armor;
+
 	private static boolean modelsInitted = false;
 
 	private static void initModels() {
@@ -57,7 +61,7 @@ public class ModelHandler {
 			return;
 
 		shiba = addModel("shiba", ShibaModel::createBodyLayer, ShibaModel::new);
-		foxhound = addModel("foxhound", FoxhoundModel::createBodyLayer, FoxhoundModel::new);
+		foxhound = addModel("foxhound", () -> FoxhoundModel.createBodyLayer(new CubeDeformation(0.0f)), FoxhoundModel::new);
 		stoneling = addModel("stoneling", StonelingModel::createBodyLayer, StonelingModel::new);
 		crab = addModel("crab", CrabModel::createBodyLayer, CrabModel::new);
 		toretoise = addModel("toretoise", ToretoiseModel::createBodyLayer, ToretoiseModel::new);
@@ -68,6 +72,8 @@ public class ModelHandler {
 
 		forgotten_hat = addArmorModel("forgotten_hat", ForgottenHatModel::createBodyLayer);
 		backpack = addArmorModel("backpack", BackpackModel::createBodyLayer);
+
+        foxhound_armor = addArmorModel("foxhound_armor", () -> FoxhoundModel.createBodyLayer(new CubeDeformation(0.2f)));
 
 		modelsInitted = true;
 	}

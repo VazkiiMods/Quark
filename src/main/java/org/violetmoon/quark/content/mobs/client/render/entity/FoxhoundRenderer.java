@@ -18,7 +18,8 @@ import org.jetbrains.annotations.NotNull;
 
 import org.violetmoon.quark.base.Quark;
 import org.violetmoon.quark.base.client.handler.ModelHandler;
-import org.violetmoon.quark.content.mobs.client.layer.FoxhoundCollarLayer;
+import org.violetmoon.quark.content.mobs.client.layer.foxhound.FoxhoundArmorLayer;
+import org.violetmoon.quark.content.mobs.client.layer.foxhound.FoxhoundCollarLayer;
 import org.violetmoon.quark.content.mobs.client.model.FoxhoundModel;
 import org.violetmoon.quark.content.mobs.entity.Foxhound;
 
@@ -42,7 +43,8 @@ public class FoxhoundRenderer extends MobRenderer<Foxhound, FoxhoundModel> {
 
 	public FoxhoundRenderer(EntityRendererProvider.Context context) {
 		super(context, ModelHandler.model(ModelHandler.foxhound), 0.5F);
-		addLayer(new FoxhoundCollarLayer(this));
+        this.addLayer(new FoxhoundArmorLayer(this, context.getModelSet()));
+        this.addLayer(new FoxhoundCollarLayer(this));
 	}
 
 	@NotNull
