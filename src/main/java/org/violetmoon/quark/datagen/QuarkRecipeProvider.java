@@ -1059,6 +1059,28 @@ public class QuarkRecipeProvider extends RecipeProvider implements IConditionBui
                 .unlockedBy("test", PlayerTrigger.TriggerInstance.tick())
                 .save(recipeOutput.withConditions(zCond("iron_plates")), "quark:building/crafting/iron_pillar");
 
+        ShapedRecipeBuilder.shaped(RecipeCategory.BUILDING_BLOCKS, RopeModule.rope, 3)
+                        .pattern("##")
+                        .pattern("##")
+                        .pattern("##")
+                        .define('#', Items.STRING)
+                        .unlockedBy("test", PlayerTrigger.TriggerInstance.tick())
+                        .save(recipeOutput.withConditions(zCond("rope")), "quark:building/crafting/rope");
+
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, GlassItemFrameModule.glassFrame, 2)
+                        .pattern("###")
+                        .pattern("#F#")
+                        .pattern("###")
+                        .define('#', Tags.Items.GLASS_PANES_COLORLESS)
+                        .define('F', Items.ITEM_FRAME)
+                        .unlockedBy("test", PlayerTrigger.TriggerInstance.tick())
+                        .save(recipeOutput.withConditions(zCond("glass_item_frame")), "quark:building/crafting/glass_item_frame");
+        ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, GlassItemFrameModule.glowingGlassFrame)
+                        .requires(Items.GLOW_INK_SAC)
+                        .requires(GlassItemFrameModule.glassFrame)
+                        .unlockedBy("test", PlayerTrigger.TriggerInstance.tick())
+                        .save(recipeOutput.withConditions(zCond("glass_item_frame")), "quark:building/crafting/glowing_glass_item_frame");
+
         ShapedRecipeBuilder.shaped(RecipeCategory.BUILDING_BLOCKS, CompressedBlocksModule.blaze_lantern)
                 //blaze lantern is *in* compressed blocks, but it is not *a* compressed block.
                 .pattern("BPB")
