@@ -180,7 +180,7 @@
     "quark.jei.dampen_influence": "Уменьшает шансы на: ",
     "quark.jei.hint_preamble": "[Quark]\n",
 
-    "quark.jei.hint.pickarang": "Это подбиранг! Метните его, и он разнесет всё, во что попадёт, и вернётся с обратно с добычей. На него можно наложить чары для повышения эффективности.",
+    "quark.jei.hint.pickarang": "Это подбиранг! Метните его, и он разнесет всё, во что попадёт, и вернётся обратно с добычей. На него можно наложить чары для повышения эффективности.",
     "quark.jei.hint.flamerang": "Работает как подбиранг, но любые предметы, которые он поднимает, становятся невосприимчивыми к огню и лаве во время полёта.",
     "quark.jei.hint.abacus": "Используйте это на блоке, и он подсчитает расстояние между блоком, на который вы смотрите, и тем, на который вы щёлкнули, до 48 блоков.",
     "quark.jei.hint.ancient_fruit": "Падает при рубке ясеня. При поедании даёт небольшое количество опыта.",
@@ -1561,5 +1561,7 @@
     "advancements.quark.poison_baby.title": "Сомнительно этически",
     "advancements.quark.poison_baby.description": "Отравите детёныша животного ядовитым картофелем",
     "advancements.quark.crab_in_a_bucket.title": "Взять в краб",
-    "advancements.quark.crab_in_a_bucket.description": "Поймате краба в ведро"
+    "advancements.quark.crab_in_a_bucket.description": "Поймате краба в ведро",
+
+    "quark.pack.emote_icon_pack": "Набор иконок эмоций Quark"
 }
