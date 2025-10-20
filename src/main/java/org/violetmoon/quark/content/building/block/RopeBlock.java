@@ -1,57 +1,53 @@
 package org.violetmoon.quark.content.building.block;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-import org.violetmoon.quark.content.automation.module.PistonsMoveTileEntitiesModule;
-import org.violetmoon.quark.content.building.module.RopeModule;
-import org.violetmoon.zeta.block.ZetaBlock;
-import org.violetmoon.zeta.item.ZetaBlockItem;
-import org.violetmoon.zeta.module.ZetaModule;
-import org.violetmoon.zeta.registry.IZetaBlockItemProvider;
-import org.violetmoon.zeta.registry.RenderLayerRegistry;
-
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.stats.Stats;
+import net.minecraft.tags.BlockTags;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.ItemInteractionResult;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.BlockItem;
-import net.minecraft.world.item.CreativeModeTabs;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
-import net.minecraft.world.item.alchemy.PotionUtils;
+import net.minecraft.world.item.*;
+import net.minecraft.world.item.alchemy.PotionContents;
 import net.minecraft.world.item.alchemy.Potions;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.LevelReader;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.LevelEvent;
-import net.minecraft.world.level.block.LiquidBlock;
-import net.minecraft.world.level.block.SimpleWaterloggedBlock;
+import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
+import net.minecraft.world.level.entity.EntityTypeTest;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.level.material.PushReaction;
+import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import net.minecraftforge.common.capabilities.ForgeCapabilities;
-import net.minecraftforge.fluids.FluidActionResult;
-import net.minecraftforge.fluids.FluidUtil;
+import net.neoforged.neoforge.fluids.FluidActionResult;
+import net.neoforged.neoforge.fluids.FluidUtil;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+import org.violetmoon.quark.content.automation.module.PistonsMoveTileEntitiesModule;
+import org.violetmoon.quark.content.building.module.RopeModule;
+import org.violetmoon.zeta.block.SimpleFluidloggedBlock;
+import org.violetmoon.zeta.block.ZetaBlock;
+import org.violetmoon.zeta.item.ZetaBlockItem;
+import org.violetmoon.zeta.module.ZetaModule;
+import org.violetmoon.zeta.registry.IZetaBlockItemProvider;
+import org.violetmoon.zeta.registry.RenderLayerRegistry;
 
 public class RopeBlock extends ZetaBlock implements IZetaBlockItemProvider, SimpleWaterloggedBlock {
 
@@ -117,20 +113,32 @@ public class RopeBlock extends ZetaBlock implements IZetaBlockItemProvider, Simp
 		return super.updateShape(state, facing, facingState, level, pos, facingPos);
 	}
 
+	@Override
+	protected InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos, Player player, BlockHitResult result) {
+		if (pullUp(level, pos)) {
+			if(!player.getAbilities().instabuild) {
+				if(!player.addItem(new ItemStack(this)))
+					player.drop(new ItemStack(this), false);
+			}
+			level.playSound(null, pos, soundType.getBreakSound(), SoundSource.BLOCKS, 0.5F, 1F);
+			return InteractionResult.sidedSuccess(level.isClientSide);
+		}
+		return InteractionResult.PASS;
+	}
+
 	@NotNull
 	@Override
-	public InteractionResult use(@NotNull BlockState state, @NotNull Level worldIn, @NotNull BlockPos pos, @NotNull Player player, @NotNull InteractionHand hand, @NotNull BlockHitResult hit) {
+	public ItemInteractionResult useItemOn(ItemStack stack, @NotNull BlockState state, @NotNull Level worldIn, @NotNull BlockPos pos, @NotNull Player player, @NotNull InteractionHand hand, @NotNull BlockHitResult hit) {
 		if(hand == InteractionHand.MAIN_HAND) {
-			ItemStack stack = player.getItemInHand(hand);
 			if(stack.getItem() == asItem() && !player.isDiscrete()) {
 				if(pullDown(worldIn, pos)) {
 					if(!player.getAbilities().instabuild)
 						stack.shrink(1);
 
 					worldIn.playSound(null, pos, soundType.getPlaceSound(), SoundSource.BLOCKS, 0.5F, 1F);
-					return InteractionResult.sidedSuccess(worldIn.isClientSide);
+					return ItemInteractionResult.sidedSuccess(worldIn.isClientSide);
 				}
-			} else if(stack.getCapability(ForgeCapabilities.FLUID_HANDLER_ITEM).isPresent()) { //TODO: Forge extension
+			} else if(FluidUtil.getFluidHandler(stack).isPresent()) { //TODO: Forge extension
 				FluidActionResult interact = FluidUtil.tryPickUpFluid(stack, player, worldIn, getBottomPos(worldIn, pos), Direction.UP);
 				if(interact.success) {
 					stack.shrink(1);
@@ -138,7 +146,7 @@ public class RopeBlock extends ZetaBlock implements IZetaBlockItemProvider, Simp
 						player.drop(interact.result, false);
 				}
 				
-				return interact.success ? InteractionResult.sidedSuccess(worldIn.isClientSide) : InteractionResult.PASS;
+				return interact.success ? ItemInteractionResult.sidedSuccess(worldIn.isClientSide) : ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
 			} else if(stack.getItem() == Items.GLASS_BOTTLE) {
 				BlockPos bottomPos = getBottomPos(worldIn, pos);
 				BlockState stateAt = worldIn.getBlockState(bottomPos);
@@ -146,7 +154,7 @@ public class RopeBlock extends ZetaBlock implements IZetaBlockItemProvider, Simp
 					Vec3 playerPos = player.position();
 					worldIn.playSound(player, playerPos.x, playerPos.y, playerPos.z, SoundEvents.BOTTLE_FILL, SoundSource.NEUTRAL, 1.0F, 1.0F);
 					stack.shrink(1);
-					ItemStack bottleStack = PotionUtils.setPotion(new ItemStack(Items.POTION), Potions.WATER);
+					ItemStack bottleStack = PotionContents.createItemStack(Items.POTION, Potions.WATER);
 					player.awardStat(Stats.ITEM_USED.get(stack.getItem()));
 
 					if(stack.isEmpty())
@@ -154,10 +162,9 @@ public class RopeBlock extends ZetaBlock implements IZetaBlockItemProvider, Simp
 					else if(!player.addItem(bottleStack))
 						player.drop(bottleStack, false);
 
-					return InteractionResult.sidedSuccess(worldIn.isClientSide);
+					return ItemInteractionResult.sidedSuccess(worldIn.isClientSide);
 				}
-
-				return InteractionResult.PASS;
+				return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
 			} else {
 				if(pullUp(worldIn, pos)) {
 					if(!player.getAbilities().instabuild) {
@@ -166,12 +173,11 @@ public class RopeBlock extends ZetaBlock implements IZetaBlockItemProvider, Simp
 					}
 
 					worldIn.playSound(null, pos, soundType.getBreakSound(), SoundSource.BLOCKS, 0.5F, 1F);
-					return InteractionResult.sidedSuccess(worldIn.isClientSide);
+					return ItemInteractionResult.sidedSuccess(worldIn.isClientSide);
 				}
 			}
 		}
-
-		return InteractionResult.PASS;
+		return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
 	}
 
 	public boolean pullUp(Level world, BlockPos pos) {
@@ -216,7 +222,7 @@ public class RopeBlock extends ZetaBlock implements IZetaBlockItemProvider, Simp
 			}
 
 			endRope = true;
-			wasAirAtEnd = world.isEmptyBlock(pos);
+			wasAirAtEnd = world.isEmptyBlock(pos) || world.getBlockState(pos).getBlock() instanceof LiquidBlock;
 		} while(true);
 
 		if(can) {
@@ -253,6 +259,8 @@ public class RopeBlock extends ZetaBlock implements IZetaBlockItemProvider, Simp
 
 	private void moveBlock(Level world, BlockPos srcPos, BlockPos dstPos) {
 		BlockState state = world.getBlockState(srcPos);
+        //zif (!state.getFluidState().is(Fluids.EMPTY)) return;
+
 		Block block = state.getBlock();
 
 		if(state.getDestroySpeed(world, srcPos) == -1 || !state.canSurvive(world, dstPos) || state.isAir() || state.getBlock() instanceof LiquidBlock ||
@@ -273,10 +281,9 @@ public class RopeBlock extends ZetaBlock implements IZetaBlockItemProvider, Simp
 		BlockState nextState = Block.updateFromNeighbourShapes(state, world, dstPos);
 		if(nextState.getProperties().contains(BlockStateProperties.WATERLOGGED))
 			nextState = nextState.setValue(BlockStateProperties.WATERLOGGED, world.getFluidState(dstPos).getType() == Fluids.WATER);
-		world.setBlockAndUpdate(dstPos, nextState);
 
 		if(tile != null) {
-			BlockEntity target = BlockEntity.loadStatic(dstPos, state, tile.saveWithFullMetadata());
+			BlockEntity target = BlockEntity.loadStatic(dstPos, state, tile.saveWithFullMetadata(world.registryAccess()), world.registryAccess());
 			if(target != null) {
 				world.setBlockEntity(target);
 				target.setBlockState(state);
@@ -284,8 +291,15 @@ public class RopeBlock extends ZetaBlock implements IZetaBlockItemProvider, Simp
 			}
 		}
 
-		world.updateNeighborsAt(dstPos, state.getBlock());
-	}
+        world.setBlockAndUpdate(dstPos, nextState);
+        nextState.handleNeighborChanged(world, dstPos, nextState.getBlock(), srcPos, true);
+
+        world.updateNeighborsAt(dstPos, state.getBlock());
+        for (Entity entity : world.getEntities(null, new AABB(srcPos.above()))) {
+            entity.teleportRelative(0 ,dstPos.getY() - srcPos.getY(), 0);
+        }
+
+    }
 
 	@Override
 	public boolean canSurvive(@NotNull BlockState state, LevelReader worldIn, BlockPos pos) {

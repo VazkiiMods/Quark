@@ -1,0 +1,38 @@
+{
+  "parent": "minecraft:husbandry/plant_seed",
+  "criteria": {
+    "ancient_apple_overlevel": {
+      "trigger": "quark:ancient_fruit_overlevel"
+    }
+  },
+  "display": {
+    "announce_to_chat": true,
+    "description": {
+      "translate": "advancements.quark.ancient_apple_overlevel.description"
+    },
+    "frame": "challenge",
+    "hidden": true,
+    "icon": {
+      "id": "quark:ancient_fruit"
+    },
+    "show_toast": true,
+    "title": {
+      "translate": "advancements.quark.ancient_apple_overlevel.title"
+    }
+  },
+  "rewards": {
+    "experience": 100
+  },
+  "requirements": [
+    [
+      "ancient_apple_overlevel"
+    ]
+  ],
+  "neoforge:conditions": [
+    {
+      "type": "zeta:flag",
+      "flag": "ancient_fruit_xp"
+    }
+  ]
+
+}

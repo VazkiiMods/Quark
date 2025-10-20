@@ -1,0 +1,19 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "zeta:flag",
+      "flag": "vertical_slabs"
+    }
+  ],
+  "type": "minecraft:crafting_shapeless",
+  "category": "building",
+  "ingredients": [
+    {
+      "item": "quark:mangrove_vertical_slab"
+    }
+  ],
+  "result": {
+    "count": 1,
+    "id": "minecraft:mangrove_slab"
+  }
+}

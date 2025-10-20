@@ -1,5 +1,19 @@
 package org.violetmoon.quark.content.tweaks.module;
 
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.tags.ItemTags;
+import net.minecraft.tags.TagKey;
+import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.HoeItem;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.block.*;
+import net.minecraft.world.level.block.state.BlockState;
+import net.neoforged.neoforge.common.ItemAbilities;
 import org.violetmoon.quark.base.Quark;
 import org.violetmoon.zeta.config.Config;
 import org.violetmoon.zeta.event.bus.LoadEvent;
@@ -9,33 +23,6 @@ import org.violetmoon.zeta.event.play.ZBlock;
 import org.violetmoon.zeta.module.ZetaLoadModule;
 import org.violetmoon.zeta.module.ZetaModule;
 import org.violetmoon.zeta.util.Hint;
-import org.violetmoon.zeta.util.MiscUtil;
-
-import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.tags.ItemTags;
-import net.minecraft.tags.TagKey;
-import net.minecraft.world.InteractionHand;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.HoeItem;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.context.BlockPlaceContext;
-import net.minecraft.world.item.context.UseOnContext;
-import net.minecraft.world.level.Level;
-import net.minecraft.world.level.LevelAccessor;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.LevelEvent;
-import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.block.state.properties.NoteBlockInstrument;
-import net.minecraft.world.level.material.MapColor;
-import net.minecraft.world.level.material.PushReaction;
-import net.minecraft.world.phys.BlockHitResult;
-import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.common.IPlantable;
-import net.minecraftforge.common.PlantType;
-import net.minecraftforge.common.ToolActions;
 
 @ZetaLoadModule(category = "tweaks")
 public class HoeHarvestingModule extends ZetaModule {
@@ -51,7 +38,7 @@ public class HoeHarvestingModule extends ZetaModule {
 	public static int highTierHoeRadius = 3;
 
 	@Hint(key = "hoe_harvesting")
-	TagKey<Item> hoes = ItemTags.HOES;
+	public static TagKey<Block> hoe_harvestable = Quark.asTagKey(Registries.BLOCK, "hoe_harvestable");
 
 	public static TagKey<Item> bigHarvestingHoesTag;
 
@@ -71,12 +58,12 @@ public class HoeHarvestingModule extends ZetaModule {
 		return !itemStack.isEmpty() &&
 				(itemStack.getItem() instanceof HoeItem
 						|| itemStack.is(ItemTags.HOES)
-						|| itemStack.getItem().canPerformAction(itemStack, ToolActions.HOE_DIG)); //TODO: IForgeItem
+						|| itemStack.getItem().canPerformAction(itemStack, ItemAbilities.HOE_DIG)); //TODO: IForgeItem
 	}
 
 	@LoadEvent
 	public final void setup(ZCommonSetup event) {
-		bigHarvestingHoesTag = ItemTags.create(new ResourceLocation(Quark.MOD_ID, "big_harvesting_hoes"));
+		bigHarvestingHoesTag = Quark.asTagKey(Registries.ITEM, "big_harvesting_hoes");
 	}
 
 	@PlayEvent
@@ -115,29 +102,35 @@ public class HoeHarvestingModule extends ZetaModule {
 				}
 
 			if(brokeNonInstant)
-				MiscUtil.damageStack(player, InteractionHand.MAIN_HAND, stack, 1);
+				stack.hurtAndBreak(1, player, EquipmentSlot.MAINHAND);
 		}
 	}
 
 	private boolean canHarvest(Player player, LevelAccessor world, BlockPos pos, BlockState state) {
-		Block block = state.getBlock();
-		if(block instanceof IPlantable plant) {
-			PlantType type = plant.getPlantType(world, pos);
-			return type != PlantType.WATER && type != PlantType.DESERT;
-		}
-
-		return isHarvestableMaterial(state) &&
-				state.canBeReplaced(new BlockPlaceContext(new UseOnContext(player, InteractionHand.MAIN_HAND, new BlockHitResult(new Vec3(0.5, 0.5, 0.5), Direction.DOWN, pos, false))));
+		return isHarvestableBlock(state);
+		//old logic:
+		//state.canBeReplaced(new BlockPlaceContext(new UseOnContext(player, InteractionHand.MAIN_HAND, new BlockHitResult(new Vec3(0.5, 0.5, 0.5), Direction.DOWN, pos, false))));
 	}
 
-	public static boolean isHarvestableMaterial(BlockState state) {
-		NoteBlockInstrument instrument = state.instrument();
+	public static boolean isHarvestableBlock(BlockState state) {
+		boolean isHarvestable = state.is(hoe_harvestable);
 
-		boolean PLANT = state.mapColor == MapColor.PLANT && state.getPistonPushReaction() == PushReaction.DESTROY;
-		boolean WATER_PLANT = state.mapColor == MapColor.WATER && instrument == NoteBlockInstrument.BASEDRUM;
-		boolean REPLACEABLE_FIREPROOF_PLANT = state.mapColor == MapColor.PLANT && state.canBeReplaced() && state.getPistonPushReaction() == PushReaction.DESTROY;
-		boolean REPLACEABLE_WATER_PLANT = state.mapColor == MapColor.WATER && state.canBeReplaced() && state.getPistonPushReaction() == PushReaction.DESTROY;
-
-		return PLANT || WATER_PLANT || REPLACEABLE_FIREPROOF_PLANT || REPLACEABLE_WATER_PLANT;
+		//extra logic for certain kinds of blocks.
+		if(state.getBlock().equals(Blocks.WATER)){
+			isHarvestable = false;
+		}
+		else if(state.getBlock() instanceof CropBlock crop){
+			isHarvestable = state.equals(crop.getStateForAge(crop.getMaxAge())); //only harvest full crops
+		}
+		else if(state.getBlock() instanceof CocoaBlock){
+			isHarvestable = state.getValue(CocoaBlock.AGE) == 2; //only harvest full cocoa
+		}
+		//TODO more crop types?
+		else if(state.getBlock() instanceof LeavesBlock){
+			if(state.getValue(LeavesBlock.PERSISTENT)){
+				isHarvestable = false; //don't harvest placed leaves
+			}
+		}
+		return isHarvestable;
 	}
 }

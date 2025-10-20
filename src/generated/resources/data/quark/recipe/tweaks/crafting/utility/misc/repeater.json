@@ -1,0 +1,30 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "zeta:flag",
+      "flag": "repeater_and_torches"
+    }
+  ],
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "#": {
+      "tag": "c:rods/wooden"
+    },
+    "I": {
+      "item": "minecraft:stone"
+    },
+    "X": {
+      "tag": "c:dusts/redstone"
+    }
+  },
+  "pattern": [
+    "X X",
+    "#X#",
+    "III"
+  ],
+  "result": {
+    "count": 1,
+    "id": "minecraft:hopper_minecart"
+  }
+}

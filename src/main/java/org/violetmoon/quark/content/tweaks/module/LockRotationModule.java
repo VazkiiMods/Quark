@@ -1,12 +1,35 @@
 package org.violetmoon.quark.content.tweaks.module;
 
-import java.lang.reflect.Field;
-import java.util.HashMap;
-import java.util.Objects;
-import java.util.UUID;
-
 import com.mojang.blaze3d.platform.GlStateManager;
-import org.lwjgl.opengl.GL11;
+import com.mojang.blaze3d.platform.Window;
+import com.mojang.blaze3d.systems.RenderSystem;
+import io.netty.buffer.ByteBuf;
+import net.minecraft.ChatFormatting;
+import net.minecraft.client.KeyMapping;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.core.Direction.Axis;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.context.BlockPlaceContext;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.StairBlock;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.level.block.state.properties.Half;
+import net.minecraft.world.level.block.state.properties.Property;
+import net.minecraft.world.level.block.state.properties.SlabType;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.HitResult;
+import net.minecraft.world.phys.HitResult.Type;
+import net.minecraft.world.phys.Vec3;
+import net.neoforged.neoforge.client.gui.VanillaGuiLayers;
+import net.neoforged.neoforge.network.PacketDistributor;
 import org.violetmoon.quark.api.IRotationLockable;
 import org.violetmoon.quark.base.Quark;
 import org.violetmoon.quark.base.QuarkClient;
@@ -25,34 +48,10 @@ import org.violetmoon.zeta.event.play.entity.player.ZPlayer;
 import org.violetmoon.zeta.module.ZetaLoadModule;
 import org.violetmoon.zeta.module.ZetaModule;
 
-import com.google.common.collect.ImmutableMap;
-import com.mojang.blaze3d.platform.Window;
-import com.mojang.blaze3d.systems.RenderSystem;
-
-import net.minecraft.ChatFormatting;
-import net.minecraft.client.KeyMapping;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.renderer.GameRenderer;
-import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
-import net.minecraft.core.Direction.Axis;
-import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.network.chat.Component;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.context.BlockPlaceContext;
-import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.StairBlock;
-import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.block.state.properties.BlockStateProperties;
-import net.minecraft.world.level.block.state.properties.Half;
-import net.minecraft.world.level.block.state.properties.Property;
-import net.minecraft.world.level.block.state.properties.SlabType;
-import net.minecraft.world.phys.BlockHitResult;
-import net.minecraft.world.phys.HitResult;
-import net.minecraft.world.phys.HitResult.Type;
-import net.minecraft.world.phys.Vec3;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Objects;
+import java.util.UUID;
 
 @ZetaLoadModule(category = "tweaks")
 public class LockRotationModule extends ZetaModule {
@@ -87,7 +86,7 @@ public class LockRotationModule extends ZetaModule {
 
 	public static BlockState getRotatedState(Level world, BlockPos pos, BlockState state, Direction face, int half) {
 		BlockState setState = state;
-		ImmutableMap<Property<?>, Comparable<?>> props = state.getValues();
+		Map<Property<?>, Comparable<?>> props = state.getValues();
 		Block block = state.getBlock();
 
 		if(block instanceof IRotationLockable lockable)
@@ -126,6 +125,13 @@ public class LockRotationModule extends ZetaModule {
 			// Half (stairs)
 			else if(props.containsKey(BlockStateProperties.HALF))
 				setState = setState.setValue(BlockStateProperties.HALF, half == 1 ? Half.TOP : Half.BOTTOM);
+		} else if (face.getAxis().equals(Axis.Y)) {
+			if(props.containsKey(BlockStateProperties.SLAB_TYPE) && props.get(BlockStateProperties.SLAB_TYPE) != SlabType.DOUBLE)
+				setState = setState.setValue(BlockStateProperties.SLAB_TYPE, face == Direction.DOWN ? SlabType.TOP : SlabType.BOTTOM);
+
+				// Half (stairs)
+			else if(props.containsKey(BlockStateProperties.HALF))
+				setState = setState.setValue(BlockStateProperties.HALF, face == Direction.DOWN ? Half.TOP : Half.BOTTOM);
 		}
 
 		return setState;
@@ -163,41 +169,13 @@ public class LockRotationModule extends ZetaModule {
 	}
 
 	public record LockProfile(Direction facing, int half) {
+		public static final StreamCodec<ByteBuf, LockProfile> STREAM_CODEC = StreamCodec.composite(
+		    Direction.STREAM_CODEC, LockProfile::facing,
+			ByteBufCodecs.INT, LockProfile::half,
+		    LockProfile::new
+		);
 
-		public static LockProfile readProfile(FriendlyByteBuf buf, Field field) {
-			boolean valid = buf.readBoolean();
-			if(!valid)
-				return null;
 
-			int face = buf.readInt();
-			int half = buf.readInt();
-			return new LockProfile(Direction.from3DDataValue(face), half);
-		}
-
-		public static void writeProfile(FriendlyByteBuf buf, Field field, LockProfile p) {
-			if(p == null)
-				buf.writeBoolean(false);
-			else {
-				buf.writeBoolean(true);
-				buf.writeInt(p.facing.get3DDataValue());
-				buf.writeInt(p.half);
-			}
-		}
-
-		@Override
-		public boolean equals(Object other) {
-			if(other == this)
-				return true;
-			if(!(other instanceof LockProfile otherProfile))
-				return false;
-
-			return otherProfile.facing == facing && otherProfile.half == half;
-		}
-
-		@Override
-		public int hashCode() {
-			return facing.hashCode() * 31 + half;
-		}
 	}
 
 	@ZetaLoadModule(clientReplacement = true)
@@ -245,17 +223,20 @@ public class LockRotationModule extends ZetaModule {
 					newProfile = new LockProfile(Direction.getNearest((float) look.x, (float) look.y, (float) look.z), -1);
 				}
 
-				if(clientProfile != null && clientProfile.equals(newProfile))
+				if(clientProfile != null && clientProfile.equals(newProfile)) {
 					clientProfile = null;
-				else
+					PacketDistributor.sendToServer(new SetLockProfileMessage(clientProfile));
+				} else {
 					clientProfile = newProfile;
-				QuarkClient.ZETA_CLIENT.sendToServer(new SetLockProfileMessage(clientProfile));
+					PacketDistributor.sendToServer(new SetLockProfileMessage(clientProfile));
+				}
 			}
 		}
 
 		@PlayEvent
-		public void onHUDRender(ZRenderGuiOverlay.Crosshair.Post event) {
-			if(clientProfile != null) {
+		public void onHUDRender(ZRenderGuiOverlay.Post event) {
+			if (event.getLayerName().equals(VanillaGuiLayers.CROSSHAIR) && !Minecraft.getInstance().options.hideGui) {
+				if(clientProfile != null) {
 				GuiGraphics guiGraphics = event.getGuiGraphics();
 
 				RenderSystem.enableBlend();
@@ -275,6 +256,7 @@ public class LockRotationModule extends ZetaModule {
 				if(clientProfile.half > -1)
 					guiGraphics.blit(ClientUtil.GENERAL_ICONS, x + 16, y, clientProfile.half * 16, 79, 16, 16, 256, 256);
 
+				}
 			}
 		}
 	}

@@ -16,13 +16,13 @@ import org.violetmoon.quark.content.mobs.entity.Shiba;
 public class ShibaRenderer extends MobRenderer<Shiba, ShibaModel> {
 
 	private static final ResourceLocation[] SHIBA_BASES = {
-			new ResourceLocation(Quark.MOD_ID, "textures/model/entity/shiba/shiba0.png"),
-			new ResourceLocation(Quark.MOD_ID, "textures/model/entity/shiba/shiba1.png"),
-			new ResourceLocation(Quark.MOD_ID, "textures/model/entity/shiba/shiba2.png")
+			Quark.asResource("textures/model/entity/shiba/shiba0.png"),
+			Quark.asResource("textures/model/entity/shiba/shiba1.png"),
+			Quark.asResource("textures/model/entity/shiba/shiba2.png")
 	};
 
-	private static final ResourceLocation SHIBA_RARE = new ResourceLocation(Quark.MOD_ID, "textures/model/entity/shiba/shiba_rare.png");
-	private static final ResourceLocation SHIBA_DOGE = new ResourceLocation(Quark.MOD_ID, "textures/model/entity/shiba/shiba_doge.png");
+	private static final ResourceLocation SHIBA_RARE = Quark.asResource("textures/model/entity/shiba/shiba_rare.png");
+	private static final ResourceLocation SHIBA_DOGE = Quark.asResource("textures/model/entity/shiba/shiba_doge.png");
 
 	public ShibaRenderer(EntityRendererProvider.Context context) {
 		super(context, ModelHandler.model(ModelHandler.shiba), 0.5F);

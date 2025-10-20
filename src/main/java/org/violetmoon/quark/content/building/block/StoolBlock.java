@@ -5,7 +5,6 @@ import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
-import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
@@ -94,9 +93,9 @@ public class StoolBlock extends ZetaBlock implements SimpleWaterloggedBlock {
 
 	@NotNull
 	@Override
-	public InteractionResult use(BlockState state, @NotNull Level worldIn, @NotNull BlockPos pos, @NotNull Player player, @NotNull InteractionHand handIn, @NotNull BlockHitResult hit) {
+	public InteractionResult useWithoutItem(BlockState state, @NotNull Level worldIn, @NotNull BlockPos pos, @NotNull Player player, @NotNull BlockHitResult hit) {
 		if(state.getValue(SAT_IN) || !worldIn.getBlockState(pos.above()).isAir() || player.getVehicle() != null)
-			return super.use(state, worldIn, pos, player, handIn, hit);
+			return super.useWithoutItem(state, worldIn, pos, player, hit);
 
 		if(!worldIn.isClientSide) {
 			Stool entity = new Stool(StoolsModule.stoolEntity, worldIn);
@@ -181,7 +180,9 @@ public class StoolBlock extends ZetaBlock implements SimpleWaterloggedBlock {
 		return defaultBlockState()
 				.setValue(WATERLOGGED, world.getFluidState(pos).getType() == Fluids.WATER)
 				.setValue(BIG, world.getBlockState(pos.above()).getShape(world, pos.above()).min(Axis.Y) == 0)
-				.setValue(SAT_IN, world.getEntitiesOfClass(Stool.class, new AABB(pos, pos.above()).inflate(0.4), e -> e.blockPosition().equals(pos)).size() > 0);
+				.setValue(SAT_IN, !world.getEntitiesOfClass(Stool.class,
+						new AABB(new Vec3(pos.getX(), pos.getY(), pos.getZ()), new Vec3(pos.above().getX(), pos.above().getY(), pos.above().getZ()))
+								.inflate(0.4), e -> e.blockPosition().equals(pos)).isEmpty());
 	}
 
 	@Override

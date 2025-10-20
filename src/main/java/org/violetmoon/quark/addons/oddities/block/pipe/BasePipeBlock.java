@@ -3,7 +3,7 @@ package org.violetmoon.quark.addons.oddities.block.pipe;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResult;
+import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.CreativeModeTabs;
@@ -92,8 +92,7 @@ public abstract class BasePipeBlock extends ZetaBlock implements EntityBlock {
 	}
 
 	@Override
-	public InteractionResult use(BlockState state, Level worldIn, BlockPos pos, Player player, InteractionHand handIn, BlockHitResult hit) {
-		ItemStack stack = player.getItemInHand(handIn);
+	public ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level worldIn, BlockPos pos, Player player, InteractionHand handIn, BlockHitResult hit) {
 
 		// fix pipes if they're ruined
 		if(stack.getItem() == Items.STICK) {
@@ -127,10 +126,10 @@ public abstract class BasePipeBlock extends ZetaBlock implements EntityBlock {
 			} while(!candidates.isEmpty());
 
 			if(fixedAny)
-				return InteractionResult.sidedSuccess(worldIn.isClientSide);
+				return ItemInteractionResult.sidedSuccess(worldIn.isClientSide);
 		}
 
-		return super.use(state, worldIn, pos, player, handIn, hit);
+		return super.useItemOn(stack, state, worldIn, pos, player, handIn, hit);
 	}
 
 	@SuppressWarnings("deprecation") //Don't need the Forge extension

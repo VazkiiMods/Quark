@@ -3,13 +3,11 @@ package org.violetmoon.quark.api.event;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.eventbus.api.Cancelable;
-import net.minecraftforge.eventbus.api.Event;
+import net.neoforged.bus.api.Event;
+import net.neoforged.bus.api.ICancellableEvent;
 import org.jetbrains.annotations.Nullable;
-import org.violetmoon.quark.content.tweaks.module.SimpleHarvestModule;
 
 /**
  * Used primarily for double crops which need extra checks before they are considered ready.
@@ -17,8 +15,8 @@ import org.violetmoon.quark.content.tweaks.module.SimpleHarvestModule;
  * Can also be used for blocks that hae other max age requirements as it fires for all crop blocks
  */
 //TODO: this can me moved to a zeta event no problem
-@Cancelable
-public class SimpleHarvestEvent extends Event {
+
+public class SimpleHarvestEvent extends Event implements ICancellableEvent {
 
     public final BlockState blockState;
     public final BlockPos pos;
@@ -53,7 +51,7 @@ public class SimpleHarvestEvent extends Event {
     public void setCanceled(boolean cancel) {
         if (cancel)
             action = ActionType.NONE;
-        super.setCanceled(cancel);
+        ICancellableEvent.super.setCanceled(cancel);
     }
 
     //Click will work just for players!

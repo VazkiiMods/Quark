@@ -1,0 +1,44 @@
+{
+  "parent": "minecraft:adventure/kill_a_mob",
+  "criteria": {
+    "get_diamond_heart": {
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "quark:diamond_heart"
+            ]
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "display": {
+    "announce_to_chat": true,
+    "description": {
+      "translate": "advancements.quark.get_diamond_heart.description"
+    },
+    "frame": "task",
+    "hidden": false,
+    "icon": {
+      "id": "quark:diamond_heart"
+    },
+    "show_toast": true,
+    "title": {
+      "translate": "advancements.quark.get_diamond_heart.title"
+    }
+  },
+  "requirements": [
+    [
+      "get_diamond_heart"
+    ]
+  ],
+  "neoforge:conditions": [
+    {
+      "type": "zeta:flag",
+      "flag": "stoneling_drop_diamond_heart"
+    }
+  ]
+
+}

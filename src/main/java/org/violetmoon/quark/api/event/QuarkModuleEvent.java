@@ -1,8 +1,9 @@
 package org.violetmoon.quark.api.event;
 
-import net.minecraftforge.eventbus.api.Event;
+import net.neoforged.bus.api.Event;
+import net.neoforged.bus.api.ICancellableEvent;
 
-public class QuarkModuleEvent extends Event {
+public class QuarkModuleEvent extends Event implements ICancellableEvent {
 
 	public final String eventName;
 

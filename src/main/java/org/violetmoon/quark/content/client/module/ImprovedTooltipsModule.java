@@ -5,6 +5,7 @@ import com.google.common.collect.Lists;
 import net.minecraft.world.item.ItemStack;
 
 import org.violetmoon.quark.base.Quark;
+import org.violetmoon.quark.base.components.QuarkDataComponents;
 import org.violetmoon.quark.content.client.resources.AttributeTooltipManager;
 import org.violetmoon.quark.content.client.tooltip.AttributeTooltips;
 import org.violetmoon.quark.content.client.tooltip.EnchantedBookTooltips;
@@ -19,9 +20,9 @@ import org.violetmoon.zeta.config.Config;
 import org.violetmoon.zeta.event.bus.LoadEvent;
 import org.violetmoon.zeta.event.bus.PlayEvent;
 import org.violetmoon.zeta.event.load.ZConfigChanged;
+import org.violetmoon.zeta.event.play.ZSkipAttributeTooltip;
 import org.violetmoon.zeta.module.ZetaLoadModule;
 import org.violetmoon.zeta.module.ZetaModule;
-import org.violetmoon.zeta.util.ItemNBTHelper;
 
 import java.util.List;
 
@@ -120,13 +121,18 @@ public class ImprovedTooltipsModule extends ZetaModule {
 
 		@LoadEvent
 		public final void configChanged(ZConfigChanged event) {
-			staticEnabled = enabled;
+			staticEnabled = isEnabled();
 			EnchantedBookTooltips.reloaded();
 		}
 
 		private static boolean ignore(ItemStack stack) {
-			return ItemNBTHelper.getBoolean(stack, IGNORE_TAG, false);
+			return Boolean.TRUE.equals(stack.get(QuarkDataComponents.IGNORE));
 		}
+
+        @PlayEvent
+        public void heyItsMeTooltip(ZSkipAttributeTooltip event) {
+            if (attributeTooltips) AttributeTooltips.removeAttributeTooltips(event);
+        }
 
 		@PlayEvent
 		public void makeTooltip(ZGatherTooltipComponents event) {

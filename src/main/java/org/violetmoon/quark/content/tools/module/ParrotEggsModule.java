@@ -1,17 +1,14 @@
 package org.violetmoon.quark.content.tools.module;
 
-import net.minecraft.Util;
 import net.minecraft.client.renderer.entity.EntityRenderers;
 import net.minecraft.client.renderer.entity.ThrownItemRenderer;
-import net.minecraft.core.Position;
-import net.minecraft.core.dispenser.AbstractProjectileDispenseBehavior;
+import net.minecraft.core.dispenser.ProjectileDispenseBehavior;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
-import net.minecraft.tags.ItemTags;
 import net.minecraft.tags.TagKey;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
@@ -20,17 +17,13 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobCategory;
 import net.minecraft.world.entity.animal.Parrot;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.item.CreativeModeTabs;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.DispenserBlock;
-
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-
 import org.violetmoon.quark.base.Quark;
 import org.violetmoon.quark.base.handler.QuarkSounds;
 import org.violetmoon.quark.content.tools.entity.ParrotEgg;
@@ -57,7 +50,7 @@ import java.util.UUID;
 @ZetaLoadModule(category = "tools")
 public class ParrotEggsModule extends ZetaModule {
 
-	private static final ResourceLocation KOTO = new ResourceLocation("quark", "textures/model/entity/variants/kotobirb.png");
+	private static final ResourceLocation KOTO = Quark.asResource("textures/model/entity/variants/kotobirb.png");
 	private static final String EGG_TIMER = "quark:parrot_egg_timer";
 
 	public static EntityType<ParrotEgg> parrotEggType;
@@ -84,41 +77,30 @@ public class ParrotEggsModule extends ZetaModule {
 				.sized(0.4F, 0.4F)
 				.clientTrackingRange(64)
 				.updateInterval(10) // update interval
-				.setCustomClientFactory((spawnEntity, world) -> new ParrotEgg(parrotEggType, world))
 				.build("parrot_egg");
 		Quark.ZETA.registry.register(parrotEggType, "parrot_egg", Registries.ENTITY_TYPE);
 
-		CreativeTabManager.daisyChain();
+        CreativeTabManager.startChain(CreativeModeTabs.INGREDIENTS, false,false, Items.EGG);
 		parrotEggs = new ArrayList<>();
 		for(Parrot.Variant variant : Parrot.Variant.values()) {
 			Item parrotEgg = new ParrotEggItem(variant, this).setCreativeTab(CreativeModeTabs.INGREDIENTS, Items.EGG, false);
 			parrotEggs.add(parrotEgg);
-
-			DispenserBlock.registerBehavior(parrotEgg, new AbstractProjectileDispenseBehavior() {
-				@NotNull
-				@Override
-				protected Projectile getProjectile(@NotNull Level world, @NotNull Position pos, @NotNull ItemStack stack) {
-					return Util.make(new ParrotEgg(world, pos.x(), pos.y(), pos.z()), (parrotEgg) -> {
-						parrotEgg.setItem(stack);
-						parrotEgg.setVariant(variant);
-					});
-				}
-			});
+			//DispenserBlock.registerBehavior(parrotEgg, new ProjectileDispenseBehavior(parrotEgg)); // TODO: Fix variant logic
 		}
-		CreativeTabManager.endDaisyChain();
+		CreativeTabManager.endChain();
 
 		throwParrotEggTrigger = event.getAdvancementModifierRegistry().registerManualTrigger("throw_parrot_egg");
 	}
 
 	@LoadEvent
 	public final void setup(ZCommonSetup event) {
-		feedTag = ItemTags.create(new ResourceLocation(Quark.MOD_ID, "parrot_feed"));
+		feedTag = Quark.asTagKey(Registries.ITEM,"parrot_feed");
 	}
 
 	@LoadEvent
 	public final void configChanged(ZConfigChanged event) {
 		// Pass over to a static reference for easier computing the coremod hook
-		isEnabled = this.enabled;
+		isEnabled = isEnabled();
 	}
 
 	@PlayEvent

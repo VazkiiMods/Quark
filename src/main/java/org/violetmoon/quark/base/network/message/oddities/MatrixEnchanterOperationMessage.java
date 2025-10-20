@@ -1,45 +1,37 @@
 package org.violetmoon.quark.base.network.message.oddities;
 
+import io.netty.buffer.ByteBuf;
+import org.violetmoon.quark.catnip.net.base.ServerboundPacketPayload;
+import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 
 import org.violetmoon.quark.addons.oddities.block.be.MatrixEnchantingTableBlockEntity;
 import org.violetmoon.quark.addons.oddities.inventory.MatrixEnchantingMenu;
-import org.violetmoon.zeta.network.IZetaMessage;
-import org.violetmoon.zeta.network.IZetaNetworkEventContext;
+import org.violetmoon.quark.base.network.QuarkNetwork;
 
-import java.io.Serial;
+public record MatrixEnchanterOperationMessage(int operation, int arg0, int arg1, int arg2) implements ServerboundPacketPayload {
+	public static final StreamCodec<ByteBuf, MatrixEnchanterOperationMessage> STREAM_CODEC = StreamCodec.composite(
+		ByteBufCodecs.INT, MatrixEnchanterOperationMessage::operation,
+		ByteBufCodecs.INT, MatrixEnchanterOperationMessage::arg0,
+		ByteBufCodecs.INT, MatrixEnchanterOperationMessage::arg1,
+		ByteBufCodecs.INT, MatrixEnchanterOperationMessage::arg2,
+	    MatrixEnchanterOperationMessage::new
+	);
 
-public class MatrixEnchanterOperationMessage implements IZetaMessage {
+	@Override
+	public void handle(ServerPlayer player) {
+		AbstractContainerMenu container = player.containerMenu;
 
-	@Serial
-	private static final long serialVersionUID = 2272401655489445173L;
-
-	public int operation;
-	public int arg0, arg1, arg2;
-
-	public MatrixEnchanterOperationMessage() {}
-
-	public MatrixEnchanterOperationMessage(int operation, int arg0, int arg1, int arg2) {
-		this.operation = operation;
-		this.arg0 = arg0;
-		this.arg1 = arg1;
-		this.arg2 = arg2;
+		if (container instanceof MatrixEnchantingMenu matrixMenu) {
+			MatrixEnchantingTableBlockEntity enchanter = matrixMenu.enchanter;
+			enchanter.onOperation(player, operation, arg0, arg1, arg2);
+		}
 	}
 
 	@Override
-	public boolean receive(IZetaNetworkEventContext context) {
-		context.enqueueWork(() -> {
-			ServerPlayer player = context.getSender();
-			AbstractContainerMenu container = player.containerMenu;
-
-			if(container instanceof MatrixEnchantingMenu matrixMenu) {
-				MatrixEnchantingTableBlockEntity enchanter = matrixMenu.enchanter;
-				enchanter.onOperation(player, operation, arg0, arg1, arg2);
-			}
-		});
-
-		return true;
+	public PacketTypeProvider getTypeProvider() {
+		return QuarkNetwork.MATRIX_ENCHANTER_OPERATION_MESSAGE;
 	}
-
 }

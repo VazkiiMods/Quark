@@ -31,14 +31,14 @@ public class GoldBarsModule extends ZetaModule {
 
 	@LoadEvent
 	public final void register(ZRegister event) {
-		gold_bars = new ZetaPaneBlock("gold_bars", this, Properties.copy(Blocks.IRON_BARS), RenderLayerRegistry.Layer.CUTOUT).setCreativeTab(CreativeModeTabs.BUILDING_BLOCKS, Blocks.GOLD_BLOCK, false);
+		gold_bars = new ZetaPaneBlock("gold_bars", this, Properties.ofFullCopy(Blocks.IRON_BARS), RenderLayerRegistry.Layer.CUTOUT).setCreativeTab(CreativeModeTabs.BUILDING_BLOCKS, Blocks.GOLD_BLOCK, false);
 
 		StructureBlockReplacementHandler.addReplacement(GoldBarsModule::getGenerationBarBlockState);
 	}
 
 	@LoadEvent
 	public final void configChanged(ZConfigChanged event) {
-		staticEnabled = enabled;
+		staticEnabled = isEnabled();
 	}
 
 	private static BlockState getGenerationBarBlockState(ServerLevelAccessor accessor, BlockState current, StructureHolder structure) {

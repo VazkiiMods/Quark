@@ -1,14 +1,16 @@
 package org.violetmoon.quark.content.mobs.entity;
 
-import com.google.common.collect.ImmutableSet;
+import net.minecraft.core.RegistryAccess;
+import net.minecraft.core.particles.ColorParticleOption;
+import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.protocol.Packet;
-import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.InteractionHand;
@@ -30,11 +32,11 @@ import net.minecraft.world.item.BowItem;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import net.minecraft.world.item.alchemy.PotionUtils;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
+import net.minecraft.world.item.enchantment.providers.VanillaEnchantmentProviders;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.ServerLevelAccessor;
-import net.minecraftforge.network.NetworkHooks;
+import net.minecraft.world.level.storage.loot.LootTable;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.violetmoon.quark.base.Quark;
@@ -48,16 +50,16 @@ public class Forgotten extends Skeleton {
 
 	public static final EntityDataAccessor<ItemStack> SHEATHED_ITEM = SynchedEntityData.defineId(Forgotten.class, EntityDataSerializers.ITEM_STACK);
 
-	public static final ResourceLocation FORGOTTEN_LOOT_TABLE = new ResourceLocation("quark", "entities/forgotten");
+	public static final ResourceKey<LootTable> FORGOTTEN_LOOT_TABLE = Quark.asResourceKey(Registries.LOOT_TABLE, "entities/forgotten");
 
 	public Forgotten(EntityType<? extends Forgotten> type, Level world) {
 		super(type, world);
 	}
 
 	@Override
-	protected void defineSynchedData() {
-		super.defineSynchedData();
-		entityData.define(SHEATHED_ITEM, ItemStack.EMPTY);
+	protected void defineSynchedData(SynchedEntityData.Builder builder) {
+		super.defineSynchedData(builder);
+		builder.define(SHEATHED_ITEM, ItemStack.EMPTY);
 	}
 
 	public static AttributeSupplier.Builder registerAttributes() {
@@ -69,8 +71,8 @@ public class Forgotten extends Skeleton {
 
 	@Override
 	@Nullable
-	public SpawnGroupData finalizeSpawn(@NotNull ServerLevelAccessor worldIn, @NotNull DifficultyInstance difficultyIn, @NotNull MobSpawnType reason, @Nullable SpawnGroupData spawnDataIn, @Nullable CompoundTag dataTag) {
-		SpawnGroupData ilivingentitydata = super.finalizeSpawn(worldIn, difficultyIn, reason, spawnDataIn, dataTag);
+	public SpawnGroupData finalizeSpawn(@NotNull ServerLevelAccessor worldIn, @NotNull DifficultyInstance difficultyIn, @NotNull MobSpawnType reason, @Nullable SpawnGroupData spawnDataIn) {
+		SpawnGroupData ilivingentitydata = super.finalizeSpawn(worldIn, difficultyIn, reason, spawnDataIn);
 		reassessWeaponGoal();
 
 		return ilivingentitydata;
@@ -95,7 +97,7 @@ public class Forgotten extends Skeleton {
 
 		double w = getBbWidth() * 2;
 		double h = getBbHeight();
-		level().addParticle(ParticleTypes.AMBIENT_ENTITY_EFFECT, getX() + Math.random() * w - w / 2, getY() + Math.random() * h, getZ() + Math.random() * w - w / 2, 0, 0, 0);
+		level().addParticle(ColorParticleOption.create(ParticleTypes.ENTITY_EFFECT, 0xffffff), getX() + Math.random() * w - w / 2, getY() + Math.random() * h, getZ() + Math.random() * w - w / 2, 0, 0, 0);
 	}
 
 	private void swap() {
@@ -105,7 +107,7 @@ public class Forgotten extends Skeleton {
 		setItemInHand(InteractionHand.MAIN_HAND, off);
 		entityData.set(SHEATHED_ITEM, curr);
 
-		Stream<WrappedGoal> stream = goalSelector.getRunningGoals();
+		Stream<WrappedGoal> stream = goalSelector.getAvailableGoals().stream().filter(WrappedGoal::isRunning);
 		stream.map(WrappedGoal::getGoal)
 				.filter(g -> g instanceof MeleeAttackGoal || g instanceof RangedBowAttackGoal<?>)
 				.forEach(Goal::stop);
@@ -113,18 +115,17 @@ public class Forgotten extends Skeleton {
 		reassessWeaponGoal();
 	}
 
-	@NotNull
 	@Override
-	protected ResourceLocation getDefaultLootTable() {
+	protected ResourceKey<LootTable> getDefaultLootTable() {
 		return FORGOTTEN_LOOT_TABLE;
 	}
 
-	@Override
+    @Override
 	public void addAdditionalSaveData(@NotNull CompoundTag compound) {
 		super.addAdditionalSaveData(compound);
 
 		CompoundTag sheathed = new CompoundTag();
-		entityData.get(SHEATHED_ITEM).save(sheathed);
+		if (entityData.get(SHEATHED_ITEM) != ItemStack.EMPTY) entityData.get(SHEATHED_ITEM).save(level().registryAccess(), sheathed);
 		compound.put("sheathed", sheathed);
 	}
 
@@ -133,17 +134,12 @@ public class Forgotten extends Skeleton {
 		super.readAdditionalSaveData(compound);
 
 		CompoundTag sheathed = compound.getCompound("sheathed");
-		entityData.set(SHEATHED_ITEM, ItemStack.of(sheathed));
+		entityData.set(SHEATHED_ITEM, ItemStack.parseOptional(level().registryAccess(), sheathed));
 	}
 
 	@Override
-	protected float getStandingEyeHeight(@NotNull Pose poseIn, @NotNull EntityDimensions sizeIn) {
-		return 2.1F;
-	}
-
-	@Override
-	protected void dropCustomDeathLoot(@NotNull DamageSource source, int looting, boolean recentlyHitIn) {
-		// NO-OP
+	protected void dropCustomDeathLoot(ServerLevel level, DamageSource source, boolean recentlyHitIn) {
+		// NO OP
 	}
 
 	@Override
@@ -154,16 +150,15 @@ public class Forgotten extends Skeleton {
 	@Override
 	protected void populateDefaultEquipmentSlots(@NotNull RandomSource rand, @NotNull DifficultyInstance difficulty) {
 		super.populateDefaultEquipmentSlots(rand, difficulty);
-
-		prepareEquipment();
+		prepareEquipment(level().registryAccess(), difficulty);
 	}
 
-	public void prepareEquipment() {
+	public void prepareEquipment(RegistryAccess access, DifficultyInstance difficulty) {
 		ItemStack bow = new ItemStack(Items.BOW);
 		ItemStack sheathed = new ItemStack(Items.IRON_SWORD);
 
-		EnchantmentHelper.enchantItem(random, bow, 20, false);
-		EnchantmentHelper.enchantItem(random, sheathed, 20, false);
+		EnchantmentHelper.enchantItemFromProvider(bow, access, VanillaEnchantmentProviders.MOB_SPAWN_EQUIPMENT, difficulty, random);
+		EnchantmentHelper.enchantItemFromProvider(sheathed, access, VanillaEnchantmentProviders.MOB_SPAWN_EQUIPMENT, difficulty, random);
 
 		if(Quark.ZETA.modules.isEnabled(ColorRunesModule.class) && random.nextBoolean()) {
 			DyeColor color = DyeColor.values()[random.nextInt(DyeColor.values().length)];
@@ -183,21 +178,12 @@ public class Forgotten extends Skeleton {
 
 	@NotNull
 	@Override
-	protected AbstractArrow getArrow(@NotNull ItemStack arrowStack, float distanceFactor) {
-		AbstractArrow arrow = super.getArrow(arrowStack, distanceFactor);
+	protected AbstractArrow getArrow(@NotNull ItemStack arrowStack, float distanceFactor, @Nullable ItemStack itemStack) {
+		AbstractArrow arrow = super.getArrow(arrowStack, distanceFactor, itemStack);
 		if(arrow instanceof Arrow arrowInstance) {
-			ItemStack stack = new ItemStack(Items.TIPPED_ARROW);
-			PotionUtils.setCustomEffects(stack, ImmutableSet.of(new MobEffectInstance(MobEffects.BLINDNESS, 100, 0)));
-			arrowInstance.setEffectsFromItem(stack);
+			arrowInstance.addEffect(new MobEffectInstance(MobEffects.BLINDNESS, 100, 0));
 		}
 
 		return arrow;
 	}
-
-	@NotNull
-	@Override
-	public Packet<ClientGamePacketListener> getAddEntityPacket() {
-		return NetworkHooks.getEntitySpawningPacket(this);
-	}
-
 }

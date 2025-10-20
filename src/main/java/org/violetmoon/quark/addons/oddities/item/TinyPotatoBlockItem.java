@@ -1,43 +1,41 @@
 package org.violetmoon.quark.addons.oddities.item;
 
-import java.util.List;
-
-import org.jetbrains.annotations.NotNull;
-import org.violetmoon.quark.addons.oddities.block.TinyPotatoBlock;
-import org.violetmoon.quark.addons.oddities.block.be.TinyPotatoBlockEntity;
-import org.violetmoon.quark.addons.oddities.util.TinyPotatoInfo;
-import org.violetmoon.quark.api.IRuneColorProvider;
-import org.violetmoon.quark.base.handler.ContributorRewardHandler;
-import org.violetmoon.quark.content.tools.base.RuneColor;
-import org.violetmoon.zeta.item.ZetaBlockItem;
-import org.violetmoon.zeta.util.ItemNBTHelper;
-
 import net.minecraft.ChatFormatting;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
+import org.jetbrains.annotations.NotNull;
+import org.violetmoon.quark.addons.oddities.block.TinyPotatoBlock;
+import org.violetmoon.quark.addons.oddities.block.be.TinyPotatoBlockEntity;
+import org.violetmoon.quark.addons.oddities.util.TinyPotatoInfo;
+import org.violetmoon.quark.api.IRuneColorProvider;
+import org.violetmoon.quark.base.components.QuarkDataComponents;
+import org.violetmoon.quark.base.handler.ContributorRewardHandler;
+import org.violetmoon.quark.content.tools.base.RuneColor;
+import org.violetmoon.zeta.item.ZetaBlockItem;
+
+import java.util.List;
 
 public class TinyPotatoBlockItem extends ZetaBlockItem implements IRuneColorProvider {
 	private static final int NOT_MY_NAME = 17;
 	private static final List<String> TYPOS = List.of("vaskii", "vazki", "voskii", "vazkkii", "vazkki", "vazzki", "vaskki", "vozkii", "vazkil", "vaskil", "vazkill", "vaskill", "vaski");
-
-	private static final String TICKS = "notMyNameTicks";
 
 	public TinyPotatoBlockItem(Block block, Properties properties) {
 		super(block, properties);
 	}
 
 	@Override
-	public boolean canEquipZeta(ItemStack stack, EquipmentSlot equipmentSlot, Entity entity) {
-		return equipmentSlot == EquipmentSlot.HEAD &&
-				(entity instanceof Player player && ContributorRewardHandler.getTier(player) > 0);
+	public boolean canEquipZeta(ItemStack stack, EquipmentSlot armorType, LivingEntity entity) {
+		return armorType == EquipmentSlot.HEAD && (entity instanceof Player player && ContributorRewardHandler.getTier(player) > 0);
 	}
 
 	@NotNull
@@ -49,28 +47,28 @@ public class TinyPotatoBlockItem extends ZetaBlockItem implements IRuneColorProv
 	}
 
 	private void updateData(ItemStack stack) {
-		CompoundTag tileTag = stack.getTagElement("BlockEntityTag");
 		// TODO: seems to me like this whole block isnt needed as tater never has that tag
-		if(tileTag != null) {
+		if(stack.has(DataComponents.BLOCK_ENTITY_DATA)) {
+			CompoundTag tileTag = stack.get(DataComponents.BLOCK_ENTITY_DATA).copyTag();
 			// this code seems to move angry tag out of blockEntity tag. Maybe it could be simplified
 			if(tileTag.contains(TinyPotatoBlockEntity.TAG_ANGRY, Tag.TAG_ANY_NUMERIC)) {
 				boolean angry = tileTag.getBoolean(TinyPotatoBlockEntity.TAG_ANGRY);
 				if(angry)
-					ItemNBTHelper.setBoolean(stack, TinyPotatoBlock.ANGRY, true);
+					stack.set(QuarkDataComponents.IS_ANGRY, true);
 				else if(TinyPotatoBlock.isAngry(stack))
-					stack.getOrCreateTag().remove(TinyPotatoBlock.ANGRY);
+					stack.set(QuarkDataComponents.IS_ANGRY, false);
 				tileTag.remove(TinyPotatoBlockEntity.TAG_ANGRY);
 			}
 
 			//remove this?
-			if(tileTag.contains(TinyPotatoBlockEntity.TAG_NAME, Tag.TAG_STRING)) {
-				stack.setHoverName(Component.Serializer.fromJson(tileTag.getString(TinyPotatoBlockEntity.TAG_NAME)));
+			/*if(tileTag.contains(TinyPotatoBlockEntity.TAG_NAME, Tag.TAG_STRING)) {
+				stack.set(DataComponents.CUSTOM_NAME, (Component.Serializer.fromJson(tileTag.getString(TinyPotatoBlockEntity.TAG_NAME))));
 				tileTag.remove(TinyPotatoBlockEntity.TAG_NAME);
-			}
+			}*/
 		}
 
-		if(!ItemNBTHelper.getBoolean(stack, TinyPotatoBlock.ANGRY, false))
-			stack.getOrCreateTag().remove(TinyPotatoBlock.ANGRY);
+		if(Boolean.TRUE.equals(stack.get(QuarkDataComponents.IS_ANGRY)))
+			stack.set(QuarkDataComponents.IS_ANGRY, false);
 	}
 
 	@Override
@@ -84,25 +82,21 @@ public class TinyPotatoBlockItem extends ZetaBlockItem implements IRuneColorProv
 		updateData(stack);
 
 		if(!world.isClientSide && holder instanceof Player player && holder.tickCount % 30 == 0 && TYPOS.contains(ChatFormatting.stripFormatting(stack.getDisplayName().getString()))) {
-			int ticks = ItemNBTHelper.getInt(stack, TICKS, 0);
+			int ticks = stack.get(QuarkDataComponents.TICKS);
 			if(ticks < NOT_MY_NAME) {
 				player.sendSystemMessage(Component.translatable("quark.misc.you_came_to_the_wrong_neighborhood." + ticks).withStyle(ChatFormatting.RED));
-				ItemNBTHelper.setInt(stack, TICKS, ticks + 1);
+				stack.set(QuarkDataComponents.TICKS, ticks + 1);
 			}
 		}
 	}
 
 	@Override
 	public boolean isFoil(@NotNull ItemStack stack) {
-		if(stack.hasCustomHoverName() && TinyPotatoInfo.fromComponent(stack.getHoverName()).enchanted())
-			return true;
-		return super.isFoil(stack);
+		return stack.has(DataComponents.CUSTOM_NAME) && TinyPotatoInfo.fromComponent(stack.getHoverName()).enchanted() || super.isFoil(stack);
 	}
 
 	@Override
 	public RuneColor getRuneColor(ItemStack stack) {
-		if(stack.hasCustomHoverName())
-			return TinyPotatoInfo.fromComponent(stack.getHoverName()).runeColor();
-		return null;
+		return stack.has(DataComponents.CUSTOM_NAME) ? TinyPotatoInfo.fromComponent(stack.getHoverName()).runeColor() : null;
 	}
 }

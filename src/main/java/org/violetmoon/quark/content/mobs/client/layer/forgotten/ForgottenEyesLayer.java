@@ -13,7 +13,7 @@ import org.violetmoon.quark.base.Quark;
 
 public class ForgottenEyesLayer<T extends Skeleton, M extends SkeletonModel<T>> extends EyesLayer<T, M> {
 
-	private static final ResourceLocation TEXTURE = new ResourceLocation(Quark.MOD_ID, "textures/model/entity/forgotten/eye.png");
+	private static final ResourceLocation TEXTURE = Quark.asResource("textures/model/entity/forgotten/eye.png");
 	private static final RenderType RENDER_TYPE = RenderType.eyes(TEXTURE);
 
 	public ForgottenEyesLayer(RenderLayerParent<T, M> rendererIn) {

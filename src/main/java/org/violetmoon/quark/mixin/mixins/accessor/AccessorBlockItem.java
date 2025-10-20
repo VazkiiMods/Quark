@@ -1,8 +1,6 @@
 package org.violetmoon.quark.mixin.mixins.accessor;
 
-import net.minecraft.world.entity.projectile.AbstractArrow;
 import net.minecraft.world.item.BlockItem;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.block.state.BlockState;
 import org.spongepowered.asm.mixin.Mixin;

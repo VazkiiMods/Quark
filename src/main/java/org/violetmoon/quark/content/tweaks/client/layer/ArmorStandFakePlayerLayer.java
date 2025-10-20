@@ -1,10 +1,7 @@
 package org.violetmoon.quark.content.tweaks.client.layer;
 
 import com.mojang.authlib.GameProfile;
-import com.mojang.authlib.minecraft.MinecraftProfileTexture;
-import com.mojang.authlib.minecraft.MinecraftProfileTexture.Type;
 import com.mojang.blaze3d.vertex.PoseStack;
-
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.model.PlayerModel;
@@ -17,21 +14,20 @@ import net.minecraft.client.renderer.blockentity.SkullBlockRenderer;
 import net.minecraft.client.renderer.entity.RenderLayerParent;
 import net.minecraft.client.renderer.entity.layers.RenderLayer;
 import net.minecraft.client.renderer.texture.OverlayTexture;
+import net.minecraft.client.resources.PlayerSkin;
 import net.minecraft.core.Rotations;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.NbtUtils;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.decoration.ArmorStand;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.item.component.ResolvableProfile;
+import net.minecraft.world.item.enchantment.EnchantmentEffectComponents;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.level.block.SkullBlock;
-
 import org.jetbrains.annotations.NotNull;
-
 import org.violetmoon.quark.content.client.module.UsesForCursesModule;
-import org.violetmoon.zeta.util.ItemNBTHelper;
 
 public class ArmorStandFakePlayerLayer<M extends EntityModel<ArmorStand>> extends RenderLayer<ArmorStand, M> {
 
@@ -47,22 +43,20 @@ public class ArmorStandFakePlayerLayer<M extends EntityModel<ArmorStand>> extend
 
 	@Override
 	public void render(@NotNull PoseStack pose, @NotNull MultiBufferSource buffer, int light, @NotNull ArmorStand armor, float p_117353_, float p_117354_, float p_117355_, float p_117356_, float p_117357_, float p_117358_) {
-		if(!UsesForCursesModule.staticEnabled || !UsesForCursesModule.bindArmorStandsWithPlayerHeads)
-			return;
+		if(!UsesForCursesModule.staticEnabled || !UsesForCursesModule.bindArmorStandsWithPlayerHeads) return;
 
 		ItemStack head = armor.getItemBySlot(EquipmentSlot.HEAD);
-		if(head.is(Items.PLAYER_HEAD) && EnchantmentHelper.hasBindingCurse(head)) {
-			CompoundTag skullOwner = ItemNBTHelper.getCompound(head, "SkullOwner", true);
-			GameProfile profile = skullOwner != null ? NbtUtils.readGameProfile(skullOwner) : null;
-			RenderType rendertype = SkullBlockRenderer.getRenderType(SkullBlock.Types.PLAYER, profile);
+		if(head.is(Items.PLAYER_HEAD) && EnchantmentHelper.has(head, EnchantmentEffectComponents.PREVENT_ARMOR_CHANGE) && head.has(DataComponents.PROFILE)) {
+
+			GameProfile profile = head.get(DataComponents.PROFILE).gameProfile();
+			RenderType rendertype = SkullBlockRenderer.getRenderType(SkullBlock.Types.PLAYER, new ResolvableProfile(profile));
 
 			if(rendertype != null) {
 				boolean slim = false;
 				if(profile != null) {
-					MinecraftProfileTexture profileTexture = Minecraft.getInstance().getSkinManager().getInsecureSkinInformation(profile).get(Type.SKIN);
-					if(profileTexture != null) {
-						String modelMeta = profileTexture.getMetadata("model");
-						slim = "slim".equals(modelMeta);
+					PlayerSkin playerSkin = Minecraft.getInstance().getSkinManager().getInsecureSkin(profile);
+					if(playerSkin != null) {
+						slim = playerSkin.model().equals(PlayerSkin.Model.SLIM);
 					}
 				}
 
@@ -93,11 +87,10 @@ public class ArmorStandFakePlayerLayer<M extends EntityModel<ArmorStand>> extend
 				rotateModel(model.leftPants, armor.getLeftLegPose());
 				rotateModel(model.rightPants, armor.getRightLegPose());
 
-				model.renderToBuffer(pose, buffer.getBuffer(rendertype), light, OverlayTexture.NO_OVERLAY, 1.0F, 1.0F, 1.0F, 1.0F);
+				model.renderToBuffer(pose, buffer.getBuffer(rendertype), light, OverlayTexture.NO_OVERLAY, -1);
 
 				pose.popPose();
 			}
-
 		}
 	}
 

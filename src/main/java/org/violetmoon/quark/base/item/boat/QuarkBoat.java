@@ -11,9 +11,7 @@ import net.minecraft.world.entity.vehicle.Boat;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.Level;
-
 import org.jetbrains.annotations.NotNull;
-
 import org.violetmoon.quark.base.handler.WoodSetHandler;
 import org.violetmoon.quark.base.handler.WoodSetHandler.QuarkBoatType;
 
@@ -34,9 +32,9 @@ public class QuarkBoat extends Boat implements IQuarkBoat {
 	}
 
 	@Override
-	protected void defineSynchedData() {
-		super.defineSynchedData();
-		entityData.define(DATA_QUARK_TYPE, "blossom");
+	protected void defineSynchedData(SynchedEntityData.Builder builder) {
+		super.defineSynchedData(builder);
+		builder.define(DATA_QUARK_TYPE, "blossom");
 	}
 
 	public String getQuarkBoatType() {

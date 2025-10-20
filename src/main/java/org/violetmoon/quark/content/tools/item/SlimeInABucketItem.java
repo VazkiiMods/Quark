@@ -2,7 +2,9 @@ package org.violetmoon.quark.content.tools.item;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.RegistryAccess;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.Connection;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
@@ -28,10 +30,12 @@ import net.minecraft.world.phys.Vec3;
 
 import org.jetbrains.annotations.NotNull;
 
+import org.violetmoon.quark.base.components.QuarkDataComponents;
 import org.violetmoon.zeta.item.ZetaItem;
 import org.violetmoon.zeta.module.ZetaModule;
 import org.violetmoon.zeta.registry.CreativeTabManager;
-import org.violetmoon.zeta.util.ItemNBTHelper;
+
+import java.util.UUID;
 
 public class SlimeInABucketItem extends ZetaItem {
 
@@ -43,7 +47,7 @@ public class SlimeInABucketItem extends ZetaItem {
 				new Item.Properties()
 						.stacksTo(1)
 						.craftRemainder(Items.BUCKET));
-		CreativeTabManager.addToCreativeTabNextTo(CreativeModeTabs.TOOLS_AND_UTILITIES, this, Items.TADPOLE_BUCKET, false);
+		CreativeTabManager.addNextToItem(CreativeModeTabs.TOOLS_AND_UTILITIES, this, Items.TADPOLE_BUCKET, false);
 	}
 
 	@Override
@@ -53,9 +57,9 @@ public class SlimeInABucketItem extends ZetaItem {
 			int x = Mth.floor(pos.x);
 			int z = Mth.floor(pos.z);
 			boolean slime = isSlimeChunk(serverLevel, x, z);
-			boolean excited = ItemNBTHelper.getBoolean(stack, TAG_EXCITED, false);
+			boolean excited = Boolean.TRUE.equals(stack.get(QuarkDataComponents.EXCITED));
 			if(excited != slime)
-				ItemNBTHelper.setBoolean(stack, TAG_EXCITED, slime);
+				stack.set(QuarkDataComponents.EXCITED, slime);
 		}
 	}
 
@@ -64,48 +68,51 @@ public class SlimeInABucketItem extends ZetaItem {
 	public InteractionResult useOn(UseOnContext context) {
 		BlockPos pos = context.getClickedPos();
 		Direction facing = context.getClickedFace();
-		Level worldIn = context.getLevel();
-		Player playerIn = context.getPlayer();
+		Level level = context.getLevel();
+		Player player = context.getPlayer();
 		InteractionHand hand = context.getHand();
 
 		double x = pos.getX() + 0.5 + facing.getStepX();
 		double y = pos.getY() + 0.5 + facing.getStepY();
 		double z = pos.getZ() + 0.5 + facing.getStepZ();
 
-		if(!worldIn.isClientSide) {
-			Slime slime = new Slime(EntityType.SLIME, worldIn);
+		if(!level.isClientSide) {
+			Slime slime = new Slime(EntityType.SLIME, level);
 
-			CompoundTag data = ItemNBTHelper.getCompound(playerIn.getItemInHand(hand), TAG_ENTITY_DATA, true);
-			if(data != null)
+			if ((player.getItemInHand(hand).has(QuarkDataComponents.SLIME_NBT))){
+				CompoundTag data = player.getItemInHand(hand).get(QuarkDataComponents.SLIME_NBT).copyTag();
 				slime.load(data);
-			else {
+            } else {
 				slime.getAttribute(Attributes.MAX_HEALTH).setBaseValue(1.0);
 				slime.getAttribute(Attributes.MOVEMENT_SPEED).setBaseValue(0.3);
 				slime.setHealth(slime.getMaxHealth());
 			}
 
 			slime.setPos(x, y, z);
+            if (player.getAbilities().instabuild)
+                slime.setUUID(UUID.randomUUID());
 
-			worldIn.gameEvent(playerIn, GameEvent.ENTITY_PLACE, slime.position());
-			worldIn.addFreshEntity(slime);
-			playerIn.swing(hand);
+			level.gameEvent(player, GameEvent.ENTITY_PLACE, slime.position());
+            level.addFreshEntity(slime);
+			player.swing(hand);
 		}
 
-		worldIn.playSound(playerIn, pos, SoundEvents.BUCKET_EMPTY, SoundSource.NEUTRAL, 1.0F, 1.0F);
+		level.playSound(player, pos, SoundEvents.BUCKET_EMPTY, SoundSource.NEUTRAL, 1.0F, 1.0F);
 
-		if(!playerIn.getAbilities().instabuild)
-			playerIn.setItemInHand(hand, new ItemStack(Items.BUCKET));
+		if(!player.getAbilities().instabuild)
+			player.setItemInHand(hand, new ItemStack(Items.BUCKET));
 
-		return InteractionResult.sidedSuccess(worldIn.isClientSide);
+		return InteractionResult.sidedSuccess(level.isClientSide);
 	}
 
 	@NotNull
 	@Override
 	public Component getName(@NotNull ItemStack stack) {
-		if(stack.hasTag()) {
-			CompoundTag cmp = ItemNBTHelper.getCompound(stack, TAG_ENTITY_DATA, false);
+		if(stack.has(QuarkDataComponents.SLIME_NBT)) {
+			CompoundTag cmp = stack.get(QuarkDataComponents.SLIME_NBT).copyTag();
 			if(cmp != null && cmp.contains("CustomName")) {
-				Component custom = Component.Serializer.fromJson(cmp.getString("CustomName"));
+
+				Component custom = Component.Serializer.fromJson(cmp.getString("CustomName"), RegistryAccess.EMPTY);
 				return Component.translatable("item.quark.slime_in_a_bucket.named", custom);
 			}
 		}

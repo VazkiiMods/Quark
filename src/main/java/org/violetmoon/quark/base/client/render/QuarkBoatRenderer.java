@@ -43,7 +43,7 @@ public class QuarkBoatRenderer extends EntityRenderer<Boat> {
 	private static Map<String, BoatModelTuple> computeBoatResources(boolean chest, EntityRendererProvider.Context context) {
 		return WoodSetHandler.boatTypes().collect(ImmutableMap.toImmutableMap(Functions.identity(), name -> {
 			String folder = chest ? "chest_boat" : "boat";
-			ResourceLocation texture = new ResourceLocation(Quark.MOD_ID, "textures/model/entity/" + folder + "/" + name + ".png");
+			ResourceLocation texture = Quark.asResource("textures/model/entity/" + folder + "/" + name + ".png");
 			BoatModel model = (chest) ? new ChestBoatModel(context.bakeLayer(ModelHandler.quark_boat_chest)) : new BoatModel(context.bakeLayer(ModelHandler.quark_boat));
 
 			return new BoatModelTuple(texture, model);
@@ -69,7 +69,8 @@ public class QuarkBoatRenderer extends EntityRenderer<Boat> {
 
 		float f2 = boat.getBubbleAngle(partialTicks);
 		if(!Mth.equal(f2, 0.0F)) {
-			matrix.mulPose(new Quaternionf(1.0F, 0.0F, 1.0F, boat.getBubbleAngle(partialTicks) * ((float) Math.PI / 180F)));
+			matrix.mulPose((new Quaternionf()).setAngleAxis(boat.getBubbleAngle(partialTicks) * 0.017453292F, 1.0F,
+					0.0F, 1.0F));
 		}
 
 		BoatModelTuple tuple = getModelWithLocation(boat);
@@ -80,7 +81,7 @@ public class QuarkBoatRenderer extends EntityRenderer<Boat> {
 		matrix.mulPose(Axis.YP.rotationDegrees(90.0F));
 		model.setupAnim(boat, partialTicks, 0.0F, -0.1F, 0.0F, 0.0F);
 		VertexConsumer vertexconsumer = buffer.getBuffer(model.renderType(loc));
-		model.renderToBuffer(matrix, vertexconsumer, light, OverlayTexture.NO_OVERLAY, 1.0F, 1.0F, 1.0F, 1.0F);
+		model.renderToBuffer(matrix, vertexconsumer, light, OverlayTexture.NO_OVERLAY);
 		if(!boat.isUnderWater()) {
 			VertexConsumer waterMask = buffer.getBuffer(RenderType.waterMask());
 			model.waterPatch().render(matrix, waterMask, light, OverlayTexture.NO_OVERLAY);

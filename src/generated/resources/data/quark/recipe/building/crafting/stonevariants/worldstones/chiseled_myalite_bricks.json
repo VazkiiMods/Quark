@@ -1,0 +1,36 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:and",
+      "values": [
+        {
+          "type": "zeta:flag",
+          "flag": "myalite"
+        },
+        {
+          "type": "zeta:flag",
+          "flag": "stone_chiseled"
+        },
+        {
+          "type": "zeta:flag",
+          "flag": "stone_bricks"
+        }
+      ]
+    }
+  ],
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "key": {
+    "#": {
+      "item": "quark:myalite_bricks_slab"
+    }
+  },
+  "pattern": [
+    "#",
+    "#"
+  ],
+  "result": {
+    "count": 1,
+    "id": "quark:chiseled_myalite_bricks"
+  }
+}

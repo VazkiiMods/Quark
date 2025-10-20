@@ -1,8 +1,10 @@
 package org.violetmoon.quark.content.building.module;
 
-import java.util.HashMap;
-import java.util.Map;
-
+import net.minecraft.world.item.CreativeModeTabs;
+import net.minecraft.world.item.DyeColor;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.SoundType;
 import org.violetmoon.zeta.block.IZetaBlock;
 import org.violetmoon.zeta.block.ZetaGlassBlock;
 import org.violetmoon.zeta.block.ZetaInheritedPaneBlock;
@@ -13,14 +15,24 @@ import org.violetmoon.zeta.module.ZetaModule;
 import org.violetmoon.zeta.registry.CreativeTabManager;
 import org.violetmoon.zeta.util.MiscUtil;
 
-import net.minecraft.world.item.CreativeModeTabs;
-import net.minecraft.world.item.DyeColor;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.SoundType;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @ZetaLoadModule(category = "building")
 public class FramedGlassModule extends ZetaModule {
+
+	public static List<Block> glassBlocks = new ArrayList<>();
+
+	public static Map<DyeColor, IZetaBlock> blockMap = new HashMap<>(); //datagen only
+	public static Map<DyeColor, IZetaBlock> paneMap = new HashMap<>();
+
+	public static ZetaGlassBlock framed_glass;
+	public static ZetaInheritedPaneBlock framed_glass_pane;
+
+    public static List<Block> stainedFramedGlass = new ArrayList<>();
+    public static List<Block> stainedFramedGlassPanes = new ArrayList<>();
 
 	@LoadEvent
 	public final void register(ZRegister event) {
@@ -28,19 +40,29 @@ public class FramedGlassModule extends ZetaModule {
 				.strength(3F, 10F)
 				.sound(SoundType.GLASS);
 
-		new ZetaInheritedPaneBlock((IZetaBlock) new ZetaGlassBlock("framed_glass", this, false, props).setCreativeTab(CreativeModeTabs.COLORED_BLOCKS, Blocks.GLASS, false))
-				.setCreativeTab(CreativeModeTabs.COLORED_BLOCKS, Blocks.GLASS_PANE, false);
+		framed_glass = (ZetaGlassBlock) new ZetaGlassBlock("framed_glass", this, false, props).setCreativeTab(CreativeModeTabs.COLORED_BLOCKS, Blocks.GLASS, false);
+		framed_glass_pane = (ZetaInheritedPaneBlock) new ZetaInheritedPaneBlock(framed_glass).setCreativeTab(CreativeModeTabs.COLORED_BLOCKS, Blocks.GLASS_PANE, false);
+        glassBlocks.add(framed_glass);
+        glassBlocks.add(framed_glass_pane);
 
-		Map<DyeColor, IZetaBlock> blocks = new HashMap<>();
-		CreativeTabManager.daisyChain();
-		for(DyeColor dye : MiscUtil.CREATIVE_COLOR_ORDER)
-			blocks.put(dye, (IZetaBlock) new ZetaGlassBlock(dye.getName() + "_framed_glass", this, true, props).setCreativeTab(CreativeModeTabs.COLORED_BLOCKS, Blocks.PINK_STAINED_GLASS, false));
-		CreativeTabManager.endDaisyChain();
+        CreativeTabManager.startChain(CreativeModeTabs.BUILDING_BLOCKS, false, false, Blocks.PINK_STAINED_GLASS);
+        for(DyeColor dye : MiscUtil.CREATIVE_COLOR_ORDER){
+			Block block = new ZetaGlassBlock(dye.getName() + "_framed_glass", this, true, props).setCreativeTab(CreativeModeTabs.COLORED_BLOCKS, Blocks.PINK_STAINED_GLASS, false);
+			blockMap.put(dye, (IZetaBlock) block);
+			glassBlocks.add((Block) blockMap.get(dye));
+            stainedFramedGlass.add(block);
+		}
+		CreativeTabManager.endChain();
 
-		CreativeTabManager.daisyChain();
-		for(DyeColor dye : MiscUtil.CREATIVE_COLOR_ORDER)
-			new ZetaInheritedPaneBlock(blocks.get(dye)).setCreativeTab(CreativeModeTabs.COLORED_BLOCKS, Blocks.PINK_STAINED_GLASS_PANE, false);
-		CreativeTabManager.endDaisyChain();
+        CreativeTabManager.startChain(CreativeModeTabs.BUILDING_BLOCKS, false, false, Blocks.PINK_STAINED_GLASS_PANE);
+        for(DyeColor dye : MiscUtil.CREATIVE_COLOR_ORDER){
+			Block block = new ZetaInheritedPaneBlock(blockMap.get(dye)).setCreativeTab(CreativeModeTabs.COLORED_BLOCKS, Blocks.PINK_STAINED_GLASS_PANE, false);
+			paneMap.put(dye, (IZetaBlock) block);
+			glassBlocks.add(block);
+            stainedFramedGlassPanes.add(block);
+		}
+
+		CreativeTabManager.endChain();
 	}
 
 }

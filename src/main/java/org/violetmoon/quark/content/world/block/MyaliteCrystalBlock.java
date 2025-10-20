@@ -6,9 +6,7 @@ import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockState;
-
 import org.jetbrains.annotations.Nullable;
-
 import org.violetmoon.zeta.block.OldMaterials;
 import org.violetmoon.zeta.block.ZetaGlassBlock;
 import org.violetmoon.zeta.module.ZetaModule;
@@ -32,17 +30,10 @@ public class MyaliteCrystalBlock extends ZetaGlassBlock implements IZetaBlockCol
 		setCreativeTab(CreativeModeTabs.NATURAL_BLOCKS);
 	}
 
-	private static float[] decompColor(int color) {
-		int r = (color & 0xFF0000) >> 16;
-		int g = (color & 0xFF00) >> 8;
-		int b = color & 0xFF;
-		return new float[] { (float) r / 255.0F, (float) g / 255.0F, (float) b / 255.0F };
-	}
-
 	@Nullable
 	@Override
-	public float[] getBeaconColorMultiplierZeta(BlockState state, LevelReader world, BlockPos pos, BlockPos beaconPos) {
-		return decompColor(MyaliteColorLogic.getColor(pos));
+	public Integer getBeaconColorMultiplierZeta(BlockState state, LevelReader world, BlockPos pos, BlockPos beaconPos) {
+		return MyaliteColorLogic.getColor(pos);
 	}
 
 	@Override

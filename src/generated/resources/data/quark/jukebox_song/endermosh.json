@@ -1,0 +1,10 @@
+{
+  "comparator_output": 14,
+  "description": {
+    "translate": "item.quark.music_disc_endermosh.desc"
+  },
+  "length_in_seconds": 189.4,
+  "sound_event": {
+    "sound_id": "quark:music.endermosh"
+  }
+}

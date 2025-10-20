@@ -3,15 +3,13 @@ package org.violetmoon.quark.addons.oddities.client.screen;
 import com.mojang.blaze3d.platform.Window;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
-
+import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.ObjectSelectionList;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.Mth;
-
 import org.jetbrains.annotations.NotNull;
-
 import org.violetmoon.quark.addons.oddities.inventory.EnchantmentMatrix.Piece;
 
 public class MatrixEnchantingPieceList extends ObjectSelectionList<MatrixEnchantingPieceList.PieceEntry> {
@@ -20,14 +18,14 @@ public class MatrixEnchantingPieceList extends ObjectSelectionList<MatrixEnchant
 	private final int listWidth;
 
 	public MatrixEnchantingPieceList(MatrixEnchantingScreen parent, int listWidth, int listHeight, int top, int bottom, int entryHeight) {
-		super(parent.getMinecraft(), listWidth, listHeight, top, bottom, entryHeight);
+		super(parent.getMinecraft(), listWidth, listHeight, top, entryHeight);
 		this.listWidth = listWidth;
 		this.parent = parent;
 	}
 
 	@Override
 	protected int getScrollbarPosition() {
-		return getLeft() + this.listWidth - 5;
+		return getX() + this.listWidth - 5;
 	}
 
 	@Override
@@ -47,44 +45,54 @@ public class MatrixEnchantingPieceList extends ObjectSelectionList<MatrixEnchant
 	}
 
 	@Override
-	public void render(@NotNull GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTicks) {
-		int i = this.getScrollbarPosition();
-		int j = i + 6;
+	public void renderWidget(@NotNull GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTicks) {
+		int scrollbarStartX = this.getScrollbarPosition();
+		int scrollbarEndX = scrollbarStartX + 6;
 
-		guiGraphics.fill(getLeft(), getTop(), getLeft() + getWidth() + 1, getTop() + getHeight(), 0xFF2B2B2B);
+		guiGraphics.fill(getX(), getY(), getX() + getWidth() + 1, getY() + getHeight(), 0xFF2B2B2B);
 
 		Window main = parent.getMinecraft().getWindow();
 		int res = (int) main.getGuiScale();
-		RenderSystem.enableScissor(getLeft() * res, (main.getGuiScaledHeight() - getBottom()) * res, getWidth() * res, getHeight() * res);
-		renderList(guiGraphics, mouseX, mouseY, partialTicks);
+		RenderSystem.enableScissor(getX() * res, (main.getGuiScaledHeight() - getBottom()) * res, getWidth() * res, getHeight() * res);
+		setScrollAmount(Math.min(this.getScrollAmount(), getMaxScroll()));
+		renderListItems(guiGraphics, mouseX, mouseY, partialTicks);
 		RenderSystem.disableScissor();
-
-		renderScroll(guiGraphics, i, j);
+		renderScroll(guiGraphics, scrollbarStartX, scrollbarEndX);
 	}
 
 	protected int getMaxScroll2() {
-		return Math.max(0, this.getMaxPosition() - (this.y1 - this.y0 - 4));
+		return Math.max(0, this.getMaxPosition() - (this.getHeight() - this.getY() - 4));
 	}
 
-	private void renderScroll(GuiGraphics guiGraphics, int i, int j) {
-		int j1 = this.getMaxScroll2();
-		if(j1 > 0) {
-			int k1 = (int) ((float) ((this.y1 - this.y0) * (this.y1 - this.y0)) / (float) this.getMaxPosition());
-			k1 = Mth.clamp(k1, 32, this.y1 - this.y0 - 8);
-			int l1 = (int) this.getScrollAmount() * (this.y1 - this.y0 - k1) / j1 + this.y0;
-			if(l1 < this.y0) {
-				l1 = this.y0;
-			}
+	/**
+	 * The method that renders the scrollbar. Note that you do NOT send in the y-pos or the height of the scrollbar. Thats all calculated here.
+	 * @param guiGraphics GuiGraphics object, needed to actually render stuff.
+	 * @param scrollbarStartX The starting x-pos of the scrollbar.
+	 * @param scrollbarEndX The ending x-pos of the scrollbar.
+	 */
+	private void renderScroll(GuiGraphics guiGraphics, int scrollbarStartX, int scrollbarEndX) {
+		int maxScrollHeight = this.getMaxScroll();
+		if(maxScrollHeight > 0) {
+			int diff = (this.getY() - this.getHeight());
+			int scrollbarSize = ((this.getHeight())*(this.getHeight()))/(this.getMaxPosition());
+			scrollbarSize = Math.clamp(scrollbarSize, 0, this.getHeight());
+			//Lerp func. A+(B-A)*T for the uninitiated. Goes between the highest and lowest ypos the scrollbar can be
+			int scrollbarYPos = (int) ((this.getY() + scrollbarSize) + (this.getHeight() - scrollbarSize) * (getScrollAmount() / getMaxScroll()));
 
-			guiGraphics.fill(i, y1, j, y0, 0xFF000000);
-			guiGraphics.fill(i, (l1 + k1), j, l1, 0xFF818181);
-			guiGraphics.fill(i, (l1 + k1 - 1), j - 1, l1, 0xFFc0c0c0);
+			/*guiGraphics.drawString(this.parent.getMinecraft().font, "getY: " + this.getY(),4,4,0xFFFFFF);
+			guiGraphics.drawString(this.parent.getMinecraft().font, "getHeight: " + this.getHeight(),4,16,0xFFFFFF);
+			guiGraphics.drawString(this.parent.getMinecraft().font, "maxScrollHeight: " + maxScrollHeight,4,28,0xFFFFFF);
+			guiGraphics.drawString(this.parent.getMinecraft().font, "scrollbarStartX: " + scrollbarStartX,4,40,0xFFFFFF);
+			guiGraphics.drawString(this.parent.getMinecraft().font, "scrollbarEndX: " + scrollbarEndX,4,52,0xFFFFFF);
+			guiGraphics.drawString(this.parent.getMinecraft().font, "scrollbarSize: " + scrollbarSize,4,64,0xFFFFFF);
+			guiGraphics.drawString(this.parent.getMinecraft().font, "scrollbarYPos: " + scrollbarYPos,4,76,0xFFFFFF);
+			guiGraphics.drawString(this.parent.getMinecraft().font, "maxPos: " + getMaxPosition(),4,88,0xFFFFFF);
+			guiGraphics.drawString(this.parent.getMinecraft().font, "scrollAmount: " + getScrollAmount(),4,100,0xFFFFFF);*/
+
+			guiGraphics.fill(scrollbarStartX, this.getY()+getHeight(), scrollbarEndX, getY(), 0xFF000000);
+			guiGraphics.fill(scrollbarStartX, (scrollbarYPos - scrollbarSize), scrollbarEndX, scrollbarYPos, 0xFF818181);
+			guiGraphics.fill(scrollbarStartX, (scrollbarYPos - scrollbarSize), scrollbarEndX - 1, scrollbarYPos, 0xFFc0c0c0);
 		}
-	}
-
-	@Override
-	protected void renderBackground(@NotNull GuiGraphics guiGraphics) {
-		// NO-OP
 	}
 
 	protected class PieceEntry extends ObjectSelectionList.Entry<PieceEntry> {

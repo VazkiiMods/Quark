@@ -1,31 +1,24 @@
 package org.violetmoon.quark.base.network.message.experimental;
 
+import io.netty.buffer.ByteBuf;
+import org.violetmoon.quark.catnip.net.base.ServerboundPacketPayload;
+import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.server.level.ServerPlayer;
+import org.violetmoon.quark.base.network.QuarkNetwork;
 import org.violetmoon.quark.content.experimental.module.VariantSelectorModule;
-import org.violetmoon.zeta.network.IZetaMessage;
-import org.violetmoon.zeta.network.IZetaNetworkEventContext;
 
-import java.io.Serial;
+public record PlaceVariantUpdateMessage(String variant) implements ServerboundPacketPayload {
+	public static final StreamCodec<ByteBuf, PlaceVariantUpdateMessage> STREAM_CODEC = ByteBufCodecs.STRING_UTF8
+			.map(PlaceVariantUpdateMessage::new, PlaceVariantUpdateMessage::variant);
 
-public class PlaceVariantUpdateMessage implements IZetaMessage {
-
-	@Serial
-	private static final long serialVersionUID = -6123685825175210844L;
-
-	public String variant;
-
-	public PlaceVariantUpdateMessage() {
-	}
-
-	public PlaceVariantUpdateMessage(String variant) {
-		this.variant = variant;
+	@Override
+	public void handle(ServerPlayer player) {
+		VariantSelectorModule.setSavedVariant(player, variant);
 	}
 
 	@Override
-	public boolean receive(IZetaNetworkEventContext context) {
-		context.enqueueWork(() -> {
-			VariantSelectorModule.setSavedVariant(context.getSender(), variant);
-		});
-		return true;
+	public PacketTypeProvider getTypeProvider() {
+		return QuarkNetwork.PLACE_VARIANT_UPDATE_MESSAGE;
 	}
-
 }

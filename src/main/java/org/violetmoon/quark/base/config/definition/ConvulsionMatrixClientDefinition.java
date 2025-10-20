@@ -12,7 +12,7 @@ import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import net.minecraftforge.client.gui.widget.ForgeSlider;
+import net.neoforged.neoforge.client.gui.widget.ExtendedSlider;
 import org.jetbrains.annotations.NotNull;
 import org.violetmoon.quark.base.config.type.ConvulsionMatrixConfig;
 import org.violetmoon.zeta.client.ZetaClient;
@@ -68,7 +68,7 @@ public class ConvulsionMatrixClientDefinition implements ClientDefinitionExt<Sec
 	}
 
 	class ConvulsionMatrixInputScreen extends AbstractSectionInputScreen {
-		ForgeSlider[] sliders = new ForgeSlider[9];
+		ExtendedSlider[] sliders = new ExtendedSlider[9];
 
 		public ConvulsionMatrixInputScreen(ZetaClient zc, Screen parent, ChangeSet changes, SectionDefinition def) {
 			super(zc, parent, changes, def);
@@ -120,8 +120,8 @@ public class ConvulsionMatrixClientDefinition implements ClientDefinitionExt<Sec
 
 		private static final Component EMPTY = Component.empty();
 
-		private ForgeSlider makeSliderPlease(int x, int y, int width, int height, ValueDefinition<List<Double>> binding, int bindingIndex) {
-			return new ForgeSlider(x, y, width, height, EMPTY, EMPTY, 0d, 2d, 0d, 0, 1, false) {
+		private ExtendedSlider makeSliderPlease(int x, int y, int width, int height, ValueDefinition<List<Double>> binding, int bindingIndex) {
+			return new ExtendedSlider(x, y, width, height, EMPTY, EMPTY, 0d, 2d, 0d, 0, 1, false) {
 				@Override
 				public void setValue(double value) {
 					super.setValue(value);
@@ -134,10 +134,9 @@ public class ConvulsionMatrixClientDefinition implements ClientDefinitionExt<Sec
 				}
 
 				@Override
-				public void render(@NotNull GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTicks) {
+				public void renderWidget(@NotNull GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTicks) {
 					Minecraft mc = Minecraft.getInstance();
-
-					super.render(guiGraphics, mouseX, mouseY, partialTicks);
+					super.renderWidget(guiGraphics, mouseX, mouseY, partialTicks);
 
 					String displayVal = String.format(Locale.ROOT, "%.2f", getValue());
 					int valueColor = changes.isDirty(binding) ? ChatFormatting.GOLD.getColor() : 0xFFFFFF;
@@ -154,8 +153,7 @@ public class ConvulsionMatrixClientDefinition implements ClientDefinitionExt<Sec
 		@Override
 		public void render(@NotNull GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTicks) {
 			PoseStack mstack = guiGraphics.pose();
-
-			renderBackground(guiGraphics);
+			renderBackground(guiGraphics, mouseX, mouseY, partialTicks);
 
 			super.render(guiGraphics, mouseX, mouseY, partialTicks);
 
@@ -170,19 +168,19 @@ public class ConvulsionMatrixClientDefinition implements ClientDefinitionExt<Sec
 			//copied from the original
 			int sliders = 0;
 			for (Renderable renderable : renderables) {
-				if (renderable instanceof ForgeSlider s) {
+				if (renderable instanceof ExtendedSlider slider) {
 					switch (sliders) {
 						case 0 -> {
-							guiGraphics.drawString(font, "R =", s.getX() - 20, s.getY() + 5, 0xFF0000);
-							guiGraphics.drawString(font, "R", s.getX() + (s.getWidth() / 2 - 2), s.getY() - 12, 0xFF0000);
+							guiGraphics.drawString(font, "R =", slider.getX() - 20, slider.getY() + 5, 0xFF0000);
+							guiGraphics.drawString(font, "R", slider.getX() + (slider.getWidth() / 2 - 2), slider.getY() - 12, 0xFF0000);
 						}
-						case 1 -> guiGraphics.drawString(font, "G", s.getX() + (s.getWidth() / 2 - 2), s.getY() - 12, 0x00FF00);
-						case 2 -> guiGraphics.drawString(font, "B", s.getX() + (s.getWidth() / 2 - 2), s.getY() - 12, 0x0077FF);
-						case 3 -> guiGraphics.drawString(font, "G =", s.getX() - 20, s.getY() + 5, 0x00FF00);
-						case 6 -> guiGraphics.drawString(font, "B =", s.getX() - 20, s.getY() + 5, 0x0077FF);
+						case 1 -> guiGraphics.drawString(font, "G", slider.getX() + (slider.getWidth() / 2 - 2), slider.getY() - 12, 0x00FF00);
+						case 2 -> guiGraphics.drawString(font, "B", slider.getX() + (slider.getWidth() / 2 - 2), slider.getY() - 12, 0x0077FF);
+						case 3 -> guiGraphics.drawString(font, "G =", slider.getX() - 20, slider.getY() + 5, 0x00FF00);
+						case 6 -> guiGraphics.drawString(font, "B =", slider.getX() - 20, slider.getY() + 5, 0x0077FF);
 					}
 					if ((sliders % 3) != 0)
-						guiGraphics.drawString(font, "+", s.getX() - 9, s.getY() + 5, 0xFFFFFF);
+						guiGraphics.drawString(font, "+", slider.getX() - 9, slider.getY() + 5, 0xFFFFFF);
 
 					sliders++;
 				}
@@ -249,17 +247,17 @@ public class ConvulsionMatrixClientDefinition implements ClientDefinitionExt<Sec
 			return values;
 		}
 
-		private double snap(ForgeSlider s) {
-			double val = s.getValue();
-			val = snap(val, 0.5, s);
-			val = snap(val, 1.0, s);
-			val = snap(val, 1.5, s);
+		private double snap(ExtendedSlider slider) {
+			double val = slider.getValue();
+			val = snap(val, 0.5, slider);
+			val = snap(val, 1.0, slider);
+			val = snap(val, 1.5, slider);
 			return val;
 		}
 
-		private double snap(double val, double correct, ForgeSlider s) {
+		private double snap(double val, double correct, ExtendedSlider slider) {
 			if(Math.abs(val - correct) < 0.02) {
-				s.setValue(correct);
+				slider.setValue(correct);
 				return correct;
 			}
 			return val;

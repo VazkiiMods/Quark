@@ -4,7 +4,6 @@ import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import com.llamalad7.mixinextras.sugar.Local;
 import com.llamalad7.mixinextras.sugar.Share;
 import com.llamalad7.mixinextras.sugar.ref.LocalRef;
-
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.Level;
@@ -12,11 +11,9 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.piston.PistonBaseBlock;
 import net.minecraft.world.level.block.piston.PistonStructureResolver;
 import net.minecraft.world.level.block.state.BlockState;
-
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.*;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
-
 import org.violetmoon.quark.content.automation.module.PistonsMoveTileEntitiesModule;
 import org.violetmoon.quark.content.experimental.module.GameNerfsModule;
 
@@ -56,7 +53,7 @@ public class PistonBaseBlockMixin {
 	@Inject(method = "moveBlocks", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/Level;setBlock(Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/level/block/state/BlockState;I)Z", ordinal = 2, shift = At.Shift.AFTER))
 	private void modifyBlockstate(Level worldIn, BlockPos posIn, Direction pistonFacing, boolean extending, CallbackInfoReturnable<Boolean> cir,
 			@Share("oldPos") LocalRef<BlockPos> oldPos, @Share("newState") LocalRef<BlockState> newState, @Share("storedMap") LocalRef<Map<BlockPos, BlockState>> storedMap) {
-		if(GameNerfsModule.stopPistonPhysicsExploits()) {
+		if(GameNerfsModule.stopPistonPhysicsExploits() && oldPos.get() != null) {
 			newState.set(worldIn.getBlockState(oldPos.get()));
 			storedMap.get().replace(oldPos.get(), newState.get());
 		}

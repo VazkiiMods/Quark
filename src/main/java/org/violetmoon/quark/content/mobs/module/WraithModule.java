@@ -4,12 +4,10 @@ import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Lists;
 import net.minecraft.client.renderer.entity.EntityRenderers;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobCategory;
-import net.minecraft.world.entity.SpawnPlacements.Type;
+import net.minecraft.world.entity.SpawnPlacementTypes;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
@@ -80,7 +78,7 @@ public class WraithModule extends ZetaModule {
 	public static List<String> validWraithSounds = wraithSounds.stream().filter((s) -> s.split("\\|").length == 3).collect(Collectors.toList());
 
 	@Hint
-	Item soul_bead;
+	public static Item soul_bead;
 
 	@LoadEvent
 	public final void register(ZRegister event) {
@@ -90,7 +88,6 @@ public class WraithModule extends ZetaModule {
 				.sized(0.6F, 1.95F)
 				.clientTrackingRange(8)
 				.fireImmune()
-				.setCustomClientFactory((spawnEntity, world) -> new Wraith(wraithType, world))
 				.build("wraith");
 		Quark.ZETA.registry.register(wraithType, "wraith", Registries.ENTITY_TYPE);
 
@@ -99,11 +96,20 @@ public class WraithModule extends ZetaModule {
 				.clientTrackingRange(4)
 				.updateInterval(10) // update frequency
 				.fireImmune()
-				.setCustomClientFactory((spawnEntity, world) -> new SoulBead(soulBeadType, world))
 				.build("soul_bead");
 		event.getRegistry().register(soulBeadType, "soul_bead", Registries.ENTITY_TYPE);
 
-		Quark.ZETA.entitySpawn.registerSpawn(wraithType, MobCategory.MONSTER, Type.ON_GROUND, Types.MOTION_BLOCKING_NO_LEAVES, Monster::checkMonsterSpawnRules, spawnConfig);
+		Quark.ZETA.entitySpawn.registerSpawn(wraithType,
+                MobCategory.MONSTER,
+                SpawnPlacementTypes.ON_GROUND,
+                Types.MOTION_BLOCKING_NO_LEAVES,
+                (wraith,
+                 level,
+                 mobSpawnType,
+                 blockPos,
+                 random) -> Monster.checkMonsterSpawnRules(wraith, level, mobSpawnType, blockPos, random)
+                        && level.getBlockState(blockPos.below()).is(wraithSpawnableTag),
+                spawnConfig);
 		Quark.ZETA.entitySpawn.addEgg(this, wraithType, 0xececec, 0xbdbdbd, spawnConfig);
 
 		event.getAdvancementModifierRegistry().addModifier(new MonsterHunterModifier(this, ImmutableSet.of(wraithType)));
@@ -116,8 +122,8 @@ public class WraithModule extends ZetaModule {
 
 	@LoadEvent
 	public final void setup(ZCommonSetup event) {
-		wraithSpawnableTag = BlockTags.create(new ResourceLocation(Quark.MOD_ID, "wraith_spawnable"));
-		soulBeadTargetTag = TagKey.create(Registries.STRUCTURE, new ResourceLocation(Quark.MOD_ID, "soul_bead_target"));
+		wraithSpawnableTag = Quark.asTagKey(Registries.BLOCK,"wraith_spawnable");
+		soulBeadTargetTag = Quark.asTagKey(Registries.STRUCTURE,"soul_bead_target");
 	}
 
 

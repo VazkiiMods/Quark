@@ -2,6 +2,7 @@ package org.violetmoon.quark.content.tweaks.client.emote;
 
 import net.minecraft.resources.ResourceLocation;
 
+import org.violetmoon.quark.base.Quark;
 import org.violetmoon.quark.content.tweaks.module.EmotesModule;
 
 public class CustomEmoteDescriptor extends EmoteDescriptor {
@@ -11,12 +12,12 @@ public class CustomEmoteDescriptor extends EmoteDescriptor {
 	}
 
 	public static ResourceLocation getSprite(String name) {
-		ResourceLocation customRes = new ResourceLocation(EmoteHandler.CUSTOM_EMOTE_NAMESPACE, name);
+		ResourceLocation customRes = ResourceLocation.fromNamespaceAndPath(EmoteHandler.CUSTOM_EMOTE_NAMESPACE, name);
 		//if(EmotesModule.Client.resourcePack.hasResource(PackType.CLIENT_RESOURCES, customRes))
 		if(EmotesModule.Client.resourcePack.hasResource(name))
 			return customRes;
 
-		return new ResourceLocation("quark", "textures/emote/custom.png");
+		return Quark.asResource("textures/emote/custom.png");
 	}
 
 	@Override

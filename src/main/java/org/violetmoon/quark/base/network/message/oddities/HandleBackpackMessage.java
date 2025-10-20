@@ -1,55 +1,44 @@
 package org.violetmoon.quark.base.network.message.oddities;
 
+import io.netty.buffer.ByteBuf;
+import org.violetmoon.quark.catnip.net.base.ServerboundPacketPayload;
+import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.network.NetworkHooks;
-
 import org.violetmoon.quark.addons.oddities.inventory.BackpackMenu;
-import org.violetmoon.zeta.network.IZetaMessage;
-import org.violetmoon.zeta.network.IZetaNetworkEventContext;
+import org.violetmoon.quark.base.network.QuarkNetwork;
 
-import java.io.Serial;
+public record HandleBackpackMessage(boolean open) implements ServerboundPacketPayload {
+	public static final StreamCodec<ByteBuf, HandleBackpackMessage> STREAM_CODEC = ByteBufCodecs.BOOL
+			.map(HandleBackpackMessage::new, HandleBackpackMessage::open);
 
-public class HandleBackpackMessage implements IZetaMessage {
+	@Override
+	public void handle(ServerPlayer player) {
+		if(open) {
+			ItemStack stack = player.getItemBySlot(EquipmentSlot.CHEST);
+			if(stack.getItem() instanceof MenuProvider && player.containerMenu != null) {
+				ItemStack holding = player.containerMenu.getCarried().copy();
+				player.containerMenu.setCarried(ItemStack.EMPTY);
+				player.openMenu((MenuProvider) stack.getItem());
+				player.containerMenu.setCarried(holding);
+			}
+		} else {
+			if(player.containerMenu != null) {
+				ItemStack holding = player.containerMenu.getCarried();
+				player.containerMenu.setCarried(ItemStack.EMPTY);
 
-	@Serial
-	private static final long serialVersionUID = 3474816381329541425L;
-
-	public boolean open;
-
-	public HandleBackpackMessage() {}
-
-	public HandleBackpackMessage(boolean open) {
-		this.open = open;
+				BackpackMenu.saveCraftingInventory(player);
+				player.containerMenu = player.inventoryMenu;
+				player.inventoryMenu.setCarried(holding);
+			}
+		}
 	}
 
 	@Override
-	public boolean receive(IZetaNetworkEventContext context) {
-		ServerPlayer player = context.getSender();
-		context.enqueueWork(() -> {
-			if(open) {
-				ItemStack stack = player.getItemBySlot(EquipmentSlot.CHEST);
-				if(stack.getItem() instanceof MenuProvider && player.containerMenu != null) {
-					ItemStack holding = player.containerMenu.getCarried().copy();
-					player.containerMenu.setCarried(ItemStack.EMPTY);
-					NetworkHooks.openScreen(player, (MenuProvider) stack.getItem(), player.blockPosition());
-					player.containerMenu.setCarried(holding);
-				}
-			} else {
-				if(player.containerMenu != null) {
-					ItemStack holding = player.containerMenu.getCarried();
-					player.containerMenu.setCarried(ItemStack.EMPTY);
-
-					BackpackMenu.saveCraftingInventory(player);
-					player.containerMenu = player.inventoryMenu;
-					player.inventoryMenu.setCarried(holding);
-				}
-			}
-		});
-
-		return true;
+	public PacketTypeProvider getTypeProvider() {
+		return QuarkNetwork.HANDLE_BACKPACK_MESSAGE;
 	}
-
 }

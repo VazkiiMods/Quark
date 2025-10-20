@@ -30,18 +30,18 @@ public class LeafCarpetModule extends ZetaModule {
 
 	@LoadEvent
 	public final void register(ZRegister event) {
-		for(Wood wood : VanillaWoods.OVERWORLD_WITH_TREE)
+		for(Wood wood : VanillaWoods.OVERWORLD_WITH_TREE) //0-7
 			carpet(wood.leaf());
 
-		carpet(Blocks.AZALEA_LEAVES);
-		carpet(Blocks.FLOWERING_AZALEA_LEAVES);
+		carpet(Blocks.AZALEA_LEAVES); //8
+		carpet(Blocks.FLOWERING_AZALEA_LEAVES); //9
 	}
 
 	@LoadEvent
 	public void postRegister(ZRegister.Post e) {
-		BlossomTreesModule.blossomTrees.stream().map(t -> t.leaves).forEach(this::blossomCarpet);
+		BlossomTreesModule.blossomTrees.stream().map(t -> t.leaves).forEach(this::blossomCarpet); //10-14
 
-		carpetBlock(AncientWoodModule.ancient_leaves).setCondition(() -> Quark.ZETA.modules.isEnabled(AncientWoodModule.class));
+		carpetBlock(AncientWoodModule.ancient_leaves).setCondition(() -> Quark.ZETA.modules.isEnabled(AncientWoodModule.class)); //15
 	}
 
 	@LoadEvent

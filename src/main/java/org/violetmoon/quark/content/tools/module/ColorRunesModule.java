@@ -2,33 +2,35 @@ package org.violetmoon.quark.content.tools.module;
 
 import com.google.common.collect.ImmutableSet;
 import net.minecraft.client.renderer.RenderType;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.TextColor;
-import net.minecraft.network.protocol.Packet;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.ThrownTrident;
-import net.minecraft.world.item.CompassItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.item.armortrim.ArmorTrim;
 import net.minecraft.world.level.storage.loot.BuiltInLootTables;
 import net.minecraft.world.level.storage.loot.entries.LootItem;
 import net.minecraft.world.level.storage.loot.entries.LootPoolEntryContainer;
 import org.jetbrains.annotations.Nullable;
-import org.violetmoon.quark.api.IRuneColorProvider;
-import org.violetmoon.quark.api.QuarkCapabilities;
 import org.violetmoon.quark.base.Quark;
+import org.violetmoon.quark.base.components.QuarkDataComponents;
 import org.violetmoon.quark.base.network.message.UpdateTridentMessage;
 import org.violetmoon.quark.content.tools.base.RuneColor;
 import org.violetmoon.quark.content.tools.client.render.GlintRenderTypes;
 import org.violetmoon.quark.content.tools.item.RuneItem;
 import org.violetmoon.quark.content.tools.recipe.SmithingRuneRecipe;
+import org.violetmoon.quark.mixin.mixins.accessor.AccessorAbstractArrow;
+import org.violetmoon.quark.mixin.mixins.accessor.AccessorArmorTrim;
 import org.violetmoon.zeta.advancement.ManualTrigger;
 import org.violetmoon.zeta.config.Config;
 import org.violetmoon.zeta.event.bus.LoadEvent;
@@ -38,9 +40,7 @@ import org.violetmoon.zeta.event.play.entity.player.ZPlayerTick;
 import org.violetmoon.zeta.event.play.loading.ZLootTableLoad;
 import org.violetmoon.zeta.module.ZetaLoadModule;
 import org.violetmoon.zeta.module.ZetaModule;
-import org.violetmoon.zeta.network.ZetaNetworkDirection;
 import org.violetmoon.zeta.util.Hint;
-import org.violetmoon.zeta.util.ItemNBTHelper;
 
 import java.util.List;
 import java.util.Map;
@@ -56,8 +56,6 @@ import java.util.function.Supplier;
  */
 @ZetaLoadModule(category = "tools")
 public class ColorRunesModule extends ZetaModule {
-
-	public static final String TAG_RUNE_COLOR = Quark.MOD_ID + ":RuneColor";
 
 	private static final ThreadLocal<RuneColor> targetColor = new ThreadLocal<>();
 	@Hint
@@ -97,34 +95,30 @@ public class ColorRunesModule extends ZetaModule {
 		if (manualColor != null)
 			return manualColor;
 
-		@Nullable
-		IRuneColorProvider cap = get(target);
-
-		return cap != null ? cap.getRuneColor(target) : null;
+		return RuneColor.byName(target.get(QuarkDataComponents.RUNE_COLOR));
 
 	}
 
 	@Nullable
 	public static RuneColor getAppliedStackColor(ItemStack target) {
-		if(target == null)
-			return null;
-		return RuneColor.byName(ItemNBTHelper.getString(target, TAG_RUNE_COLOR, null));
+		if(target == null) return null;
+		return RuneColor.byName(target.get(QuarkDataComponents.RUNE_COLOR));
 	}
 
 	private static final Map<ThrownTrident, ItemStack> TRIDENT_STACK_REFERENCES = new WeakHashMap<>();
 
-	public static void syncTrident(Consumer<Packet<?>> packetConsumer, ThrownTrident trident, boolean force) {
-		ItemStack stack = trident.getPickupItem();
+	public static void syncTrident(Consumer<CustomPacketPayload> packetConsumer, ThrownTrident trident, boolean force) {
+		ItemStack stack = ((AccessorAbstractArrow)trident).quark$getPickupItem();
 		ItemStack prev = TRIDENT_STACK_REFERENCES.get(trident);
-		if(force || prev == null || ItemStack.isSameItemSameTags(stack, prev))
-			packetConsumer.accept(Quark.ZETA.network.wrapInVanilla(new UpdateTridentMessage(trident.getId(), stack), ZetaNetworkDirection.PLAY_TO_CLIENT));
+		if(force || prev == null || ItemStack.isSameItemSameComponents(stack, prev))
+			packetConsumer.accept(new UpdateTridentMessage(trident.getId(), stack));
 		else
 			TRIDENT_STACK_REFERENCES.put(trident, stack);
 	}
 
 	public static ItemStack withRune(ItemStack stack, @Nullable RuneColor color) {
 		if (color != null) {
-			ItemNBTHelper.setString(stack, ColorRunesModule.TAG_RUNE_COLOR, color.getSerializedName());
+			stack.set(QuarkDataComponents.RUNE_COLOR, color.getSerializedName());
 		}
 		return stack;
 	}
@@ -188,7 +182,7 @@ public class ColorRunesModule extends ZetaModule {
 	}
 
 	public static boolean canHaveRune(ItemStack stack) {
-		return stack.isEnchanted() || (stack.getItem() == Items.COMPASS && CompassItem.isLodestoneCompass(stack)); // isLodestoneCompass = is lodestone compass
+		return stack.isEnchanted() || (stack.getItem() == Items.COMPASS && stack.has(DataComponents.LODESTONE_TRACKER)); // isLodestoneCompass = is lodestone compass
 	}
 
 	public static Component extremeRainbow(Component component) {
@@ -209,25 +203,25 @@ public class ColorRunesModule extends ZetaModule {
 			TextColor.fromRgb(Mth.hsvToRgb((time + shift) * 2 % 360 / 360F, 1F, 1F))));
 	}
 
-	public static void appendRuneText(ItemStack stack, List<Component> components, Component upgradeTitle) {
-		RuneColor color = getAppliedStackColor(stack);
-		if (color != null) {
-			if (!components.contains(upgradeTitle))
-				components.add(upgradeTitle);
+    public static void appendRuneTooltip(ItemStack stack, List<Component> components) {
+        ArmorTrim component = stack.get(DataComponents.TRIM);
 
-			MutableComponent baseComponent = Component.translatable("rune.quark." + color.getName());
+        if (component != null && ((AccessorArmorTrim) component).showInTooltip()) {
+            RuneColor color = ColorRunesModule.getAppliedStackColor(stack);
+            if (color != null) {
+                if (!components.contains(AccessorArmorTrim.getUPGRADE_TITLE())) {
+                    components.add(AccessorArmorTrim.getUPGRADE_TITLE());
+                }
 
-			if (color == RuneColor.RAINBOW)
-				components.add(CommonComponents.space().append(extremeRainbow(baseComponent)));
-			else
-				components.add(CommonComponents.space().append(baseComponent
-					.withStyle((style) -> style.withColor(color.getTextColor()))));
-		}
-	}
-
-	private static @Nullable IRuneColorProvider get(ItemStack stack) {
-		return Quark.ZETA.capabilityManager.getCapability(QuarkCapabilities.RUNE_COLOR, stack);
-	}
+                MutableComponent baseComponent = Component.translatable("rune.quark." + color.getName());
+                if (color == RuneColor.RAINBOW) {
+                    components.add(CommonComponents.space().append(ColorRunesModule.extremeRainbow(baseComponent)));
+                } else {
+                    components.add(CommonComponents.space().append(baseComponent.withStyle((style) -> style.withColor(color.getTextColor()))));
+                }
+            }
+        }
+    }
 
 	@ZetaLoadModule(clientReplacement = true)
 	public static class Client extends ColorRunesModule {
@@ -245,7 +239,7 @@ public class ColorRunesModule extends ZetaModule {
 		}
 
 		public static RenderType getGlintDirect() {
-			return renderType(GlintRenderTypes.glintDirect, RenderType::glintDirect);
+			return renderType(GlintRenderTypes.glintDirect, RenderType::entityGlintDirect);
 		}
 
 		public static RenderType getEntityGlintDirect() {
@@ -253,7 +247,7 @@ public class ColorRunesModule extends ZetaModule {
 		}
 
 		public static RenderType getArmorGlint() {
-			return renderType(GlintRenderTypes.armorGlint, RenderType::armorGlint);
+			return renderType(GlintRenderTypes.armorGlint, RenderType::armorEntityGlint);
 		}
 
 		public static RenderType getArmorEntityGlint() {
@@ -264,6 +258,5 @@ public class ColorRunesModule extends ZetaModule {
 			RuneColor color = changeColor();
 			return color != null ? map.get(color) : vanilla.get();
 		}
-
 	}
 }

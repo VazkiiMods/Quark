@@ -8,7 +8,6 @@ import net.minecraft.world.entity.npc.*;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.trading.MerchantOffer;
 import net.minecraft.world.item.trading.MerchantOffers;
-
 import org.violetmoon.quark.content.experimental.hax.PseudoAccessorMerchantOffer;
 import org.violetmoon.quark.mixin.mixins.accessor.AccessorMerchantOffer;
 import org.violetmoon.zeta.config.Config;
@@ -60,12 +59,12 @@ public class VillagerRerollingReworkModule extends ZetaModule {
 
 	@LoadEvent
 	public final void configChanged(ZConfigChanged event) {
-		staticEnabled = enabled;
+		staticEnabled = isEnabled();
 	}
 
 	@PlayEvent
 	public void assignSeedIfUnassigned(ZLivingTick event) {
-		LivingEntity entity = event.getEntity();
+		if (!(event.getEntity() instanceof LivingEntity entity)) return;
 		if(canUseSeededRandom(entity)) {
 			CompoundTag persistent = entity.getPersistentData();
 
@@ -108,9 +107,9 @@ public class VillagerRerollingReworkModule extends ZetaModule {
 					boolean foundEquivalent = false; // We avoid duplicate trades...
 					for(MerchantOffer otherOffer : offers) {
 
-						if(ItemStack.isSameItemSameTags(otherOffer.getBaseCostA(), rerolled.getBaseCostA()) &&
-								ItemStack.isSameItemSameTags(otherOffer.getCostB(), rerolled.getCostB()) &&
-								ItemStack.isSameItemSameTags(otherOffer.getResult(), rerolled.getResult())) {
+						if(ItemStack.isSameItemSameComponents(otherOffer.getBaseCostA(), rerolled.getBaseCostA()) &&
+								ItemStack.isSameItemSameComponents(otherOffer.getCostB(), rerolled.getCostB()) &&
+								ItemStack.isSameItemSameComponents(otherOffer.getResult(), rerolled.getResult())) {
 							foundEquivalent = true;
 							break;
 						}

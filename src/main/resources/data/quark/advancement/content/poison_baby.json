@@ -1,0 +1,35 @@
+{
+  "parent": "minecraft:husbandry/breed_an_animal",
+  "criteria": {
+    "poison_baby": {
+      "trigger": "quark:poison_baby"
+    }
+  },
+  "display": {
+    "announce_to_chat": true,
+    "description": {
+      "translate": "advancements.quark.poison_baby.description"
+    },
+    "frame": "task",
+    "hidden": false,
+    "icon": {
+      "id": "minecraft:poisonous_potato"
+    },
+    "show_toast": true,
+    "title": {
+      "translate": "advancements.quark.poison_baby.title"
+    }
+  },
+  "requirements": [
+    [
+      "poison_baby"
+    ]
+  ],
+  "neoforge:conditions": [
+    {
+      "type": "zeta:flag",
+      "flag": "poison_potato_usage"
+    }
+  ]
+
+}

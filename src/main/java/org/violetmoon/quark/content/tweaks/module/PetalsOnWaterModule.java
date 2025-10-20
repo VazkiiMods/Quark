@@ -38,7 +38,7 @@ public class PetalsOnWaterModule extends ZetaModule {
 
 	@LoadEvent
 	public final void register(ZRegister event) {
-		water_pink_petals = new WaterPetalBlock(Items.PINK_PETALS, "water_pink_petals", this, Properties.copy(Blocks.PINK_PETALS));
+		water_pink_petals = new WaterPetalBlock(Items.PINK_PETALS, "water_pink_petals", this, Properties.ofFullCopy(Blocks.PINK_PETALS));
 	}
 
 	@PlayEvent

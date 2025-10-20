@@ -9,8 +9,8 @@ import net.minecraft.world.entity.npc.Villager;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.level.block.LevelEvent;
-import net.minecraftforge.event.ForgeEventFactory;
 
+import net.neoforged.neoforge.event.EventHooks;
 import org.violetmoon.zeta.event.bus.PlayEvent;
 import org.violetmoon.zeta.event.play.entity.living.ZLivingConversion;
 import org.violetmoon.zeta.module.ZetaLoadModule;
@@ -29,13 +29,13 @@ public class ZombieVillagersOnNormalModule extends ZetaModule {
 
 				if (zombievillager == null) return;
 
-				zombievillager.finalizeSpawn(serverLevel, level.getCurrentDifficultyAt(zombievillager.blockPosition()), MobSpawnType.CONVERSION, new Zombie.ZombieGroupData(false, true), null);
+				zombievillager.finalizeSpawn(serverLevel, level.getCurrentDifficultyAt(zombievillager.blockPosition()), MobSpawnType.CONVERSION, new Zombie.ZombieGroupData(false, true));
 				zombievillager.setVillagerData(villager.getVillagerData());
 				zombievillager.setGossips(villager.getGossips().store(NbtOps.INSTANCE));
-				zombievillager.setTradeOffers(villager.getOffers().createTag());
+				zombievillager.setTradeOffers(villager.getOffers().copy());
 				zombievillager.setVillagerXp(villager.getVillagerXp());
 
-				ForgeEventFactory.onLivingConvert(villager, zombievillager);
+				EventHooks.onLivingConvert(villager, zombievillager);
 				level.levelEvent(null, LevelEvent.SOUND_ZOMBIE_INFECTED, villager.blockPosition(), 0);
 
 				event.setCanceled(true);

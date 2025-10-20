@@ -1,0 +1,39 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:and",
+      "values": [
+        {
+          "type": "zeta:flag",
+          "flag": "pickarang"
+        },
+        {
+          "type": "zeta:flag",
+          "flag": "stonelings"
+        }
+      ]
+    }
+  ],
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "key": {
+    "D": {
+      "tag": "c:gems/diamond"
+    },
+    "H": {
+      "item": "quark:diamond_heart"
+    },
+    "W": {
+      "tag": "minecraft:planks"
+    }
+  },
+  "pattern": [
+    "DWH",
+    "  W",
+    "  D"
+  ],
+  "result": {
+    "count": 1,
+    "id": "quark:pickarang"
+  }
+}

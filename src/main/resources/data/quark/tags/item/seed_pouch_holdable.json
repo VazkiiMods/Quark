@@ -1,0 +1,49 @@
+{
+  "replace": false,
+  "values": [
+    "#c:seeds",
+    "#c:mushrooms",
+    "#minecraft:villager_plantable_seeds",
+    "minecraft:warped_fungus",
+    "minecraft:crimson_fungus",
+    "#minecraft:saplings",
+    "minecraft:sweet_berries",
+    "minecraft:kelp",
+    "minecraft:bamboo",
+    "minecraft:sugar_cane",
+    "minecraft:nether_wart",
+    "minecraft:cocoa_beans",
+    {
+      "id": "gardens_of_the_dead:soulblight_fungus",
+      "required": false
+    },
+    {
+      "id": "undergarden:blood_mushroom",
+      "required": false
+    },
+    {
+      "id": "undergarden:ink_mushroom",
+      "required": false
+    },
+    {
+      "id": "undergarden:indigo_mushroom",
+      "required": false
+    },
+    {
+      "id": "undergarden:veil_mushroom",
+      "required": false
+    },
+     {
+      "id": "nyliumnasturtium:nylium_nasturtium_seeds",
+      "required": false
+    },
+    {
+      "id": "habitat:fairy_ring_mushroom",
+      "required": false
+    },
+    {
+      "id": "farmersrespite:tea_seeds",
+      "required": false
+    }
+  ]
+}

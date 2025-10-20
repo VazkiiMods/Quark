@@ -2,7 +2,6 @@ package org.violetmoon.quark.addons.oddities.client.render.entity;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
-
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.Sheets;
@@ -17,16 +16,13 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.inventory.InventoryMenu;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.HitResult;
-
 import org.jetbrains.annotations.NotNull;
-
 import org.violetmoon.quark.addons.oddities.entity.TotemOfHoldingEntity;
 import org.violetmoon.quark.base.Quark;
-import org.violetmoon.quark.base.QuarkClient;
 
 public class TotemOfHoldingRenderer extends EntityRenderer<TotemOfHoldingEntity> {
 
-	private static final ModelResourceLocation LOCATION_MODEL = new ModelResourceLocation(Quark.MOD_ID, "extra/totem_of_holding", "inventory");
+	private static final ModelResourceLocation LOCATION_MODEL = ModelResourceLocation.standalone(Quark.asResource("extra/totem_of_holding"));
 
 	public TotemOfHoldingRenderer(EntityRendererProvider.Context context) {
 		super(context);
@@ -36,7 +32,7 @@ public class TotemOfHoldingRenderer extends EntityRenderer<TotemOfHoldingEntity>
 	public void render(TotemOfHoldingEntity entity, float entityYaw, float partialTicks, @NotNull PoseStack matrixStackIn, @NotNull MultiBufferSource bufferIn, int packedLightIn) {
 		int deathTicks = entity.getDeathTicks();
 		boolean dying = entity.isDying();
-		float time = QuarkClient.ticker.ticksInGame + partialTicks;
+		float time = entity.tickCount + partialTicks;
 		float scale = !dying ? 1F : Math.max(0, TotemOfHoldingEntity.DEATH_TIME - (deathTicks + partialTicks)) / TotemOfHoldingEntity.DEATH_TIME;
 		float rotation = time + (!dying ? 0 : (deathTicks + partialTicks) * 5);
 		double translation = !dying ? (Math.sin(time * 0.03) * 0.1) : ((deathTicks + partialTicks) / TotemOfHoldingEntity.DEATH_TIME * 5);

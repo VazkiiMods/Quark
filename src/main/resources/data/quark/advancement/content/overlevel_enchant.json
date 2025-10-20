@@ -1,0 +1,35 @@
+{
+  "parent": "minecraft:story/enchant_item",
+  "criteria": {
+    "overlevel_enchant": {
+      "trigger": "quark:overlevel"
+    }
+  },
+  "display": {
+    "announce_to_chat": true,
+    "description": {
+      "translate": "advancements.quark.overlevel_enchant.description"
+    },
+    "frame": "task",
+    "hidden": false,
+    "icon": {
+      "id": "quark:ancient_tome"
+    },
+    "show_toast": true,
+    "title": {
+      "translate": "advancements.quark.overlevel_enchant.title"
+    }
+  },
+  "requirements": [
+    [
+      "overlevel_enchant"
+    ]
+  ],
+  "neoforge:conditions": [
+    {
+      "type": "zeta:flag",
+      "flag": "ancient_tomes"
+    }
+  ]
+
+}

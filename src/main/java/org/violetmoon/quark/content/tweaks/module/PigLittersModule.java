@@ -16,7 +16,6 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.stats.Stats;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.AgeableMob;
-import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.ai.goal.TemptGoal;
 import net.minecraft.world.entity.ai.goal.WrappedGoal;
@@ -87,8 +86,7 @@ public class PigLittersModule extends ZetaModule {
 
 	@PlayEvent
 	public void onEntityUpdate(ZLivingTick event) {
-		LivingEntity entity = event.getEntity();
-		if(entity instanceof Animal animal && !animal.isInLove())
+		if(event.getEntity() instanceof Animal animal && !animal.isInLove())
 			animal.getPersistentData().remove(GOLDEN_CARROT_TAG);
 	}
 

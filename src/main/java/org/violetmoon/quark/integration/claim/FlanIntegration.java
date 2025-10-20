@@ -1,5 +1,6 @@
 package org.violetmoon.quark.integration.claim;
 
+/* TODO: Wait for Neoforge Flan or remove
 import io.github.flemmli97.flan.api.permission.BuiltinPermission;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
@@ -86,3 +87,4 @@ public final class FlanIntegration implements IClaimIntegration {
 		}
 	}
 }
+ */

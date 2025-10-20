@@ -24,7 +24,7 @@ public class ChuteModule extends ZetaModule {
 
 	public static BlockEntityType<ChuteBlockEntity> blockEntityType;
 	@Hint
-	Block chute;
+	public static Block chute;
 
 	@LoadEvent
 	public final void register(ZRegister event) {

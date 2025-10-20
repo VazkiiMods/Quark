@@ -1,27 +1,17 @@
 package org.violetmoon.quark.base.handler;
 
-import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.capabilities.ForgeCapabilities;
-import net.minecraftforge.common.capabilities.ICapabilityProvider;
-import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.items.IItemHandler;
-import net.minecraftforge.items.IItemHandlerModifiable;
-import net.minecraftforge.items.ItemHandlerHelper;
-
+import net.neoforged.neoforge.items.IItemHandler;
+import net.neoforged.neoforge.items.IItemHandlerModifiable;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-
-import org.violetmoon.zeta.util.ItemNBTHelper;
 
 /**
  * @author WireSegal
  *         Created at 4:27 PM on 12/15/18.
  */
-public class ProxiedItemStackHandler implements IItemHandler, IItemHandlerModifiable, ICapabilityProvider {
+public class ProxiedItemStackHandler implements IItemHandler, IItemHandlerModifiable {
 
 	protected final ItemStack stack;
 	protected final String key;
@@ -45,7 +35,8 @@ public class ProxiedItemStackHandler implements IItemHandler, IItemHandlerModifi
 		this.size = size;
 	}
 
-	private ListTag getStackList() {
+	//todo: Get this working
+	/*private ListTag getStackList() {
 		ListTag list = ItemNBTHelper.getList(stack, key, 10, true);
 		if(list == null)
 			ItemNBTHelper.setList(stack, key, list = new ListTag());
@@ -54,15 +45,15 @@ public class ProxiedItemStackHandler implements IItemHandler, IItemHandlerModifi
 			list.add(new CompoundTag());
 
 		return list;
-	}
+	}*/
 
 	private void writeStack(int index, @NotNull ItemStack stack) {
-		getStackList().set(index, stack.serializeNBT());
+		//getStackList().set(index, stack.serializeNBT());
 		onContentsChanged(index);
 	}
 
 	private ItemStack readStack(int index) {
-		return ItemStack.of(getStackList().getCompound(index));
+		return ItemStack.EMPTY; //new ItemStack(getStackList().getCompound(index));
 	}
 
 	@Override
@@ -97,7 +88,7 @@ public class ProxiedItemStackHandler implements IItemHandler, IItemHandlerModifi
 		int limit = getStackLimit(slot, stack);
 
 		if(!existing.isEmpty()) {
-			if(!ItemHandlerHelper.canItemStacksStack(stack, existing))
+			if(!ItemStack.isSameItemSameComponents(stack, existing))
 				return stack;
 
 			limit -= existing.getCount();
@@ -109,9 +100,9 @@ public class ProxiedItemStackHandler implements IItemHandler, IItemHandlerModifi
 		boolean reachedLimit = stack.getCount() > limit;
 
 		if(!simulate)
-			writeStack(slot, reachedLimit ? ItemHandlerHelper.copyStackWithSize(stack, limit) : stack);
+			writeStack(slot, reachedLimit ? stack.copyWithCount(limit) : stack);
 
-		return reachedLimit ? ItemHandlerHelper.copyStackWithSize(stack, stack.getCount() - limit) : ItemStack.EMPTY;
+		return reachedLimit ? stack.copyWithCount(stack.getCount() - limit) : ItemStack.EMPTY;
 	}
 
 	@Override
@@ -136,9 +127,8 @@ public class ProxiedItemStackHandler implements IItemHandler, IItemHandlerModifi
 			return existing;
 		} else {
 			if(!simulate)
-				writeStack(slot, ItemHandlerHelper.copyStackWithSize(existing, existing.getCount() - toExtract));
-
-			return ItemHandlerHelper.copyStackWithSize(existing, toExtract);
+				writeStack(slot, stack.copyWithCount(existing.getCount() - toExtract));
+			return existing.copyWithCount(toExtract);
 		}
 	}
 
@@ -165,9 +155,11 @@ public class ProxiedItemStackHandler implements IItemHandler, IItemHandlerModifi
 		// NO-OP
 	}
 
+	/* TODO: Need to use ICapabilityProvider in registration (?)
 	@NotNull
 	@Override
 	public <T> LazyOptional<T> getCapability(@NotNull Capability<T> capability, @Nullable Direction facing) {
 		return ForgeCapabilities.ITEM_HANDLER.orEmpty(capability, LazyOptional.of(() -> this));
 	}
+	 */
 }

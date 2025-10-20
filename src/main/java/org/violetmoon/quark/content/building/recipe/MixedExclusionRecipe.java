@@ -1,176 +1,183 @@
 package org.violetmoon.quark.content.building.recipe;
 
-import com.google.gson.JsonObject;
-
+import com.mojang.serialization.*;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
+import io.netty.buffer.ByteBuf;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.core.NonNullList;
-import net.minecraft.core.RegistryAccess;
-import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.core.Registry;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.tags.TagKey;
-import net.minecraft.world.inventory.CraftingContainer;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import net.minecraft.world.item.crafting.CraftingBookCategory;
-import net.minecraft.world.item.crafting.CraftingRecipe;
-import net.minecraft.world.item.crafting.Ingredient;
-import net.minecraft.world.item.crafting.RecipeSerializer;
+import net.minecraft.world.item.crafting.*;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.common.crafting.IShapedRecipe;
-
 import org.jetbrains.annotations.NotNull;
 
-public class MixedExclusionRecipe implements CraftingRecipe, IShapedRecipe<CraftingContainer> {
+import java.util.stream.Stream;
 
-	public static final RecipeSerializer<MixedExclusionRecipe> SERIALIZER = new Serializer();
+public class MixedExclusionRecipe implements CraftingRecipe {
+    public static final MixedExclusionRecipe.Serializer SERIALIZER = new MixedExclusionRecipe.Serializer();
 
-	private final ResourceLocation res;
-	private NonNullList<Ingredient> ingredients;
+    private NonNullList<Ingredient> ingredients;
 
-	private final String type;
-	private final ItemStack output;
-	private final TagKey<Item> tag;
-	private final ItemStack placeholder;
+    private final String group;
+    private final ItemStack output;
+    private final TagKey<Item> tag;
+    private final ItemStack placeholder;
 
-	public MixedExclusionRecipe(ResourceLocation res, String type, ItemStack output, TagKey<Item> tag, ItemStack placeholder) {
-		this.res = res;
+    public MixedExclusionRecipe(String group, ItemStack output, TagKey<Item> tag, ItemStack placeholder) {
+        this.group = group;
+        this.output = output;
+        this.tag = tag;
+        this.placeholder = placeholder;
+    }
 
-		this.type = type;
-		this.output = output;
-		this.tag = tag;
-		this.placeholder = placeholder;
-	}
+    @Override
+    public boolean canCraftInDimensions(int x, int y) {
+        return x == 3 && y == 3;
+    }
 
-	public static MixedExclusionRecipe forChest(String type, ResourceLocation res, boolean log) {
-		ItemStack output = new ItemStack(Items.CHEST, (log ? 4 : 1));
-		TagKey<Item> tag = (log ? ItemTags.LOGS : ItemTags.PLANKS);
-		ItemStack placeholder = new ItemStack(log ? Items.OAK_LOG : Items.OAK_PLANKS);
-		return new MixedExclusionRecipe(res, type, output, tag, placeholder);
-	}
+    @Override
+    @NotNull
+    public ItemStack assemble(@NotNull CraftingInput input, HolderLookup.@NotNull Provider provider) {
+        return output.copy();
+    }
 
-	public static MixedExclusionRecipe forFurnace(String type, ResourceLocation res) {
-		ItemStack output = new ItemStack(Items.FURNACE);
-		TagKey<Item> tag = ItemTags.STONE_CRAFTING_MATERIALS;
-		ItemStack placeholder = new ItemStack(Items.COBBLESTONE);
-		return new MixedExclusionRecipe(res, type, output, tag, placeholder);
-	}
+    @NotNull
+    @Override
+    public String getGroup() {
+        return this.group;
+    }
 
-	@Override
-	public boolean canCraftInDimensions(int x, int y) {
-		return x == 3 && y == 3;
-	}
+    @Override
+    public @NotNull ItemStack getResultItem(HolderLookup.@NotNull Provider provider) {
+        return output.copy();
+    }
 
-	@NotNull
-	@Override
-	public ItemStack assemble(@NotNull CraftingContainer arg0, RegistryAccess acc) {
-		return output.copy();
-	}
+    @NotNull
+    @Override
+    public RecipeSerializer<?> getSerializer() {
+        return SERIALIZER;
+    }
 
-	@NotNull
-	@Override
-	public ResourceLocation getId() {
-		return res;
-	}
+    @Override
+    public @NotNull CraftingBookCategory category() {
+        return CraftingBookCategory.MISC;
+    }
 
-	@NotNull
-	@Override
-	public ItemStack getResultItem(RegistryAccess acc) {
-		return output.copy();
-	}
+    @Override
+    public boolean matches(CraftingInput input, @NotNull Level level) {
+        if(input.size() == 9 && input.getItem(4).isEmpty()) {
+            ItemStack first = null;
+            boolean foundDifference = false;
 
-	@NotNull
-	@Override
-	public RecipeSerializer<?> getSerializer() {
-		return SERIALIZER;
-	}
+            for(int i = 0; i < 9; i++)
+                if(i != 4) { // ignore center
+                    ItemStack stack = input.getItem(i);
+                    if(!stack.isEmpty() && stack.is(tag)) {
+                        if(first == null)
+                            first = stack;
+                        else if(!ItemStack.isSameItem(first, stack))
+                            foundDifference = true;
+                    } else
+                        return false;
+                }
+            return foundDifference;
+        }
+        return false;
+    }
 
-	@Override
-	public CraftingBookCategory category() {
-		return CraftingBookCategory.MISC;
-	}
+    @NotNull
+    @Override
+    public NonNullList<Ingredient> getIngredients() {
+        if(ingredients == null) {
+            NonNullList<Ingredient> list = NonNullList.withSize(9, Ingredient.EMPTY);
+            Ingredient ingr = Ingredient.of(placeholder);
+            for(int i = 0; i < 8; i++)
+                list.set(i < 4 ? i : i + 1, ingr);
+            ingredients = list;
+        }
 
-	@Override
-	public boolean matches(CraftingContainer inv, @NotNull Level world) {
-		if(inv.getItem(4).isEmpty()) {
-			ItemStack first = null;
-			boolean foundDifference = false;
+        return ingredients;
+    }
 
-			for(int i = 0; i < 9; i++)
-				if(i != 4) { // ignore center
-					ItemStack stack = inv.getItem(i);
-					if(!stack.isEmpty() && stack.is(tag)) {
-						if(first == null)
-							first = stack;
-						else if(!ItemStack.isSameItem(first, stack))
-							foundDifference = true;
-					} else
-						return false;
-				}
+    public static MixedExclusionRecipe forChest(String group, boolean log) {
+        ItemStack output = new ItemStack(Items.CHEST, (log ? 4 : 1));
+        TagKey<Item> tag = (log ? ItemTags.LOGS : ItemTags.PLANKS);
+        ItemStack placeholder = new ItemStack(log ? Items.OAK_LOG : Items.OAK_PLANKS);
+        return new MixedExclusionRecipe(group, output, tag, placeholder);
+    }
 
-			return foundDifference;
-		}
+    public static MixedExclusionRecipe forFurnace(String group) {
+        ItemStack output = new ItemStack(Items.FURNACE);
+        TagKey<Item> tag = ItemTags.STONE_CRAFTING_MATERIALS;
+        ItemStack placeholder = new ItemStack(Items.COBBLESTONE);
+        return new MixedExclusionRecipe(group, output, tag, placeholder);
+    }
 
-		return false;
-	}
+    @Override
+    public boolean isSpecial() {
+        return true;
+    }
 
-	@Override
-	public int getRecipeWidth() {
-		return 3;
-	}
+    public static class Serializer implements RecipeSerializer<MixedExclusionRecipe> {
+        public static final MapCodec<MixedExclusionRecipe> CODEC = RecordCodecBuilder.mapCodec(
+                inst -> inst.group(
+                                Codec.STRING.optionalFieldOf("group", "").forGetter(recipe -> recipe.group),
+                                ItemStack.STRICT_CODEC.fieldOf("output").forGetter(recipe -> recipe.output),
+                                TagKey.codec(Registries.ITEM).fieldOf("tag").forGetter(recipe -> recipe.tag),
+                                ItemStack.CODEC.optionalFieldOf("placeholder", ItemStack.EMPTY).forGetter(recipe -> recipe.placeholder)
+                        )
+                        .apply(inst, MixedExclusionRecipe::new)
+        );
 
-	@Override
-	public int getRecipeHeight() {
-		return 3;
-	}
+        public static final StreamCodec<RegistryFriendlyByteBuf, MixedExclusionRecipe> STREAM_CODEC = new StreamCodec<>() {
+            @Override
+            public @NotNull MixedExclusionRecipe decode(RegistryFriendlyByteBuf buf) {
+                String group = buf.readUtf();
+                ItemStack output = ItemStack.STREAM_CODEC.decode(buf);
+                TagKey<Item> tagKey = evilBackportedTagKeyStreamCodec(Registries.ITEM).decode(buf);
+                ItemStack placeholder = ItemStack.STREAM_CODEC.decode(buf);
+                return new MixedExclusionRecipe(group, output, tagKey, placeholder);
+            }
 
-	@NotNull
-	@Override
-	public NonNullList<Ingredient> getIngredients() {
-		if(ingredients == null) {
-			NonNullList<Ingredient> list = NonNullList.withSize(9, Ingredient.EMPTY);
-			Ingredient ingr = Ingredient.of(placeholder);
-			for(int i = 0; i < 8; i++)
-				list.set(i < 4 ? i : i + 1, ingr);
-			ingredients = list;
-		}
+            @Override
+            public void encode(RegistryFriendlyByteBuf buf, MixedExclusionRecipe recipe) {
+                buf.writeUtf(recipe.group);
+                ItemStack.STREAM_CODEC.encode(buf, recipe.output);
+                evilBackportedTagKeyStreamCodec(Registries.ITEM).encode(buf, recipe.tag);
+                ItemStack.STREAM_CODEC.encode(buf, recipe.placeholder);
+            }
+        };
 
-		return ingredients;
-	}
+        public static <T> StreamCodec<ByteBuf, TagKey<T>> evilBackportedTagKeyStreamCodec(ResourceKey<? extends Registry<T>> registry) {
+            return ResourceLocation.STREAM_CODEC.map(resourceLocation -> TagKey.create(registry, resourceLocation), TagKey::location);
+        }
 
-	@Override
-	public boolean isSpecial() {
-		return true;
-	}
+        @Override
+        public @NotNull MapCodec<MixedExclusionRecipe> codec() {
+            return CODEC;
+        }
 
-	private static class Serializer implements RecipeSerializer<MixedExclusionRecipe> {
+        @Override
+        public @NotNull StreamCodec<RegistryFriendlyByteBuf, MixedExclusionRecipe> streamCodec() {
+            return STREAM_CODEC;
+        }
 
-		@NotNull
-		@Override
-		public MixedExclusionRecipe fromJson(@NotNull ResourceLocation arg0, JsonObject arg1) {
-			String type = arg1.get("subtype").getAsString();
-			return forType(arg0, type);
-		}
-
-		@Override
-		public MixedExclusionRecipe fromNetwork(@NotNull ResourceLocation arg0, FriendlyByteBuf arg1) {
-			return forType(arg0, arg1.readUtf());
-		}
-
-		@Override
-		public void toNetwork(FriendlyByteBuf arg0, MixedExclusionRecipe arg1) {
-			arg0.writeUtf(arg1.type);
-		}
-
-		private MixedExclusionRecipe forType(ResourceLocation res, String type) {
-			return switch(type) {
-			case "chest" -> MixedExclusionRecipe.forChest(type, res, false);
-			case "chest4" -> MixedExclusionRecipe.forChest(type, res, true);
-			case "furnace" -> MixedExclusionRecipe.forFurnace(type, res);
-			default -> null;
-			};
-		}
-
-	}
-
+        private static MixedExclusionRecipe forType(String type) {
+            return switch(type) {
+                case "chest" -> MixedExclusionRecipe.forChest(type, false);
+                case "chest4" -> MixedExclusionRecipe.forChest(type, true);
+                case "furnace" -> MixedExclusionRecipe.forFurnace(type);
+                default -> null;
+            };
+        }
+    }
 }

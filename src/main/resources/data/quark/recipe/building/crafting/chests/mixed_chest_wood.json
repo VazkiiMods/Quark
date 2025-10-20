@@ -1,0 +1,28 @@
+{
+  "type": "quark:mixed_exclusion",
+  "group": "chest4",
+  "output": {
+    "id": "minecraft:chest",
+    "count": 4
+  },
+  "tag": "minecraft:logs",
+  "placeholder": {
+    "id": "minecraft:oak_log",
+    "count": 1
+  },
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:and",
+      "values": [
+        {
+          "type": "zeta:flag",
+          "flag": "wood_to_chest_recipes"
+        },
+        {
+          "type": "zeta:flag",
+          "flag": "variant_chests"
+        }
+      ]
+    }
+  ]
+}

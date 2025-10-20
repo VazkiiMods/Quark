@@ -1,7 +1,7 @@
 package org.violetmoon.quark.addons.oddities.client.screen;
 
 import com.mojang.blaze3d.systems.RenderSystem;
-
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.Button;
@@ -15,12 +15,11 @@ import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.InventoryMenu;
 import net.minecraft.world.item.ItemStack;
-
+import net.neoforged.neoforge.network.PacketDistributor;
 import org.violetmoon.quark.addons.oddities.inventory.BackpackMenu;
 import org.violetmoon.quark.addons.oddities.module.BackpackModule;
 import org.violetmoon.quark.api.IQuarkButtonAllowed;
 import org.violetmoon.quark.base.Quark;
-import org.violetmoon.quark.base.QuarkClient;
 import org.violetmoon.quark.base.network.message.oddities.HandleBackpackMessage;
 
 import java.util.HashMap;
@@ -28,7 +27,7 @@ import java.util.Map;
 
 public class BackpackInventoryScreen extends InventoryScreen implements IQuarkButtonAllowed {
 
-	private static final ResourceLocation BACKPACK_INVENTORY_BACKGROUND = new ResourceLocation(Quark.MOD_ID, "textures/misc/backpack_gui.png");
+	private static final ResourceLocation BACKPACK_INVENTORY_BACKGROUND = Quark.asResource("textures/misc/backpack_gui.png");
 
 	private final Player player;
 	private final Map<Button, Integer> buttonYs = new HashMap<>();
@@ -46,7 +45,6 @@ public class BackpackInventoryScreen extends InventoryScreen implements IQuarkBu
 	public static Player setBackpackContainer(Player entity, InventoryMenu container) {
 		oldContainer = entity.inventoryMenu;
 		entity.inventoryMenu = container;
-
 		return entity;
 	}
 
@@ -78,7 +76,7 @@ public class BackpackInventoryScreen extends InventoryScreen implements IQuarkBu
 			ItemStack curr = player.containerMenu.getCarried();
 			BackpackMenu.saveCraftingInventory(player);
 			closeHack = true;
-			QuarkClient.ZETA_CLIENT.sendToServer(new HandleBackpackMessage(false));
+			PacketDistributor.sendToServer(new HandleBackpackMessage(false));
 			minecraft.setScreen(new InventoryScreen(player));
 			player.inventoryMenu.setCarried(curr);
 		}
@@ -98,10 +96,10 @@ public class BackpackInventoryScreen extends InventoryScreen implements IQuarkBu
 	protected void renderBg(GuiGraphics guiGraphics, float partialTicks, int mouseX, int mouseY) {
 		RenderSystem.setShader(GameRenderer::getPositionTexShader);
 		RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
-		int i = leftPos;
-		int j = topPos;
-		guiGraphics.blit(BACKPACK_INVENTORY_BACKGROUND, i, j, 0, 0, imageWidth, imageHeight);
-		renderEntityInInventoryFollowsMouse(guiGraphics, i + 51, j + 75, 30, i + 51 - mouseX, j + 75 - 50 - mouseY, minecraft.player);
+		int leftPos = this.leftPos;
+		int topPos = this.topPos;
+		guiGraphics.blit(BACKPACK_INVENTORY_BACKGROUND, leftPos, topPos, 0, 0, imageWidth, imageHeight);
+		renderEntityInInventoryFollowsMouse(guiGraphics, leftPos + 26, topPos + 8, leftPos + 75, topPos + 78, 30, 0.0625F, mouseX, mouseY, this.minecraft.player);
 		moveCharmsButtons();
 	}
 

@@ -1,5 +1,7 @@
 package org.violetmoon.quark.base.handler;
 
+import net.minecraft.core.Holder;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.Container;
@@ -12,20 +14,17 @@ import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.*;
 import net.minecraft.world.item.alchemy.Potion;
-import net.minecraft.world.item.alchemy.PotionUtils;
 import net.minecraft.world.item.enchantment.Enchantment;
-import net.minecraft.world.item.enchantment.EnchantmentHelper;
+import net.minecraft.world.item.enchantment.ItemEnchantments;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
-import net.minecraftforge.items.IItemHandler;
-import net.minecraftforge.items.SlotItemHandler;
-import net.minecraftforge.items.wrapper.InvWrapper;
-
+import net.neoforged.neoforge.items.IItemHandler;
+import net.neoforged.neoforge.items.SlotItemHandler;
+import net.neoforged.neoforge.items.wrapper.InvWrapper;
 import org.violetmoon.quark.addons.oddities.inventory.BackpackMenu;
 import org.violetmoon.quark.addons.oddities.inventory.slot.CachedItemHandlerSlot;
 import org.violetmoon.quark.api.ICustomSorting;
 import org.violetmoon.quark.api.ISortingLockedSlots;
-import org.violetmoon.quark.api.QuarkCapabilities;
 import org.violetmoon.quark.base.Quark;
 import org.violetmoon.quark.content.management.module.InventorySortingModule;
 
@@ -39,7 +38,7 @@ public final class SortingHandler {
 			SortingHandler::damageCompare,
 			(ItemStack s1, ItemStack s2) -> s2.getCount() - s1.getCount(),
 			(ItemStack s1, ItemStack s2) -> s2.hashCode() - s1.hashCode(),
-			SortingHandler::fallbackNBTCompare));
+			SortingHandler::fallbackComponentCompare));
 
 	private static final Comparator<ItemStack> FOOD_COMPARATOR = jointComparator(Arrays.asList(
 			SortingHandler::foodHealCompare,
@@ -91,41 +90,36 @@ public final class SortingHandler {
 		for(Slot s : c.slots) {
 			Container inv = s.container;
 			if((inv == player.getInventory()) == playerContainer) {
-				if(!playerContainer && s instanceof SlotItemHandler slot) {
-					sortInventory(slot.getItemHandler(), lockedSlots);
-				} else {
-					InvWrapper wrapper = new InvWrapper(inv);
-					if(playerContainer)
-						sortInventory(wrapper, 9, 36, lockedSlots);
-					else
-						sortInventory(wrapper, lockedSlots);
-				}
+				if(playerContainer)
+					sortInventory(inv, 9, 36, lockedSlots);
+				else
+					sortInventory(inv, lockedSlots);
 				break;
 			}
 		}
 
 		if(backpack)
 			for(Slot s : c.slots)
-				if(s instanceof CachedItemHandlerSlot) {
-					sortInventory(((CachedItemHandlerSlot) s).getItemHandler(), lockedSlots);
+				if(s instanceof CachedItemHandlerSlot cachedSlot) {
+					sortInventory(cachedSlot.container, lockedSlots);
 					break;
 				}
 	}
 
-	public static void sortInventory(IItemHandler handler, int[] lockedSlots) {
-		sortInventory(handler, 0, lockedSlots);
+	public static void sortInventory(Container container, int[] lockedSlots) {
+		sortInventory(container, 0, lockedSlots);
 	}
 
-	public static void sortInventory(IItemHandler handler, int iStart, int[] lockedSlots) {
-		sortInventory(handler, iStart, handler.getSlots(), lockedSlots);
+	public static void sortInventory(Container container, int iStart, int[] lockedSlots) {
+		sortInventory(container, iStart, container.getContainerSize(), lockedSlots);
 	}
 
-	public static void sortInventory(IItemHandler handler, int iStart, int iEnd, int[] lockedSlots) {
+	public static void sortInventory(Container container, int iStart, int iEnd, int[] lockedSlots) {
 		List<ItemStack> stacks = new ArrayList<>();
 		List<ItemStack> restore = new ArrayList<>();
 
 		for(int i = iStart; i < iEnd; i++) {
-			ItemStack stackAt = handler.getStackInSlot(i);
+			ItemStack stackAt = container.getItem(i);
 
 			restore.add(stackAt.copy());
 			if(!isLocked(i, lockedSlots) && !stackAt.isEmpty())
@@ -135,52 +129,38 @@ public final class SortingHandler {
 		mergeStacks(stacks);
 		sortStackList(stacks);
 
-		if(setInventory(handler, stacks, iStart, iEnd, lockedSlots) == InteractionResult.FAIL)
-			setInventory(handler, restore, iStart, iEnd, lockedSlots);
+		if(setInventory(container, stacks, iStart, iEnd, lockedSlots) == InteractionResult.FAIL)
+			setInventory(container, restore, iStart, iEnd, lockedSlots);
 	}
 
-	private static InteractionResult setInventory(IItemHandler inventory, List<ItemStack> stacks, int iStart, int iEnd, int[] lockedSlots) {
-		int skipped = 0;
-		for(int i = iStart; i < iEnd; i++) {
-			if(isLocked(i, lockedSlots)) {
+	private static InteractionResult setInventory(Container container, List<ItemStack> stacks, int iStart, int iEnd, int[] lockedSlots) {
+		int skipped = 0; // Track how many slots have been skipped
+
+		// Copy container over to a map to make sure when we clear the container we can restore the slots that dont get sorted.
+		Map<Integer, ItemStack> containerCopy = new HashMap<>();
+		for (int containSlot = 0; containSlot < container.getContainerSize(); containSlot++) {
+			containerCopy.put(containSlot, container.getItem(containSlot));
+		}
+
+		container.clearContent(); // Clear container. Perhaps its possible to only remove what is necessary? I'm a little unsure of this though.
+
+		// Restore any items that shouldn't of been cleared.
+		for (int slot = 0; slot < container.getContainerSize(); slot++) {
+			if (slot < iStart || slot >= iEnd) {
+				container.setItem(slot, containerCopy.get(slot));
+			}
+		}
+
+		// Set the sorted slots to what they are supposed to be.
+		for (int slot = iStart; slot < iEnd; slot++) {
+			// Check if it's a locked slot, in which case we skip it.
+			if(isLocked(slot, lockedSlots)) {
+				container.setItem(slot, containerCopy.get(slot));
 				skipped++;
 				continue;
 			}
 
-			int j = i - iStart - skipped;
-			ItemStack stack = j >= stacks.size() ? ItemStack.EMPTY : stacks.get(j);
-
-			ItemStack stackInSlot = inventory.getStackInSlot(i);
-			if(!stackInSlot.isEmpty()) {
-				ItemStack extractTest = inventory.extractItem(i, inventory.getSlotLimit(i), true);
-				if(extractTest.isEmpty() || extractTest.getCount() != stackInSlot.getCount())
-					return InteractionResult.PASS;
-			}
-
-			if(!stack.isEmpty() && !inventory.isItemValid(i, stack))
-				return InteractionResult.PASS;
-		}
-
-		for(int i = iStart; i < iEnd; i++) {
-			if(isLocked(i, lockedSlots))
-				continue;
-
-			inventory.extractItem(i, inventory.getSlotLimit(i), false);
-		}
-
-		skipped = 0;
-		for(int i = iStart; i < iEnd; i++) {
-			if(isLocked(i, lockedSlots)) {
-				skipped++;
-				continue;
-			}
-
-			int j = i - iStart - skipped;
-			ItemStack stack = j >= stacks.size() ? ItemStack.EMPTY : stacks.get(j);
-
-			if(!stack.isEmpty())
-				if(!inventory.insertItem(i, stack, false).isEmpty())
-					return InteractionResult.FAIL;
+			container.setItem(slot, stacks.get(slot - iStart - skipped));
 		}
 
 		return InteractionResult.SUCCESS;
@@ -217,7 +197,7 @@ public final class SortingHandler {
 			if(stackAt.isEmpty())
 				continue;
 
-			if(stackAt.getCount() < stackAt.getMaxStackSize() && ItemStack.isSameItem(stack, stackAt) && ItemStack.isSameItemSameTags(stack, stackAt)) {
+			if(stackAt.getCount() < stackAt.getMaxStackSize() && ItemStack.isSameItem(stack, stackAt) && ItemStack.isSameItemSameComponents(stack, stackAt)) {
 				int setSize = stackAt.getCount() + stack.getCount();
 				int carryover = Math.max(0, setSize - stackAt.getMaxStackSize());
 				stackAt.setCount(carryover);
@@ -343,7 +323,7 @@ public final class SortingHandler {
 				else if(o instanceof ItemStack stack)
 					itemList.add(stack.getItem());
 				else if(o instanceof String s) {
-					Item item = BuiltInRegistries.ITEM.get(new ResourceLocation(s));
+					Item item = BuiltInRegistries.ITEM.get(ResourceLocation.parse(s));
 					if(item != Items.AIR)
 						itemList.add(item);
 				}
@@ -355,21 +335,21 @@ public final class SortingHandler {
 	private static int nutrition(FoodProperties properties) {
 		if(properties == null)
 			return 0;
-		return properties.getNutrition();
+		return properties.nutrition();
 	}
 
 	private static int foodHealCompare(ItemStack stack1, ItemStack stack2) {
-		return nutrition(stack2.getItem().getFoodProperties()) - nutrition(stack1.getItem().getFoodProperties());
+		return nutrition(stack2.get(DataComponents.FOOD)) - nutrition(stack1.get(DataComponents.FOOD));
 	}
 
 	private static float saturation(FoodProperties properties) {
 		if(properties == null)
 			return 0;
-		return Math.min(20, properties.getNutrition() * properties.getSaturationModifier() * 2);
+		return Math.min(20, properties.nutrition() * properties.saturation() * 2);
 	}
 
 	private static int foodSaturationCompare(ItemStack stack1, ItemStack stack2) {
-		return (int) (saturation(stack2.getItem().getFoodProperties()) - saturation(stack1.getItem().getFoodProperties()));
+		return (int) (saturation(stack2.get(DataComponents.FOOD)) - saturation(stack1.get(DataComponents.FOOD)));
 	}
 
 	private static int enchantmentCompare(ItemStack stack1, ItemStack stack2) {
@@ -380,11 +360,12 @@ public final class SortingHandler {
 		if(!stack.isEnchanted())
 			return 0;
 
-		Map<Enchantment, Integer> enchantments = EnchantmentHelper.getEnchantments(stack);
+		ItemEnchantments enchantments = stack.getTagEnchantments();
 		int total = 0;
 
-		for(Integer i : enchantments.values())
-			total += i;
+		for (Holder<Enchantment> enchantment : enchantments.keySet()) {
+			total += enchantments.getLevel(enchantment);
+		}
 
 		return total;
 	}
@@ -409,7 +390,7 @@ public final class SortingHandler {
 		EquipmentSlot slot2 = armor2.getEquipmentSlot();
 
 		if(slot1 == slot2)
-			return armor2.getMaterial().getDefenseForType(armor2.getType()) - armor2.getMaterial().getDefenseForType(armor1.getType());
+			return armor2.getMaterial().value().getDefense(armor2.getType()) - armor2.getMaterial().value().getDefense(armor1.getType());
 
 		return slot2.getIndex() - slot1.getIndex();
 	}
@@ -418,9 +399,10 @@ public final class SortingHandler {
 		return stack1.getDamageValue() - stack2.getDamageValue();
 	}
 
-	public static int fallbackNBTCompare(ItemStack stack1, ItemStack stack2) {
-		boolean hasTag1 = stack1.hasTag();
-		boolean hasTag2 = stack2.hasTag();
+	public static int fallbackComponentCompare(ItemStack stack1, ItemStack stack2) {
+		//Can components even be empty?
+		boolean hasTag1 = !stack1.getComponents().isEmpty();
+		boolean hasTag2 = !stack2.getComponents().isEmpty();
 
 		if(hasTag2 && !hasTag1)
 			return -1;
@@ -429,12 +411,14 @@ public final class SortingHandler {
 		else if(!hasTag1)
 			return 0;
 
-		return stack2.getTag().toString().hashCode() - stack1.getTag().toString().hashCode();
+		return stack2.getComponents().toString().hashCode() - stack1.getComponents().toString().hashCode();
 	}
 
 	public static int potionComplexityCompare(ItemStack stack1, ItemStack stack2) {
-		List<MobEffectInstance> effects1 = PotionUtils.getCustomEffects(stack1);
-		List<MobEffectInstance> effects2 = PotionUtils.getCustomEffects(stack2);
+		List<MobEffectInstance> effects1 = new ArrayList<>();
+		stack1.get(DataComponents.POTION_CONTENTS).getAllEffects().forEach(effects1::add);
+		List<MobEffectInstance> effects2 = new ArrayList<>();
+		stack2.get(DataComponents.POTION_CONTENTS).getAllEffects().forEach(effects2::add);
 
 		int totalPower1 = 0;
 		int totalPower2 = 0;
@@ -447,23 +431,34 @@ public final class SortingHandler {
 	}
 
 	public static int potionTypeCompare(ItemStack stack1, ItemStack stack2) {
-		Potion potion1 = PotionUtils.getPotion(stack1);
-		Potion potion2 = PotionUtils.getPotion(stack2);
+		Holder<Potion> potion1 = stack1.get(DataComponents.POTION_CONTENTS).potion().get();
+		Holder<Potion> potion2 = stack2.get(DataComponents.POTION_CONTENTS).potion().get();
 
-		return BuiltInRegistries.POTION.getId(potion2) - BuiltInRegistries.POTION.getId(potion1);
+		return BuiltInRegistries.POTION.getId(potion2.value()) - BuiltInRegistries.POTION.getId(potion1.value());
 	}
 
 	static boolean hasCustomSorting(ItemStack stack) {
-		return Quark.ZETA.capabilityManager.hasCapability(QuarkCapabilities.SORTING, stack);
+		return false;
+		//return Quark.ZETA.capabilityManager.hasCapability(QuarkCapabilities.SORTING, stack);
 	}
 
 	static ICustomSorting getCustomSorting(ItemStack stack) {
-		return Quark.ZETA.capabilityManager.getCapability(QuarkCapabilities.SORTING, stack);
+		return new ICustomSorting() {
+			@Override
+			public Comparator<ItemStack> getItemComparator() {
+				return null;
+			}
+
+			@Override
+			public String getSortingCategory() {
+				return "NULL";
+			}
+		};
+		//return Quark.ZETA.capabilityManager.getCapability(QuarkCapabilities.SORTING, stack);
 	}
 
 	private enum ItemType {
 
-		FOOD(ItemStack::isEdible, FOOD_COMPARATOR),
 		TORCH(list(Blocks.TORCH)),
 		TOOL_PICKAXE(classPredicate(PickaxeItem.class), TOOL_COMPARATOR),
 		TOOL_SHOVEL(classPredicate(ShovelItem.class), TOOL_COMPARATOR),
@@ -480,6 +475,7 @@ public final class SortingHandler {
 		MINECART(classPredicate(MinecartItem.class)),
 		RAIL(list(Blocks.RAIL, Blocks.POWERED_RAIL, Blocks.DETECTOR_RAIL, Blocks.ACTIVATOR_RAIL)),
 		DYE(classPredicate(DyeItem.class)),
+		FOOD(stack -> (stack.has(DataComponents.FOOD)), FOOD_COMPARATOR),
 		ANY(inverseClassPredicate(BlockItem.class)),
 		BLOCK(classPredicate(BlockItem.class));
 

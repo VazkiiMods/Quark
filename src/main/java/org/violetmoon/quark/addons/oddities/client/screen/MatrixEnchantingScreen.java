@@ -1,23 +1,7 @@
 package org.violetmoon.quark.addons.oddities.client.screen;
 
-import java.util.LinkedList;
-import java.util.List;
-
-import net.minecraft.world.entity.monster.Zombie;
-import org.jetbrains.annotations.NotNull;
-import org.violetmoon.quark.addons.oddities.block.be.MatrixEnchantingTableBlockEntity;
-import org.violetmoon.quark.addons.oddities.inventory.EnchantmentMatrix;
-import org.violetmoon.quark.addons.oddities.inventory.EnchantmentMatrix.Piece;
-import org.violetmoon.quark.addons.oddities.inventory.MatrixEnchantingMenu;
-import org.violetmoon.quark.addons.oddities.module.MatrixEnchantingModule;
-import org.violetmoon.quark.base.Quark;
-import org.violetmoon.quark.base.QuarkClient;
-import org.violetmoon.quark.base.client.handler.ClientUtil;
-import org.violetmoon.quark.base.network.message.oddities.MatrixEnchanterOperationMessage;
-
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
-
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
@@ -32,10 +16,25 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.item.enchantment.Enchantment;
+import net.neoforged.neoforge.network.PacketDistributor;
+import org.jetbrains.annotations.NotNull;
+import org.violetmoon.quark.addons.oddities.block.be.MatrixEnchantingTableBlockEntity;
+import org.violetmoon.quark.addons.oddities.inventory.EnchantmentMatrix;
+import org.violetmoon.quark.addons.oddities.inventory.EnchantmentMatrix.Piece;
+import org.violetmoon.quark.addons.oddities.inventory.MatrixEnchantingMenu;
+import org.violetmoon.quark.addons.oddities.module.MatrixEnchantingModule;
+import org.violetmoon.quark.base.Quark;
+import org.violetmoon.quark.base.client.handler.ClientUtil;
+import org.violetmoon.quark.base.network.message.oddities.MatrixEnchanterOperationMessage;
+import org.violetmoon.quark.catnip.animation.AnimationTickHolder;
+
+import java.util.LinkedList;
+import java.util.List;
 
 public class MatrixEnchantingScreen extends AbstractContainerScreen<MatrixEnchantingMenu> {
 
-	public static final ResourceLocation BACKGROUND = new ResourceLocation(Quark.MOD_ID, "textures/misc/matrix_enchanting.png");
+	public static final ResourceLocation BACKGROUND = Quark.asResource("textures/misc/matrix_enchanting.png");
 
 	protected final Inventory playerInv;
 	protected final MatrixEnchantingTableBlockEntity enchanter;
@@ -61,7 +60,7 @@ public class MatrixEnchantingScreen extends AbstractContainerScreen<MatrixEnchan
 		selectedPiece = -1;
 		addRenderableWidget(plusButton = new MatrixEnchantingPlusButton(leftPos + 86, topPos + 63, this::add));
 		pieceList = new MatrixEnchantingPieceList(this, 28, 64, topPos + 11, topPos + 75, 22);
-		pieceList.setLeftPos(leftPos + 139);
+		pieceList.setX(leftPos + 139);
 		addRenderableWidget(pieceList);
 		updateButtonStatus();
 
@@ -116,7 +115,7 @@ public class MatrixEnchantingScreen extends AbstractContainerScreen<MatrixEnchan
 		if(enchanter.bookshelfPower > 0) {
 			pose.pushPose();
 			guiGraphics.renderItem(new ItemStack(Items.BOOK), x, y);
-			pose.translate(0, 0, 1000);
+			pose.translate(0, 0, 200);
 	
 			x -= font.width(text) / 2;
 	
@@ -171,12 +170,12 @@ public class MatrixEnchantingScreen extends AbstractContainerScreen<MatrixEnchan
 
 	@Override
 	public void render(@NotNull GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTicks) {
-		renderBackground(guiGraphics);
+		renderBackground(guiGraphics, mouseX, mouseY, partialTicks);
 		super.render(guiGraphics, mouseX, mouseY, partialTicks);
 
 		if(hoveredPiece != null) {
 			List<Component> tooltip = new LinkedList<>();
-			tooltip.add(Component.translatable(hoveredPiece.enchant.getFullname(hoveredPiece.level).getString().replaceAll("\\u00A7.", "")).withStyle(ChatFormatting.GOLD));
+			tooltip.add(Component.translatable(Enchantment.getFullname(hoveredPiece.enchant,hoveredPiece.level).getString().replaceAll("\\u00A7.", "")).withStyle(ChatFormatting.GOLD));
 
 			if(hoveredPiece.influence > 0)
 				tooltip.add(Component.translatable("quark.gui.enchanting.influence", (int) (hoveredPiece.influence * MatrixEnchantingModule.influencePower * 100)).withStyle(ChatFormatting.GRAY));
@@ -193,7 +192,7 @@ public class MatrixEnchantingScreen extends AbstractContainerScreen<MatrixEnchan
 				tooltip.add(Component.translatable("quark.gui.enchanting.right_click").withStyle(ChatFormatting.GRAY));
 			} else if(selectedPiece != -1) {
 				Piece p = getPiece(selectedPiece);
-				if(p != null && p.enchant == hoveredPiece.enchant && hoveredPiece.level < hoveredPiece.enchant.getMaxLevel()) {
+				if(p != null && p.enchant == hoveredPiece.enchant && hoveredPiece.level < hoveredPiece.enchant.value().getMaxLevel()) {
 					tooltip.add(Component.literal(""));
 					tooltip.add(Component.translatable("quark.gui.enchanting.merge").withStyle(ChatFormatting.GRAY));
 				}
@@ -290,13 +289,13 @@ public class MatrixEnchantingScreen extends AbstractContainerScreen<MatrixEnchan
 
 		if(selectedPiece != -1 && gridHoverX != -1) {
 			Piece piece = getPiece(selectedPiece);
-			if(piece != null && !(hoveredPiece != null && piece.enchant == hoveredPiece.enchant && hoveredPiece.level < hoveredPiece.enchant.getMaxLevel())) {
+			if(piece != null && !(hoveredPiece != null && piece.enchant == hoveredPiece.enchant && hoveredPiece.level < hoveredPiece.enchant.value().getMaxLevel())) {
 				stack.pushPose();
 				stack.translate(gridHoverX * 10, gridHoverY * 10, 0);
 
 				float a = 0.2F;
 				if(matrix.canPlace(piece, gridHoverX, gridHoverY))
-					a = (float) ((Math.sin(QuarkClient.ticker.total * 0.2) + 1) * 0.4 + 0.4);
+					a = (float) ((Math.sin(AnimationTickHolder.getTicks() + Minecraft.getInstance().getTimer().getGameTimeDeltaTicks() * 0.2) + 1) * 0.4 + 0.4);
 				renderPiece(guiGraphics, piece, a);
 				stack.popPose();
 			}
@@ -353,7 +352,7 @@ public class MatrixEnchantingScreen extends AbstractContainerScreen<MatrixEnchan
 		int hover = enchanter.matrix.matrix[gridHoverX][gridHoverY];
 		Piece p = getPiece(hover);
 		Piece p1 = getPiece(selectedPiece);
-		if(p != null && p1 != null && p.enchant == p1.enchant && p.level < p.enchant.getMaxLevel()) {
+		if(p != null && p1 != null && p.enchant == p1.enchant && p.level < p.enchant.value().getMaxLevel()) {
 			send(MatrixEnchantingTableBlockEntity.OPER_MERGE, hover, id, 0);
 			selectedPiece = -1;
 			click();
@@ -362,7 +361,7 @@ public class MatrixEnchantingScreen extends AbstractContainerScreen<MatrixEnchan
 
 	private void send(int operation, int arg0, int arg1, int arg2) {
 		MatrixEnchanterOperationMessage message = new MatrixEnchanterOperationMessage(operation, arg0, arg1, arg2);
-		QuarkClient.ZETA_CLIENT.sendToServer(message);
+		PacketDistributor.sendToServer(message);
 	}
 
 	private void click() {

@@ -1,0 +1,24 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "zeta:flag",
+      "flag": "wooden_posts"
+    }
+  ],
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "key": {
+    "F": {
+      "item": "minecraft:dark_oak_wood"
+    }
+  },
+  "pattern": [
+    "F",
+    "F",
+    "F"
+  ],
+  "result": {
+    "count": 8,
+    "id": "quark:dark_oak_post"
+  }
+}

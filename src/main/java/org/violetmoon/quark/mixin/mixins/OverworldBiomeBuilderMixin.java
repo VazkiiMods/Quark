@@ -21,7 +21,7 @@ public class OverworldBiomeBuilderMixin {
 
 	@Inject(method = "addUndergroundBiomes", at = @At("RETURN"))
 	public void addUndergroundBiomes(Consumer<Pair<Climate.ParameterPoint, ResourceKey<Biome>>> consumer, CallbackInfo info) {
-		Quark.TERRABLENDER_INTEGRATION.modifyVanillaOverworldPreset((OverworldBiomeBuilder) (Object) this, consumer);
+		//Quark.TERRABLENDER_INTEGRATION.modifyVanillaOverworldPreset((OverworldBiomeBuilder) (Object) this, consumer);
 	}
 
 }

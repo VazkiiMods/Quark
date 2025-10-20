@@ -3,8 +3,6 @@ package org.violetmoon.quark.content.automation.entity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.protocol.Packet;
-import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.protocol.game.ClientboundBlockUpdatePacket;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
@@ -22,10 +20,7 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.FallingBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.network.NetworkHooks;
-
 import org.jetbrains.annotations.NotNull;
-
 import org.violetmoon.quark.content.automation.module.GravisandModule;
 
 public class Gravisand extends FallingBlockEntity {
@@ -61,15 +56,15 @@ public class Gravisand extends FallingBlockEntity {
 		BlockPos blockpos1 = this.blockPosition();
 		boolean aboveHasCollision = !level().getBlockState(blockpos1.above()).getCollisionShape(level(), blockpos1.above()).isEmpty();
 		if(!this.level().isClientSide && getFallDirection() > 0 && !isRemoved() && aboveHasCollision) {
-			Block block = this.blockState.getBlock();
+			Block block = this.getBlockState().getBlock();
 			BlockState blockstate = this.level().getBlockState(blockpos1);
 			this.setDeltaMovement(this.getDeltaMovement().multiply(0.7D, 0.5D, 0.7D));
 			boolean flag2 = blockstate.canBeReplaced(new DirectionalPlaceContext(this.level(), blockpos1, Direction.UP, ItemStack.EMPTY, Direction.DOWN));
 			boolean flag3 = FallingBlock.isFree(this.level().getBlockState(blockpos1.above()));
-			boolean flag4 = this.blockState.canSurvive(this.level(), blockpos1) && !flag3;
+			boolean flag4 = this.getBlockState().canSurvive(this.level(), blockpos1) && !flag3;
 
 			if(flag2 && flag4) {
-				if(this.level().setBlock(blockpos1, this.blockState, 3)) {
+				if(this.level().setBlock(blockpos1, this.getBlockState(), 3)) {
 					((ServerLevel) this.level()).getChunkSource().chunkMap.broadcast(this, new ClientboundBlockUpdatePacket(blockpos1, this.level().getBlockState(blockpos1)));
 					this.discard();
 				} else if(this.dropItem && this.level().getGameRules().getBoolean(GameRules.RULE_DOENTITYDROPS)) {
@@ -88,10 +83,9 @@ public class Gravisand extends FallingBlockEntity {
 	}
 
 	@Override
-	protected void defineSynchedData() {
-		super.defineSynchedData();
-
-		entityData.define(DIRECTION, 0F);
+	protected void defineSynchedData(SynchedEntityData.Builder builder) {
+		super.defineSynchedData(builder);
+		builder.define(DIRECTION, 0F);
 	}
 
 	@Override
@@ -114,21 +108,12 @@ public class Gravisand extends FallingBlockEntity {
 	@Override
 	protected void addAdditionalSaveData(@NotNull CompoundTag compound) {
 		super.addAdditionalSaveData(compound);
-
 		compound.putFloat(TAG_DIRECTION, getFallDirection());
 	}
 
 	@Override
 	protected void readAdditionalSaveData(@NotNull CompoundTag compound) {
 		super.readAdditionalSaveData(compound);
-
 		entityData.set(DIRECTION, compound.getFloat(TAG_DIRECTION));
 	}
-
-	@NotNull
-	@Override
-	public Packet<ClientGamePacketListener> getAddEntityPacket() {
-		return NetworkHooks.getEntitySpawningPacket(this);
-	}
-
 }

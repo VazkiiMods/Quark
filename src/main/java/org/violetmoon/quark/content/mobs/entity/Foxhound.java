@@ -14,13 +14,12 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.core.particles.SimpleParticleType;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.protocol.Packet;
-import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
@@ -53,21 +52,21 @@ import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.biome.Biomes;
 import net.minecraft.world.level.block.entity.AbstractFurnaceBlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.world.level.pathfinder.BlockPathTypes;
+import net.minecraft.world.level.pathfinder.PathType;
+import net.minecraft.world.level.storage.loot.LootTable;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.network.NetworkHooks;
-
 import org.jetbrains.annotations.NotNull;
-
 import org.violetmoon.quark.addons.oddities.block.TinyPotatoBlock;
 import org.violetmoon.quark.addons.oddities.module.TinyPotatoModule;
+import org.violetmoon.quark.base.Quark;
+import org.violetmoon.quark.base.components.QuarkDataComponents;
 import org.violetmoon.quark.base.handler.QuarkSounds;
 import org.violetmoon.quark.content.mobs.ai.FindPlaceToSleepGoal;
 import org.violetmoon.quark.content.mobs.ai.SleepGoal;
 import org.violetmoon.quark.content.mobs.module.FoxhoundModule;
 import org.violetmoon.quark.content.tweaks.ai.WantLoveGoal;
-import org.violetmoon.zeta.util.ItemNBTHelper;
+import org.violetmoon.quark.mixin.mixins.accessor.AccessorWolf;
 
 import java.util.List;
 import java.util.Optional;
@@ -77,29 +76,32 @@ import static org.violetmoon.quark.content.mobs.ai.FindPlaceToSleepGoal.Target.*
 
 public class Foxhound extends Wolf implements Enemy {
 
-	public static final ResourceLocation FOXHOUND_LOOT_TABLE = new ResourceLocation("quark", "entities/foxhound");
-
+	public static final ResourceKey<LootTable> FOXHOUND_LOOT_TABLE = Quark.asResourceKey(Registries.LOOT_TABLE, "entities/foxhound");
 	private static final EntityDataAccessor<Boolean> TEMPTATION = SynchedEntityData.defineId(Foxhound.class, EntityDataSerializers.BOOLEAN);
 	private static final EntityDataAccessor<Boolean> IS_BLUE = SynchedEntityData.defineId(Foxhound.class, EntityDataSerializers.BOOLEAN);
 	private static final EntityDataAccessor<Boolean> TATERING = SynchedEntityData.defineId(Foxhound.class, EntityDataSerializers.BOOLEAN);
+	private static final EntityDataAccessor<Integer> COLLAR_COLOR = SynchedEntityData.defineId(Foxhound.class, EntityDataSerializers.INT);
 
 	private int timeUntilPotatoEmerges = 0;
 
 	public Foxhound(EntityType<? extends Foxhound> type, Level worldIn) {
 		super(type, worldIn);
-		this.setPathfindingMalus(BlockPathTypes.WATER, -1.0F);
-		this.setPathfindingMalus(BlockPathTypes.LAVA, 1.0F);
-		this.setPathfindingMalus(BlockPathTypes.DANGER_FIRE, 1.0F);
-		this.setPathfindingMalus(BlockPathTypes.DAMAGE_FIRE, 1.0F);
+		this.setPathfindingMalus(PathType.WATER, -1.0F);
+		this.setPathfindingMalus(PathType.LAVA, 1.0F);
+		this.setPathfindingMalus(PathType.DANGER_FIRE, 1.0F);
+		this.setPathfindingMalus(PathType.DAMAGE_FIRE, 1.0F); //TODO is there a reason this is here twice?
 	}
 
 	@Override
-	protected void defineSynchedData() {
-		super.defineSynchedData();
-		setCollarColor(DyeColor.ORANGE);
-		entityData.define(TEMPTATION, false);
-		entityData.define(IS_BLUE, false);
-		entityData.define(TATERING, false);
+	protected void defineSynchedData(SynchedEntityData.Builder builder) {
+		super.defineSynchedData(builder);
+
+		//todo: Mixin accessor or accesswidener
+
+		builder.define(COLLAR_COLOR, DyeColor.ORANGE.getId());
+		builder.define(TEMPTATION, false);
+		builder.define(IS_BLUE, false);
+		builder.define(TATERING, false);
 	}
 
 	@Override
@@ -123,12 +125,12 @@ public class Foxhound extends Wolf implements Enemy {
 	}
 
 	@Override
-	public SpawnGroupData finalizeSpawn(ServerLevelAccessor worldIn, @NotNull DifficultyInstance difficultyIn, @NotNull MobSpawnType reason, SpawnGroupData spawnDataIn, CompoundTag dataTag) {
+	public SpawnGroupData finalizeSpawn(ServerLevelAccessor worldIn, @NotNull DifficultyInstance difficultyIn, @NotNull MobSpawnType reason, SpawnGroupData spawnDataIn) {
 		Holder<Biome> biome = worldIn.getBiome(BlockPos.containing(position()));
 		if(biome.is(Biomes.SOUL_SAND_VALLEY.location()))
 			setBlue(true);
 
-		return super.finalizeSpawn(worldIn, difficultyIn, reason, spawnDataIn, dataTag);
+		return super.finalizeSpawn(worldIn, difficultyIn, reason, spawnDataIn);
 	}
 
 	@Override
@@ -153,7 +155,8 @@ public class Foxhound extends Wolf implements Enemy {
 			if(--timeUntilPotatoEmerges == 0) {
 				setTatering(false);
 				ItemStack stack = new ItemStack(TinyPotatoModule.tiny_potato);
-				ItemNBTHelper.setBoolean(stack, TinyPotatoBlock.ANGRY, true);
+				stack.set(QuarkDataComponents.IS_ANGRY, true);
+
 				spawnAtLocation(stack);
 				playSound(QuarkSounds.BLOCK_POTATO_HURT, 1f, 1f);
 			} else if(!isTatering())
@@ -176,7 +179,7 @@ public class Foxhound extends Wolf implements Enemy {
 		if(WantLoveGoal.needsPets(this)) {
 			Entity owner = getOwner();
 			if(owner != null && owner.distanceToSqr(this) < 1 && !owner.isInWater() && !owner.fireImmune() && (!(owner instanceof Player player) || !player.getAbilities().invulnerable))
-				owner.setSecondsOnFire(5);
+				owner.igniteForSeconds(5);
 		}
 
 		Vec3 pos = position();
@@ -206,7 +209,7 @@ public class Foxhound extends Wolf implements Enemy {
 				if(cookTime > 0 && cookTime % 3 == 0) {
 					List<Foxhound> foxhounds = level.getEntitiesOfClass(Foxhound.class, new AABB(blockPosition()),
 							(fox) -> fox != null && fox.isTame());
-					if(!foxhounds.isEmpty() && foxhounds.get(0) == this) {
+					if(!foxhounds.isEmpty() && foxhounds.getFirst() == this) {
 						furnace.cookingProgress = furnace.cookingProgress == 3 ? 5 : Math.min(furnace.cookingTotalTime - 1, cookTime + 1);
 
 						if(getOwner() instanceof ServerPlayer sp)
@@ -222,9 +225,8 @@ public class Foxhound extends Wolf implements Enemy {
 		return false;
 	}
 
-	@NotNull
 	@Override
-	protected ResourceLocation getDefaultLootTable() {
+	protected ResourceKey<LootTable> getDefaultLootTable() {
 		return FOXHOUND_LOOT_TABLE;
 	}
 
@@ -238,7 +240,7 @@ public class Foxhound extends Wolf implements Enemy {
 		this.goalSelector.addGoal(3, new SitWhenOrderedToGoal(this));
 		this.goalSelector.addGoal(4, new LeapAtTargetGoal(this, 0.4F));
 		this.goalSelector.addGoal(5, new MeleeAttackGoal(this, 1.0D, true));
-		this.goalSelector.addGoal(6, new FollowOwnerGoal(this, 1.0D, 10.0F, 2.0F, false));
+		this.goalSelector.addGoal(6, new FollowOwnerGoal(this, 1.0D, 10.0F, 2.0F));
 		this.goalSelector.addGoal(7, new BreedGoal(this, 1.0D));
 		this.goalSelector.addGoal(8, new FindPlaceToSleepGoal(this, 0.8D, LIT_FURNACE));
 		this.goalSelector.addGoal(9, new FindPlaceToSleepGoal(this, 0.8D, FURNACE));
@@ -276,10 +278,8 @@ public class Foxhound extends Wolf implements Enemy {
 				((int) this.getAttributeValue(Attributes.ATTACK_DAMAGE)));
 
 		if(flag) {
-			entityIn.setSecondsOnFire(5);
-			this.doEnchantDamageEffects(this, entityIn);
+			entityIn.igniteForSeconds(5);
 		}
-
 		return flag;
 	}
 
@@ -347,7 +347,7 @@ public class Foxhound extends Wolf implements Enemy {
 
 		if(uuid != null) {
 			kid.setOwnerUUID(uuid);
-			kid.setTame(true);
+			kid.setTame(true, true);
 		}
 
 		if(isBlue())
@@ -414,15 +414,6 @@ public class Foxhound extends Wolf implements Enemy {
 		entityData.set(TATERING, tatering);
 	}
 
-//	public static boolean canSpawnHere(IServerWorld world, BlockPos pos, Random rand) {
-//		if(world.getLightFor(LightType.SKY, pos) > rand.nextInt(32)) {
-//			return false;
-//		} else {
-//			int light = world.getWorld().isThundering() ? world.getNeighborAwareLightSubtracted(pos, 10) : world.getLight(pos);
-//			return light <= rand.nextInt(8);
-//		}
-//	}
-
 	@Override
 	public float getWalkTargetValue(BlockPos pos, LevelReader worldIn) {
 		return worldIn.getBlockState(pos.below()).is(FoxhoundModule.foxhoundSpawnableTag) ? 10.0F : worldIn.getRawBrightness(pos, 0) - 0.5F;
@@ -442,11 +433,5 @@ public class Foxhound extends Wolf implements Enemy {
 			setInSittingPose(false);
 			sleep.setSleeping(false);
 		}
-	}
-
-	@NotNull
-	@Override
-	public Packet<ClientGamePacketListener> getAddEntityPacket() {
-		return NetworkHooks.getEntitySpawningPacket(this);
 	}
 }

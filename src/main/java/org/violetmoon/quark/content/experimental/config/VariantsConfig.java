@@ -96,8 +96,8 @@ public class VariantsConfig implements IConfigType {
 		for(String s : manualVariants) {
 			String[] toks = s.split(",");
 
-			Block block = BuiltInRegistries.BLOCK.get(new ResourceLocation(toks[1]));
-			Block out = BuiltInRegistries.BLOCK.get(new ResourceLocation(toks[2]));
+			Block block = BuiltInRegistries.BLOCK.get(ResourceLocation.parse(toks[1]));
+			Block out = BuiltInRegistries.BLOCK.get(ResourceLocation.parse(toks[2]));
 			manualVariantMap.put(block, new ManualVariant(toks[0], out));
 		}
 
@@ -243,7 +243,7 @@ public class VariantsConfig implements IConfigType {
 			}
 
 		String targetStr = String.format(Locale.ROOT, format, namespace, name, suffix);
-		ResourceLocation target = new ResourceLocation(targetStr);
+        ResourceLocation target = ResourceLocation.parse(targetStr);
 		Block ret = BuiltInRegistries.BLOCK.get(target);
 
 		if(ret == Blocks.AIR) {

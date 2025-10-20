@@ -1,0 +1,41 @@
+{
+  "parent": "minecraft:husbandry/tactical_fishing",
+  "criteria": {
+    "crab_bucket": {
+      "conditions": {
+        "item": {
+          "items": [
+            "quark:crab_bucket"
+          ]
+        }
+      },
+      "trigger": "minecraft:filled_bucket"
+    }
+  },
+  "display": {
+    "announce_to_chat": true,
+    "description": {
+      "translate": "advancements.quark.crab_in_a_bucket.description"
+    },
+    "frame": "task",
+    "hidden": false,
+    "icon": {
+      "id": "quark:crab_bucket"
+    },
+    "show_toast": true,
+    "title": {
+      "translate": "advancements.quark.crab_in_a_bucket.title"
+    }
+  },
+  "requirements": [
+    [
+      "crab_bucket"
+    ]
+  ],
+  "neoforge:conditions": [
+    {
+      "type": "zeta:flag",
+      "flag": "crabs"
+    }
+  ]
+}

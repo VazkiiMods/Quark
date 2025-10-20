@@ -24,20 +24,21 @@ import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.ChestBlockEntity;
 import net.minecraft.world.phys.BlockHitResult;
-import net.minecraftforge.common.capabilities.ForgeCapabilities;
-import net.minecraftforge.items.IItemHandler;
-import net.minecraftforge.items.ItemHandlerHelper;
+import net.neoforged.neoforge.capabilities.Capabilities;
+import net.neoforged.neoforge.items.IItemHandler;
+import net.neoforged.neoforge.items.ItemHandlerHelper;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.violetmoon.quark.api.ITrowelable;
 import org.violetmoon.quark.api.IUsageTickerOverride;
 import org.violetmoon.quark.base.Quark;
+import org.violetmoon.quark.base.components.ItemWrapperComponent;
+import org.violetmoon.quark.base.components.QuarkDataComponents;
 import org.violetmoon.quark.content.tools.module.SeedPouchModule;
 import org.violetmoon.zeta.item.ZetaItem;
 import org.violetmoon.zeta.module.IDisableable;
 import org.violetmoon.zeta.module.ZetaModule;
 import org.violetmoon.zeta.registry.CreativeTabManager;
-import org.violetmoon.zeta.util.ItemNBTHelper;
 import org.violetmoon.zeta.util.RegistryUtil;
 
 import java.util.ArrayList;
@@ -56,7 +57,7 @@ public class SeedPouchItem extends ZetaItem implements IUsageTickerOverride, ITr
 		super("seed_pouch", module,
 				new Item.Properties()
 						.stacksTo(1));
-		CreativeTabManager.addToCreativeTabNextTo(CreativeModeTabs.TOOLS_AND_UTILITIES, this, Items.LEAD, false);
+		CreativeTabManager.addNextToItem(CreativeModeTabs.TOOLS_AND_UTILITIES, this, Items.LEAD, false);
 	}
 
 	@Override
@@ -212,7 +213,7 @@ public class SeedPouchItem extends ZetaItem implements IUsageTickerOverride, ITr
 			if (player != null && player.isShiftKeyDown() && !context.getLevel().isClientSide()) {
 				BlockEntity targetedBE = context.getLevel().getBlockEntity(BlockPos.containing(context.getClickLocation()));
 				if (targetedBE instanceof ChestBlockEntity chest) {
-					Optional<IItemHandler> optionalItemHandler = chest.getCapability(ForgeCapabilities.ITEM_HANDLER, Direction.NORTH).resolve();
+					Optional<IItemHandler> optionalItemHandler = Optional.ofNullable(context.getLevel().getCapability(Capabilities.ItemHandler.BLOCK, chest.getBlockPos(), Direction.NORTH));
 					if (optionalItemHandler.isPresent()) {
 						// Copy stack and set it to the amount in the pouch
 						ItemStack toInsert = seed.copy();
@@ -313,7 +314,7 @@ public class SeedPouchItem extends ZetaItem implements IUsageTickerOverride, ITr
 	}
 
 	@Override
-	public ItemStack getUsageTickerItem(ItemStack stack) {
+	public ItemStack getUsageTickerItem(ItemStack stack, RegistryAccess access) {
 		PouchContents contents = getContents(stack);
 		return contents.isEmpty() ? stack : contents.getContents();
 	}
@@ -350,34 +351,35 @@ public class SeedPouchItem extends ZetaItem implements IUsageTickerOverride, ITr
 		private int count = 0;
 
 		public ItemStack writeToStack(ItemStack target) {
-			CompoundTag tag = target.getTag();
+			CompoundTag tag = new CompoundTag();
+			//target.save(access, tag);
 
 			if(isEmpty()) {
 				//If we are empty, and the target doesn't have any NBT tag, that's cool. Nothing to do.
 				//If the target *does* have an NBT tag, ensure we remove our tags.
-				if(tag != null) {
-					tag.remove(TAG_STORED_ITEM);
-					tag.remove(TAG_COUNT);
+                target.remove(QuarkDataComponents.STORED_ITEM);
+                target.remove(QuarkDataComponents.ITEM_COUNT);
 
-					//And, if we just removed *all* the tags on the target, erase its NBT tag entirely.
-					if(tag.isEmpty())
-						target.setTag(null);
-				}
-			} else {
-				ItemNBTHelper.setCompound(target, TAG_STORED_ITEM, contents.save(new CompoundTag()));
-				ItemNBTHelper.setInt(target, TAG_COUNT, count);
+                //And, if we just removed *all* the tags on the target, erase its NBT tag entirely.;
+            } else {
+				target.set(QuarkDataComponents.STORED_ITEM, new ItemWrapperComponent(contents));
+				target.set(QuarkDataComponents.ITEM_COUNT, count);
 			}
 
 			return target;
 		}
 
+		/**
+		 * Reads the target's components and spits out the content
+		 * @param target What is hopefully a seed pouch
+		 * @return The contents of the pouch
+		 */
 		public static PouchContents readFromStack(ItemStack target) {
-			CompoundTag tag = target.getTag();
 			PouchContents contents = new PouchContents();
 
-			if(tag != null && tag.contains(TAG_STORED_ITEM) && tag.contains(TAG_COUNT)) {
-				contents.contents = ItemStack.of(tag.getCompound(TAG_STORED_ITEM));
-				contents.count = tag.getInt(TAG_COUNT);
+			if (target.has(QuarkDataComponents.STORED_ITEM) && target.has(QuarkDataComponents.ITEM_COUNT)) {
+				contents.contents = target.get(QuarkDataComponents.STORED_ITEM).stack();
+				contents.count = target.get(QuarkDataComponents.ITEM_COUNT);
 			}
 
 			return contents;
@@ -386,7 +388,9 @@ public class SeedPouchItem extends ZetaItem implements IUsageTickerOverride, ITr
 		//Invariant: readFromStack(target).getCount() == readCountOnlyFromStack().
 		//Reading itemstacks is expensive, often times we don't care about them.
 		public static int readCountOnlyFromStack(ItemStack target) {
-			return ItemNBTHelper.getInt(target, TAG_COUNT, 0);
+			if (target.has(QuarkDataComponents.ITEM_COUNT))
+				return target.get(QuarkDataComponents.ITEM_COUNT);
+			else return 0;
 		}
 
 		//Ensures you can't read a PouchContents, mutate it, then forget to write it back to the stack.
@@ -478,7 +482,7 @@ public class SeedPouchItem extends ZetaItem implements IUsageTickerOverride, ITr
 			if(isEmpty())
 				return other.is(SeedPouchModule.seedPouchHoldableTag) || (SeedPouchModule.allowFertilizer && other.is(SeedPouchModule.seedPouchFertilizersTag));
 			else
-				return this.count < SeedPouchModule.maxItems && ItemStack.isSameItemSameTags(contents, other);
+				return this.count < SeedPouchModule.maxItems && ItemStack.isSameItemSameComponents(contents, other);
 		}
 
 	}

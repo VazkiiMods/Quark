@@ -1,0 +1,35 @@
+{
+  "parent": "minecraft:adventure/trade",
+  "criteria": {
+    "pathfinder_map_center": {
+      "trigger": "quark:pathfinder_map_center"
+    }
+  },
+  "display": {
+    "announce_to_chat": true,
+    "description": {
+      "translate": "advancements.quark.pathfinder_map_center.description"
+    },
+    "frame": "goal",
+    "hidden": false,
+    "icon": {
+      "id": "minecraft:filled_map"
+    },
+    "show_toast": true,
+    "title": {
+      "translate": "advancements.quark.pathfinder_map_center.title"
+    }
+  },
+  "requirements": [
+    [
+      "pathfinder_map_center"
+    ]
+  ],
+  "neoforge:conditions": [
+    {
+      "type": "zeta:flag",
+      "flag": "pathfinder_maps"
+    }
+  ]
+
+}

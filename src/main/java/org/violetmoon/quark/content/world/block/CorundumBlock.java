@@ -2,8 +2,7 @@ package org.violetmoon.quark.content.world.block;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.core.particles.DustParticleOptions;
-import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.core.particles.*;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.item.CreativeModeTabs;
@@ -30,7 +29,7 @@ import org.violetmoon.zeta.module.ZetaModule;
  */
 public class CorundumBlock extends ZetaGlassBlock {
 
-	public final float[] colorComponents;
+	public final int color;
 	public final boolean waxed;
 
 	public CorundumClusterBlock cluster;
@@ -46,10 +45,7 @@ public class CorundumBlock extends ZetaGlassBlock {
 						.randomTicks()
 						.noOcclusion());
 
-		float r = ((color >> 16) & 0xff) / 255f;
-		float g = ((color >> 8) & 0xff) / 255f;
-		float b = (color & 0xff) / 255f;
-		colorComponents = new float[] { r, g, b };
+		this.color = color;
 		this.waxed = waxed;
 
 		if(module == null) //auto registration below this line
@@ -93,7 +89,8 @@ public class CorundumBlock extends ZetaGlassBlock {
 			double y = (double) pos.getY() + rand.nextDouble();
 			double z = (double) pos.getZ() + rand.nextDouble();
 
-			worldIn.addParticle(ParticleTypes.AMBIENT_ENTITY_EFFECT, x, y, z, colorComponents[0], colorComponents[1], colorComponents[2]);
+			//Unsure if this is correct behavior.
+			worldIn.addParticle(new BlockParticleOption(ParticleTypes.BLOCK, stateIn), x, y, z, (color >> 16)/255f, (color >> 8) / 255f, color / 255f);
 		}
 
 		if(!waxed)
@@ -117,14 +114,13 @@ public class CorundumBlock extends ZetaGlassBlock {
 					worldIn.addParticle(ParticleTypes.END_ROD, x, y, z, ox / ol, oy / ol, oz / ol);
 				}
 
-				worldIn.addParticle(new DustParticleOptions(new Vector3f(colorComponents[0], colorComponents[1], colorComponents[2]), size), x, y, z, 0, 0, 0);
+				worldIn.addParticle(new DustParticleOptions(new Vector3f((color >> 16)/255f, (color >> 8) / 255f, color / 255f), size), x, y, z, 0, 0, 0);
 			}
 	}
 
 	@Nullable
 	@Override
-	public float[] getBeaconColorMultiplierZeta(BlockState state, LevelReader world, BlockPos pos, BlockPos beaconPos) {
-		return colorComponents;
+	public Integer getBeaconColorMultiplierZeta(BlockState state, LevelReader world, BlockPos pos, BlockPos beaconPos) {
+		return color;
 	}
-
 }

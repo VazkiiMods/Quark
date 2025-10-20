@@ -1,10 +1,10 @@
 package org.violetmoon.quark.addons.oddities.block;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.RandomSource;
-import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.LivingEntity;
@@ -24,11 +24,8 @@ import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.phys.BlockHitResult;
-import net.minecraftforge.network.NetworkHooks;
-
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-
 import org.violetmoon.quark.addons.oddities.block.be.CrateBlockEntity;
 import org.violetmoon.quark.addons.oddities.module.CrateModule;
 import org.violetmoon.zeta.block.ZetaBlock;
@@ -39,7 +36,7 @@ public class CrateBlock extends ZetaBlock implements EntityBlock {
 	public static final BooleanProperty PROPERTY_OPEN = BlockStateProperties.OPEN;
 
 	public CrateBlock(@Nullable ZetaModule module) {
-		super("crate", module, Properties.copy(Blocks.BARREL));
+		super("crate", module, Properties.ofFullCopy(Blocks.BARREL));
 		registerDefaultState(stateDefinition.any().setValue(PROPERTY_OPEN, false));
 
 		if(module == null) //auto registration below this line
@@ -56,8 +53,7 @@ public class CrateBlock extends ZetaBlock implements EntityBlock {
 	public int getAnalogOutputSignal(@NotNull BlockState state, @NotNull Level world, @NotNull BlockPos pos) {
 		BlockEntity be = world.getBlockEntity(pos);
 		if(be instanceof CrateBlockEntity crate) {
-			var crateHandler = crate.itemHandler();
-			return (int) (Math.floor((crateHandler.displayTotal * 14.0) / crateHandler.getSlots()) + (crateHandler.displayTotal > 0 ? 1 : 0));
+			return (int) (Math.floor((crate.displayTotal * 14.0) / crate.getContainerSize()) + (crate.displayTotal > 0 ? 1 : 0));
 		}
 		return 0;
 	}
@@ -71,14 +67,14 @@ public class CrateBlock extends ZetaBlock implements EntityBlock {
 
 	@NotNull
 	@Override
-	public InteractionResult use(@NotNull BlockState state, Level worldIn, @NotNull BlockPos pos, @NotNull Player player, @NotNull InteractionHand handIn, @NotNull BlockHitResult hit) {
+	public InteractionResult useWithoutItem(@NotNull BlockState state, Level worldIn, @NotNull BlockPos pos, @NotNull Player player, @NotNull BlockHitResult hit) {
 		if(worldIn.isClientSide) {
 			return InteractionResult.SUCCESS;
 		} else {
 			BlockEntity be = worldIn.getBlockEntity(pos);
 			if(be instanceof CrateBlockEntity crate) {
 				if(player instanceof ServerPlayer serverPlayer)
-					NetworkHooks.openScreen(serverPlayer, crate, pos);
+					serverPlayer.openMenu(crate, pos);
 
 				PiglinAi.angerNearbyPiglins(player, true);
 			}
@@ -89,10 +85,10 @@ public class CrateBlock extends ZetaBlock implements EntityBlock {
 
 	@Override
 	public void setPlacedBy(@NotNull Level worldIn, @NotNull BlockPos pos, @NotNull BlockState state, @Nullable LivingEntity placer, ItemStack stack) {
-		if(stack.hasCustomHoverName()) {
+		if(stack.getComponents().has(DataComponents.CUSTOM_NAME)) {
 			BlockEntity tileentity = worldIn.getBlockEntity(pos);
 			if(tileentity instanceof CrateBlockEntity crate)
-				crate.setCustomName(stack.getHoverName());
+				crate.setComponents(stack.getComponents());
 		}
 	}
 

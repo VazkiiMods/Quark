@@ -3,13 +3,11 @@ package org.violetmoon.quark.content.tweaks.module;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.Input;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
-import net.minecraft.tags.BlockTags;
-import net.minecraft.tags.ItemTags;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -29,7 +27,6 @@ import net.minecraft.world.level.block.state.properties.DirectionProperty;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.VoxelShape;
-
 import org.violetmoon.quark.base.Quark;
 import org.violetmoon.zeta.client.event.play.ZInputUpdate;
 import org.violetmoon.zeta.config.Config;
@@ -37,9 +34,9 @@ import org.violetmoon.zeta.event.bus.LoadEvent;
 import org.violetmoon.zeta.event.bus.PlayEvent;
 import org.violetmoon.zeta.event.load.ZCommonSetup;
 import org.violetmoon.zeta.event.load.ZConfigChanged;
+import org.violetmoon.zeta.event.load.ZGatherHints;
 import org.violetmoon.zeta.event.play.entity.player.ZPlayerTick;
 import org.violetmoon.zeta.event.play.entity.player.ZRightClickBlock;
-import org.violetmoon.zeta.event.load.ZGatherHints;
 import org.violetmoon.zeta.module.ZetaLoadModule;
 import org.violetmoon.zeta.module.ZetaModule;
 import org.violetmoon.zeta.util.RegistryUtil;
@@ -70,13 +67,13 @@ public class EnhancedLaddersModule extends ZetaModule {
 
 	@LoadEvent
 	public final void setup(ZCommonSetup event) {
-		laddersTag = ItemTags.create(new ResourceLocation(Quark.MOD_ID, "ladders"));
-		laddersBlockTag = BlockTags.create(new ResourceLocation(Quark.MOD_ID, "ladders"));
+		laddersTag = Quark.asTagKey(Registries.ITEM,"ladders");
+		laddersBlockTag = Quark.asTagKey(Registries.BLOCK,"ladders");
 	}
 
 	@LoadEvent
 	public final void configChanged(ZConfigChanged event) {
-		staticEnabled = enabled;
+		staticEnabled = isEnabled();
 	}
 
 	@LoadEvent
@@ -110,7 +107,7 @@ public class EnhancedLaddersModule extends ZetaModule {
 	public static boolean canSurviveTweak(boolean vanillaSurvive, BlockState state, LevelReader world, BlockPos pos) {
 		//With the freestanding feature enabled, ladders can survive if they are supported by a block (vanillaSurvive),
 		//or if they are underneath a ladder on the same wall.
-		if(vanillaSurvive)
+		if(vanillaSurvive && !world.getBlockState(pos.relative(state.getValue(FACING).getOpposite())).is(laddersBlockTag))
 			return true;
 
 		if(!staticEnabled || !allowFreestanding || !state.is(laddersBlockTag) || !state.hasProperty(FACING))
@@ -227,5 +224,4 @@ public class EnhancedLaddersModule extends ZetaModule {
 	protected boolean isScaffolding(BlockState state, LivingEntity entity) {
 		return zeta().blockExtensions.get(state).isScaffoldingZeta(state, entity.level(), entity.blockPosition(), entity);
 	}
-
 }

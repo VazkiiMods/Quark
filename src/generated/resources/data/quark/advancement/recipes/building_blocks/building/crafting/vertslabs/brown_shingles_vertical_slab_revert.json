@@ -1,0 +1,38 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "zeta:flag",
+      "flag": "vertical_slabs"
+    }
+  ],
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "quark:building/crafting/vertslabs/brown_shingles_vertical_slab_revert"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    },
+    "obtained_vertical_slab": {
+      "conditions": {
+        "items": [
+          {
+            "items": "quark:vertical_oak_planks"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "requirements": [
+    [
+      "has_the_recipe",
+      "obtained_vertical_slab"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "quark:building/crafting/vertslabs/brown_shingles_vertical_slab_revert"
+    ]
+  }
+}

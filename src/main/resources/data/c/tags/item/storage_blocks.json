@@ -1,0 +1,24 @@
+{
+  "replace": false,
+  "values": [
+    "#c:storage_blocks/charcoal",
+    "#c:storage_blocks/sugar_cane",
+    "#c:storage_blocks/cactus",
+    "#c:storage_blocks/chorus_fruit",
+    "#c:storage_blocks/stick",
+    "#c:storage_blocks/apple",
+    "#c:storage_blocks/golden_apple",
+    "#c:storage_blocks/potato",
+    "#c:storage_blocks/carrot",
+    "#c:storage_blocks/golden_carrot",
+    "#c:storage_blocks/beetroot",
+    "#c:storage_blocks/cocoa_beans",
+    "#c:storage_blocks/nether_wart",
+    "#c:storage_blocks/gunpowder",
+    "#c:storage_blocks/sweet_berries",
+    "#c:storage_blocks/glow_berries",
+    "#c:storage_blocks/blaze_rod",
+    "#c:storage_blocks/leather",
+    "#c:storage_blocks/rabbit_hide"
+  ]
+}

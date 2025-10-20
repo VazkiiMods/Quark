@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    {
+      "item": "quark:bonded_leather"
+    }
+  ],
+  "result": {
+    "count": 9,
+    "id": "minecraft:leather"
+  }
+}

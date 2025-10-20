@@ -3,8 +3,7 @@ package org.violetmoon.quark.content.tools.entity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.protocol.Packet;
-import net.minecraft.network.protocol.game.ClientGamePacketListener;
+import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.world.entity.Entity;
@@ -14,10 +13,6 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.network.NetworkHooks;
-
-import org.jetbrains.annotations.NotNull;
-
 import org.violetmoon.quark.content.tools.module.SkullPikesModule;
 
 public class SkullPike extends Entity {
@@ -58,24 +53,11 @@ public class SkullPike extends Entity {
 	}
 
 	@Override
-	protected void defineSynchedData() {
-		// NO-OP
-	}
+	protected void defineSynchedData(SynchedEntityData.Builder builder) {}
 
 	@Override
-	protected void readAdditionalSaveData(@NotNull CompoundTag nbt) {
-		// NO-OP
-	}
+	protected void readAdditionalSaveData(CompoundTag tag) {}
 
 	@Override
-	protected void addAdditionalSaveData(@NotNull CompoundTag nbt) {
-		// NO-OP
-	}
-
-	@NotNull
-	@Override
-	public Packet<ClientGamePacketListener> getAddEntityPacket() {
-		return NetworkHooks.getEntitySpawningPacket(this);
-	}
-
+	protected void addAdditionalSaveData(CompoundTag tag) {}
 }

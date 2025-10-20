@@ -16,14 +16,14 @@ import net.minecraft.tags.BlockTags;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.WorldGenLevel;
 import net.minecraft.world.level.biome.Biome;
-import net.minecraft.world.level.block.AbstractGlassBlock;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.TransparentBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.chunk.ChunkGenerator;
 import net.minecraft.world.level.levelgen.feature.ConfiguredFeature;
 import net.minecraft.world.level.levelgen.feature.configurations.RandomPatchConfiguration;
 import net.minecraft.world.level.levelgen.placement.PlacedFeature;
-import net.minecraftforge.common.Tags;
+import net.neoforged.neoforge.common.Tags;
 
 public class FairyRingGenerator extends Generator {
 
@@ -82,7 +82,7 @@ public class FairyRingGenerator extends Generator {
 						BlockPos fpos = pos.offset(i, k, j);
 						BlockPos fposUp = fpos.above();
 						BlockState state = world.getBlockState(fpos);
-						if(state.getBlock() instanceof AbstractGlassBlock && world.isEmptyBlock(fposUp)) {
+						if(state.getBlock() instanceof TransparentBlock && world.isEmptyBlock(fposUp)) {
 							if(flowerState == null) {
 								holder.value().place(world, generator, rand, fposUp);
 								flowerState = world.getBlockState(fposUp);
@@ -97,13 +97,13 @@ public class FairyRingGenerator extends Generator {
 		BlockPos orePos = pos.below(rand.nextInt(10) + 25);
 		BlockState stoneState = world.getBlockState(orePos);
 		int down = 0;
-		while(!stoneState.is(Tags.Blocks.STONE) && down < 10) {
+		while(!stoneState.is(Tags.Blocks.STONES) && down < 10) {
 			orePos = orePos.below();
 			stoneState = world.getBlockState(orePos);
 			down++;
 		}
 
-		if(stoneState.is(Tags.Blocks.STONE)) {
+		if(stoneState.is(Tags.Blocks.STONES)) {
 			BlockState ore = FairyRingsModule.ores.get(rand.nextInt(FairyRingsModule.ores.size()));
 			world.setBlock(orePos, ore, 2);
 			for(Direction face : Direction.values())

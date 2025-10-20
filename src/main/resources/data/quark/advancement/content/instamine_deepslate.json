@@ -1,0 +1,38 @@
+{
+  "parent": "quark:overlevel_enchant",
+  "criteria": {
+    "instamine_deepslate": {
+      "trigger": "quark:instamine_deepslate"
+    }
+  },
+  "display": {
+    "announce_to_chat": true,
+    "description": {
+      "translate": "advancements.quark.instamine_deepslate.description"
+    },
+    "frame": "challenge",
+    "hidden": false,
+    "icon": {
+      "id": "minecraft:deepslate"
+    },
+    "show_toast": true,
+    "title": {
+      "translate": "advancements.quark.instamine_deepslate.title"
+    }
+  },
+  "rewards": {
+    "experience": 100
+  },
+  "requirements": [
+    [
+      "instamine_deepslate"
+    ]
+  ],
+  "neoforge:conditions": [
+    {
+      "type": "zeta:flag",
+      "flag": "deepslate_tweak"
+    }
+  ]
+
+}

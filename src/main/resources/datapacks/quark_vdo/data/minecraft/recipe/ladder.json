@@ -1,0 +1,27 @@
+{
+    "neoforge:conditions": [
+        {
+            "type": "neoforge:not",
+            "value": {
+                "type": "zeta:flag",
+                "flag": "variant_ladders"
+            }
+        }
+    ],
+    "type": "minecraft:crafting_shaped",
+    "category": "misc",
+    "key": {
+        "#": {
+            "item": "minecraft:stick"
+        }
+    },
+    "pattern": [
+        "# #",
+        "###",
+        "# #"
+    ],
+    "result": {
+        "count": 3,
+        "id": "minecraft:ladder"
+    }
+}

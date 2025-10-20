@@ -19,7 +19,7 @@ import org.violetmoon.zeta.util.Hint;
 public class RedstoneRandomizerModule extends ZetaModule {
 
 	@Hint
-	Block redstone_randomizer;
+	public static Block redstone_randomizer;
 
 	@LoadEvent
 	public final void register(ZRegister event) {

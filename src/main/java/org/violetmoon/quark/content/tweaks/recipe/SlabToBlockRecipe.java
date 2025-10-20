@@ -1,19 +1,11 @@
 package org.violetmoon.quark.content.tweaks.recipe;
 
-import net.minecraft.core.RegistryAccess;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.world.inventory.CraftingContainer;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.crafting.CraftingBookCategory;
-import net.minecraft.world.item.crafting.CraftingRecipe;
-import net.minecraft.world.item.crafting.CustomRecipe;
-import net.minecraft.world.item.crafting.RecipeSerializer;
-import net.minecraft.world.item.crafting.RecipeType;
-import net.minecraft.world.item.crafting.SimpleCraftingRecipeSerializer;
+import net.minecraft.world.item.crafting.*;
 import net.minecraft.world.level.Level;
-
 import org.violetmoon.quark.content.tweaks.module.SlabsToBlocksModule;
 
 import java.util.Optional;
@@ -23,22 +15,21 @@ public class SlabToBlockRecipe extends CustomRecipe {
 	public static final SimpleCraftingRecipeSerializer<?> SERIALIZER = new SimpleCraftingRecipeSerializer<>(SlabToBlockRecipe::new);
 	private boolean locked = false;
 
-	public SlabToBlockRecipe(ResourceLocation id, CraftingBookCategory cat) {
-		super(id, cat);
+	public SlabToBlockRecipe(CraftingBookCategory category) {
+		super(category);
 	}
 
 	@Override
-	public boolean matches(CraftingContainer container, Level level) {
-		if(locked)
-			return false;
+	public boolean matches(CraftingInput input, Level level) {
+		if(locked) return false;
 
 		Item target = null;
 
 		boolean checked = false;
 		boolean result = false;
 
-		for(int i = 0; i < container.getContainerSize(); i++) {
-			ItemStack stack = container.getItem(i);
+		for(int i = 0; i < input.size(); i++) {
+			ItemStack stack = input.getItem(i);
 			if(!stack.isEmpty()) {
 				Item item = stack.getItem();
 
@@ -46,7 +37,7 @@ public class SlabToBlockRecipe extends CustomRecipe {
 					if(checked)
 						return false;
 
-					result = item == target && checkForOtherRecipes(container, level);
+					result = item == target && checkForOtherRecipes(input, level);
 					checked = true;
 				} else {
 					if(SlabsToBlocksModule.recipes.containsKey(item)) {
@@ -61,23 +52,22 @@ public class SlabToBlockRecipe extends CustomRecipe {
 	}
 
 	// very much doubt multiple threads would ever touch this but JUST IN CASE
-	private synchronized boolean checkForOtherRecipes(CraftingContainer container, Level level) {
+	private synchronized boolean checkForOtherRecipes(CraftingInput input, Level level) {
 		locked = true;
 		boolean ret = false;
 		MinecraftServer server = level.getServer();
 		if(server != null) {
-			Optional<CraftingRecipe> optional = server.getRecipeManager().getRecipeFor(RecipeType.CRAFTING, container, level);
-			ret = !optional.isPresent();
+			Optional<RecipeHolder<CraftingRecipe>> optional = server.getRecipeManager().getRecipeFor(RecipeType.CRAFTING, input, level);
+			ret = optional.isEmpty();
 		}
-
 		locked = false;
 		return ret;
 	}
 
 	@Override
-	public ItemStack assemble(CraftingContainer container, RegistryAccess gaming) {
-		for(int i = 0; i < container.getContainerSize(); i++) {
-			ItemStack stack = container.getItem(i);
+	public ItemStack assemble(CraftingInput inv, HolderLookup.Provider provider) {
+		for(int i = 0; i < inv.size(); i++) {
+			ItemStack stack = inv.getItem(i);
 			if(!stack.isEmpty()) {
 				Item item = stack.getItem();
 
@@ -85,7 +75,6 @@ public class SlabToBlockRecipe extends CustomRecipe {
 					return new ItemStack(SlabsToBlocksModule.recipes.get(item));
 			}
 		}
-
 		return ItemStack.EMPTY;
 	}
 

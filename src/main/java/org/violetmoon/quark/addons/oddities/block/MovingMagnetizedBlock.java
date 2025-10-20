@@ -2,12 +2,12 @@ package org.violetmoon.quark.addons.oddities.block;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityTicker;
@@ -70,12 +70,13 @@ public class MovingMagnetizedBlock extends ZetaBlock implements EntityBlock {
 
 	@NotNull
 	@Override
-	public InteractionResult use(@NotNull BlockState state, Level worldIn, @NotNull BlockPos pos, @NotNull Player player, @NotNull InteractionHand handIn, @NotNull BlockHitResult hit) {
-		if(!worldIn.isClientSide && worldIn.getBlockEntity(pos) == null) {
-			worldIn.removeBlock(pos, false);
+	public InteractionResult useWithoutItem(@NotNull BlockState state, Level level, @NotNull BlockPos pos, @NotNull Player player, @NotNull BlockHitResult hit) {
+		if (!level.isClientSide && level.getBlockEntity(pos) == null) {
+			level.removeBlock(pos, false);
 			return InteractionResult.CONSUME;
-		} else
+		} else {
 			return InteractionResult.PASS;
+		}
 	}
 
 	@Override
@@ -105,8 +106,7 @@ public class MovingMagnetizedBlock extends ZetaBlock implements EntityBlock {
 	}
 
 	@Override
-	@NotNull
-	public ItemStack getCloneItemStack(@NotNull BlockGetter worldIn, @NotNull BlockPos pos, @NotNull BlockState state) {
+	public ItemStack getCloneItemStack(LevelReader level, BlockPos pos, BlockState state) {
 		return ItemStack.EMPTY;
 	}
 
@@ -128,7 +128,7 @@ public class MovingMagnetizedBlock extends ZetaBlock implements EntityBlock {
 	}
 
 	@Override
-	public boolean isPathfindable(@NotNull BlockState state, @NotNull BlockGetter worldIn, @NotNull BlockPos pos, @NotNull PathComputationType type) {
+	protected boolean isPathfindable(BlockState state, PathComputationType type) {
 		return false;
 	}
 
@@ -141,5 +141,4 @@ public class MovingMagnetizedBlock extends ZetaBlock implements EntityBlock {
 	public <T extends BlockEntity> BlockEntityTicker<T> getTicker(@NotNull Level world, @NotNull BlockState state, @NotNull BlockEntityType<T> type) {
 		return createTickerHelper(type, MagnetsModule.magnetizedBlockType, MagnetizedBlockBlockEntity::tick);
 	}
-
 }

@@ -1,6 +1,7 @@
 package org.violetmoon.quark.content.automation.block.be;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.core.NonNullList;
 import net.minecraft.core.particles.ItemParticleOption;
 import net.minecraft.core.particles.ParticleTypes;
@@ -22,7 +23,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec2;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.common.util.FakePlayer;
+import net.neoforged.neoforge.common.util.FakePlayer;
 import org.jetbrains.annotations.NotNull;
 import org.violetmoon.quark.content.automation.block.FeedingTroughBlock;
 import org.violetmoon.quark.content.automation.module.FeedingTroughModule;
@@ -30,6 +31,7 @@ import org.violetmoon.zeta.util.MiscUtil;
 
 import java.util.List;
 import java.util.Random;
+import java.util.function.Predicate;
 
 /**
  * @author WireSegal
@@ -46,7 +48,7 @@ public class FeedingTroughBlockEntity extends RandomizableContainerBlockEntity {
 		this.stacks = NonNullList.withSize(9, ItemStack.EMPTY);
 	}
 
-	public void updateFoodHolder(Animal mob, Ingredient temptations, FakePlayer foodHolder) {
+	public void updateFoodHolder(Animal mob, Predicate<ItemStack> temptations, FakePlayer foodHolder) {
 		for(int i = 0; i < getContainerSize(); i++) {
 			ItemStack stack = getItem(i);
 			if(temptations.test(stack) && mob.isFood(stack)) {
@@ -167,23 +169,20 @@ public class FeedingTroughBlockEntity extends RandomizableContainerBlockEntity {
 	}
 
 	@Override
-	public void load(@NotNull CompoundTag nbt) {
-		super.load(nbt);
-
-		this.internalRng = nbt.getLong("rng");
+	protected void loadAdditional(CompoundTag tag, HolderLookup.Provider provider) {
+		super.loadAdditional(tag, provider);
+		this.internalRng = tag.getLong("rng");
 		this.stacks = NonNullList.withSize(this.getContainerSize(), ItemStack.EMPTY);
-		if(!this.tryLoadLootTable(nbt))
-			ContainerHelper.loadAllItems(nbt, this.stacks);
-
+		if(!this.tryLoadLootTable(tag))
+			ContainerHelper.loadAllItems(tag, this.stacks, provider);
 	}
 
 	@Override
-	protected void saveAdditional(@NotNull CompoundTag nbt) {
-		super.saveAdditional(nbt);
-
-		nbt.putLong("rng", internalRng);
-		if(!this.trySaveLootTable(nbt))
-			ContainerHelper.saveAllItems(nbt, this.stacks);
+	protected void saveAdditional(CompoundTag tag, HolderLookup.Provider provider) {
+		super.saveAdditional(tag, provider);
+		tag.putLong("rng", internalRng);
+		if(!this.trySaveLootTable(tag))
+			ContainerHelper.saveAllItems(tag, this.stacks, provider);
 	}
 
 	@Override

@@ -1,9 +1,7 @@
 package org.violetmoon.quark.content.client.tooltip;
 
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.BufferBuilder;
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.blaze3d.vertex.Tesselator;
 import com.mojang.datafixers.util.Either;
 
 import net.minecraft.client.Minecraft;
@@ -12,13 +10,14 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent;
 import net.minecraft.client.renderer.GameRenderer;
-import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.FormattedText;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.inventory.tooltip.TooltipComponent;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.MapItem;
+import net.minecraft.world.level.saveddata.maps.MapId;
 import net.minecraft.world.level.saveddata.maps.MapItemSavedData;
 
 import org.jetbrains.annotations.NotNull;
@@ -30,7 +29,7 @@ import java.util.List;
 
 public class MapTooltips {
 
-	private static final ResourceLocation RES_MAP_BACKGROUND = new ResourceLocation("textures/map/map_background.png");
+	private static final ResourceLocation RES_MAP_BACKGROUND = ResourceLocation.withDefaultNamespace("textures/map/map_background.png");
 
 	public static void makeTooltip(ZGatherTooltipComponents event) {
 		ItemStack stack = event.getItemStack();
@@ -52,7 +51,7 @@ public class MapTooltips {
 			PoseStack pose = guiGraphics.pose();
 
 			MapItemSavedData mapdata = MapItem.getSavedData(stack, mc.level);
-			Integer mapID = MapItem.getMapId(stack);
+			MapId mapID = stack.get(DataComponents.MAP_ID);
 
 			if(mapdata == null)
 				return;

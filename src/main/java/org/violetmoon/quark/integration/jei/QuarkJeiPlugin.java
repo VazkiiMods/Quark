@@ -4,6 +4,8 @@ import mezz.jei.api.IModPlugin;
 import mezz.jei.api.JeiPlugin;
 import mezz.jei.api.constants.RecipeTypes;
 import mezz.jei.api.gui.handlers.IGuiContainerHandler;
+import mezz.jei.api.ingredients.subtypes.ISubtypeInterpreter;
+import mezz.jei.api.ingredients.subtypes.UidContext;
 import mezz.jei.api.recipe.IRecipeManager;
 import mezz.jei.api.recipe.RecipeType;
 import mezz.jei.api.recipe.vanilla.IJeiAnvilRecipe;
@@ -16,6 +18,8 @@ import mezz.jei.api.registration.IRecipeTransferRegistration;
 import mezz.jei.api.registration.ISubtypeRegistration;
 import mezz.jei.api.registration.IVanillaCategoryExtensionRegistration;
 import net.minecraft.client.renderer.Rect2i;
+import net.minecraft.core.Holder;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.EnchantedBookItem;
@@ -27,6 +31,7 @@ import net.minecraft.world.item.enchantment.EnchantmentInstance;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.violetmoon.quark.addons.oddities.block.be.MatrixEnchantingTableBlockEntity;
 import org.violetmoon.quark.addons.oddities.client.screen.BackpackInventoryScreen;
 import org.violetmoon.quark.addons.oddities.client.screen.CrateScreen;
@@ -50,7 +55,7 @@ import java.util.stream.Stream;
 
 @JeiPlugin
 public class QuarkJeiPlugin implements IModPlugin {
-    private static final ResourceLocation UID = new ResourceLocation(Quark.MOD_ID, Quark.MOD_ID);
+    private static final ResourceLocation UID = Quark.asResource(Quark.MOD_ID);
 
     public static final RecipeType<InfluenceEntry> INFLUENCING =
             RecipeType.create(Quark.MOD_ID, "influence", InfluenceEntry.class);
@@ -63,13 +68,23 @@ public class QuarkJeiPlugin implements IModPlugin {
 
     @Override
     public void registerItemSubtypes(@NotNull ISubtypeRegistration registration) {
-        registration.useNbtForSubtypes(AncientTomesModule.ancient_tome);
+        registration.registerSubtypeInterpreter(AncientTomesModule.ancient_tome, new ISubtypeInterpreter<ItemStack>() {
+            @Override
+            public @Nullable Object getSubtypeData(ItemStack ingredient, UidContext context) {
+                return ingredient;
+            }
+
+            @Override
+            public String getLegacyStringSubtypeInfo(ItemStack ingredient, UidContext context) {
+                return "ancient_tome";
+            }
+        });
     }
 
     @Override
     public void registerVanillaCategoryExtensions(@NotNull IVanillaCategoryExtensionRegistration registration) {
-        registration.getCraftingCategory().addCategoryExtension(ElytraDuplicationRecipe.class, ElytraDuplicationExtension::new);
-        registration.getCraftingCategory().addCategoryExtension(SlabToBlockRecipe.class, SlabToBlockExtension::new);
+        registration.getCraftingCategory().addExtension(ElytraDuplicationRecipe.class, new ElytraDuplicationExtension<>());
+        registration.getCraftingCategory().addExtension(SlabToBlockRecipe.class, new SlabToBlockExtension<>());
     }
 
     private boolean matrix() {
@@ -129,8 +144,8 @@ public class QuarkJeiPlugin implements IModPlugin {
 
     private void registerAncientTomeAnvilRecipes(@NotNull IRecipeRegistration registration, @NotNull IVanillaRecipeFactory factory) {
         List<IJeiAnvilRecipe> recipes = new ArrayList<>();
-        for (Enchantment enchant : AncientTomesModule.validEnchants) {
-            EnchantmentInstance data = new EnchantmentInstance(enchant, enchant.getMaxLevel());
+        for (Holder<Enchantment> enchant : AncientTomesModule.validEnchants) {
+            EnchantmentInstance data = new EnchantmentInstance(enchant, enchant.value().getMaxLevel());
             recipes.add(factory.createAnvilRecipe(EnchantedBookItem.createForEnchantment(data),
                     Collections.singletonList(AncientTomeItem.getEnchantedItemStack(enchant)),
                     Collections.singletonList(EnchantedBookItem.createForEnchantment(new EnchantmentInstance(data.enchantment, data.level + 1)))));
@@ -159,7 +174,7 @@ public class QuarkJeiPlugin implements IModPlugin {
         registration.addRecipes(INFLUENCING,
                 Arrays.stream(DyeColor.values()).map(color -> {
                     Block candle = MatrixEnchantingTableBlockEntity.CANDLES.get(color.getId());
-                    Influence influence = MatrixEnchantingModule.candleInfluences.get(color);
+                    Influence influence = MatrixEnchantingModule.candleInfluences.get(color).toInfluence();
 
                     return new InfluenceEntry(candle, influence);
                 }).filter(InfluenceEntry::hasAny).collect(Collectors.toList()));
@@ -167,7 +182,7 @@ public class QuarkJeiPlugin implements IModPlugin {
         registration.addRecipes(INFLUENCING,
                 MatrixEnchantingModule.customInfluences.entrySet().stream().map(entry -> {
                     Block block = entry.getKey().getBlock();
-                    Influence influence = entry.getValue().influence();
+                    Influence influence = entry.getValue().influence().toInfluence();
 
                     return new InfluenceEntry(block, influence);
                 }).filter(InfluenceEntry::hasAny).collect(Collectors.toList()));
@@ -204,7 +219,7 @@ public class QuarkJeiPlugin implements IModPlugin {
             ItemStack left = new ItemStack(item);
             ItemStack out = left.copy();
 
-            int max = Quark.ZETA.itemExtensions.get(left).getMaxDamageZeta(left);
+            int max = left.get(DataComponents.MAX_DAMAGE);
 
             left.setDamageValue(max - 1);
             out.setDamageValue(max - max / 4);

@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:blasting",
+  "ingredient": {
+    "item": "minecraft:raw_copper_block"
+  },
+  "result": {
+		"id": "minecraft:copper_block"
+},
+ "experience": 6.3,
+  "cookingtime": 900,
+  "neoforge:conditions": [
+    {
+      "type": "zeta:flag",
+      "flag": "smelt_ore_blocks"
+    }
+  ]
+}

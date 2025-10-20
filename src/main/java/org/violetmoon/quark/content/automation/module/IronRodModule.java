@@ -1,7 +1,6 @@
 package org.violetmoon.quark.content.automation.module;
 
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.tags.BlockTags;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.level.block.Block;
 
@@ -33,6 +32,6 @@ public class IronRodModule extends ZetaModule {
 
 	@LoadEvent
 	public final void setup(ZCommonSetup event) {
-		ironRodImmuneTag = BlockTags.create(new ResourceLocation(Quark.MOD_ID, "iron_rod_immune"));
+		ironRodImmuneTag = Quark.asTagKey(Registries.BLOCK,"iron_rod_immune");
 	}
 }

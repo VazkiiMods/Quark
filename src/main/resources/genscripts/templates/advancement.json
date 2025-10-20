@@ -13,7 +13,7 @@
     "frame": "%type%",
     "hidden": false,
     "icon": {
-      "item": "%item%"
+      "id": "%item%"
     },
     "show_toast": true,
     "title": {
@@ -27,7 +27,7 @@
   ],
   "conditions": [
     {
-      "type": "quark:advancement_flag",
+      "type": "zeta:flag",
       "flag": "%flag%"
     }
   ]

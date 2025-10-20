@@ -3,6 +3,7 @@ package org.violetmoon.quark.content.tweaks.client.item;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.renderer.item.ItemPropertyFunction;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtUtils;
 import net.minecraft.resources.ResourceKey;
@@ -13,17 +14,16 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.decoration.ItemFrame;
 import net.minecraft.world.item.CompassItem;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.component.LodestoneTracker;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.dimension.LevelStem;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-
+import org.violetmoon.quark.base.components.QuarkDataComponents;
 import org.violetmoon.quark.content.tweaks.module.CompassesWorkEverywhereModule;
-import org.violetmoon.zeta.util.ItemNBTHelper;
 
 import java.util.Optional;
 
@@ -39,7 +39,7 @@ public class CompassAnglePropertyFunction implements ItemPropertyFunction {
 		if(entityIn == null && !stack.isFramed())
 			return 0F;
 
-		if(CompassesWorkEverywhereModule.enableCompassNerf && (!stack.hasTag() || !ItemNBTHelper.getBoolean(stack, CompassesWorkEverywhereModule.TAG_COMPASS_CALCULATED, false)))
+		if(CompassesWorkEverywhereModule.enableCompassNerf && (!Boolean.TRUE.equals(stack.get(QuarkDataComponents.IS_COMPASS_CALCULATED))))
 			return 0F;
 
 		boolean carried = entityIn != null;
@@ -57,20 +57,20 @@ public class CompassAnglePropertyFunction implements ItemPropertyFunction {
 		BlockPos target = new BlockPos(0, 0, 0);
 
 		ResourceLocation dimension = worldIn.dimension().location();
-		boolean isLodestone = CompassItem.isLodestoneCompass(stack);
-		BlockPos lodestonePos = isLodestone ? this.getLodestonePosition(worldIn, stack.getOrCreateTag()) : null;
+		boolean isLodestone = stack.has(DataComponents.LODESTONE_TRACKER);
+		BlockPos lodestonePos = isLodestone ? this.getLodestonePosition(worldIn, stack.get(DataComponents.LODESTONE_TRACKER)) : null;
 
 		if(lodestonePos != null) {
 			calculate = true;
 			target = lodestonePos;
-		} else if(!isLodestone) {
+		} else if (!isLodestone) {
 			if(dimension.equals(LevelStem.END.location()) && CompassesWorkEverywhereModule.enableEnd)
 				calculate = true;
 			else if(dimension.equals(LevelStem.NETHER.location()) && CompassesWorkEverywhereModule.isCompassCalculated(stack) && CompassesWorkEverywhereModule.enableNether) {
-				boolean set = ItemNBTHelper.getBoolean(stack, CompassesWorkEverywhereModule.TAG_POSITION_SET, false);
+				boolean set = Boolean.TRUE.equals(stack.get(QuarkDataComponents.IS_POS_SET));
 				if(set) {
-					int x = ItemNBTHelper.getInt(stack, CompassesWorkEverywhereModule.TAG_NETHER_TARGET_X, 0);
-					int z = ItemNBTHelper.getInt(stack, CompassesWorkEverywhereModule.TAG_NETHER_TARGET_Z, 0);
+					int x = stack.get(QuarkDataComponents.NETHER_TARGET_X);
+					int z = stack.get(QuarkDataComponents.NETHER_TARGET_Z);
 					calculate = true;
 					target = new BlockPos(x, 0, z);
 				}
@@ -119,13 +119,12 @@ public class CompassAnglePropertyFunction implements ItemPropertyFunction {
 	// vanilla copy from here on out
 
 	@Nullable
-	private BlockPos getLodestonePosition(Level world, CompoundTag tag) {
-		boolean flag = tag.contains("LodestonePos");
-		boolean flag1 = tag.contains("LodestoneDimension");
-		if(flag && flag1) {
-			Optional<ResourceKey<Level>> optional = CompassItem.getLodestoneDimension(tag);
-			if(optional.isPresent() && world.dimension().equals(optional.get())) {
-				return NbtUtils.readBlockPos(tag.getCompound("LodestonePos"));
+	private BlockPos getLodestonePosition(Level world, LodestoneTracker tracker) {
+		boolean flag = tracker.target().isPresent();
+		if(flag) {
+			ResourceKey<Level> dim = tracker.target().get().dimension();
+			if(world.dimension().equals(dim)) {
+				return tracker.target().get().pos();
 			}
 		}
 

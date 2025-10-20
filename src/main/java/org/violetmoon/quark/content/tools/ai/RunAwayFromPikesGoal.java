@@ -9,9 +9,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.pathfinder.Path;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
-
 import org.jetbrains.annotations.Nullable;
-
 import org.violetmoon.quark.content.tools.entity.SkullPike;
 
 import java.util.EnumSet;
@@ -38,7 +36,7 @@ public class RunAwayFromPikesGoal extends Goal {
 
 	@Override
 	public boolean canUse() {
-		avoidTarget = getClosestEntity(entity.level(), entity, entity.getX(), entity.getY(), entity.getZ(), entity.getBoundingBox().inflate(avoidDistance, 3.0D, avoidDistance));
+		avoidTarget = getClosestPike(entity.level(), entity, entity.getX(), entity.getY(), entity.getZ(), entity.getBoundingBox().inflate(avoidDistance, 3.0D, avoidDistance));
 		if(avoidTarget == null)
 			return false;
 
@@ -54,27 +52,19 @@ public class RunAwayFromPikesGoal extends Goal {
 	}
 
 	@Nullable
-	private SkullPike getClosestEntity(Level world, LivingEntity living, double x, double y, double z, AABB bounds) {
-		return getClosestEntity(world.getEntitiesOfClass(SkullPike.class, bounds, skullPike -> true), living, x, y, z);
-	}
+	private SkullPike getClosestPike(Level level, LivingEntity living, double x, double y, double z, AABB bounds) {
+		List<SkullPike> pikes = level.getEntitiesOfClass(SkullPike.class, bounds, skullPike -> skullPike.isVisible(living) && skullPike.distanceTo(living) <= avoidDistance);
+		double distance = avoidDistance;
+		SkullPike pike = null;
 
-	@Nullable
-	private SkullPike getClosestEntity(List<SkullPike> entities, LivingEntity target, double x, double y, double z) {
-		double d0 = -1.0D;
-		SkullPike t = null;
-
-		for(SkullPike t1 : entities) {
-			if(!t1.isVisible(target))
-				continue;
-
-			double d1 = t1.distanceToSqr(x, y, z);
-			if(d0 == -1.0D || d1 < d0) {
-				d0 = d1;
-				t = t1;
+		for(SkullPike current : pikes) {
+			double compareDistance = current.distanceTo(living);
+			if (compareDistance < distance) {
+				distance = compareDistance;
+				pike = current;
 			}
 		}
-
-		return t;
+		return pike;
 	}
 
 	@Override
@@ -99,6 +89,5 @@ public class RunAwayFromPikesGoal extends Goal {
 		} else {
 			this.entity.getNavigation().setSpeedModifier(this.farSpeed);
 		}
-
 	}
 }

@@ -33,7 +33,7 @@ public class GlowLichenGrowthBlock extends ZetaBushBlock implements Bonemealable
 
 	public GlowLichenGrowthBlock(@Nullable ZetaModule module) {
 		super("glow_lichen_growth", module, CreativeModeTabs.NATURAL_BLOCKS,
-				Properties.copy(Blocks.GLOW_LICHEN)
+				Properties.ofFullCopy(Blocks.GLOW_LICHEN)
 						.randomTicks()
 						.lightLevel(s -> 8));
 	}
@@ -70,10 +70,9 @@ public class GlowLichenGrowthBlock extends ZetaBushBlock implements Bonemealable
 	}
 
 	@Override
-	public boolean isValidBonemealTarget(@NotNull LevelReader levelReader, @NotNull BlockPos blockPos,
-			@NotNull BlockState blockState, boolean isClientSided) {
+	public boolean isValidBonemealTarget(LevelReader reader, BlockPos pos, BlockState state) {
 		for(Direction dir : MiscUtil.HORIZONTALS)
-			if(canSpread(levelReader, blockPos.relative(dir)))
+			if(canSpread(reader, pos.relative(dir)))
 				return true;
 
 		return false;

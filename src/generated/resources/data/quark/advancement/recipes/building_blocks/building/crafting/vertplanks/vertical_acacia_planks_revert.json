@@ -1,0 +1,38 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "zeta:flag",
+      "flag": "vertical_planks"
+    }
+  ],
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "quark:building/crafting/vertplanks/vertical_acacia_planks_revert"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    },
+    "obtained_vertical_planks": {
+      "conditions": {
+        "items": [
+          {
+            "items": "quark:vertical_acacia_planks"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "requirements": [
+    [
+      "has_the_recipe",
+      "obtained_vertical_planks"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "quark:building/crafting/vertplanks/vertical_acacia_planks_revert"
+    ]
+  }
+}

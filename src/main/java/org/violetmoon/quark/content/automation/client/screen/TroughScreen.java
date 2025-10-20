@@ -7,7 +7,6 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.DispenserMenu;
 import org.violetmoon.quark.base.Quark;
-import org.violetmoon.quark.base.handler.ContributorRewardHandler;
 
 public class TroughScreen extends DispenserScreen {
 

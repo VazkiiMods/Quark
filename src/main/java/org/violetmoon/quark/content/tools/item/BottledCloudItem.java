@@ -2,7 +2,6 @@ package org.violetmoon.quark.content.tools.item;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResult;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.CreativeModeTabs;
@@ -28,7 +27,7 @@ public class BottledCloudItem extends ZetaItem {
 
 	public BottledCloudItem(ZetaModule module) {
 		super("bottled_cloud", module, new Item.Properties());
-		CreativeTabManager.addToCreativeTabNextTo(CreativeModeTabs.TOOLS_AND_UTILITIES, this, Items.MILK_BUCKET, false);
+		CreativeTabManager.addNextToItem(CreativeModeTabs.TOOLS_AND_UTILITIES, this, Items.MILK_BUCKET, false);
 	}
 
 	@NotNull
@@ -42,16 +41,15 @@ public class BottledCloudItem extends ZetaItem {
 			if(!world.isEmptyBlock(pos))
 				pos = pos.relative(bresult.getDirection());
 
-			if(world.isEmptyBlock(pos) && Quark.FLAN_INTEGRATION.canPlace(player, pos)) {
+			if(world.isEmptyBlock(pos) /*&& Quark.FLAN_INTEGRATION.canPlace(player, pos)*/) { // TODO: Wait for Neoforge Flan or remove
 
 				if(!world.isClientSide) {
 					world.gameEvent(player, GameEvent.BLOCK_PLACE, pos);
 					world.setBlockAndUpdate(pos, BottledCloudModule.cloud.defaultBlockState());
 				}
 
-				stack.shrink(1);
-
 				if(!player.getAbilities().instabuild) {
+					stack.shrink(1);
 					ItemStack returnStack = new ItemStack(Items.GLASS_BOTTLE);
 					if(stack.isEmpty())
 						stack = returnStack;

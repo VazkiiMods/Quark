@@ -1,0 +1,33 @@
+{
+    "replace": false,
+    "values": [
+        "quark:oak_chest",
+        "quark:spruce_chest",
+        "quark:birch_chest",
+        "quark:jungle_chest",
+        "quark:acacia_chest",
+        "quark:dark_oak_chest",
+        "quark:warped_chest",
+        "quark:crimson_chest",
+        "quark:azalea_chest",
+        "quark:blossom_chest",
+        "quark:mangrove_chest",
+        "quark:ancient_chest",
+        "quark:cherry_chest",
+        "quark:bamboo_chest",
+        "quark:trapped_oak_chest",
+        "quark:trapped_spruce_chest",
+        "quark:trapped_birch_chest",
+        "quark:trapped_jungle_chest",
+        "quark:trapped_acacia_chest",
+        "quark:trapped_dark_oak_chest",
+        "quark:trapped_warped_chest",
+        "quark:trapped_crimson_chest",
+        "quark:trapped_azalea_chest",
+        "quark:trapped_blossom_chest",
+        "quark:trapped_mangrove_chest",
+        "quark:trapped_ancient_chest",
+        "quark:trapped_cherry_chest",
+        "quark:trapped_bamboo_chest"
+    ]
+}

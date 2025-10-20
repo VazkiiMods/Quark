@@ -1,8 +1,8 @@
 package org.violetmoon.quark.content.building.module;
 
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.BlockSource;
 import net.minecraft.core.Direction;
+import net.minecraft.core.dispenser.BlockSource;
 import net.minecraft.core.dispenser.OptionalDispenseItemBehavior;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.item.ItemStack;
@@ -12,7 +12,6 @@ import net.minecraft.world.level.block.DispenserBlock;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.MapColor;
-
 import org.jetbrains.annotations.NotNull;
 import org.violetmoon.quark.content.building.block.RopeBlock;
 import org.violetmoon.zeta.config.Config;
@@ -58,9 +57,9 @@ public class RopeModule extends ZetaModule {
 		@NotNull
 		@Override
 		protected ItemStack execute(BlockSource source, @NotNull ItemStack stack) {
-			Direction facing = source.getBlockState().getValue(DispenserBlock.FACING);
-			BlockPos pos = source.getPos().relative(facing);
-			Level world = source.getLevel();
+			Direction facing = source.state().getValue(DispenserBlock.FACING);
+			BlockPos pos = source.pos().relative(facing);
+			Level world = source.level();
 			setSuccess(false);
 
 			BlockState state = world.getBlockState(pos);
@@ -76,13 +75,9 @@ public class RopeModule extends ZetaModule {
 				world.playSound(null, pos, soundtype.getPlaceSound(), SoundSource.BLOCKS, (soundtype.getVolume() + 1.0F) / 2.0F, soundtype.getPitch() * 0.8F);
 				setSuccess(true);
 				stack.shrink(1);
-
 				return stack;
 			}
-
 			return stack;
 		}
-
 	}
-
 }

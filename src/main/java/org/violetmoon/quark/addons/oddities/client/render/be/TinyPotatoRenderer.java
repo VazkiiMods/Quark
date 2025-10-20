@@ -13,8 +13,10 @@ import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.client.renderer.entity.ItemRenderer;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.client.resources.model.ModelManager;
+import net.minecraft.client.resources.model.ModelResourceLocation;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.BlockItem;
@@ -27,11 +29,13 @@ import org.jetbrains.annotations.NotNull;
 import org.violetmoon.quark.addons.oddities.block.be.TinyPotatoBlockEntity;
 import org.violetmoon.quark.addons.oddities.module.TinyPotatoModule;
 import org.violetmoon.quark.addons.oddities.util.TinyPotatoInfo;
+import org.violetmoon.quark.base.Quark;
 import org.violetmoon.quark.content.tools.base.RuneColor;
 import org.violetmoon.quark.content.tools.module.ColorRunesModule;
 import org.violetmoon.quark.mixin.mixins.client.accessor.AccessorModelManager;
 
 import java.util.Calendar;
+import java.util.Locale;
 import java.util.Map;
 import java.util.regex.Pattern;
 
@@ -59,56 +63,56 @@ public class TinyPotatoRenderer implements BlockEntityRenderer<TinyPotatoBlockEn
 
 	private static BakedModel getModel(String name, boolean angry) {
 		ModelManager bmm = Minecraft.getInstance().getModelManager();
-		Map<ResourceLocation, BakedModel> mm = ((AccessorModelManager) bmm).getBakedRegistry();
+		Map<ModelResourceLocation, BakedModel> mm = ((AccessorModelManager) bmm).getBakedRegistry();
 		BakedModel missing = bmm.getMissingModel();
-		ResourceLocation location = taterLocation(name);
+		ModelResourceLocation location = ModelResourceLocation.standalone(taterLocation(name));
 		BakedModel model = mm.get(location);
 		if(model == null) {
 			if(isTheSpookDay()) {
-				return mm.getOrDefault(taterLocation(HALLOWEEN), missing);
+				return mm.getOrDefault(ModelResourceLocation.standalone(taterLocation(HALLOWEEN)), missing);
 			} else if(angry) {
-				return mm.getOrDefault(taterLocation(ANGRY), missing);
+				return mm.getOrDefault(ModelResourceLocation.standalone(taterLocation(ANGRY)), missing);
 			} else {
-				return mm.getOrDefault(taterLocation(DEFAULT), missing);
+				return mm.getOrDefault(ModelResourceLocation.standalone(taterLocation(DEFAULT)), missing);
 			}
 		}
 		return model;
 	}
 
 	private static ResourceLocation taterLocation(String name) {
-		return new ResourceLocation("quark", "tiny_potato/" + normalizeName(name));
+		return Quark.asResource("tiny_potato/" + normalizeName(name));
 	}
 
 	private static String normalizeName(String name) {
-		return ESCAPED.matcher(name).replaceAll("_");
+		return ESCAPED.matcher(name).replaceAll("_").toLowerCase(Locale.ROOT);
 	}
 
 	@Override
-	public void render(@NotNull TinyPotatoBlockEntity potato, float partialTicks, @NotNull PoseStack ms, @NotNull MultiBufferSource buffers, int light, int overlay) {
-		ms.pushPose();
+	public void render(@NotNull TinyPotatoBlockEntity potato, float partialTicks, @NotNull PoseStack poseStack, @NotNull MultiBufferSource buffers, int light, int overlay) {
+		poseStack.pushPose();
 
 		TinyPotatoInfo info = TinyPotatoInfo.fromComponent(potato.name);
 		RenderType layer = Sheets.translucentCullBlockSheet();
 		BakedModel model = getModel(info.name(), potato.angry);
 
-		ms.translate(0.5F, 0F, 0.5F);
+		poseStack.translate(0.5F, 0F, 0.5F);
 		Direction potatoFacing = potato.getBlockState().getValue(BlockStateProperties.HORIZONTAL_FACING);
 		float rotY = 0;
-		switch(potatoFacing) {
-		default:
-		case SOUTH:
-			rotY = 180F;
-			break;
-		case NORTH:
-			break;
-		case EAST:
-			rotY = 90F;
-			break;
-		case WEST:
-			rotY = 270F;
-			break;
+		switch (potatoFacing) {
+			default:
+			case SOUTH:
+				rotY = 180F;
+				break;
+			case NORTH:
+				break;
+			case EAST:
+				rotY = 90F;
+				break;
+			case WEST:
+				rotY = 270F;
+				break;
 		}
-		ms.mulPose(com.mojang.math.Axis.YN.rotationDegrees(rotY));
+		poseStack.mulPose(com.mojang.math.Axis.YN.rotationDegrees(rotY));
 
 		float jump = potato.jumpTicks;
 		if(jump > 0) {
@@ -119,34 +123,34 @@ public class TinyPotatoRenderer implements BlockEntityRenderer<TinyPotatoBlockEn
 		float rotZ = (float) Math.sin(jump / 10 * Math.PI) * 2;
 		float wiggle = (float) Math.sin(jump / 10 * Math.PI) * 0.05F;
 
-		ms.translate(wiggle, up, 0F);
-		ms.mulPose(com.mojang.math.Axis.ZP.rotationDegrees(rotZ));
+		poseStack.translate(wiggle, up, 0F);
+		poseStack.mulPose(com.mojang.math.Axis.ZP.rotationDegrees(rotZ));
 
 		boolean render = !(info.name().equals("mami") || info.name().equals("soaryn") || info.name().equals("eloraam") && jump != 0);
 		if(render) {
-			ms.pushPose();
-			ms.translate(-0.5F, 0, -0.5F);
+			poseStack.pushPose();
+			poseStack.translate(-0.5F, 0, -0.5F);
 			RuneColor runeColor = info.runeColor();
 			if(runeColor != null)
 				ColorRunesModule.setTargetColor(runeColor);
 
 			VertexConsumer buffer = ItemRenderer.getFoilBuffer(buffers, layer, true, info.enchanted());
 
-			renderModel(ms, buffer, light, overlay, model);
-			ms.popPose();
+			renderModel(poseStack, buffer, light, overlay, model);
+			poseStack.popPose();
 		}
 
-		ms.translate(0F, 1.5F, 0F);
-		ms.pushPose();
-		ms.mulPose(com.mojang.math.Axis.ZP.rotationDegrees(180F));
-		renderItems(potato, potatoFacing, ms, buffers, light, overlay);
-		ms.popPose();
+		poseStack.translate(0F, 1.5F, 0F);
+		poseStack.pushPose();
+		poseStack.mulPose(com.mojang.math.Axis.ZP.rotationDegrees(180F));
+		renderItems(potato, potatoFacing, poseStack, buffers, light, overlay);
+		poseStack.popPose();
 
-		ms.mulPose(com.mojang.math.Axis.ZP.rotationDegrees(-rotZ));
-		ms.mulPose(com.mojang.math.Axis.YN.rotationDegrees(-rotY));
+		poseStack.mulPose(com.mojang.math.Axis.ZP.rotationDegrees(-rotZ));
+		poseStack.mulPose(com.mojang.math.Axis.YN.rotationDegrees(-rotY));
 
-		renderName(potato, info.name(), ms, buffers, light);
-		ms.popPose();
+		renderName(potato, info.name(), poseStack, buffers, light);
+		poseStack.popPose();
 	}
 
 	private void renderName(TinyPotatoBlockEntity potato, String name, PoseStack ms, MultiBufferSource buffers, int light) {
@@ -249,7 +253,7 @@ public class TinyPotatoRenderer implements BlockEntityRenderer<TinyPotatoBlockEn
 			case WEST -> {
 				if(mySon) {
 					ms.translate(0.95F, -0.29F, 0.9F);
-					if(stack.hasCustomHoverName()) {
+					if(stack.getComponents().has(DataComponents.CUSTOM_NAME)) {
 						TinyPotatoInfo info = TinyPotatoInfo.fromComponent(stack.getHoverName());
 						if(info.name().equals("kingdaddydmac")) {
 							ms.translate(0.55F, 0, 0);

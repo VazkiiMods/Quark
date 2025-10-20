@@ -4,75 +4,71 @@ import com.mojang.blaze3d.platform.Window;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.datafixers.util.Either;
-
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent;
+import net.minecraft.client.multiplayer.ClientPacketListener;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.FormattedText;
+import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.network.chat.contents.TranslatableContents;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.inventory.tooltip.TooltipComponent;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.component.ItemContainerContents;
 import net.minecraft.world.level.block.ShulkerBoxBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.RandomizableContainerBlockEntity;
-import net.minecraftforge.common.capabilities.ForgeCapabilities;
-import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.items.IItemHandler;
-
+import net.neoforged.neoforge.items.IItemHandler;
 import org.jetbrains.annotations.NotNull;
-
 import org.violetmoon.quark.base.Quark;
 import org.violetmoon.quark.base.handler.SimilarBlockTypeHandler;
 import org.violetmoon.quark.content.client.module.ChestSearchingModule;
 import org.violetmoon.quark.content.client.module.ImprovedTooltipsModule;
 import org.violetmoon.zeta.client.event.play.ZGatherTooltipComponents;
-import org.violetmoon.zeta.util.ItemNBTHelper;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Optional;
 
 public class ShulkerBoxTooltips {
 
-	public static final ResourceLocation WIDGET_RESOURCE = new ResourceLocation("quark", "textures/misc/shulker_widget.png");
+	public static final ResourceLocation WIDGET_RESOURCE = Quark.asResource("textures/misc/shulker_widget.png");
 
 	public static void makeTooltip(ZGatherTooltipComponents event) {
 		ItemStack stack = event.getItemStack();
-		if(SimilarBlockTypeHandler.isShulkerBox(stack)) {
-			CompoundTag cmp = ItemNBTHelper.getCompound(stack, "BlockEntityTag", false);
-
-			if(cmp.contains("LootTable"))
+		if(SimilarBlockTypeHandler.isShulkerBox(stack) && stack.has(DataComponents.CONTAINER)) {
+			ItemContainerContents contents = stack.get(DataComponents.CONTAINER);
+			if (contents.nonEmptyStream().toList().isEmpty()) {
 				return;
-
-			if(!cmp.contains("id"))
-				return;
-
-			BlockEntity te = BlockEntity.loadStatic(BlockPos.ZERO, ((BlockItem) stack.getItem()).getBlock().defaultBlockState(), cmp);
-			if(te != null && te.getCapability(ForgeCapabilities.ITEM_HANDLER).isPresent()) {
-				List<Either<FormattedText, TooltipComponent>> tooltip = event.getTooltipElements();
-				List<Either<FormattedText, TooltipComponent>> tooltipCopy = new ArrayList<>(tooltip);
-
-				for(int i = 1; i < tooltipCopy.size(); i++) {
-					Either<FormattedText, TooltipComponent> either = tooltipCopy.get(i);
-					if(either.left().isPresent()) {
-						String s = either.left().get().getString();
-						if(!s.startsWith("\u00a7") || s.startsWith("\u00a7o"))
-							tooltip.remove(either);
-					}
-				}
-
-				if(!ImprovedTooltipsModule.shulkerBoxRequireShift || Screen.hasShiftDown())
-					tooltip.add(1, Either.right(new ShulkerComponent(stack)));
-				if(ImprovedTooltipsModule.shulkerBoxRequireShift && !Screen.hasShiftDown())
-					tooltip.add(1, Either.left(Component.translatable("quark.misc.shulker_box_shift")));
 			}
+
+			ClientPacketListener listener = Minecraft.getInstance().getConnection();
+			List<Either<FormattedText, TooltipComponent>> tooltip = event.getTooltipElements();
+			List<Either<FormattedText, TooltipComponent>> tooltipCopy = new ArrayList<>(tooltip);
+
+			for(int i = 1; i < tooltipCopy.size(); i++) {
+				Either<FormattedText, TooltipComponent> either = tooltipCopy.get(i);
+				if(either.left().isPresent() && either.left().get() instanceof MutableComponent component) {
+					String s = either.left().get().getString();
+					if (component.getContents() instanceof TranslatableContents translatableContents && translatableContents.getKey().contains("container.shulkerBox"))
+						tooltip.remove(either);
+				}
+			}
+
+			if(!ImprovedTooltipsModule.shulkerBoxRequireShift || Screen.hasShiftDown())
+				tooltip.add(1, Either.right(new ShulkerComponent(stack)));
+			if(ImprovedTooltipsModule.shulkerBoxRequireShift && !Screen.hasShiftDown())
+				tooltip.add(1, Either.left(Component.translatable("quark.misc.shulker_box_shift")));
 		}
 	}
 
@@ -98,78 +94,60 @@ public class ShulkerBoxTooltips {
 
 			PoseStack pose = guiGraphics.pose();
 
-			CompoundTag cmp = ItemNBTHelper.getCompound(stack, "BlockEntityTag", true);
-			if(cmp != null) {
-				if(cmp.contains("LootTable"))
-					return;
+			if(stack.has(DataComponents.CONTAINER)) {
+				ItemContainerContents contents = stack.get(DataComponents.CONTAINER);
 
-				if(!cmp.contains("id")) {
-					cmp = cmp.copy();
-					cmp.putString("id", "minecraft:shulker_box");
+				ItemStack currentBox = stack;
+				int currentX = tooltipX;
+				int currentY = tooltipY - 1;
+
+                int size = Math.toIntExact(contents.nonEmptyStream().count());
+				int[] dims = {Math.min(size, 9), 1 + (size-1) / 9};
+				for (int[] testAgainst : TARGET_RATIOS) {
+					if (testAgainst[0] * testAgainst[1] == size) {
+						dims = testAgainst;
+						break;
+					}
 				}
-				BlockEntity te = BlockEntity.loadStatic(BlockPos.ZERO, ((BlockItem) stack.getItem()).getBlock().defaultBlockState(), cmp);
-				if(te != null) {
-					if(te instanceof RandomizableContainerBlockEntity randomizable)
-						randomizable.setLootTable(null, 0);
 
-					LazyOptional<IItemHandler> handler = te.getCapability(ForgeCapabilities.ITEM_HANDLER, null);
-					handler.ifPresent((capability) -> {
-						ItemStack currentBox = stack;
-						int currentX = tooltipX;
-						int currentY = tooltipY - 1;
+				int texWidth = CORNER * 2 + EDGE * dims[0];
+				int right = currentX + texWidth;
+				Window window = mc.getWindow();
+				if (right > window.getGuiScaledWidth())
+					currentX -= (right - window.getGuiScaledWidth());
 
-						int size = capability.getSlots();
-						int[] dims = { Math.min(size, 9), Math.max(size / 9, 1) };
-						for(int[] testAgainst : TARGET_RATIOS) {
-							if(testAgainst[0] * testAgainst[1] == size) {
-								dims = testAgainst;
-								break;
-							}
-						}
+				pose.pushPose();
+				pose.translate(0, 0, 700);
 
-						int texWidth = CORNER * 2 + EDGE * dims[0];
-						int right = currentX + texWidth;
-						Window window = mc.getWindow();
-						if(right > window.getGuiScaledWidth())
-							currentX -= (right - window.getGuiScaledWidth());
+				int color = -1;
 
-						pose.pushPose();
-						pose.translate(0, 0, 700);
-
-						int color = -1;
-
-						if(ImprovedTooltipsModule.shulkerBoxUseColors && ((BlockItem) currentBox.getItem()).getBlock() instanceof ShulkerBoxBlock boxBlock) {
-							DyeColor dye = boxBlock.getColor();
-							if(dye != null) {
-								float[] colorComponents = dye.getTextureDiffuseColors();
-								color = ((int) (colorComponents[0] * 255) << 16) |
-										((int) (colorComponents[1] * 255) << 8) |
-										(int) (colorComponents[2] * 255);
-							}
-						}
-
-						renderTooltipBackground(guiGraphics, mc, pose, currentX, currentY, dims[0], dims[1], color);
-
-						for(int i = 0; i < size; i++) {
-							ItemStack itemstack = capability.getStackInSlot(i);
-							int xp = currentX + 6 + (i % 9) * 18;
-							int yp = currentY + 6 + (i / 9) * 18;
-
-							if(!itemstack.isEmpty()) {
-								guiGraphics.renderItem(itemstack, xp, yp);
-								guiGraphics.renderItemDecorations(mc.font, itemstack, xp, yp);
-							}
-
-							if(!Quark.ZETA.modules.get(ChestSearchingModule.class).namesMatch(itemstack)) {
-								RenderSystem.disableDepthTest();
-								guiGraphics.fill(xp, yp, xp + 16, yp + 16, 0xAA000000);
-							}
-						}
-
-						pose.popPose();
-					});
-
+				if (ImprovedTooltipsModule.shulkerBoxUseColors && ((BlockItem) currentBox.getItem()).getBlock() instanceof ShulkerBoxBlock boxBlock) {
+					DyeColor dye = boxBlock.getColor();
+					if (dye != null) {
+						color = dye.getTextureDiffuseColor();
+					}
 				}
+
+				renderTooltipBackground(guiGraphics, mc, pose, currentX, currentY, dims[0], dims[1], color);
+
+                Iterator<ItemStack> stackIterator = contents.nonEmptyItems().iterator();
+				for (int i = 0; i < size; i++) {
+					ItemStack itemstack = stackIterator.next();
+
+					int xp = currentX + 6 + ((i) % 9) * 18;
+					int yp = currentY + 6 + ((i) / 9) * 18;
+
+					guiGraphics.renderItem(itemstack, xp, yp);
+					guiGraphics.renderItemDecorations(mc.font, itemstack, xp, yp);
+
+					if (!Quark.ZETA.modules.get(ChestSearchingModule.class).namesMatch(itemstack)) {
+						RenderSystem.disableDepthTest();
+						guiGraphics.fill(xp, yp, xp + 16, yp + 16, 0xAA000000);
+                        RenderSystem.enableDepthTest();
+					}
+				}
+
+				pose.popPose();
 			}
 		}
 
@@ -219,12 +197,23 @@ public class ShulkerBoxTooltips {
 
 		@Override
 		public int getHeight() {
-			return 65;
+			if (stack.isEmpty() || !stack.has(DataComponents.CONTAINER))
+				return 0;
+			else {
+				ItemContainerContents contents = stack.get(DataComponents.CONTAINER);
+				return 11 + (1 + (Math.toIntExact((contents.nonEmptyStream().count())) - 1) / 9) * 18;
+			}
 		}
 
+		//171 max
 		@Override
 		public int getWidth(@NotNull Font font) {
-			return 171;
+			if (stack.isEmpty() || !stack.has(DataComponents.CONTAINER))
+				return 0;
+			else {
+				ItemContainerContents contents = stack.get(DataComponents.CONTAINER);
+				return 9 + Math.min(Math.toIntExact(contents.nonEmptyStream().count()), 9) * 18;
+			}
 		}
 	}
 

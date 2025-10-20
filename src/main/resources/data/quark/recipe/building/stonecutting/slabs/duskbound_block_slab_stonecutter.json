@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:stonecutting",
+  "ingredient": {
+    "item": "quark:duskbound_block"
+  },
+  "result": {
+		"id": "quark:duskbound_block_slab",
+      "count": 2
+},
+  "neoforge:conditions": [
+    {
+      "type": "zeta:flag",
+      "flag": "duskbound_blocks"
+    }
+  ]
+}

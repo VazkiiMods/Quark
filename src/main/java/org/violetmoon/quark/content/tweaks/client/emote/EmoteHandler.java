@@ -154,18 +154,13 @@ public final class EmoteHandler {
 		Minecraft mc = Minecraft.getInstance();
 		EntityRenderDispatcher manager = mc.getEntityRenderDispatcher();
 
-		EntityRenderer<? extends Player> render = manager.getSkinMap().get(player.getModelName());
-		if(render instanceof PlayerRenderer playerRenderer)
-			return playerRenderer;
-		return null;
+		EntityRenderer<? extends Player> render = manager.getSkinMap().get(player.getSkin().model());
+		return (render instanceof PlayerRenderer playerRenderer) ? playerRenderer : null;
 	}
 
 	private static HumanoidModel<?> getPlayerModel(AbstractClientPlayer player) {
 		PlayerRenderer render = getRenderPlayer(player);
-		if(render != null)
-			return render.getModel();
-
-		return null;
+		return (render != null) ? render.getModel() : null;
 	}
 
 	private static HumanoidModel<?> getPlayerArmorModel(AbstractClientPlayer player) {
@@ -178,11 +173,9 @@ public final class EmoteHandler {
 
 	private static HumanoidModel<?> getPlayerArmorModelForSlot(AbstractClientPlayer player, EquipmentSlot slot) {
 		PlayerRenderer render = getRenderPlayer(player);
-		if(render == null)
-			return null;
+		if(render == null) return null;
 
-		List<RenderLayer<AbstractClientPlayer,
-				PlayerModel<AbstractClientPlayer>>> list = render.layers;
+		List<RenderLayer<AbstractClientPlayer, PlayerModel<AbstractClientPlayer>>> list = render.layers;
 		for(RenderLayer<?, ?> r : list) {
 			if(r instanceof HumanoidArmorLayer)
 				return ((HumanoidArmorLayer<?, ?, ?>) r).getArmorModel(slot);

@@ -1,10 +1,19 @@
 package org.violetmoon.quark.content.building.module;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Locale;
-import java.util.Optional;
-
+import com.google.common.collect.ImmutableSet;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.tags.TagKey;
+import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.PipeBlock;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.properties.BooleanProperty;
+import net.minecraft.world.level.block.state.properties.EnumProperty;
+import net.minecraft.world.level.block.state.properties.Property;
+import net.neoforged.neoforge.common.ItemAbilities;
 import org.apache.commons.lang3.tuple.Pair;
 import org.violetmoon.quark.base.Quark;
 import org.violetmoon.quark.content.building.block.QuarkVerticalSlabBlock;
@@ -16,27 +25,14 @@ import org.violetmoon.zeta.event.load.ZConfigChanged;
 import org.violetmoon.zeta.event.load.ZRegister;
 import org.violetmoon.zeta.module.ZetaLoadModule;
 import org.violetmoon.zeta.module.ZetaModule;
+import org.violetmoon.zeta.registry.CreativeTabManager;
 import org.violetmoon.zeta.util.handler.ToolInteractionHandler;
 
-import com.google.common.collect.ImmutableSet;
-
-import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.tags.BlockTags;
-import net.minecraft.tags.TagKey;
-import net.minecraft.world.level.LevelAccessor;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.PipeBlock;
-import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.block.state.properties.BooleanProperty;
-import net.minecraft.world.level.block.state.properties.EnumProperty;
-import net.minecraft.world.level.block.state.properties.Property;
-import net.minecraftforge.common.ToolActions;
+import java.util.*;
 
 @ZetaLoadModule(category = "building")
 public class VerticalSlabsModule extends ZetaModule {
+	public static Map<Block, QuarkVerticalSlabBlock> blocks = new HashMap<>();
 
 	@Config(description = "Should Walls and Panes attempt to connect to the side of Vertical Slabs?")
 	public static boolean allowSideConnections = true;
@@ -67,7 +63,10 @@ public class VerticalSlabsModule extends ZetaModule {
 				Blocks.MANGROVE_SLAB, Blocks.MUD_BRICK_SLAB,
 
 				// 1.20
-				Blocks.CHERRY_SLAB, Blocks.BAMBOO_SLAB, Blocks.BAMBOO_MOSAIC_SLAB
+				Blocks.CHERRY_SLAB, Blocks.BAMBOO_SLAB, Blocks.BAMBOO_MOSAIC_SLAB,
+
+                //1.21.1
+                Blocks.TUFF_SLAB, Blocks.POLISHED_TUFF_SLAB, Blocks.TUFF_BRICK_SLAB
 		)
 				.forEach(b -> new QuarkVerticalSlabBlock(b, this));
 
@@ -93,7 +92,7 @@ public class VerticalSlabsModule extends ZetaModule {
 			WeatheringCopperVerticalSlabBlock current = copperVerticalSlabs.get(i);
 			WeatheringCopperVerticalSlabBlock next = i < max - 1 ? copperVerticalSlabs.get(i + 1) : null;
 			if(prev != null) {
-				ToolInteractionHandler.registerInteraction(ToolActions.AXE_SCRAPE, current, prev);
+				ToolInteractionHandler.registerInteraction(ItemAbilities.AXE_SCRAPE, current, prev);
 				current.prev = prev;
 			}
 			if(next != null)
@@ -101,22 +100,25 @@ public class VerticalSlabsModule extends ZetaModule {
 			current.first = first;
 		}
 
-		Quark.ZETA.variantRegistry.slabs.forEach(b -> {
-			if(b instanceof IVerticalSlabProvider provider)
-				provider.getVerticalSlab(b, this);
-			else
+		Quark.ZETA.variantRegistry.slabs.values().forEach(b -> {
+            /*if(b instanceof IVerticalSlabProvider provider) {
+                QuarkVerticalSlabBlock vertSlab = provider.getVerticalSlab(b, this);
+                //VerticalSlabsModule.blocks.put(b, vertSlab);
+            }
+
+			else*/
 				new QuarkVerticalSlabBlock(b, this);
 		});
 	}
 
 	@LoadEvent
 	public final void setup(ZCommonSetup event) {
-		verticalSlabTag = BlockTags.create(new ResourceLocation(Quark.MOD_ID, "vertical_slabs"));
+		verticalSlabTag = Quark.asTagKey(Registries.BLOCK, "vertical_slabs");
 	}
 
 	@LoadEvent
 	public final void configChanged(ZConfigChanged event) {
-		staticEnabled = enabled;
+		staticEnabled = isEnabled();
 	}
 
 	public static BlockState messWithPaneState(LevelAccessor level, BlockPos ourPos, BlockState state) {
@@ -165,10 +167,4 @@ public class VerticalSlabsModule extends ZetaModule {
 
 		return false;
 	}
-
-	public interface IVerticalSlabProvider {
-		QuarkVerticalSlabBlock getVerticalSlab(Block block, ZetaModule module);
-
-	}
-
 }

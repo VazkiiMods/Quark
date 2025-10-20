@@ -45,14 +45,14 @@ public class FallenLogsModule extends ZetaModule {
 	
 	@Config(description = "Tags that define which biomes can have which wood types")
 	public static List<String> biomeTags = Arrays.asList(
-			"quark:has_fallen_acacia=minecraft:acacia_log",
-            "quark:has_fallen_birch=minecraft:birch_log",
-            "quark:has_fallen_cherry=minecraft:cherry_log",
-            "quark:has_fallen_dark_oak=minecraft:dark_oak_log",
-            "quark:has_fallen_jungle=minecraft:jungle_log",
-            "quark:has_fallen_mangrove=minecraft:mangrove_log",
-            "quark:has_fallen_oak=minecraft:oak_log",
-            "quark:has_fallen_spruce=minecraft:spruce_log");
+			"has_fallen_acacia=minecraft:acacia_log",
+            "has_fallen_birch=minecraft:birch_log",
+            "has_fallen_cherry=minecraft:cherry_log",
+            "has_fallen_dark_oak=minecraft:dark_oak_log",
+            "has_fallen_jungle=minecraft:jungle_log",
+            "has_fallen_mangrove=minecraft:mangrove_log",
+            "has_fallen_oak=minecraft:oak_log",
+            "has_fallen_spruce=minecraft:spruce_log");
 
 	public static Map<TagKey<Biome>, Block> blocksPerTag = new HashMap<>();
 	
@@ -61,8 +61,8 @@ public class FallenLogsModule extends ZetaModule {
 
 	@LoadEvent
 	public final void setup(ZCommonSetup event) {
-		reducedLogsTag = TagKey.create(Registries.BIOME, new ResourceLocation(Quark.MOD_ID, "has_lower_fallen_tree_density"));
-		canSpawnOnTag = TagKey.create(Registries.BLOCK, new ResourceLocation(Quark.MOD_ID, "fallen_log_can_spawn_on"));
+		reducedLogsTag = Quark.asTagKey(Registries.BIOME, "has_lower_fallen_tree_density");
+		canSpawnOnTag = Quark.asTagKey(Registries.BLOCK, "fallen_log_can_spawn_on");
 		WorldGenHandler.addGenerator(this, new FallenLogGenerator(dimensions), Decoration.TOP_LAYER_MODIFICATION, QuarkWorldGenWeights.FALLEN_LOGS);
 	}
 	
@@ -75,8 +75,8 @@ public class FallenLogsModule extends ZetaModule {
 			String k = toks[0];
 			String v = toks[1];
 			
-			TagKey<Biome> tag = TagKey.create(Registries.BIOME, new ResourceLocation(k));
-			Block block = BuiltInRegistries.BLOCK.get(new ResourceLocation(v));
+			TagKey<Biome> tag = Quark.asTagKey(Registries.BIOME, (k));
+			Block block = BuiltInRegistries.BLOCK.get(ResourceLocation.parse(v));
 			
 			if(block == null)
 				throw new IllegalArgumentException("Block " + v + " doesn't exist");

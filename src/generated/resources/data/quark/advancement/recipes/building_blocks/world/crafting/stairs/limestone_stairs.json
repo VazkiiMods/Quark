@@ -1,0 +1,38 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "zeta:flag",
+      "flag": "limestone"
+    }
+  ],
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_limestone": {
+      "conditions": {
+        "items": [
+          {
+            "items": "quark:limestone"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "quark:world/crafting/stairs/limestone_stairs"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    }
+  },
+  "requirements": [
+    [
+      "has_the_recipe",
+      "has_limestone"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "quark:world/crafting/stairs/limestone_stairs"
+    ]
+  }
+}

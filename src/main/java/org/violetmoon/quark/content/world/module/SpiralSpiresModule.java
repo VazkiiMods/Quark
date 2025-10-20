@@ -32,9 +32,9 @@ import org.violetmoon.zeta.config.type.DimensionConfig;
 import org.violetmoon.zeta.event.bus.LoadEvent;
 import org.violetmoon.zeta.event.bus.PlayEvent;
 import org.violetmoon.zeta.event.load.ZCommonSetup;
+import org.violetmoon.zeta.event.load.ZGatherHints;
 import org.violetmoon.zeta.event.load.ZRegister;
 import org.violetmoon.zeta.event.play.entity.ZEntityTeleport;
-import org.violetmoon.zeta.event.load.ZGatherHints;
 import org.violetmoon.zeta.module.ZetaLoadModule;
 import org.violetmoon.zeta.module.ZetaModule;
 import org.violetmoon.zeta.util.Hint;
@@ -82,8 +82,8 @@ public class SpiralSpiresModule extends ZetaModule {
 		dusky_myalite = new ZetaBlock("dusky_myalite", this, props).setCreativeTab(CreativeModeTabs.BUILDING_BLOCKS, Blocks.PURPUR_BLOCK, true);
 		myalite_crystal = new MyaliteCrystalBlock(this);
 
-		((IZetaBlock) dusky_myalite).setCreativeTab(CreativeModeTabs.NATURAL_BLOCKS, Blocks.END_STONE, false);
-		((IZetaBlock) myalite_crystal).setCreativeTab(CreativeModeTabs.NATURAL_BLOCKS, Blocks.END_STONE, false);
+		//((IZetaBlock) dusky_myalite).setCreativeTab(CreativeModeTabs.NATURAL_BLOCKS, Blocks.END_STONE, false);
+		//((IZetaBlock) myalite_crystal).setCreativeTab(CreativeModeTabs.NATURAL_BLOCKS, Blocks.END_STONE, false);
 
 		useViaductTrigger = event.getAdvancementModifierRegistry().registerManualTrigger("use_viaduct");
 	}

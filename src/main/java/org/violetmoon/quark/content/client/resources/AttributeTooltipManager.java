@@ -4,7 +4,6 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.Resource;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.server.packs.resources.SimplePreparableReloadListener;
@@ -39,7 +38,7 @@ public class AttributeTooltipManager extends SimplePreparableReloadListener<Map<
 		Map<String, AttributeIconEntry> tooltips = new HashMap<>();
 		profiler.startTick();
 		try {
-			for(Resource resource : manager.getResourceStack(new ResourceLocation("quark", "attribute_tooltips.json"))) {
+			for(Resource resource : manager.getResourceStack(Quark.asResource("attribute_tooltips.json"))) {
 				profiler.push(resource.sourcePackId());
 
 				try {

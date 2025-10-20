@@ -11,10 +11,10 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundSource;
-import net.minecraft.tags.ItemTags;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -31,6 +31,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
+import net.neoforged.neoforge.client.gui.VanillaGuiLayers;
 import org.apache.commons.lang3.tuple.Pair;
 import org.violetmoon.quark.base.Quark;
 import org.violetmoon.zeta.client.event.play.ZClientTick;
@@ -47,9 +48,8 @@ import java.util.List;
 
 @ZetaLoadModule(category = "tweaks")
 public class ReacharoundPlacingModule extends ZetaModule {
-
-	public static final ResourceLocation OVERLAY_HORIZONTAL = new ResourceLocation(Quark.MOD_ID, "textures/gui/reacharound_overlay_horizontal.png");
-	public static final ResourceLocation OVERLAY_VERTICAL = new ResourceLocation(Quark.MOD_ID, "textures/gui/reacharound_overlay_vertical.png");
+	public static final ResourceLocation OVERLAY_HORIZONTAL = Quark.asResource("textures/gui/reacharound_overlay_horizontal.png");
+	public static final ResourceLocation OVERLAY_VERTICAL = Quark.asResource("textures/gui/reacharound_overlay_vertical.png");
 
 	@Config
 	@Config.Min(0)
@@ -69,7 +69,7 @@ public class ReacharoundPlacingModule extends ZetaModule {
 
 	@LoadEvent
 	public final void setup(ZCommonSetup event) {
-		reacharoundTag = ItemTags.create(new ResourceLocation(Quark.MOD_ID, "reacharound_able"));
+		reacharoundTag = Quark.asTagKey(Registries.ITEM, "reacharound_able");
 	}
 
 	@PlayEvent
@@ -82,8 +82,10 @@ public class ReacharoundPlacingModule extends ZetaModule {
 			if(!player.mayUseItemAt(target.pos, target.dir, stack) || !player.level().mayInteract(player, target.pos))
 				return;
 
+			/* TODO: Fix/remove, dependency not available for 1.21.1
 			if(!Quark.FLAN_INTEGRATION.canPlace(player, target.pos))
 				return;
+			 */
 
 			int count = stack.getCount();
 			InteractionHand hand = event.getHand();
@@ -194,47 +196,46 @@ public class ReacharoundPlacingModule extends ZetaModule {
 	public static class Client extends ReacharoundPlacingModule {
 
 		@PlayEvent
-		public void onRender(ZRenderGuiOverlay.Crosshair.Post event) {
-			GuiGraphics guiGraphics = event.getGuiGraphics();
+		public void onRender(ZRenderGuiOverlay.Post event) {
+			if (event.getLayerName().equals(VanillaGuiLayers.CROSSHAIR) && !Minecraft.getInstance().options.hideGui) {
+				GuiGraphics guiGraphics = event.getGuiGraphics();
 
-			Minecraft mc = Minecraft.getInstance();
-			Player player = mc.player;
+				Minecraft mc = Minecraft.getInstance();
+				Player player = mc.player;
 
-			if(mc.options.hideGui)
-				return;
-			
-			HitResult result = mc.hitResult;
-			if(result instanceof BlockHitResult bhr) {
-				BlockPos hitPos = bhr.getBlockPos();
-				BlockState stateAt = player.level().getBlockState(hitPos);
-				if(!stateAt.isAir())
-					return;
-			}
-				
+				HitResult result = mc.hitResult;
+				if (result instanceof BlockHitResult bhr) {
+					BlockPos hitPos = bhr.getBlockPos();
+					BlockState stateAt = player.level().getBlockState(hitPos);
+					if (!stateAt.isAir())
+						return;
+				}
 
-			if(player != null && currentTarget != null) {
-				Window res = event.getWindow();
-				PoseStack matrix = event.getGuiGraphics().pose();
 
-				boolean vertical = (currentTarget.dir.getAxis() == Axis.Y);
-				ResourceLocation texture = (vertical ? OVERLAY_VERTICAL : OVERLAY_HORIZONTAL);
+				if (player != null && currentTarget != null) {
+					Window res = event.getWindow();
+					PoseStack matrix = event.getGuiGraphics().pose();
 
-				RenderSystem.blendFuncSeparate(GlStateManager.SourceFactor.ONE_MINUS_DST_COLOR, GlStateManager.DestFactor.ONE_MINUS_SRC_COLOR, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
+					boolean vertical = (currentTarget.dir.getAxis() == Axis.Y);
+					ResourceLocation texture = (vertical ? OVERLAY_VERTICAL : OVERLAY_HORIZONTAL);
 
-				matrix.pushPose();
-				int x = (res.getGuiScaledWidth() - 15) / 2;
-				int y = (res.getGuiScaledHeight() - 15) / 2;
-				guiGraphics.blit(texture, x, y, 0, 0, 16, 16, 16, 16);
+					RenderSystem.blendFuncSeparate(GlStateManager.SourceFactor.ONE_MINUS_DST_COLOR, GlStateManager.DestFactor.ONE_MINUS_SRC_COLOR, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
 
-				matrix.popPose();
+					matrix.pushPose();
+					int x = (res.getGuiScaledWidth() - 15) / 2;
+					int y = (res.getGuiScaledHeight() - 15) / 2;
+					guiGraphics.blit(texture, x, y, 0, 0, 16, 16, 16, 16);
 
-				RenderSystem.defaultBlendFunc();
+					matrix.popPose();
 
+					RenderSystem.defaultBlendFunc();
+
+				}
 			}
 		}
 
 		@PlayEvent
-		public void clientTick(ZClientTick.End event) {
+		public void clientTick(ZClientTick.Start event) {
 
 			currentTarget = null;
 

@@ -1,8 +1,8 @@
 package org.violetmoon.quark.base.network;
 
-import java.time.Instant;
-import java.util.BitSet;
-
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import org.violetmoon.quark.base.Quark;
 import org.violetmoon.quark.base.network.message.ChangeHotbarMessage;
 import org.violetmoon.quark.base.network.message.DoEmoteMessage;
@@ -21,51 +21,62 @@ import org.violetmoon.quark.base.network.message.experimental.PlaceVariantUpdate
 import org.violetmoon.quark.base.network.message.oddities.HandleBackpackMessage;
 import org.violetmoon.quark.base.network.message.oddities.MatrixEnchanterOperationMessage;
 import org.violetmoon.quark.base.network.message.oddities.ScrollCrateMessage;
-import org.violetmoon.quark.content.tweaks.module.LockRotationModule;
-import org.violetmoon.zeta.network.ZetaNetworkDirection;
-import org.violetmoon.zeta.network.ZetaNetworkHandler;
+import org.violetmoon.quark.catnip.net.base.BasePacketPayload;
+import org.violetmoon.quark.catnip.net.base.CatnipPacketRegistry;
 
-import net.minecraft.network.chat.LastSeenMessages;
-import net.minecraft.network.chat.MessageSignature;
+import java.util.Locale;
 
-public final class QuarkNetwork {
+public enum QuarkNetwork implements BasePacketPayload.PacketTypeProvider {
+	// Base Quark
+	SORT_INVENTORY_MESSAGE(SortInventoryMessage.class, SortInventoryMessage.STREAM_CODEC),
+	INVENTORY_TRANSFER_MESSAGE(InventoryTransferMessage.class, InventoryTransferMessage.STREAM_CODEC),
+	DOUBLE_DOOR_MESSAGE(DoubleDoorMessage.class, DoubleDoorMessage.STREAM_CODEC),
+	HARVEST_MESSAGE(HarvestMessage.class, HarvestMessage.STREAM_CODEC),
+	REQUEST_EMOTE_MESSAGE(RequestEmoteMessage.class, RequestEmoteMessage.STREAM_CODEC),
+	CHANGE_HOTBAR_MESSAGE(ChangeHotbarMessage.class, ChangeHotbarMessage.STREAM_CODEC),
+	SET_LOCK_PROFILE_MESSAGE(SetLockProfileMessage.class, SetLockProfileMessage.OPTIONAL_STREAM_CODEC),
+	SHARE_ITEM_C2S_MESSAGE(ShareItemC2SMessage.class, ShareItemC2SMessage.STREAM_CODEC),
+	SCROLL_ON_BUNDLE_MESSAGE(ScrollOnBundleMessage.class, ScrollOnBundleMessage.STREAM_CODEC),
+
+	// Oddities
+	HANDLE_BACKPACK_MESSAGE(HandleBackpackMessage.class, HandleBackpackMessage.STREAM_CODEC),
+	MATRIX_ENCHANTER_OPERATION_MESSAGE(MatrixEnchanterOperationMessage.class, MatrixEnchanterOperationMessage.STREAM_CODEC),
+	SCROLL_CRATE_MESSAGE(ScrollCrateMessage.class, ScrollCrateMessage.STREAM_CODEC),
+
+	// Experimental
+	PLACE_VARIANT_UPDATE_MESSAGE(PlaceVariantUpdateMessage.class, PlaceVariantUpdateMessage.STREAM_CODEC),
+
+	PLACE_VARIANT_RESTORE_MESSAGE(PlaceVariantRestoreMessage.class, PlaceVariantRestoreMessage.STREAM_CODEC),
+
+	// Clientbound
+	DO_EMOTE_MESSAGE(DoEmoteMessage.class, DoEmoteMessage.STREAM_CODEC),
+	UPDATE_TRIDENT_MESSAGE(UpdateTridentMessage.class, UpdateTridentMessage.STREAM_CODEC),
+	SHARE_ITEM_S2C_MESSAGE(ShareItemS2CMessage.class, ShareItemS2CMessage.STREAM_CODEC);
 
 	// bump when you change messages
 	public static final int PROTOCOL_VERSION = 4;
 
-	public static void init() {
-		ZetaNetworkHandler network = Quark.ZETA.createNetworkHandler(PROTOCOL_VERSION);
-		Quark.ZETA.network = network;
+	private final CatnipPacketRegistry.PacketType<?> type;
 
-		network.getSerializer().mapHandlers(Instant.class, (buf, field) -> buf.readInstant(), (buf, field, instant) -> buf.writeInstant(instant));
-		network.getSerializer().mapHandlers(MessageSignature.class, (buf, field) -> new MessageSignature(buf.accessByteBufWithCorrectSize()), (buf, field, signature) -> MessageSignature.write(buf, signature));
-		network.getSerializer().mapHandlers(LastSeenMessages.Update.class, (buf, field) -> new LastSeenMessages.Update(buf), (buf, field, update) -> update.write(buf));
-
-		// Base Quark
-		network.register(SortInventoryMessage.class, ZetaNetworkDirection.PLAY_TO_SERVER);
-		network.register(InventoryTransferMessage.class, ZetaNetworkDirection.PLAY_TO_SERVER);
-		network.register(DoubleDoorMessage.class, ZetaNetworkDirection.PLAY_TO_SERVER);
-		network.register(HarvestMessage.class, ZetaNetworkDirection.PLAY_TO_SERVER);
-		network.register(RequestEmoteMessage.class, ZetaNetworkDirection.PLAY_TO_SERVER);
-		network.register(ChangeHotbarMessage.class, ZetaNetworkDirection.PLAY_TO_SERVER);
-		network.register(SetLockProfileMessage.class, ZetaNetworkDirection.PLAY_TO_SERVER);
-		network.register(ShareItemC2SMessage.class, ZetaNetworkDirection.PLAY_TO_SERVER);
-		network.register(ScrollOnBundleMessage.class, ZetaNetworkDirection.PLAY_TO_SERVER);
-		network.getSerializer().mapHandlers(LockRotationModule.LockProfile.class, LockRotationModule.LockProfile::readProfile, LockRotationModule.LockProfile::writeProfile);
-
-		// Oddities
-		network.register(HandleBackpackMessage.class, ZetaNetworkDirection.PLAY_TO_SERVER);
-		network.register(MatrixEnchanterOperationMessage.class, ZetaNetworkDirection.PLAY_TO_SERVER);
-		network.register(ScrollCrateMessage.class, ZetaNetworkDirection.PLAY_TO_SERVER);
-
-		// Experimental
-		network.register(PlaceVariantUpdateMessage.class, ZetaNetworkDirection.PLAY_TO_SERVER);
-		network.register(PlaceVariantRestoreMessage.class, ZetaNetworkDirection.PLAY_TO_CLIENT);
-
-		// Clientbound
-		network.register(DoEmoteMessage.class, ZetaNetworkDirection.PLAY_TO_CLIENT);
-		network.register(UpdateTridentMessage.class, ZetaNetworkDirection.PLAY_TO_CLIENT);
-		network.register(ShareItemS2CMessage.class, ZetaNetworkDirection.PLAY_TO_CLIENT);
+	<T extends BasePacketPayload> QuarkNetwork(Class<T> clazz, StreamCodec<? super RegistryFriendlyByteBuf, T> codec) {
+		String name = this.name().toLowerCase(Locale.ROOT);
+		this.type = new CatnipPacketRegistry.PacketType<>(
+				new CustomPacketPayload.Type<>(Quark.asResource(name)),
+				clazz, codec
+		);
 	}
 
+	@Override
+	@SuppressWarnings("unchecked")
+	public <T extends CustomPacketPayload> CustomPacketPayload.Type<T> getType() {
+		return (CustomPacketPayload.Type<T>) this.type.type();
+	}
+
+	public static void init() {
+		CatnipPacketRegistry packetRegistry = new CatnipPacketRegistry(Quark.MOD_ID, PROTOCOL_VERSION);
+		for (QuarkNetwork packet : QuarkNetwork.values()) {
+			packetRegistry.registerPacket(packet.type);
+		}
+		packetRegistry.registerAllPackets();
+	}
 }

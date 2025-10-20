@@ -1,0 +1,157 @@
+{
+  "parent": "minecraft:story/enchant_item",
+  "criteria": {
+    "rune_white": {
+      "conditions": {
+        "recipe_id": "quark:tools/smithing/rune_smithing_white"
+      },
+      "trigger": "minecraft:recipe_crafted"
+    },
+    "rune_orange": {
+      "conditions": {
+        "recipe_id": "quark:tools/smithing/rune_smithing_orange"
+      },
+      "trigger": "minecraft:recipe_crafted"
+    },
+    "rune_magenta": {
+      "conditions": {
+        "recipe_id": "quark:tools/smithing/rune_smithing_magenta"
+      },
+      "trigger": "minecraft:recipe_crafted"
+    },
+    "rune_light_blue": {
+      "conditions": {
+        "recipe_id": "quark:tools/smithing/rune_smithing_light_blue"
+      },
+      "trigger": "minecraft:recipe_crafted"
+    },
+    "rune_yellow": {
+      "conditions": {
+        "recipe_id": "quark:tools/smithing/rune_smithing_yellow"
+      },
+      "trigger": "minecraft:recipe_crafted"
+    },
+    "rune_lime": {
+      "conditions": {
+        "recipe_id": "quark:tools/smithing/rune_smithing_lime"
+      },
+      "trigger": "minecraft:recipe_crafted"
+    },
+    "rune_pink": {
+      "conditions": {
+        "recipe_id": "quark:tools/smithing/rune_smithing_pink"
+      },
+      "trigger": "minecraft:recipe_crafted"
+    },
+    "rune_gray": {
+      "conditions": {
+        "recipe_id": "quark:tools/smithing/rune_smithing_gray"
+      },
+      "trigger": "minecraft:recipe_crafted"
+    },
+    "rune_light_gray": {
+      "conditions": {
+        "recipe_id": "quark:tools/smithing/rune_smithing_light_gray"
+      },
+      "trigger": "minecraft:recipe_crafted"
+    },
+    "rune_cyan": {
+      "conditions": {
+        "recipe_id": "quark:tools/smithing/rune_smithing_cyan"
+      },
+      "trigger": "minecraft:recipe_crafted"
+    },
+    "rune_purple": {
+      "conditions": {
+        "recipe_id": "quark:tools/smithing/rune_smithing_purple"
+      },
+      "trigger": "minecraft:recipe_crafted"
+    },
+    "rune_blue": {
+      "conditions": {
+        "recipe_id": "quark:tools/smithing/rune_smithing_blue"
+      },
+      "trigger": "minecraft:recipe_crafted"
+    },
+    "rune_brown": {
+      "conditions": {
+        "recipe_id": "quark:tools/smithing/rune_smithing_brown"
+      },
+      "trigger": "minecraft:recipe_crafted"
+    },
+    "rune_green": {
+      "conditions": {
+        "recipe_id": "quark:tools/smithing/rune_smithing_green"
+      },
+      "trigger": "minecraft:recipe_crafted"
+    },
+    "rune_red": {
+      "conditions": {
+        "recipe_id": "quark:tools/smithing/rune_smithing_red"
+      },
+      "trigger": "minecraft:recipe_crafted"
+    },
+    "rune_black": {
+      "conditions": {
+        "recipe_id": "quark:tools/smithing/rune_smithing_black"
+      },
+      "trigger": "minecraft:recipe_crafted"
+    },
+    "rune_rainbow": {
+      "conditions": {
+        "recipe_id": "quark:tools/smithing/rune_smithing_rainbow"
+      },
+      "trigger": "minecraft:recipe_crafted"
+    },
+    "rune_blank": {
+      "conditions": {
+        "recipe_id": "quark:tools/smithing/rune_smithing_blank"
+      },
+      "trigger": "minecraft:recipe_crafted"
+    }
+  },
+  "display": {
+    "announce_to_chat": true,
+    "description": {
+      "translate": "advancements.quark.apply_color_rune.description"
+    },
+    "frame": "task",
+    "hidden": false,
+    "icon": {
+      "id": "quark:smithing_template_rune"
+    },
+    "show_toast": true,
+    "title": {
+      "translate": "advancements.quark.apply_color_rune.title"
+    }
+  },
+  "requirements": [
+    [
+      "rune_white",
+      "rune_orange",
+      "rune_magenta",
+      "rune_light_blue",
+      "rune_yellow",
+      "rune_lime",
+      "rune_pink",
+      "rune_gray",
+      "rune_light_gray",
+      "rune_cyan",
+      "rune_purple",
+      "rune_blue",
+      "rune_brown",
+      "rune_green",
+      "rune_red",
+      "rune_black",
+      "rune_rainbow",
+      "rune_blank"
+    ]
+  ],
+  "neoforge:conditions": [
+    {
+      "type": "zeta:flag",
+      "flag": "color_runes"
+    }
+  ],
+  "sends_telemetry_event": true
+}

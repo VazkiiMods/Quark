@@ -1,0 +1,35 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "zeta:flag",
+      "flag": "rainbow_lamps"
+    },
+    {
+      "type": "zeta:flag",
+      "flag": "corundum"
+    },
+    {
+      "type": "zeta:flag",
+      "flag": "rainbow_lamp_corundum"
+    }
+  ],
+  "type": "minecraft:crafting_shaped",
+  "category": "redstone",
+  "key": {
+    "C": {
+      "item": "quark:red_corundum"
+    },
+    "R": {
+      "tag": "c:dusts/redstone"
+    }
+  },
+  "pattern": [
+    " R ",
+    "RCR",
+    " R "
+  ],
+  "result": {
+    "count": 1,
+    "id": "quark:red_crystal_lamp"
+  }
+}

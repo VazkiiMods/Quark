@@ -9,13 +9,13 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.tags.BlockTags;
 import net.minecraft.world.item.CreativeModeTabs;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.FenceBlock;
-import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
@@ -24,6 +24,7 @@ import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
+import net.neoforged.neoforge.common.util.TriState;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -65,7 +66,7 @@ public class HedgeBlock extends ZetaFenceBlock implements IZetaBlock, IZetaBlock
 		if(module == null) //auto registration below this line
 			return;
 
-		CreativeTabManager.addToCreativeTabNextTo(CreativeModeTabs.NATURAL_BLOCKS, this, leaf, false);
+		CreativeTabManager.addNextToItem(CreativeModeTabs.NATURAL_BLOCKS, this, leaf, false);
 		module.zeta().renderLayerRegistry.put(this, RenderLayerRegistry.Layer.CUTOUT);
 	}
 
@@ -140,8 +141,8 @@ public class HedgeBlock extends ZetaFenceBlock implements IZetaBlock, IZetaBlock
 	}
 
 	@Override
-	public boolean canSustainPlantZeta(@NotNull BlockState state, @NotNull BlockGetter world, @NotNull BlockPos pos, @NotNull Direction facing, @NotNull String plantabletype) {
-		return facing == Direction.UP && !state.getValue(WATERLOGGED) && "plains".equals(plantabletype);
+	public TriState canSustainPlantZeta(BlockState state, BlockGetter level, BlockPos soilPosition, Direction facing, BlockState plant) {
+		return (facing == Direction.UP && !state.getValue(WATERLOGGED)) ? TriState.TRUE : TriState.FALSE;
 	}
 
 	@Override

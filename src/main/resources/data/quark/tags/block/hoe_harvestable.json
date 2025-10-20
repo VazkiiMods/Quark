@@ -1,0 +1,29 @@
+{
+  "values": [
+    "#minecraft:crops",
+    "#minecraft:replaceable_by_trees",
+    "#minecraft:flowers",
+    "minecraft:cactus",
+    "minecraft:sugar_cane",
+    "minecraft:cocoa",
+    "minecraft:lily_pad",
+    "minecraft:short_grass",
+    "minecraft:tall_grass",
+    {
+      "required": false,
+      "id": "twilightforest:huge_water_lily"
+    },
+    {
+      "required": false,
+      "id": "twilightforest:huge_lily_pad"
+    },
+    {
+      "required": false,
+      "id": "biomesoplenty:huge_lily_pad"
+    },
+    {
+      "required": false,
+      "id": "biomesoplenty:high_grass"
+    }
+  ]
+}

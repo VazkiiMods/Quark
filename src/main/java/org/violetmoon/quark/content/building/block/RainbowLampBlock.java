@@ -15,10 +15,8 @@ import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.block.state.properties.NoteBlockInstrument;
 import net.minecraft.world.level.material.MapColor;
-
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-
 import org.violetmoon.quark.content.building.module.RainbowLampsModule;
 import org.violetmoon.zeta.block.ZetaGlassBlock;
 import org.violetmoon.zeta.module.ZetaModule;
@@ -29,7 +27,7 @@ import org.violetmoon.zeta.module.ZetaModule;
  */
 public class RainbowLampBlock extends ZetaGlassBlock {
 
-	public final float[] colorComponents;
+	public final int color;
 
 	public static final BooleanProperty LIT = BlockStateProperties.LIT;
 
@@ -45,10 +43,7 @@ public class RainbowLampBlock extends ZetaGlassBlock {
 						.lightLevel(b -> b.getValue(LIT) ? RainbowLampsModule.lightLevel : 0)
 						.noOcclusion());
 
-		float r = ((color >> 16) & 0xff) / 255f;
-		float g = ((color >> 8) & 0xff) / 255f;
-		float b = (color & 0xff) / 255f;
-		colorComponents = new float[] { r, g, b };
+		this.color = color;
 
 		if(module == null) //auto registration below this line
 			return;
@@ -101,10 +96,9 @@ public class RainbowLampBlock extends ZetaGlassBlock {
 		builder.add(LIT);
 	}
 
-	@Nullable
 	@Override
-	public float[] getBeaconColorMultiplierZeta(BlockState state, LevelReader world, BlockPos pos, BlockPos beaconPos) {
-		return state.getValue(LIT) ? colorComponents : null;
+	public Integer getBeaconColorMultiplierZeta(BlockState state, LevelReader world, BlockPos pos, BlockPos beaconPos) {
+		return state.getValue(LIT) ? color : null;
 	}
 
 }

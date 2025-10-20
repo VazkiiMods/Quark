@@ -11,14 +11,13 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
-
 import org.jetbrains.annotations.NotNull;
-
 import org.violetmoon.quark.content.tools.entity.ParrotEgg;
 import org.violetmoon.quark.content.tools.module.ParrotEggsModule;
 import org.violetmoon.zeta.item.ZetaItem;
 import org.violetmoon.zeta.module.ZetaModule;
 
+//Todo: I think it needs to extend ProjectileItem
 public class ParrotEggItem extends ZetaItem {
 	private final Parrot.Variant variant;
 

@@ -1,0 +1,45 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:and",
+      "values": [
+        {
+          "type": "zeta:flag",
+          "flag": "magnet"
+        },
+        {
+          "type": "zeta:flag",
+          "flag": "magnet_pre_end"
+        }
+      ]
+    }
+  ],
+  "type": "minecraft:crafting_shaped",
+  "category": "redstone",
+  "key": {
+    "B": {
+      "tag": "c:dyes/blue"
+    },
+    "C": {
+      "tag": "c:cobblestones"
+    },
+    "I": {
+      "tag": "c:ingots/iron"
+    },
+    "P": {
+      "tag": "c:ingots/copper"
+    },
+    "R": {
+      "tag": "c:dusts/redstone"
+    }
+  },
+  "pattern": [
+    "CIC",
+    "BPR",
+    "CIC"
+  ],
+  "result": {
+    "count": 1,
+    "id": "quark:magnet"
+  }
+}

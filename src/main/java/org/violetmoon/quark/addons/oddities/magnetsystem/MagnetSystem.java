@@ -1,13 +1,11 @@
 package org.violetmoon.quark.addons.oddities.magnetsystem;
 
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import org.jetbrains.annotations.Nullable;
@@ -16,8 +14,6 @@ import org.violetmoon.quark.addons.oddities.block.be.MagnetBlockEntity;
 import org.violetmoon.quark.addons.oddities.module.MagnetsModule;
 import org.violetmoon.quark.api.IMagnetMoveAction;
 import org.violetmoon.quark.api.IMagnetTracker;
-import org.violetmoon.quark.api.QuarkCapabilities;
-import org.violetmoon.quark.base.Quark;
 import org.violetmoon.zeta.api.ICollateralMover;
 import org.violetmoon.zeta.event.play.ZRecipeCrawl;
 import org.violetmoon.zeta.util.RegistryUtil;
@@ -49,19 +45,23 @@ public class MagnetSystem {
 	}
 
 	public static @Nullable IMagnetTracker getTracker(Level level) {
-		return Quark.ZETA.capabilityManager.getCapability(QuarkCapabilities.MAGNET_TRACKER_CAPABILITY, level);
+		//Todo: Replaced capability, check if it works.
+
+		return ((MagnetWorldInterface)(level)).getTracker();
 	}
 
 	public static void tick(boolean start, Level level) {
-		IMagnetTracker tracker = getTracker(level);
-		if(tracker == null)
-			return;
+		if (!level.isClientSide()) {
+			IMagnetTracker tracker = getTracker(level);
+			if (tracker == null)
+				return;
 
-		if(!start) {
-			for(BlockPos pos : tracker.getTrackedPositions())
-				tracker.actOnForces(pos);
+			if (!start) {
+				for (BlockPos pos : tracker.getTrackedPositions())
+					tracker.actOnForces(pos);
+			}
+			tracker.clear();
 		}
-		tracker.clear();
 	}
 
 	public static void onRecipeReset() {
@@ -93,9 +93,11 @@ public class MagnetSystem {
 	}
 
 	public static void applyForce(Level world, BlockPos pos, int magnitude, boolean pushing, Direction dir, int distance, BlockPos origin) {
-		IMagnetTracker tracker = getTracker(world);
-		if(tracker != null)
-			tracker.applyForce(pos, magnitude, pushing, dir, distance, origin);
+		if (!world.isClientSide) {
+			IMagnetTracker tracker = getTracker(world);
+			if (tracker != null)
+				tracker.applyForce(pos, magnitude, pushing, dir, distance, origin);
+		}
 	}
 
 	public static ICollateralMover.MoveResult getPushAction(MagnetBlockEntity magnet, BlockPos pos, BlockState state, Direction moveDir) {

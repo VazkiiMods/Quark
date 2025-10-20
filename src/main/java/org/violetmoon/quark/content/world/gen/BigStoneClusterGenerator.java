@@ -42,6 +42,7 @@ public class BigStoneClusterGenerator extends ClusterBasedGenerator {
 				return new BlockPos[] { pos };
 		}
 
+
 		return new BlockPos[0];
 	}
 

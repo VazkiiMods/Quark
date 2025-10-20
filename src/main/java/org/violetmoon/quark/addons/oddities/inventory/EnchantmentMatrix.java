@@ -1,9 +1,13 @@
 package org.violetmoon.quark.addons.oddities.inventory;
 
-import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.Holder;
+import net.minecraft.core.HolderLookup;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.tags.EnchantmentTags;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 import net.minecraft.util.random.Weight;
@@ -14,10 +18,10 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.EnchantmentInstance;
 
+import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 
 import org.violetmoon.quark.addons.oddities.module.MatrixEnchantingModule;
-import org.violetmoon.quark.content.experimental.module.EnchantmentsBegoneModule;
 
 import java.awt.*;
 import java.util.*;
@@ -39,7 +43,7 @@ public class EnchantmentMatrix {
 	private static final String TAG_TYPE_COUNT = "typeCount";
 	private static final String TAG_INFLUENCED = "influenced";
 
-	public final Map<Enchantment, Integer> totalValue = new HashMap<>();
+	public final Map<Holder<Enchantment>, Integer> totalValue = new HashMap<>();
 	public final Map<Integer, Piece> pieces = new HashMap<>();
 	public List<Integer> benchedPieces = new ArrayList<>();
 	public List<Integer> placedPieces = new ArrayList<>();
@@ -51,10 +55,12 @@ public class EnchantmentMatrix {
 	public final boolean book;
 	public final ItemStack target;
 	public final RandomSource rng;
+	public final Level levelAsInWorld;
 
-	public EnchantmentMatrix(ItemStack target, RandomSource rng) {
+	public EnchantmentMatrix(ItemStack target, Level level) {
 		this.target = target;
-		this.rng = rng;
+		this.levelAsInWorld = level;
+		this.rng = level.random;
 		book = target.getItem() == Items.BOOK;
 		computeMatrix();
 	}
@@ -145,39 +151,40 @@ public class EnchantmentMatrix {
 		List<Piece> marked = pieces.values().stream().filter(p -> p.marked).collect(Collectors.toList());
 
 		List<EnchantmentDataWrapper> validEnchants = new ArrayList<>();
-		BuiltInRegistries.ENCHANTMENT.forEach(enchantment -> {
+		HolderLookup.RegistryLookup<Enchantment> enchantmentRegistryLookup = levelAsInWorld.registryAccess().lookupOrThrow(Registries.ENCHANTMENT);
+		enchantmentRegistryLookup.listElements().forEach(enchantment -> {
 
-			String id = BuiltInRegistries.ENCHANTMENT.getKey(enchantment).toString();
+			String id = enchantment.getKey().location().toString();
 			boolean isValid = true;
 
-			if (!enchantment.isDiscoverable()) {
+			if (!enchantment.is(EnchantmentTags.IN_ENCHANTING_TABLE)) {
 				isValid = MatrixEnchantingModule.allowUndiscoverableEnchantments ||
 					MatrixEnchantingModule.undiscoverableWhitelist.contains(id);
 			}
 
-			if(isValid && enchantment.isTreasureOnly()) {
+			if(isValid && enchantment.is(EnchantmentTags.TREASURE)) {
 				isValid = MatrixEnchantingModule.allowTreasures ||
 						(isBook && MatrixEnchantingModule.treasureWhitelist.contains(id));
 			}
 
 			if(isValid
-					&& !EnchantmentsBegoneModule.shouldBegone(enchantment)
 					&& !MatrixEnchantingModule.disallowedEnchantments.contains(id)
-					&& ((enchantment.canEnchant(target) && enchantment.canApplyAtEnchantingTable(target)) || (book && enchantment.isAllowedOnBooks()))) {
+					//todo: An additional check exists to see if an enchantment was allowed on books, will need to be replaced. "|| (book && enchantment.isAllowedOnBooks())"
+					&& ((enchantment.value().canEnchant(target) && enchantment.value().isPrimaryItem(target)))) {
 				int enchantLevel = 1;
 				if(book) {
-					for(int i = enchantment.getMaxLevel(); i > enchantment.getMinLevel() - 1; --i) {
-						if(level >= enchantment.getMinCost(i) && level <= enchantment.getMaxCost(i)) {
+					for(int i = enchantment.value().getMaxLevel(); i > enchantment.value().getMinLevel() - 1; --i) {
+						if(level >= enchantment.value().getMinCost(i) && level <= enchantment.value().getMaxCost(i)) {
 							enchantLevel = i;
 							break;
 						}
 					}
 				}
 
-				int valueAdded = getValue(enchantment, enchantLevel);
+				int valueAdded = getValue(enchantment.value(), enchantLevel);
 				int currentValue = totalValue.getOrDefault(enchantment, 0);
 
-				if(valueAdded + currentValue > getValue(enchantment, enchantment.getMaxLevel()) + getMaxXP(enchantment, enchantment.getMaxLevel()))
+				if(valueAdded + currentValue > getValue(enchantment.value(), enchantment.value().getMaxLevel()) + getMaxXP(enchantment.value(), enchantment.value().getMaxLevel()))
 					return;
 				EnchantmentDataWrapper wrapper = new EnchantmentDataWrapper(enchantment, enchantLevel);
 				wrapper.normalizeRarity(influences, marked);
@@ -193,13 +200,13 @@ public class EnchantmentMatrix {
 		for(EnchantmentDataWrapper wrapper : validEnchants)
 			total += wrapper.mutableWeight.val;
 
-		/*if(total == 0) {
+		if(total == 0) {
 			for(EnchantmentDataWrapper wrapper : validEnchants)
 				wrapper.mutableWeight.val++;
-		}*/
+		}
 
 		EnchantmentDataWrapper ret = WeightedRandom.getRandomItem(rng, validEnchants).orElse(null);
-		if(!simulate && ret != null && influences.containsKey(ret.enchantment) && influences.get(ret.enchantment) > 0)
+		if(!simulate && ret != null && influences.containsKey(ret.enchantment.value()) && influences.get(ret.enchantment.value()) > 0)
 			influenced = true;
 
 		return ret;
@@ -248,13 +255,13 @@ public class EnchantmentMatrix {
 		Piece placedPiece = pieces.get(placed);
 		Piece hoveredPiece = pieces.get(hover);
 		if(placedPiece != null && hoveredPiece != null && placedPieces.contains(placed) && benchedPieces.contains(hover)) {
-			Enchantment enchant = placedPiece.enchant;
-			if(hoveredPiece.enchant == enchant && placedPiece.level < enchant.getMaxLevel()) {
+			Holder<Enchantment> enchant = placedPiece.enchant;
+			if(hoveredPiece.enchant == enchant && placedPiece.level < enchant.value().getMaxLevel()) {
 				placedPiece.xp += hoveredPiece.getValue();
 
 				int max = placedPiece.getMaxXP();
 				while(placedPiece.xp >= max) {
-					if(placedPiece.level >= enchant.getMaxLevel())
+					if(placedPiece.level >= enchant.value().getMaxLevel())
 						break;
 
 					placedPiece.level++;
@@ -303,7 +310,7 @@ public class EnchantmentMatrix {
 
 			int id = pieceTag.getInt(TAG_PIECE_ID);
 			Piece piece = new Piece();
-			piece.readFromNBT(pieceTag);
+			piece.readFromNBT(pieceTag, levelAsInWorld);
 			pieces.put(id, piece);
 			totalValue.put(piece.enchant, totalValue.getOrDefault(piece.enchant, 0) + piece.getValue());
 		}
@@ -364,11 +371,9 @@ public class EnchantmentMatrix {
 		if(level >= enchantment.getMaxLevel())
 			return 0;
 
-		return switch(enchantment.getRarity()) {
-		case COMMON -> level;
-		case UNCOMMON -> level / 2 + 1;
-		default -> 1;
-		};
+
+		//UNCOMMON -> level / 2 + 1;
+		return level;
 	}
 
 	public static int getValue(Enchantment enchantment, int level) {
@@ -379,7 +384,6 @@ public class EnchantmentMatrix {
 	}
 
 	public static class Piece {
-
 		private static final int[][][] PIECE_TYPES = new int[][][] {
 				{ { 0, 0 }, { -1, 0 }, { 1, 0 }, { 0, -1 }, { 0, 1 } }, // Plus
 				{ { 0, 0 }, { -1, 0 }, { 1, 0 }, { -1, -1 }, { 0, -1 } }, // Block
@@ -407,7 +411,7 @@ public class EnchantmentMatrix {
 		private static final String TAG_MARKED = "marked";
 		private static final String TAG_INFLUENCE = "influence";
 
-		public Enchantment enchant;
+		public Holder<Enchantment> enchant;
 		public int level, color, type, x, y, xp;
 		public int[][] blocks;
 		public boolean marked;
@@ -422,7 +426,7 @@ public class EnchantmentMatrix {
 			this.influence = wrapper.influence;
 			this.type = type;
 
-			Random rng = new Random(Objects.toString(BuiltInRegistries.ENCHANTMENT.getKey(enchant)).hashCode());
+			Random rng = new Random(enchant.hashCode());
 			float h = rng.nextFloat();
 			float s = rng.nextFloat() * 0.2F + 0.8F;
 			float b = rng.nextFloat() * 0.25F + 0.75F;
@@ -454,18 +458,18 @@ public class EnchantmentMatrix {
 		}
 
 		public int getMaxXP() {
-			return EnchantmentMatrix.getMaxXP(enchant, level);
+			return EnchantmentMatrix.getMaxXP(enchant.value(), level);
 		}
 
 		public int getValue() {
-			return EnchantmentMatrix.getValue(enchant, level) + xp;
+			return EnchantmentMatrix.getValue(enchant.value(), level) + xp;
 		}
 
 		public void writeToNBT(CompoundTag cmp) {
 			cmp.putInt(TAG_COLOR, color);
 			cmp.putInt(TAG_TYPE, type);
 			if(enchant != null)
-				cmp.putString(TAG_ENCHANTMENT, Objects.toString(BuiltInRegistries.ENCHANTMENT.getKey(enchant)));
+				cmp.putString(TAG_ENCHANTMENT, enchant.getRegisteredName());
 			cmp.putInt(TAG_LEVEL, level);
 			cmp.putInt(TAG_X, x);
 			cmp.putInt(TAG_Y, y);
@@ -478,10 +482,10 @@ public class EnchantmentMatrix {
 				cmp.putIntArray(TAG_BLOCK + i, blocks[i]);
 		}
 
-		public void readFromNBT(CompoundTag cmp) {
+		public void readFromNBT(CompoundTag cmp, Level levelAsInWorld) {
 			color = cmp.getInt(TAG_COLOR);
 			type = cmp.getInt(TAG_TYPE);
-			enchant = BuiltInRegistries.ENCHANTMENT.get(new ResourceLocation(cmp.getString(TAG_ENCHANTMENT)));
+			enchant = levelAsInWorld.registryAccess().lookupOrThrow(Registries.ENCHANTMENT).get(ResourceKey.create(Registries.ENCHANTMENT, ResourceLocation.parse(cmp.getString(TAG_ENCHANTMENT)))).get();
 			level = cmp.getInt(TAG_LEVEL);
 			x = cmp.getInt(TAG_X);
 			y = cmp.getInt(TAG_Y);
@@ -501,22 +505,24 @@ public class EnchantmentMatrix {
 		private int influence;
 		private final MutableWeight mutableWeight;
 
-		public EnchantmentDataWrapper(Enchantment enchantmentObj, int enchLevel) {
+		public EnchantmentDataWrapper(Holder<Enchantment> enchantmentObj, int enchLevel) {
 			super(enchantmentObj, enchLevel);
-			mutableWeight = new MutableWeight(enchantment.getRarity().getWeight());
+			mutableWeight = new MutableWeight(enchantment.value().getWeight());
 		}
 
 		public void normalizeRarity(Map<Enchantment, Integer> influences, List<Piece> markedEnchants) {
 			if(MatrixEnchantingModule.normalizeRarity) {
-				switch(enchantment.getRarity()) {
-				case COMMON -> mutableWeight.val = 80000;
-				case UNCOMMON -> mutableWeight.val = 40000;
-				case RARE -> mutableWeight.val = 25000;
-				case VERY_RARE -> mutableWeight.val = 5000;
-				default -> {}
+				mutableWeight.val = enchantment.value().getWeight() * 8;
+
+				//Todo: The fuzzing equation needs to probably be rewritten. I'm just trying to preserve the behavior from previous versions.
+				if (mutableWeight.val == 8) {
+					mutableWeight.val = 5;
+				} else if (mutableWeight.val == 16) {
+					mutableWeight.val = 25;
 				}
 
-				influence = Mth.clamp(influences.getOrDefault(enchantment, 0), -MatrixEnchantingModule.influenceMax, MatrixEnchantingModule.influenceMax);
+
+				influence = Mth.clamp(influences.getOrDefault(enchantment.value(), 0), -MatrixEnchantingModule.influenceMax, MatrixEnchantingModule.influenceMax);
 				float multiplier = 1F + influence * (float) MatrixEnchantingModule.influencePower;
 				mutableWeight.val *= multiplier;
 
@@ -529,7 +535,7 @@ public class EnchantmentMatrix {
 						mutableWeight.val *= MatrixEnchantingModule.dupeMultiplier;
 						mark = false;
 						break;
-					} else if(!other.enchant.isCompatibleWith(enchantment) || !enchantment.isCompatibleWith(other.enchant)) {
+					} else if(other.enchant.value().exclusiveSet().contains(enchantment) || enchantment.value().exclusiveSet().contains(other.enchant)) {
 						mutableWeight.val *= MatrixEnchantingModule.incompatibleMultiplier;
 						mark = false;
 						break;
@@ -550,7 +556,7 @@ public class EnchantmentMatrix {
 
 	private static class MutableWeight extends Weight {
 
-		protected int val;
+		protected double val;
 
 		public MutableWeight(int val) {
 			super(val);
@@ -558,7 +564,7 @@ public class EnchantmentMatrix {
 
 		@Override
 		public int asInt() {
-			return val;
+			return (int) val;
 		}
 
 	}

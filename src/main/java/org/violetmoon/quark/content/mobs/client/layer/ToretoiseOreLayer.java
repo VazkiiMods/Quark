@@ -27,9 +27,8 @@ public class ToretoiseOreLayer extends RenderLayer<Toretoise, ToretoiseModel> {
 	public void render(@NotNull PoseStack matrix, @NotNull MultiBufferSource buffer, int light, Toretoise entity, float limbAngle, float limbDistance, float tickDelta, float customAngle, float headYaw, float headPitch) {
 		int ore = entity.getOreType();
 		if(ore != 0 && ore <= Toretoise.ORE_TYPES) {
-			ResourceLocation res = new ResourceLocation(String.format(Locale.ROOT, ORE_BASE, ore));
-			renderColoredCutoutModel(getParentModel(), res, matrix, buffer, light, entity, 1, 1, 1);
+			ResourceLocation res = ResourceLocation.parse(String.format(ORE_BASE, ore));
+			renderColoredCutoutModel(getParentModel(), res, matrix, buffer, light, entity, -1);
 		}
 	}
-
 }

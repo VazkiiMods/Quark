@@ -1,0 +1,26 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "zeta:flag",
+      "flag": "hedges"
+    }
+  ],
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "key": {
+    "L": {
+      "item": "minecraft:dark_oak_leaves"
+    },
+    "W": {
+      "tag": "minecraft:dark_oak_logs"
+    }
+  },
+  "pattern": [
+    "L",
+    "W"
+  ],
+  "result": {
+    "count": 2,
+    "id": "quark:dark_oak_hedge"
+  }
+}

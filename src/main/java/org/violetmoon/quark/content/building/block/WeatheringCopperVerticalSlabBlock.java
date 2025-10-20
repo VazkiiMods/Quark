@@ -27,7 +27,7 @@ public class WeatheringCopperVerticalSlabBlock extends QuarkVerticalSlabBlock im
 
 	@Override
 	public void randomTick(@NotNull BlockState state, @NotNull ServerLevel world, @NotNull BlockPos pos, @NotNull RandomSource random) {
-		this.onRandomTick(state, world, pos, random);
+		this.changeOverTime(state, world, pos, random);
 	}
 
 	@Override

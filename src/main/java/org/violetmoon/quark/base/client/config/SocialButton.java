@@ -16,7 +16,7 @@ import org.violetmoon.quark.base.Quark;
 
 public class SocialButton extends Button {
 
-	public static final ResourceLocation SOCIAL_ICONS = new ResourceLocation(Quark.MOD_ID, "textures/gui/social_icons.png");
+	public static final ResourceLocation SOCIAL_ICONS = Quark.asResource("textures/gui/social_icons.png");
 
 	private final int textColor;
 	private final int socialId;

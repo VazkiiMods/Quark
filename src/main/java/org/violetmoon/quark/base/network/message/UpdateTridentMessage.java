@@ -1,47 +1,40 @@
 package org.violetmoon.quark.base.network.message;
 
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
+import org.violetmoon.quark.catnip.net.base.ClientboundPacketPayload;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.projectile.ThrownTrident;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+import org.violetmoon.quark.base.network.QuarkNetwork;
 
-import org.violetmoon.zeta.network.IZetaMessage;
-import org.violetmoon.zeta.network.IZetaNetworkEventContext;
-
-import java.io.Serial;
-
-public class UpdateTridentMessage implements IZetaMessage {
-
-	@Serial
-	private static final long serialVersionUID = -4716987873031723456L;
-
-	public int tridentID;
-	public ItemStack stack;
-
-	public UpdateTridentMessage() {}
-
-	public UpdateTridentMessage(int trident, ItemStack stack) {
-		this.tridentID = trident;
-		this.stack = stack;
-	}
+public record UpdateTridentMessage(int tridentID, ItemStack stack) implements ClientboundPacketPayload {
+	public static final StreamCodec<RegistryFriendlyByteBuf, UpdateTridentMessage> STREAM_CODEC = StreamCodec.composite(
+		ByteBufCodecs.INT, UpdateTridentMessage::tridentID, 
+	    ItemStack.STREAM_CODEC, UpdateTridentMessage::stack,
+		UpdateTridentMessage::new
+	);
 
 	@Override
 	@OnlyIn(Dist.CLIENT)
-	public boolean receive(IZetaNetworkEventContext context) {
-		context.enqueueWork(() -> {
-			Level level = Minecraft.getInstance().level;
-			if(level != null) {
-				Entity entity = level.getEntity(tridentID);
-				if(entity instanceof ThrownTrident trident) {
-					trident.tridentItem = stack;
-				}
+	public void handle(LocalPlayer player) {
+		Level level = Minecraft.getInstance().level;
+		if (level != null) {
+			Entity entity = level.getEntity(tridentID);
+			if (entity instanceof ThrownTrident trident) {
+				trident.pickupItemStack = stack;
 			}
-		});
-
-		return true;
+		}
 	}
 
+	@Override
+	public PacketTypeProvider getTypeProvider() {
+		return QuarkNetwork.UPDATE_TRIDENT_MESSAGE;
+	}
 }

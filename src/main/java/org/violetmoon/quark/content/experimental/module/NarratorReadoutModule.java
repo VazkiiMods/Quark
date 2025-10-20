@@ -1,7 +1,6 @@
 package org.violetmoon.quark.content.experimental.module;
 
 import com.mojang.text2speech.Narrator;
-
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
@@ -20,10 +19,10 @@ import net.minecraft.world.level.block.entity.SignBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
-import net.minecraftforge.client.settings.KeyConflictContext;
-import net.minecraftforge.client.settings.KeyModifier;
-
+import net.neoforged.neoforge.client.settings.KeyConflictContext;
+import net.neoforged.neoforge.client.settings.KeyModifier;
 import org.violetmoon.quark.base.QuarkClient;
+import org.violetmoon.quark.catnip.animation.AnimationTickHolder;
 import org.violetmoon.zeta.client.event.load.ZKeyMapping;
 import org.violetmoon.zeta.client.event.play.ZInput;
 import org.violetmoon.zeta.event.bus.LoadEvent;
@@ -80,7 +79,7 @@ public class NarratorReadoutModule extends ZetaModule {
 		private void acceptInput(boolean down, boolean full) {
 			Minecraft mc = Minecraft.getInstance();
 
-			float curr = QuarkClient.ticker.total;
+			float curr = AnimationTickHolder.getTicks() + Minecraft.getInstance().getTimer().getGameTimeDeltaTicks();
 			if(down && (curr - last) > 10) {
 				Narrator narrator = Narrator.getNarrator();
 				String readout = getReadout(mc, full);

@@ -3,7 +3,6 @@ package org.violetmoon.quark.base.handler;
 import com.google.common.collect.Lists;
 
 import net.minecraft.core.registries.Registries;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
 
 import org.violetmoon.quark.base.Quark;
@@ -106,13 +105,13 @@ public class QuarkSounds {
 
 	@LoadEvent
 	public static void start(ZRegister e) {
-		for(SoundEvent event : REGISTRY_DEFERENCE)
+		for (SoundEvent event : REGISTRY_DEFERENCE)
 			e.getRegistry().register(event, event.getLocation(), Registries.SOUND_EVENT);
 		//REGISTRY_DEFERENCE.clear(); //Maybe this will fix https://github.com/VazkiiMods/Quark/issues/4854 ??????
 	}
 
 	public static SoundEvent register(String name) {
-		SoundEvent event = SoundEvent.createVariableRangeEvent(new ResourceLocation(Quark.MOD_ID, name));
+		SoundEvent event = SoundEvent.createVariableRangeEvent(Quark.asResource(name));
 		REGISTRY_DEFERENCE.add(event);
 		return event;
 	}

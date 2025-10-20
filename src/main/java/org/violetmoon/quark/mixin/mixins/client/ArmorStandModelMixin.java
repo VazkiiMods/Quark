@@ -54,6 +54,8 @@ public class ArmorStandModelMixin {
 			rightBodyStick.visible = false;
 			leftBodyStick.visible = false;
 			shoulderStick.visible = false;
+			model.leftArm.visible = false;
+			model.rightArm.visible = false;
 			model.head.visible = false;
 			model.body.visible = false;
 		}

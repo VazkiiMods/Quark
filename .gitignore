@@ -8,6 +8,7 @@ Thumbs.db
 ## ForgeGradle
 /run
 /runServer
+/runs
 
 ## eclipse
 /.settings
@@ -39,6 +40,8 @@ Thumbs.db
 !/gradle/wrapper/gradle-wrapper.jar
 !/mixin/*.jar
 !/native/*.jar
+# This one is just to share the zeta files
+!/localjars/*.jar
 
 ### OSX (adds a lot of garbage)###
 .DS_Store
@@ -73,3 +76,6 @@ __pycache__
 
 # Web
 web/cached.php
+
+# Zeta for porting, remove later
+Zeta

@@ -1,15 +1,31 @@
 package org.violetmoon.quark.content.client.module;
 
-import java.util.*;
-import java.util.function.BooleanSupplier;
-
+import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.blaze3d.vertex.PoseStack;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.components.Tooltip;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
+import net.minecraft.client.gui.screens.inventory.CraftingScreen;
 import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipPositioner;
+import net.minecraft.client.gui.screens.recipebook.GhostRecipe;
+import net.minecraft.client.gui.screens.recipebook.GhostRecipe.GhostIngredient;
+import net.minecraft.client.gui.screens.recipebook.RecipeBookComponent;
+import net.minecraft.client.gui.screens.recipebook.RecipeBookPage;
+import net.minecraft.client.gui.screens.recipebook.RecipeCollection;
+import net.minecraft.client.renderer.GameRenderer;
+import net.minecraft.core.RegistryAccess;
 import net.minecraft.network.chat.Component;
+import net.minecraft.world.inventory.Slot;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.item.crafting.Recipe;
+import net.minecraft.world.item.crafting.RecipeHolder;
 import org.apache.commons.lang3.tuple.Pair;
 import org.joml.Vector2i;
 import org.joml.Vector2ic;
-import org.violetmoon.quark.base.QuarkClient;
 import org.violetmoon.quark.base.client.handler.ClientUtil;
 import org.violetmoon.zeta.client.event.play.ZClientTick;
 import org.violetmoon.zeta.client.event.play.ZRenderContainerScreen;
@@ -18,26 +34,11 @@ import org.violetmoon.zeta.event.bus.PlayEvent;
 import org.violetmoon.zeta.module.ZetaLoadModule;
 import org.violetmoon.zeta.module.ZetaModule;
 
-import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.PoseStack;
-
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.gui.components.EditBox;
-import net.minecraft.client.gui.screens.Screen;
-import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
-import net.minecraft.client.gui.screens.inventory.CraftingScreen;
-import net.minecraft.client.gui.screens.recipebook.GhostRecipe;
-import net.minecraft.client.gui.screens.recipebook.GhostRecipe.GhostIngredient;
-import net.minecraft.client.gui.screens.recipebook.RecipeBookComponent;
-import net.minecraft.client.gui.screens.recipebook.RecipeBookPage;
-import net.minecraft.client.gui.screens.recipebook.RecipeCollection;
-import net.minecraft.client.renderer.GameRenderer;
-import net.minecraft.core.RegistryAccess;
-import net.minecraft.world.inventory.Slot;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.crafting.Ingredient;
-import net.minecraft.world.item.crafting.Recipe;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
+import java.util.Stack;
+import java.util.function.BooleanSupplier;
 
 @ZetaLoadModule(category = "client")
 public class MicrocraftingHelperModule extends ZetaModule {
@@ -46,7 +47,7 @@ public class MicrocraftingHelperModule extends ZetaModule {
 	public static class Client extends MicrocraftingHelperModule {
 
 		private static Screen currentScreen;
-		private static Recipe<?> currentRecipe;
+		private static RecipeHolder<?> currentRecipe;
 
 		private static final Stack<StackedRecipe> recipes = new Stack<>();
 		private static int compoundCount = 1;
@@ -66,7 +67,7 @@ public class MicrocraftingHelperModule extends ZetaModule {
 
 					Minecraft mc = screen.getMinecraft();
 					RegistryAccess registryAccess = mc.level.registryAccess();
-					Recipe<?> recipeToSet = getRecipeToSet(recipeBook, ingr, true, registryAccess);
+					RecipeHolder<?> recipeToSet = getRecipeToSet(recipeBook, ingr, true, registryAccess);
 					if(recipeToSet == null)
 						recipeToSet = getRecipeToSet(recipeBook, ingr, false, registryAccess);
 
@@ -74,7 +75,7 @@ public class MicrocraftingHelperModule extends ZetaModule {
 						int ourCount = 0;
 
 
-						ItemStack testStack = recipeToSet.getResultItem(registryAccess);
+						ItemStack testStack = recipeToSet.value().getResultItem(registryAccess);
 						for(int j = 1; j < ghost.size(); j++) { // start at 1 to skip output
 							GhostIngredient testGhostIngr = ghost.get(j);
 							Ingredient testIngr = testGhostIngr.ingredient;
@@ -90,12 +91,12 @@ public class MicrocraftingHelperModule extends ZetaModule {
 							int mult = (int) (Math.ceil((double) ourCount / (double) testStack.getCount()));
 							compoundCount *= mult;
 
-							Recipe<?> ghostRecipe = ghost.getRecipe();
+							RecipeHolder<?> ghostRecipe = ghost.getRecipe();
 							StackedRecipe stackedRecipe = new StackedRecipe(ghostRecipe, testStack, compoundCount, getClearCondition(ingr, reqCount));
 							boolean stackIt = true;
 
 							if(recipes.isEmpty()) {
-								ItemStack rootDisplayStack = ghostRecipe.getResultItem(registryAccess);
+								ItemStack rootDisplayStack = ghostRecipe.value().getResultItem(registryAccess);
 								StackedRecipe rootRecipe = new StackedRecipe(null, rootDisplayStack, rootDisplayStack.getCount(), () -> recipes.size() == 1);
 								recipes.add(rootRecipe);
 							} else
@@ -238,7 +239,7 @@ public class MicrocraftingHelperModule extends ZetaModule {
 				compoundCount = 1;
 		}
 
-		private Recipe<?> getRecipeToSet(RecipeBookComponent recipeBook, Ingredient ingr, boolean craftableOnly, RegistryAccess registryAccess) {
+		private RecipeHolder<?> getRecipeToSet(RecipeBookComponent recipeBook, Ingredient ingr, boolean craftableOnly, RegistryAccess registryAccess) {
 			EditBox text = recipeBook.searchBox;
 
 			for(ItemStack stack : ingr.getItems()) {
@@ -253,7 +254,7 @@ public class MicrocraftingHelperModule extends ZetaModule {
 
                 if(!recipeLists.isEmpty()) {
                     recipeLists.removeIf(rl -> {
-                        List<Recipe<?>> list = rl.getDisplayRecipes(craftableOnly);
+                        List<RecipeHolder<?>> list = rl.getDisplayRecipes(craftableOnly);
                         return list.isEmpty();
                     });
 
@@ -264,17 +265,17 @@ public class MicrocraftingHelperModule extends ZetaModule {
                         if (rl1 == rl2)
                             return 0;
 
-                        Recipe<?> r1 = rl1.getDisplayRecipes(craftableOnly).get(0);
-                        Recipe<?> r2 = rl2.getDisplayRecipes(craftableOnly).get(0);
+						RecipeHolder<?> r1 = rl1.getDisplayRecipes(craftableOnly).get(0);
+						RecipeHolder<?> r2 = rl2.getDisplayRecipes(craftableOnly).get(0);
                         return compareRecipes(r1, r2);
                     });
 
                     for(RecipeCollection list : recipeLists) {
-                        List<Recipe<?>> recipeList = list.getDisplayRecipes(craftableOnly);
+                        List<RecipeHolder<?>> recipeList = list.getDisplayRecipes(craftableOnly);
                         recipeList.sort(this::compareRecipes);
 
-                        for(Recipe<?> recipe : recipeList)
-                            if(ingr.test(recipe.getResultItem(registryAccess)))
+                        for(RecipeHolder<?> recipe : recipeList)
+                            if(ingr.test(recipe.value().getResultItem(registryAccess)))
                                 return recipe;
                     }
                 }
@@ -283,12 +284,12 @@ public class MicrocraftingHelperModule extends ZetaModule {
 			return null;
 		}
 
-		private int compareRecipes(Recipe<?> r1, Recipe<?> r2) {
+		private int compareRecipes(RecipeHolder<?> r1, RecipeHolder<?> r2) {
 			if(r1 == r2)
 				return 0;
 
-			String id1 = r1.getId().toString();
-			String id2 = r2.getId().toString();
+			String id1 = r1.id().toString();
+			String id2 = r2.id().toString();
 
 			boolean id1Mc = id1.startsWith("minecraft");
 			boolean id2Mc = id2.startsWith("minecraft");
@@ -334,11 +335,11 @@ public class MicrocraftingHelperModule extends ZetaModule {
 			return null;
 		}
 
-		private record StackedRecipe(Recipe<?> recipe,
+		private record StackedRecipe(RecipeHolder<?> recipe,
 				ItemStack displayItem, int count,
 				BooleanSupplier clearCondition) {
 
-			private StackedRecipe(Recipe<?> recipe, ItemStack displayItem, int count, BooleanSupplier clearCondition) {
+			private StackedRecipe(RecipeHolder<?> recipe, ItemStack displayItem, int count, BooleanSupplier clearCondition) {
 				this.recipe = recipe;
 				this.count = count;
 				this.clearCondition = clearCondition;

@@ -1,21 +1,5 @@
 package org.violetmoon.quark.base.proxy;
 
-import java.time.LocalDateTime;
-import java.time.Month;
-
-import org.jetbrains.annotations.Nullable;
-import org.violetmoon.quark.base.Quark;
-import org.violetmoon.quark.base.QuarkClient;
-import org.violetmoon.quark.base.client.config.QButtonHandler;
-import org.violetmoon.quark.base.client.config.QuarkConfigHomeScreen;
-import org.violetmoon.quark.base.client.handler.ClientUtil;
-import org.violetmoon.quark.base.client.handler.InventoryButtonHandler;
-import org.violetmoon.quark.base.client.handler.ModelHandler;
-import org.violetmoon.quark.base.client.handler.QuarkProgrammerArtHandler;
-import org.violetmoon.quark.base.handler.ContributorRewardHandler;
-import org.violetmoon.quark.base.handler.WoodSetHandler;
-import org.violetmoon.quark.mixin.mixins.client.accessor.AccessorMultiPlayerGameMode;
-
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.player.LocalPlayer;
@@ -25,8 +9,26 @@ import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.BlockHitResult;
-import net.minecraftforge.client.ConfigScreenHandler.ConfigScreenFactory;
-import net.minecraftforge.fml.ModLoadingContext;
+import net.neoforged.fml.ModLoadingContext;
+import net.neoforged.neoforge.client.gui.IConfigScreenFactory;
+import org.jetbrains.annotations.Nullable;
+import org.violetmoon.quark.base.Quark;
+import org.violetmoon.quark.base.QuarkClient;
+import org.violetmoon.quark.base.client.config.QButtonHandler;
+import org.violetmoon.quark.base.client.config.QuarkConfigHomeScreen;
+import org.violetmoon.quark.base.client.handler.ClientUtil;
+import org.violetmoon.quark.base.client.handler.InventoryButtonHandler;
+import org.violetmoon.quark.base.client.handler.ModelHandler;
+import org.violetmoon.quark.base.client.handler.QuarkProgrammerArtHandler;
+import org.violetmoon.quark.base.components.QuarkDataComponents;
+import org.violetmoon.quark.base.handler.ContributorRewardHandler;
+import org.violetmoon.quark.base.handler.WoodSetHandler;
+import org.violetmoon.quark.catnip.animation.AnimationTickHolder;
+import org.violetmoon.quark.mixin.mixins.client.accessor.AccessorMultiPlayerGameMode;
+
+import java.time.LocalDateTime;
+import java.time.Month;
+import java.util.function.Supplier;
 
 // TODO: can we merge quark client and this class?
 public class ClientProxy extends CommonProxy {
@@ -54,7 +56,9 @@ public class ClientProxy extends CommonProxy {
 
 		super.start(); //<- loads and initializes modules
 
-		ModLoadingContext.get().registerExtensionPoint(ConfigScreenFactory.class, () -> new ConfigScreenFactory((minecraft, screen) -> new QuarkConfigHomeScreen(screen)));
+		Supplier<IConfigScreenFactory> configScreen = () ->
+				(mc, previousScreen) -> new QuarkConfigHomeScreen(previousScreen);
+		ModLoadingContext.get().registerExtensionPoint(IConfigScreenFactory.class, configScreen);
 	}
 
 	@Override
@@ -79,7 +83,7 @@ public class ClientProxy extends CommonProxy {
 
 	@Override
 	public float getVisualTime() {
-		return QuarkClient.ticker.total;
+		return AnimationTickHolder.getTicks();
 	}
 
 	@Override

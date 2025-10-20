@@ -21,7 +21,7 @@ public class EnderWatcherModule extends ZetaModule {
 
 	public static ManualTrigger watcherCenterTrigger;
 	@Hint
-	Block ender_watcher;
+	static public Block ender_watcher;
 
 	@LoadEvent
 	public final void register(ZRegister event) {

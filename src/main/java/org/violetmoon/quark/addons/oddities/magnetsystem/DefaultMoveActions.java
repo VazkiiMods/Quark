@@ -1,39 +1,35 @@
 package org.violetmoon.quark.addons.oddities.magnetsystem;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
-
 import com.mojang.authlib.GameProfile;
-import net.minecraft.server.level.ServerLevel;
-import net.minecraft.world.InteractionHand;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.item.Items;
-import net.minecraft.world.item.enchantment.EnchantmentHelper;
-import net.minecraft.world.item.enchantment.Enchantments;
-import net.minecraft.world.level.block.*;
-import net.minecraft.world.level.gameevent.GameEvent;
-import net.minecraft.world.level.material.FluidState;
-import net.minecraftforge.common.util.FakePlayer;
-import net.minecraftforge.common.util.FakePlayerFactory;
-import org.violetmoon.quark.addons.oddities.module.MagnetsModule;
-import org.violetmoon.quark.api.IMagnetMoveAction;
-
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.HopperBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.DoubleBlockHalf;
+import net.minecraft.world.level.gameevent.GameEvent;
+import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.common.IPlantable;
+import net.neoforged.neoforge.common.SpecialPlantable;
+import net.neoforged.neoforge.common.util.FakePlayer;
+import net.neoforged.neoforge.common.util.FakePlayerFactory;
+import org.violetmoon.quark.addons.oddities.module.MagnetsModule;
+import org.violetmoon.quark.api.IMagnetMoveAction;
+import org.violetmoon.quark.mixin.mixins.accessor.AccessorBlockBehavior;
 
-import javax.annotation.Nullable;
+import java.util.HashMap;
+import java.util.UUID;
 
 public class DefaultMoveActions {
 
@@ -72,7 +68,7 @@ public class DefaultMoveActions {
 
 			FakePlayer player = FakePlayerFactory.get(level, FAKE_PLAYER_PROFILE);
 			ItemStack tool = Items.IRON_PICKAXE.getDefaultInstance();
-			EnchantmentHelper.setEnchantments(Map.of(Enchantments.SILK_TOUCH, 1), tool);
+			tool.enchant(level.registryAccess().registry(Registries.ENCHANTMENT).get().getHolderOrThrow(Enchantments.SILK_TOUCH), 1);
 			player.setItemInHand(InteractionHand.MAIN_HAND, tool);
 
 			BlockEntity blockentity = blockstate.hasBlockEntity() ? level.getBlockEntity(pPos) : null;
@@ -113,13 +109,13 @@ public class DefaultMoveActions {
 							if(world.isEmptyBlock(groundPos))
 								groundPos = groundPos.below();
 							Block seedType = blockItem.getBlock();
-							if(seedType instanceof IPlantable plantable) {
+							if(seedType instanceof SpecialPlantable) {
 								BlockState groundBlock = world.getBlockState(groundPos);
-								if(groundBlock.getBlock().canSustainPlant(groundBlock, world, groundPos,Direction.UP, plantable)) {
+								if(groundBlock.getBlock().canSustainPlant(groundBlock, world, groundPos,Direction.UP, state).isTrue()) {
 									BlockPos seedPos = groundPos.above();
 									if(state.canSurvive(world, seedPos)) {
 										BlockState seedState = seedType.defaultBlockState();
-										world.playSound(null, seedPos, seedType.getSoundType(seedState).getPlaceSound(), SoundSource.BLOCKS, 1.0F, 1.0F);
+										world.playSound(null, seedPos, ((AccessorBlockBehavior)seedType).invokeGetSoundType(seedState).getPlaceSound(), SoundSource.BLOCKS, 1.0F, 1.0F);
 
 										boolean canPlace = true;
 										if(seedState.getBlock() instanceof DoublePlantBlock) {

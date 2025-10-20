@@ -3,14 +3,12 @@ package org.violetmoon.quark.content.tools.module;
 import com.mojang.blaze3d.platform.Window;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-
 import net.minecraft.client.Camera;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.item.ItemProperties;
 import net.minecraft.core.BlockPos;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
@@ -21,8 +19,9 @@ import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
-
+import net.neoforged.neoforge.client.gui.VanillaGuiLayers;
 import org.joml.Matrix4f;
+import org.violetmoon.quark.base.Quark;
 import org.violetmoon.quark.base.config.type.RGBAColorConfig;
 import org.violetmoon.quark.content.tools.item.AbacusItem;
 import org.violetmoon.zeta.client.event.load.ZClientSetup;
@@ -42,7 +41,7 @@ import java.util.List;
 public class AbacusModule extends ZetaModule {
 
 	@Hint
-	public Item abacus;
+	public static Item abacus;
 
 	@Config
 	RGBAColorConfig highlightColor = RGBAColorConfig.forColor(0, 0, 0, 0.4);
@@ -57,30 +56,32 @@ public class AbacusModule extends ZetaModule {
 
 		@LoadEvent
 		public void clientSetup(ZClientSetup e) {
-			e.enqueueWork(() -> ItemProperties.register(abacus, new ResourceLocation("count"), AbacusItem.Client.ITEM_PROPERTY_FUNCTION));
+			e.enqueueWork(() -> ItemProperties.register(abacus, Quark.asResource("count"), AbacusItem.Client.ITEM_PROPERTY_FUNCTION));
 		}
 
 		@PlayEvent
-		public void onHUDRenderPost(ZRenderGuiOverlay.Crosshair.Post event) {
-			Minecraft mc = Minecraft.getInstance();
-			Player player = mc.player;
-			GuiGraphics guiGraphics = event.getGuiGraphics();
-			if(player != null) {
-				ItemStack stack = player.getMainHandItem();
-				if(!(stack.getItem() instanceof AbacusItem))
-					stack = player.getOffhandItem();
+		public void onHUDRenderPost(ZRenderGuiOverlay.Post event) {
+			if (event.getLayerName().equals(VanillaGuiLayers.CROSSHAIR) && !Minecraft.getInstance().options.hideGui) {
+				Minecraft mc = Minecraft.getInstance();
+				Player player = mc.player;
+				GuiGraphics guiGraphics = event.getGuiGraphics();
+				if (player != null) {
+					ItemStack stack = player.getMainHandItem();
+					if (!(stack.getItem() instanceof AbacusItem))
+						stack = player.getOffhandItem();
 
-				if(stack.getItem() instanceof AbacusItem) {
-					int distance = AbacusItem.Client.getCount(stack, player);
-					if(distance > -1) {
-						Window window = event.getWindow();
-						int x = window.getGuiScaledWidth() / 2 + 10;
-						int y = window.getGuiScaledHeight() / 2 - 7;
+					if (stack.getItem() instanceof AbacusItem) {
+						int distance = AbacusItem.Client.getCount(stack, player);
+						if (distance > -1) {
+							Window window = event.getWindow();
+							int x = window.getGuiScaledWidth() / 2 + 10;
+							int y = window.getGuiScaledHeight() / 2 - 7;
 
-						guiGraphics.renderItem(stack, x, y);
+							guiGraphics.renderItem(stack, x, y);
 
-						String distStr = distance < AbacusItem.MAX_COUNT ? Integer.toString(distance + 1) : (AbacusItem.MAX_COUNT + "+");
-						guiGraphics.drawString(mc.font, distStr, x + 17, y + 5, 0xFFFFFF, true);
+							String distStr = distance < AbacusItem.MAX_COUNT ? Integer.toString(distance + 1) : (AbacusItem.MAX_COUNT + "+");
+							guiGraphics.drawString(mc.font, distStr, x + 17, y + 5, 0xFFFFFF, true);
+						}
 					}
 				}
 			}
@@ -152,8 +153,8 @@ public class AbacusModule extends ZetaModule {
 										f1 /= f3;
 										f2 /= f3;
 
-										bufferIn.vertex(matrix4f, (float) (minX + xIn), (float) (minY + yIn), (float) (minZ + zIn)).color(r, g, b, a).normal(pose.normal(), f, f1, f2).endVertex();
-										bufferIn.vertex(matrix4f, (float) (maxX + xIn), (float) (maxY + yIn), (float) (maxZ + zIn)).color(r, g, b, a).normal(pose.normal(), f, f1, f2).endVertex();
+										bufferIn.addVertex(matrix4f, (float) (minX + xIn), (float) (minY + yIn), (float) (minZ + zIn)).setColor(r, g, b, a).setNormal(pose, f, f1, f2);
+										bufferIn.addVertex(matrix4f, (float) (maxX + xIn), (float) (maxY + yIn), (float) (maxZ + zIn)).setColor(r, g, b, a).setNormal(pose, f, f1, f2);
 									});
 								}
 

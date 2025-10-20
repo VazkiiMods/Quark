@@ -13,7 +13,7 @@ import org.violetmoon.zeta.util.Hint;
 public class SturdyStoneModule extends ZetaModule {
 
 	@Hint
-	Block sturdy_stone;
+	public static Block sturdy_stone;
 
 	@LoadEvent
 	public final void register(ZRegister event) {

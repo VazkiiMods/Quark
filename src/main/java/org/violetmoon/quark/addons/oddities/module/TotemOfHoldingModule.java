@@ -10,7 +10,6 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.MobCategory;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
-
 import org.violetmoon.quark.addons.oddities.client.render.entity.TotemOfHoldingRenderer;
 import org.violetmoon.quark.addons.oddities.entity.TotemOfHoldingEntity;
 import org.violetmoon.quark.base.Quark;
@@ -61,7 +60,6 @@ public class TotemOfHoldingModule extends ZetaModule {
 				.updateInterval(128) // update interval
 				.fireImmune()
 				.setShouldReceiveVelocityUpdates(false)
-				.setCustomClientFactory((spawnEntity, world) -> new TotemOfHoldingEntity(totemType, world))
 				.build("totem");
 		Quark.ZETA.registry.register(totemType, "totem", Registries.ENTITY_TYPE);
 	}
@@ -126,7 +124,7 @@ public class TotemOfHoldingModule extends ZetaModule {
 
 		@LoadEvent
 		public void registerAdditionalModels(ZAddModels event) {
-			event.register(new ModelResourceLocation(Quark.MOD_ID, "extra/totem_of_holding", "inventory"));
+			event.register(ModelResourceLocation.standalone(Quark.asResource("extra/totem_of_holding")));
 		}
 	}
 }

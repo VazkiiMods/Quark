@@ -1,44 +1,37 @@
 package org.violetmoon.quark.content.tools.item;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
-
-import com.mojang.datafixers.util.Pair;
-import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.core.RegistryAccess;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.*;
+import net.minecraft.world.item.context.BlockPlaceContext;
+import net.minecraft.world.item.context.UseOnContext;
+import net.minecraft.world.phys.BlockHitResult;
 import org.jetbrains.annotations.NotNull;
 import org.violetmoon.quark.api.ITrowelable;
 import org.violetmoon.quark.api.IUsageTickerOverride;
+import org.violetmoon.quark.base.components.ItemWrapperComponent;
+import org.violetmoon.quark.base.components.QuarkDataComponents;
 import org.violetmoon.quark.content.tools.module.TrowelModule;
 import org.violetmoon.zeta.item.ZetaItem;
 import org.violetmoon.zeta.module.ZetaModule;
 import org.violetmoon.zeta.registry.CreativeTabManager;
-import org.violetmoon.zeta.util.ItemNBTHelper;
 import org.violetmoon.zeta.util.MiscUtil;
 
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResult;
-import net.minecraft.world.entity.player.Inventory;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.BlockItem;
-import net.minecraft.world.item.CreativeModeTabs;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
-import net.minecraft.world.item.context.BlockPlaceContext;
-import net.minecraft.world.item.context.UseOnContext;
-import net.minecraft.world.phys.BlockHitResult;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+import java.util.Random;
 
 public class TrowelItem extends ZetaItem implements IUsageTickerOverride {
-
-	private static final String TAG_PLACING_SEED = "placing_seed";
-	private static final String TAG_LAST_STACK = "last_stack";
 
 	public TrowelItem(ZetaModule module) {
 		super("trowel", module, new Item.Properties()
 				.durability(255));
-		CreativeTabManager.addToCreativeTabNextTo(CreativeModeTabs.TOOLS_AND_UTILITIES, this, Items.SHEARS, false);
+		CreativeTabManager.addNextToItem(CreativeModeTabs.TOOLS_AND_UTILITIES, this, Items.SHEARS, false);
 	}
 
 	@NotNull
@@ -60,9 +53,9 @@ public class TrowelItem extends ZetaItem implements IUsageTickerOverride {
 
 		ItemStack trowel = player.getItemInHand(hand);
 
-		long seed = ItemNBTHelper.getLong(trowel, TAG_PLACING_SEED, 0);
+		long seed = Optional.ofNullable(trowel.get(QuarkDataComponents.PLACING_SEED)).orElse(0L);
 		Random rand = new Random(seed);
-		ItemNBTHelper.setLong(trowel, TAG_PLACING_SEED, rand.nextLong());
+		trowel.set(QuarkDataComponents.PLACING_SEED, rand.nextLong());
 
 		int targetSlot = targets.get(rand.nextInt(targets.size()));
 		ItemStack toPlaceStack = inventory.getItem(targetSlot);
@@ -77,11 +70,10 @@ public class TrowelItem extends ZetaItem implements IUsageTickerOverride {
 		inventory.setItem(targetSlot, newHandItem);
 
 		if (result.consumesAction()) {
-			CompoundTag cmp = toPlaceStack.serializeNBT();
-			ItemNBTHelper.setCompound(trowel, TAG_LAST_STACK, cmp);
+			trowel.set(QuarkDataComponents.LAST_STACK, new ItemWrapperComponent(toPlaceStack));
 
-			if(TrowelModule.maxDamage > 0)
-				MiscUtil.damageStack(player, hand, context.getItemInHand(), 1);
+			if (TrowelModule.maxDamage > 0)
+				MiscUtil.damageStack(context.getItemInHand(), 1, player, hand == InteractionHand.MAIN_HAND ? EquipmentSlot.MAINHAND : EquipmentSlot.OFFHAND);
 		}
 
 		return result;
@@ -97,32 +89,23 @@ public class TrowelItem extends ZetaItem implements IUsageTickerOverride {
 	}
 
 	public static ItemStack getLastStack(ItemStack stack) {
-		CompoundTag cmp = ItemNBTHelper.getCompound(stack, TAG_LAST_STACK, false);
-		return ItemStack.of(cmp);
+		if (stack.has(QuarkDataComponents.LAST_STACK))
+			return stack.get(QuarkDataComponents.LAST_STACK).stack();
+		else
+			return ItemStack.EMPTY;
 	}
 
 	@Override
-	public int getMaxDamageZeta(ItemStack stack) {
-		return TrowelModule.maxDamage;
-	}
-
-	@Override
-	public boolean canBeDepleted() {
-		return TrowelModule.maxDamage > 0;
-	}
-
-	@Override
-	public ItemStack getUsageTickerItem(ItemStack stack) {
+	public ItemStack getUsageTickerItem(ItemStack stack, RegistryAccess access) {
 		return getLastStack(stack);
 	}
 
-	class TrowelBlockItemUseContext extends BlockPlaceContext {
+	static class TrowelBlockItemUseContext extends BlockPlaceContext {
 
 		public TrowelBlockItemUseContext(UseOnContext context, ItemStack stack) {
 			super(context.getLevel(), context.getPlayer(), context.getHand(), stack,
 					new BlockHitResult(context.getClickLocation(), context.getClickedFace(), context.getClickedPos(), context.isInside()));
 		}
-
 	}
 
 }

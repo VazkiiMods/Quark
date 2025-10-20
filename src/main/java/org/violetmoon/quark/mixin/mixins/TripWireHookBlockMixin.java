@@ -17,7 +17,7 @@ import org.violetmoon.quark.content.experimental.module.GameNerfsModule;
 public class TripWireHookBlockMixin {
 
 	@WrapWithCondition(method = "calculateState", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/Level;setBlock(Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/level/block/state/BlockState;I)Z"))
-	private boolean fixTripWireDupe(Level instance, BlockPos pos, BlockState state, int flag) {
+	private static boolean fixTripWireDupe(Level instance, BlockPos pos, BlockState state, int flag) {
 		if(GameNerfsModule.shouldTripwireHooksCheckForAir() && state.is(Blocks.TRIPWIRE_HOOK))
 			return instance.getBlockState(pos).is(Blocks.TRIPWIRE_HOOK);
 		return true;

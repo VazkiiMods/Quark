@@ -3,7 +3,6 @@ package org.violetmoon.quark.addons.oddities.module;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderers;
 import net.minecraft.client.resources.model.ModelResourceLocation;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.level.block.Block;
@@ -67,7 +66,7 @@ public class PipesModule extends ZetaModule {
 
 	@LoadEvent
 	public final void setup(ZCommonSetup event) {
-		pipesTag = BlockTags.create(new ResourceLocation(Quark.MOD_ID, "pipes"));
+		pipesTag = BlockTags.create(Quark.asResource("pipes"));
 	}
 
 	@LoadEvent
@@ -84,7 +83,7 @@ public class PipesModule extends ZetaModule {
 
 		@LoadEvent
 		public void registerAdditionalModels(ZAddModels event) {
-			event.register(new ModelResourceLocation(Quark.MOD_ID, "extra/pipe_flare", "inventory"));
+			event.register(new ModelResourceLocation(Quark.asResource("extra/pipe_flare"), "standalone"));
 		}
 	}
 }

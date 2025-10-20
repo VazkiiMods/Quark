@@ -1,0 +1,35 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:and",
+      "values": [
+        {
+          "type": "zeta:flag",
+          "flag": "dripstone"
+        },
+        {
+          "type": "zeta:flag",
+          "flag": "more_stone_variants"
+        },
+        {
+          "type": "zeta:flag",
+          "flag": "stone_bricks"
+        }
+      ]
+    }
+  ],
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "key": {
+    "#": {
+      "item": "quark:dripstone_bricks"
+    }
+  },
+  "pattern": [
+    "###"
+  ],
+  "result": {
+    "count": 6,
+    "id": "quark:dripstone_bricks_slab"
+  }
+}

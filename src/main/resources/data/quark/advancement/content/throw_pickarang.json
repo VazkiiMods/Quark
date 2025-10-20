@@ -1,0 +1,35 @@
+{
+  "parent": "minecraft:story/mine_diamond",
+  "criteria": {
+    "throw_pickarang": {
+      "trigger": "quark:throw_pickarang"
+    }
+  },
+  "display": {
+    "announce_to_chat": true,
+    "description": {
+      "translate": "advancements.quark.throw_pickarang.description"
+    },
+    "frame": "task",
+    "hidden": false,
+    "icon": {
+      "id": "quark:pickarang"
+    },
+    "show_toast": true,
+    "title": {
+      "translate": "advancements.quark.throw_pickarang.title"
+    }
+  },
+  "requirements": [
+    [
+      "throw_pickarang"
+    ]
+  ],
+  "neoforge:conditions": [
+    {
+      "type": "zeta:flag",
+      "flag": "pickarang"
+    }
+  ]
+
+}

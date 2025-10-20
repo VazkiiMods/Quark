@@ -3,9 +3,10 @@ package org.violetmoon.quark.content.tweaks.module;
 import java.util.EnumMap;
 import java.util.Map;
 
+import net.minecraft.core.registries.Registries;
 import org.violetmoon.quark.base.Quark;
-import org.violetmoon.quark.content.experimental.module.VariantSelectorModule;
 import org.violetmoon.quark.content.tweaks.block.DirtyGlassBlock;
+import org.violetmoon.zeta.block.IZetaBlock;
 import org.violetmoon.zeta.block.ZetaBlock;
 import org.violetmoon.zeta.block.ZetaInheritedPaneBlock;
 import org.violetmoon.zeta.event.bus.LoadEvent;
@@ -17,8 +18,6 @@ import org.violetmoon.zeta.module.ZetaModule;
 import org.violetmoon.zeta.registry.CreativeTabManager;
 import org.violetmoon.zeta.util.MiscUtil;
 
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.tags.ItemTags;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.CreativeModeTabs;
 import net.minecraft.world.item.DyeColor;
@@ -37,6 +36,7 @@ import net.minecraft.world.level.material.MapColor;
 public class GlassShardModule extends ZetaModule {
 
 	public static ZetaBlock dirtyGlass;
+	public static ZetaInheritedPaneBlock dirtyGlassPane;
 
 	public static TagKey<Item> shardTag;
 
@@ -50,19 +50,19 @@ public class GlassShardModule extends ZetaModule {
 		dirtyGlass = new DirtyGlassBlock("dirty_glass", this,
 				Block.Properties.of().mapColor(MapColor.COLOR_BROWN).strength(0.3F).sound(SoundType.GLASS));
 
-		new ZetaInheritedPaneBlock(dirtyGlass).setCreativeTab(CreativeModeTabs.COLORED_BLOCKS, Blocks.WHITE_STAINED_GLASS_PANE, true);
+		dirtyGlassPane = (ZetaInheritedPaneBlock) new ZetaInheritedPaneBlock(dirtyGlass).setCreativeTab(CreativeModeTabs.COLORED_BLOCKS, Blocks.WHITE_STAINED_GLASS_PANE, true);
 
-		CreativeTabManager.daisyChain();
-		clearShard = new ZetaItem("clear_shard", this, new Item.Properties()).setCreativeTab(CreativeModeTabs.INGREDIENTS, Items.PINK_DYE, false);
+        CreativeTabManager.startChain(CreativeModeTabs.INGREDIENTS, false, false, Items.PINK_DYE);
+        clearShard = new ZetaItem("clear_shard", this, new Item.Properties()).setCreativeTab(CreativeModeTabs.INGREDIENTS, Items.PINK_DYE, false);
 		dirtyShard = new ZetaItem("dirty_shard", this, new Item.Properties()).setCreativeTab(CreativeModeTabs.INGREDIENTS);
 
 		for(DyeColor color : MiscUtil.CREATIVE_COLOR_ORDER)
 			shardColors.put(color, new ZetaItem(color.getSerializedName() + "_shard", this, new Item.Properties()).setCreativeTab(CreativeModeTabs.INGREDIENTS));
-		CreativeTabManager.endDaisyChain();
+		CreativeTabManager.endChain();
 	}
 
 	@LoadEvent
 	public final void setup(ZCommonSetup event) {
-		shardTag = ItemTags.create(new ResourceLocation(Quark.MOD_ID, "shards"));
+		shardTag = Quark.asTagKey(Registries.ITEM,"shards");
 	}
 }

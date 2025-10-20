@@ -14,7 +14,7 @@ import org.violetmoon.quark.content.mobs.entity.Toretoise;
 
 public class ToretoiseRenderer extends MobRenderer<Toretoise, ToretoiseModel> {
 
-	private static final ResourceLocation BASE_TEXTURE = new ResourceLocation(Quark.MOD_ID, "textures/model/entity/toretoise/base.png");
+	private static final ResourceLocation BASE_TEXTURE = Quark.asResource("textures/model/entity/toretoise/base.png");
 
 	public ToretoiseRenderer(EntityRendererProvider.Context context) {
 		super(context, ModelHandler.model(ModelHandler.toretoise), 1F);

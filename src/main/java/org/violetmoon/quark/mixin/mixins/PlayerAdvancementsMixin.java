@@ -10,7 +10,7 @@ import org.violetmoon.quark.base.config.QuarkGeneralConfig;
 @Mixin(AdvancementVisibilityEvaluator.class)
 public class PlayerAdvancementsMixin {
 
-	@ModifyConstant(method = "evaluateVisibility(Lnet/minecraft/advancements/Advancement;Ljava/util/function/Predicate;Lnet/minecraft/server/advancements/AdvancementVisibilityEvaluator$Output;)V", constant = @Constant(intValue = 2))
+	@ModifyConstant(method = "evaluateVisibility(Lnet/minecraft/advancements/AdvancementNode;Ljava/util/function/Predicate;Lnet/minecraft/server/advancements/AdvancementVisibilityEvaluator$Output;)V", constant = @Constant(intValue = 2))
 	private static int visibility(int curr) {
 		return QuarkGeneralConfig.advancementVisibilityDepth;
 	}

@@ -2,6 +2,7 @@ package org.violetmoon.quark.addons.oddities.block.be;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtUtils;
@@ -12,7 +13,10 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.MoverType;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.*;
+import net.minecraft.world.level.block.BasePressurePlateBlock;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.ButtonBlock;
+import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
@@ -21,9 +25,6 @@ import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
-
-import org.jetbrains.annotations.NotNull;
-
 import org.violetmoon.quark.addons.oddities.magnetsystem.MagnetSystem;
 import org.violetmoon.quark.addons.oddities.module.MagnetsModule;
 import org.violetmoon.quark.api.IMagnetMoveAction;
@@ -229,9 +230,8 @@ public class MagnetizedBlockBlockEntity extends BlockEntity {
 			tileData.putInt("x", this.worldPosition.getX());
 			tileData.putInt("y", this.worldPosition.getY());
 			tileData.putInt("z", this.worldPosition.getZ());
-			return BlockEntity.loadStatic(pos, magnetState, subTile);
+			return BlockEntity.loadStatic(pos, magnetState, subTile, level.registryAccess());
 		}
-
 		return null;
 	}
 
@@ -302,29 +302,30 @@ public class MagnetizedBlockBlockEntity extends BlockEntity {
 	}
 
 	@Override
-	public void load(@NotNull CompoundTag compound) {
-		super.load(compound);
-
-		this.magnetState = NbtUtils.readBlockState(level.holderLookup(Registries.BLOCK), compound.getCompound("blockState"));
-		this.magnetFacing = Direction.from3DDataValue(compound.getInt("facing"));
-		this.progress = compound.getFloat("progress");
+	protected void loadAdditional(CompoundTag tag, HolderLookup.Provider provider) {
+		super.loadAdditional(tag, provider);
+		this.magnetState = NbtUtils.readBlockState(level.holderLookup(Registries.BLOCK), tag.getCompound("blockState"));
+		this.magnetFacing = Direction.from3DDataValue(tag.getInt("facing"));
+		this.progress = tag.getFloat("progress");
 		this.lastProgress = this.progress;
-		this.subTile = compound.getCompound("subTile");
+		this.subTile = tag.getCompound("subTile");
 	}
 
 	@Override
-	@NotNull
-	public CompoundTag getUpdateTag() {
-		return writeNBTData(serializeNBT(), false);
+	public CompoundTag getUpdateTag(HolderLookup.Provider provider) {
+		return writeNBTData(serializeAttachments(provider), false);
 	}
 
 	@Override
-	protected void saveAdditional(@NotNull CompoundTag nbt) {
-		super.saveAdditional(nbt);
-		writeNBTData(nbt, true);
+	protected void saveAdditional(CompoundTag tag, HolderLookup.Provider provider) {
+		super.saveAdditional(tag, provider);
+		writeNBTData(tag, true);
 	}
 
 	private CompoundTag writeNBTData(CompoundTag compound, boolean includeSubTile) {
+		if (compound == null) {
+			compound = new CompoundTag();
+		}
 		compound.put("blockState", NbtUtils.writeBlockState(this.magnetState));
 		if(includeSubTile)
 			compound.put("subTile", subTile);

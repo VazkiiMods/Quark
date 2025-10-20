@@ -1,19 +1,12 @@
 package org.violetmoon.quark.addons.oddities.block.pipe;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-import org.violetmoon.quark.addons.oddities.block.be.PipeBlockEntity;
-import org.violetmoon.quark.addons.oddities.module.PipesModule;
-import org.violetmoon.zeta.module.ZetaModule;
-import org.violetmoon.zeta.util.MiscUtil;
-
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResult;
+import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -35,11 +28,16 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+import org.violetmoon.quark.addons.oddities.block.be.PipeBlockEntity;
+import org.violetmoon.quark.addons.oddities.module.PipesModule;
+import org.violetmoon.zeta.module.ZetaModule;
+import org.violetmoon.zeta.util.MiscUtil;
 
 public class CopperPipeBlock extends BasePipeBlock implements SimpleWaterloggedBlock {
 
 	private static final VoxelShape CENTER_SHAPE = Shapes.box(0.3125, 0.3125, 0.3125, 0.6875, 0.6875, 0.6875);
-
 	private static final VoxelShape DOWN_SHAPE = Shapes.box(0.3125, 0, 0.3125, 0.6875, 0.6875, 0.6875);
 	private static final VoxelShape UP_SHAPE = Shapes.box(0.3125, 0.3125, 0.3125, 0.6875, 1, 0.6875);
 	private static final VoxelShape NORTH_SHAPE = Shapes.box(0.3125, 0.3125, 0, 0.6875, 0.6875, 0.6875);
@@ -60,12 +58,13 @@ public class CopperPipeBlock extends BasePipeBlock implements SimpleWaterloggedB
 	}
 
 	// Convert to encased
+
+
 	@Override
-	public InteractionResult use(BlockState state, Level worldIn, BlockPos pos, Player player, InteractionHand handIn, BlockHitResult hit) {
-		ItemStack stack = player.getItemInHand(handIn);
+	public ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level worldIn, BlockPos pos, Player player, InteractionHand handIn, BlockHitResult hit) {
 		if(stack.is(Items.GLASS) && PipesModule.enableEncasedPipes) {
 			if(worldIn.getBlockEntity(pos) instanceof PipeBlockEntity be) {
-				CompoundTag cmp = be.saveWithoutMetadata();
+				CompoundTag cmp = be.saveWithoutMetadata(worldIn.registryAccess());
 
 				if(!worldIn.isClientSide) {
 					worldIn.removeBlockEntity(pos);
@@ -74,7 +73,7 @@ public class CopperPipeBlock extends BasePipeBlock implements SimpleWaterloggedB
 					worldIn.updateNeighborsAt(pos, PipesModule.encasedPipe);
 
 					BlockEntity newBe = worldIn.getBlockEntity(pos);
-					if(newBe != null) newBe.load(cmp);
+					if(newBe != null) newBe.loadWithComponents(cmp, worldIn.registryAccess());
 				}
 
 				SoundType type = Blocks.GLASS.defaultBlockState().getSoundType(worldIn, pos, player);
@@ -85,10 +84,9 @@ public class CopperPipeBlock extends BasePipeBlock implements SimpleWaterloggedB
 					stack.shrink(1);
 				}
 			}
-			return InteractionResult.sidedSuccess(worldIn.isClientSide);
+			return ItemInteractionResult.sidedSuccess(worldIn.isClientSide);
 		}
-
-		return super.use(state, worldIn, pos, player, handIn, hit);
+		return super.useItemOn(stack, state, worldIn, pos, player, handIn, hit);
 	}
 
 	@Override
@@ -150,8 +148,6 @@ public class CopperPipeBlock extends BasePipeBlock implements SimpleWaterloggedB
 			SHAPE_CACHE[index] = currShape;
 			cached = currShape;
 		}
-
 		return cached;
 	}
-
 }

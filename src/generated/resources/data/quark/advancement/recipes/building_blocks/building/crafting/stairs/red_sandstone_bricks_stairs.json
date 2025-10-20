@@ -1,0 +1,38 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "zeta:flag",
+      "flag": "sandstone_bricks"
+    }
+  ],
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_red_sandstone_bricks": {
+      "conditions": {
+        "items": [
+          {
+            "items": "quark:red_sandstone_bricks"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "quark:building/crafting/stairs/red_sandstone_bricks_stairs"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    }
+  },
+  "requirements": [
+    [
+      "has_the_recipe",
+      "has_red_sandstone_bricks"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "quark:building/crafting/stairs/red_sandstone_bricks_stairs"
+    ]
+  }
+}

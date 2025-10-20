@@ -1,44 +1,9 @@
 package org.violetmoon.quark.content.experimental.module;
 
-import java.util.List;
-import java.util.Objects;
-
 import com.mojang.blaze3d.platform.GlStateManager;
-import net.minecraft.world.level.block.PressurePlateBlock;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-import org.lwjgl.glfw.GLFW;
-import org.lwjgl.opengl.GL11;
-import org.violetmoon.quark.base.Quark;
-import org.violetmoon.quark.base.QuarkClient;
-import org.violetmoon.quark.base.client.handler.ClientUtil;
-import org.violetmoon.quark.base.network.message.experimental.PlaceVariantRestoreMessage;
-import org.violetmoon.quark.base.network.message.experimental.PlaceVariantUpdateMessage;
-import org.violetmoon.quark.content.experimental.client.screen.VariantSelectorScreen;
-import org.violetmoon.quark.content.experimental.client.tooltip.VariantsComponent;
-import org.violetmoon.quark.content.experimental.config.VariantsConfig;
-import org.violetmoon.quark.content.experimental.item.HammerItem;
-import org.violetmoon.quark.mixin.mixins.accessor.AccessorBlockItem;
-import org.violetmoon.zeta.client.event.load.ZKeyMapping;
-import org.violetmoon.zeta.client.event.load.ZTooltipComponents;
-import org.violetmoon.zeta.client.event.play.ZInput;
-import org.violetmoon.zeta.client.event.play.ZRenderGuiOverlay;
-import org.violetmoon.zeta.client.event.play.ZRenderTooltip;
-import org.violetmoon.zeta.config.Config;
-import org.violetmoon.zeta.config.ConfigManager;
-import org.violetmoon.zeta.event.bus.LoadEvent;
-import org.violetmoon.zeta.event.bus.PlayEvent;
-import org.violetmoon.zeta.event.load.ZConfigChanged;
-import org.violetmoon.zeta.event.load.ZRegister;
-import org.violetmoon.zeta.event.play.entity.ZEntityJoinLevel;
-import org.violetmoon.zeta.event.play.entity.player.ZPlayer;
-import org.violetmoon.zeta.module.ZetaLoadModule;
-import org.violetmoon.zeta.module.ZetaModule;
-
 import com.mojang.blaze3d.platform.Window;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.datafixers.util.Either;
-
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
@@ -63,6 +28,39 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
+import net.neoforged.neoforge.client.gui.VanillaGuiLayers;
+import net.neoforged.neoforge.network.PacketDistributor;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+import org.lwjgl.glfw.GLFW;
+import org.lwjgl.opengl.GL11;
+import org.violetmoon.quark.base.Quark;
+import org.violetmoon.quark.base.QuarkClient;
+import org.violetmoon.quark.base.client.handler.ClientUtil;
+import org.violetmoon.quark.base.network.message.experimental.PlaceVariantRestoreMessage;
+import org.violetmoon.quark.base.network.message.experimental.PlaceVariantUpdateMessage;
+import org.violetmoon.quark.content.experimental.client.screen.VariantSelectorScreen;
+import org.violetmoon.quark.content.experimental.client.tooltip.VariantsComponent;
+import org.violetmoon.quark.content.experimental.config.VariantsConfig;
+import org.violetmoon.quark.content.experimental.item.HammerItem;
+import org.violetmoon.quark.mixin.mixins.accessor.AccessorBlockItem;
+import org.violetmoon.zeta.client.event.load.ZKeyMapping;
+import org.violetmoon.zeta.client.event.load.ZTooltipComponents;
+import org.violetmoon.zeta.client.event.play.ZInput;
+import org.violetmoon.zeta.client.event.play.ZRenderGuiOverlay;
+import org.violetmoon.zeta.client.event.play.ZRenderTooltip;
+import org.violetmoon.zeta.config.Config;
+import org.violetmoon.zeta.event.bus.LoadEvent;
+import org.violetmoon.zeta.event.bus.PlayEvent;
+import org.violetmoon.zeta.event.load.ZConfigChanged;
+import org.violetmoon.zeta.event.load.ZRegister;
+import org.violetmoon.zeta.event.play.entity.ZEntityJoinLevel;
+import org.violetmoon.zeta.event.play.entity.player.ZPlayer;
+import org.violetmoon.zeta.module.ZetaLoadModule;
+import org.violetmoon.zeta.module.ZetaModule;
+
+import java.util.List;
+import java.util.Objects;
 
 @ZetaLoadModule(
 	category = "experimental", enabledByDefault = false,
@@ -118,7 +116,7 @@ public class VariantSelectorModule extends ZetaModule {
 
 	@LoadEvent
 	public final void configChanged(ZConfigChanged event) {
-		staticEnabled = enabled;
+		staticEnabled = isEnabled();
 	}
 
 	@NotNull
@@ -166,7 +164,7 @@ public class VariantSelectorModule extends ZetaModule {
 	public void onPlayerJoin(ZPlayer.LoggedIn event) {
 		if (event.getPlayer() instanceof ServerPlayer player) {
 			String variant = getSavedVariant(player);
-			Quark.ZETA.network.sendToPlayer(new PlaceVariantRestoreMessage(variant), player);
+			PacketDistributor.sendToPlayer(player, new PlaceVariantRestoreMessage(variant));
 		}
 	}
 
@@ -181,8 +179,6 @@ public class VariantSelectorModule extends ZetaModule {
 
 				if(otherBlock != block) {
 					ItemStack clone = new ItemStack(otherBlock.asItem());
-					clone.setTag(stack.getTag());
-					clone.setCount(stack.getCount()); //TODO: maybe this leads to double slab dupes lol
 					ie.setItem(clone);
 				}
 			}
@@ -236,7 +232,7 @@ public class VariantSelectorModule extends ZetaModule {
 
 		public static void setClientVariant(String variant, boolean sync) {
 			if(sync && !Objects.equals(clientVariant, variant)) {
-				QuarkClient.ZETA_CLIENT.sendToServer(new PlaceVariantUpdateMessage(variant));
+				PacketDistributor.sendToServer(new PlaceVariantUpdateMessage(variant));
 			}
 
             clientVariant = variant;
@@ -341,100 +337,102 @@ public class VariantSelectorModule extends ZetaModule {
 		}
 
 		@PlayEvent
-		public void onRender(ZRenderGuiOverlay.Crosshair.Pre event) {
-			GuiGraphics guiGraphics = event.getGuiGraphics();
+		public void onRender(ZRenderGuiOverlay.Pre event) {
+			if (event.getLayerName().equals(VanillaGuiLayers.CROSSHAIR) && !Minecraft.getInstance().options.hideGui) {
+				GuiGraphics guiGraphics = event.getGuiGraphics();
 
-			Minecraft mc = Minecraft.getInstance();
-			if(mc.screen instanceof VariantSelectorScreen || !showHud)
-				return;
-
-			Player player = mc.player;
-			String savedVariant = getSavedVariant(player);
-
-			ItemStack mainHand = player.getMainHandItem();
-			ItemStack displayLeft = mainHand.copy();
-
-			Block variantBlock = null;
-
-			if(displayLeft.is(hammer)) {
-				HitResult result = mc.hitResult;
-				if(result instanceof BlockHitResult bhr) {
-					BlockPos pos = bhr.getBlockPos();
-					Block testBlock = player.level().getBlockState(pos).getBlock();
-
-					displayLeft = new ItemStack(testBlock);
-					variantBlock = getVariantBlockFromAny(testBlock, savedVariant);
-				}
-			} else
-				variantBlock = getMainHandVariantBlock(player, savedVariant);
-
-			if(variantBlock != null) {
-				ItemStack displayRight = new ItemStack(variantBlock);
-
-				if(displayLeft.getItem() == displayRight.getItem())
+				Minecraft mc = Minecraft.getInstance();
+				if (mc.screen instanceof VariantSelectorScreen || !showHud)
 					return;
 
-				Window window = event.getWindow();
-				int x = window.getGuiScaledWidth() / 2;
-				int y = window.getGuiScaledHeight() / 2 + 12;
+				Player player = mc.player;
+				String savedVariant = getSavedVariant(player);
 
-				if(alignHudToHotbar) {
-					HumanoidArm arm = mc.options.mainHand().get();
-					if(arm == HumanoidArm.RIGHT)
-						x += 125;
-					else
-						x -= 93;
+				ItemStack mainHand = player.getMainHandItem();
+				ItemStack displayLeft = mainHand.copy();
 
-					y = window.getGuiScaledHeight() - 19;
-				}
+				Block variantBlock = null;
 
-				int offset = 8;
-				int width = smallerArrow ? 13 : 16;
+				if (displayLeft.is(hammer)) {
+					HitResult result = mc.hitResult;
+					if (result instanceof BlockHitResult bhr) {
+						BlockPos pos = bhr.getBlockPos();
+						Block testBlock = player.level().getBlockState(pos).getBlock();
 
-				displayLeft.setCount(1);
-
-				int posX = x - offset - width + hudOffsetX;
-				int posY = y + hudOffsetY;
-
-				if( !showSimpleHud) {
-					guiGraphics.renderFakeItem(displayLeft, posX, posY);
-
-					RenderSystem.enableBlend();
-					if(renderLikeCrossHair) {
-						RenderSystem.blendFuncSeparate(GlStateManager.SourceFactor.ONE_MINUS_DST_COLOR, GlStateManager.DestFactor.ONE_MINUS_SRC_COLOR, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
-						RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1);
-					}else{
-						RenderSystem.defaultBlendFunc();
-						RenderSystem.setShaderColor(0.8f, 0.8f, 0.8f, 0.7f);
+						displayLeft = new ItemStack(testBlock);
+						variantBlock = getVariantBlockFromAny(testBlock, savedVariant);
 					}
-					//alternative smaller arrow
-					if(smallerArrow){
-						guiGraphics.blit(ClientUtil.GENERAL_ICONS, posX + 8, posY+5, 0,
-								141+17, 22, 15, 256, 256);
-					}else {
-						guiGraphics.blit(ClientUtil.GENERAL_ICONS, posX + 8, posY, 0,
-								141, 22, 15, 256, 256);
-					}
+				} else
+					variantBlock = getMainHandVariantBlock(player, savedVariant);
 
-					RenderSystem.defaultBlendFunc();
+				if (variantBlock != null) {
+					ItemStack displayRight = new ItemStack(variantBlock);
 
-					posX += width * 2;
-				} else {
-					final ResourceLocation WIDGETS_LOCATION = new ResourceLocation("textures/gui/widget.png");
+					if (displayLeft.getItem() == displayRight.getItem())
+						return;
 
-					if(alignHudToHotbar) {
-						RenderSystem.enableBlend();
-						RenderSystem.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
-						if(enableGreenTint)
-							RenderSystem.setShaderColor(0.5F, 1.0F, 0.5F, 1.0F);
+					Window window = event.getWindow();
+					int x = window.getGuiScaledWidth() / 2;
+					int y = window.getGuiScaledHeight() / 2 + 12;
+
+					if (alignHudToHotbar) {
+						HumanoidArm arm = mc.options.mainHand().get();
+						if (arm == HumanoidArm.RIGHT)
+							x += 125;
 						else
-							RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
-						guiGraphics.blit(WIDGETS_LOCATION, posX - 3, posY - 3, 24, 23, 22, 22, 256, 256);
-					} else
-						posX += width;
-				}
+							x -= 93;
 
-				guiGraphics.renderFakeItem(displayRight, posX, posY);
+						y = window.getGuiScaledHeight() - 19;
+					}
+
+					int offset = 8;
+					int width = smallerArrow ? 13 : 16;
+
+					displayLeft.setCount(1);
+
+					int posX = x - offset - width + hudOffsetX;
+					int posY = y + hudOffsetY;
+
+					if (!showSimpleHud) {
+						guiGraphics.renderFakeItem(displayLeft, posX, posY);
+
+						RenderSystem.enableBlend();
+						if (renderLikeCrossHair) {
+							RenderSystem.blendFuncSeparate(GlStateManager.SourceFactor.ONE_MINUS_DST_COLOR, GlStateManager.DestFactor.ONE_MINUS_SRC_COLOR, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
+							RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1);
+						} else {
+							RenderSystem.defaultBlendFunc();
+							RenderSystem.setShaderColor(0.8f, 0.8f, 0.8f, 0.7f);
+						}
+						//alternative smaller arrow
+						if (smallerArrow) {
+							guiGraphics.blit(ClientUtil.GENERAL_ICONS, posX + 8, posY + 5, 0,
+									141 + 17, 22, 15, 256, 256);
+						} else {
+							guiGraphics.blit(ClientUtil.GENERAL_ICONS, posX + 8, posY, 0,
+									141, 22, 15, 256, 256);
+						}
+
+						RenderSystem.defaultBlendFunc();
+
+						posX += width * 2;
+					} else {
+						final ResourceLocation WIDGETS_LOCATION = ResourceLocation.withDefaultNamespace("textures/gui/widget.png"); //TODO this file no longer exists
+
+						if (alignHudToHotbar) {
+							RenderSystem.enableBlend();
+							RenderSystem.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+							if (enableGreenTint)
+								RenderSystem.setShaderColor(0.5F, 1.0F, 0.5F, 1.0F);
+							else
+								RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
+							guiGraphics.blit(WIDGETS_LOCATION, posX - 3, posY - 3, 24, 23, 22, 22, 256, 256);
+						} else
+							posX += width;
+					}
+
+					guiGraphics.renderFakeItem(displayRight, posX, posY);
+				}
 			}
 		}
 	}

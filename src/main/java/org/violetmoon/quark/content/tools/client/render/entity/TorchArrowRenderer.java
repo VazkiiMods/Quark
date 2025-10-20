@@ -9,7 +9,7 @@ import org.violetmoon.quark.content.tools.entity.TorchArrow;
 
 public class TorchArrowRenderer extends ArrowRenderer<TorchArrow> {
 
-	public static final ResourceLocation TORCH_ARROW_LOCATION = new ResourceLocation(Quark.MOD_ID, "textures/model/entity/torch_arrow.png");
+	public static final ResourceLocation TORCH_ARROW_LOCATION = Quark.asResource("textures/model/entity/torch_arrow.png");
 
 	public TorchArrowRenderer(EntityRendererProvider.Context p_174399_) {
 		super(p_174399_);
@@ -17,7 +17,7 @@ public class TorchArrowRenderer extends ArrowRenderer<TorchArrow> {
 
 	@Override
 	public ResourceLocation getTextureLocation(TorchArrow p_116001_) {
-		return new ResourceLocation(Quark.MOD_ID, "textures/model/entity/torch_arrow.png");
+		return TORCH_ARROW_LOCATION;
 	}
 
 }

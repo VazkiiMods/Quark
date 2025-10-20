@@ -1,0 +1,35 @@
+{
+  "parent": "minecraft:adventure/root",
+  "criteria": {
+    "crawl_in_hollow_log": {
+      "trigger": "quark:hollow_log_crawl"
+    }
+  },
+  "display": {
+    "announce_to_chat": true,
+    "description": {
+      "translate": "advancements.quark.crawl_in_hollow_log.description"
+    },
+    "frame": "task",
+    "hidden": false,
+    "icon": {
+      "id": "quark:hollow_oak_log"
+    },
+    "show_toast": true,
+    "title": {
+      "translate": "advancements.quark.crawl_in_hollow_log.title"
+    }
+  },
+  "requirements": [
+    [
+      "crawl_in_hollow_log"
+    ]
+  ],
+  "neoforge:conditions": [
+    {
+      "type": "zeta:flag",
+      "flag": "hollow_logs"
+    }
+  ]
+
+}

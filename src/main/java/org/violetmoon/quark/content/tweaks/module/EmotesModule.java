@@ -1,11 +1,11 @@
 package org.violetmoon.quark.content.tweaks.module;
 
+import aurelienribon.tweenengine.Tween;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Lists;
 import com.mojang.blaze3d.platform.Window;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
-
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
@@ -16,19 +16,23 @@ import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
-
+import net.neoforged.neoforge.client.gui.VanillaGuiLayers;
+import net.neoforged.neoforge.network.PacketDistributor;
 import org.lwjgl.glfw.GLFW;
 import org.violetmoon.quark.base.QuarkClient;
 import org.violetmoon.quark.base.handler.ContributorRewardHandler;
 import org.violetmoon.quark.base.network.message.RequestEmoteMessage;
-import org.violetmoon.quark.content.tweaks.client.emote.*;
+import org.violetmoon.quark.content.tweaks.client.emote.CustomEmoteIconResourcePack;
+import org.violetmoon.quark.content.tweaks.client.emote.EmoteBase;
+import org.violetmoon.quark.content.tweaks.client.emote.EmoteDescriptor;
+import org.violetmoon.quark.content.tweaks.client.emote.EmoteHandler;
+import org.violetmoon.quark.content.tweaks.client.emote.ModelAccessor;
 import org.violetmoon.quark.content.tweaks.client.screen.NotButton;
 import org.violetmoon.zeta.client.event.load.ZClientSetup;
 import org.violetmoon.zeta.client.event.load.ZKeyMapping;
 import org.violetmoon.zeta.client.event.play.ZInput;
 import org.violetmoon.zeta.client.event.play.ZRenderGuiOverlay;
 import org.violetmoon.zeta.client.event.play.ZRenderLiving;
-import org.violetmoon.zeta.client.event.play.ZRenderTick;
 import org.violetmoon.zeta.client.event.play.ZScreen;
 import org.violetmoon.zeta.config.Config;
 import org.violetmoon.zeta.event.bus.LoadEvent;
@@ -39,9 +43,13 @@ import org.violetmoon.zeta.module.ZetaLoadModule;
 import org.violetmoon.zeta.module.ZetaModule;
 
 import java.io.File;
-import java.util.*;
-
-import aurelienribon.tweenengine.Tween;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.TreeMap;
 
 @ZetaLoadModule(category = "tweaks")
 public class EmotesModule extends ZetaModule {
@@ -222,7 +230,7 @@ public class EmotesModule extends ZetaModule {
 								x, y,
 								EMOTE_BUTTON_WIDTH - 1, EMOTE_BUTTON_WIDTH - 1,
 								desc,
-								() -> QuarkClient.ZETA_CLIENT.sendToServer(new RequestEmoteMessage(desc.getRegistryName()))
+								() -> PacketDistributor.sendToServer(new RequestEmoteMessage(desc.getRegistryName()))
 							);
 
 							emoteButtons.add(button);
@@ -261,7 +269,7 @@ public class EmotesModule extends ZetaModule {
 				for(KeyMapping key : Client.emoteKeybinds.keySet()) {
 					if(key.isDown()) {
 						String emote = Client.emoteKeybinds.get(key);
-						QuarkClient.ZETA_CLIENT.sendToServer(new RequestEmoteMessage(emote));
+						PacketDistributor.sendToServer(new RequestEmoteMessage(emote));
 						return;
 					}
 				}
@@ -269,44 +277,46 @@ public class EmotesModule extends ZetaModule {
 		}
 
 		@PlayEvent
-		public void drawCrosshair(ZRenderGuiOverlay.Crosshair.Post event) {
-			Minecraft mc = Minecraft.getInstance();
-			Window res = event.getWindow();
-			GuiGraphics guiGraphics = event.getGuiGraphics();
-			PoseStack stack = guiGraphics.pose();
-			EmoteBase emote = EmoteHandler.getPlayerEmote(mc.player);
-			if(emote != null && emote.timeDone < emote.totalTime) {
-				ResourceLocation resource = emote.desc.texture;
-				int x = res.getGuiScaledWidth() / 2 - 16;
-				int y = res.getGuiScaledHeight() / 2 - 60;
-				float transparency = 1F;
-				float tween = 5F;
+		public void drawCrosshair(ZRenderGuiOverlay.Post event) {
+			if (event.getLayerName().equals(VanillaGuiLayers.CROSSHAIR) && !Minecraft.getInstance().options.hideGui) {
+				Minecraft mc = Minecraft.getInstance();
+				Window res = event.getWindow();
+				GuiGraphics guiGraphics = event.getGuiGraphics();
+				PoseStack stack = guiGraphics.pose();
+				EmoteBase emote = EmoteHandler.getPlayerEmote(mc.player);
+				if (emote != null && emote.timeDone < emote.totalTime) {
+					ResourceLocation resource = emote.desc.texture;
+					int x = res.getGuiScaledWidth() / 2 - 16;
+					int y = res.getGuiScaledHeight() / 2 - 60;
+					float transparency = 1F;
+					float tween = 5F;
 
-				if(emote.timeDone < tween)
-					transparency = emote.timeDone / tween;
-				else if(emote.timeDone > emote.totalTime - tween)
-					transparency = (emote.totalTime - emote.timeDone) / tween;
+					if (emote.timeDone < tween)
+						transparency = emote.timeDone / tween;
+					else if (emote.timeDone > emote.totalTime - tween)
+						transparency = (emote.totalTime - emote.timeDone) / tween;
 
-				stack.pushPose();
-				RenderSystem.setShader(GameRenderer::getPositionTexShader);
-				RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, transparency);
+					stack.pushPose();
+					RenderSystem.setShader(GameRenderer::getPositionTexShader);
+					//RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, transparency);
 
-				RenderSystem.enableBlend();
-				RenderSystem.defaultBlendFunc();
+					RenderSystem.enableBlend();
+					RenderSystem.defaultBlendFunc();
 
-				guiGraphics.blit(resource, x, y, 0, 0, 32, 32, 32, 32);
-				RenderSystem.enableBlend();
+					guiGraphics.blit(resource, x, y, 0, 0, 32, 32, 32, 32);
+					RenderSystem.enableBlend();
 
-				String name = I18n.get(emote.desc.getTranslationKey());
-				guiGraphics.drawString(mc.font, name, res.getGuiScaledWidth() / 2f - mc.font.width(name) / 2f, y + 34, 0xFFFFFF + (((int) (transparency * 255F)) << 24), true);
-				stack.popPose();
+					String name = I18n.get(emote.desc.getTranslationKey());
+					guiGraphics.drawString(mc.font, name, res.getGuiScaledWidth() / 2f - mc.font.width(name) / 2f, y + 34, 0xFFFFFF + (((int) (transparency * 255F)) << 24), true);
+					stack.popPose();
+				}
 			}
 		}
 
-		@PlayEvent
-		public void renderTick(ZRenderTick.Start event) {
+		/*@PlayEvent
+		public void renderTick(ZRenderTick event) {
 			EmoteHandler.onRenderTick(Minecraft.getInstance());
-		}
+		}*/
 
 		@PlayEvent
 		public void preRenderLiving(ZRenderLiving.PreHighest event) {

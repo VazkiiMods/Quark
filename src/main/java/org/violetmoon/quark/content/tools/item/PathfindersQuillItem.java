@@ -1,11 +1,8 @@
 package org.violetmoon.quark.content.tools.item;
 
 import net.minecraft.ChatFormatting;
-import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
-import net.minecraft.core.GlobalPos;
-import net.minecraft.core.Holder;
-import net.minecraft.core.QuartPos;
+import net.minecraft.core.*;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
@@ -19,26 +16,20 @@ import net.minecraft.world.InteractionResult;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.CreativeModeTabs;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
-import net.minecraft.world.item.MapItem;
-import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.item.*;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.biome.BiomeSource;
 import net.minecraft.world.level.biome.Climate;
-import net.minecraft.world.level.saveddata.maps.MapDecoration.Type;
+import net.minecraft.world.level.saveddata.maps.MapDecorationTypes;
 import net.minecraft.world.level.saveddata.maps.MapItemSavedData;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 import org.jetbrains.annotations.Nullable;
-
 import org.violetmoon.quark.base.Quark;
-import org.violetmoon.quark.base.QuarkClient;
+import org.violetmoon.quark.base.components.QuarkDataComponents;
+import org.violetmoon.quark.catnip.animation.AnimationTickHolder;
 import org.violetmoon.quark.content.mobs.module.StonelingsModule;
 import org.violetmoon.quark.content.tools.module.PathfinderMapsModule;
 import org.violetmoon.quark.content.tools.module.PathfinderMapsModule.TradeInfo;
@@ -46,35 +37,19 @@ import org.violetmoon.quark.content.world.module.GlimmeringWealdModule;
 import org.violetmoon.zeta.item.ZetaItem;
 import org.violetmoon.zeta.module.ZetaModule;
 import org.violetmoon.zeta.registry.CreativeTabManager;
-import org.violetmoon.zeta.util.ItemNBTHelper;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 public class PathfindersQuillItem extends ZetaItem implements CreativeTabManager.AppendsUniquely {
 
-	private static final Direction[] DIRECTIONS = new Direction[] { Direction.EAST, Direction.SOUTH, Direction.WEST, Direction.NORTH };
-
-	public static final String TAG_BIOME = "targetBiome";
-	public static final String TAG_COLOR = "targetBiomeColor";
-	public static final String TAG_UNDERGROUND = "targetBiomeUnderground";
-
-	protected static final String TAG_IS_SEARCHING = "isSearchingForBiome";
-	protected static final String TAG_SOURCE_X = "searchSourceX";
-	protected static final String TAG_SOURCE_Z = "searchSourceZ";
-	protected static final String TAG_POS_X = "searchPosX";
-	protected static final String TAG_POS_Z = "searchPosZ";
-	protected static final String TAG_POS_LEG = "searchPosLeg";
-	protected static final String TAG_POS_LEG_INDEX = "searchPosLegIndex";
+    private static final Direction[] DIRECTIONS = new Direction[] {Direction.EAST, Direction.SOUTH, Direction.WEST, Direction.NORTH};
 
 	public PathfindersQuillItem(ZetaModule module, Item.Properties properties) {
 		super("pathfinders_quill", module, properties);
-		CreativeTabManager.addToCreativeTabNextTo(CreativeModeTabs.TOOLS_AND_UTILITIES, this, Items.MAP, false);
+        CreativeTabManager.addNextToItem(CreativeModeTabs.TOOLS_AND_UTILITIES, this, Items.MAP, false);
 	}
 
 	public PathfindersQuillItem(ZetaModule module) {
@@ -82,15 +57,12 @@ public class PathfindersQuillItem extends ZetaItem implements CreativeTabManager
 	}
 
 	public static ResourceLocation getTargetBiome(ItemStack stack) {
-		String str = ItemNBTHelper.getString(stack, TAG_BIOME, "");
-		if(str.isEmpty())
-			return null;
-
-		return new ResourceLocation(str);
+		String str = Optional.ofNullable(stack.get(QuarkDataComponents.TARGET_BIOME)).orElse("");
+		return str.isEmpty() ? null : ResourceLocation.parse(str);
 	}
 
 	public static int getOverlayColor(ItemStack stack) {
-		return ItemNBTHelper.getInt(stack, TAG_COLOR, 0xFFFFFF);
+		return Optional.ofNullable(stack.get(QuarkDataComponents.BIOME_COLOR)).orElse(0xFFFFFF);
 	}
 
 	public static ItemStack forBiome(String biome, int color) {
@@ -100,15 +72,15 @@ public class PathfindersQuillItem extends ZetaItem implements CreativeTabManager
 	}
 
 	public static void setBiome(ItemStack stack, String biome, int color, boolean underground) {
-		ItemNBTHelper.setString(stack, TAG_BIOME, biome);
-		ItemNBTHelper.setInt(stack, TAG_COLOR, color);
-		ItemNBTHelper.setBoolean(stack, TAG_UNDERGROUND, underground);
+		stack.set(QuarkDataComponents.TARGET_BIOME, biome);
+		stack.set(QuarkDataComponents.BIOME_COLOR, color);
+		stack.set(QuarkDataComponents.IS_UNDERGROUND, underground);
 	}
 
 	public static @Nullable ItemStack getActiveQuill(Player player) {
 		for(ItemStack stack : player.getInventory().items)
 			if(stack.getItem() instanceof PathfindersQuillItem) {
-				boolean searching = ItemNBTHelper.getBoolean(stack, TAG_IS_SEARCHING, false);
+				boolean searching = Optional.ofNullable(stack.get(QuarkDataComponents.IS_SEARCHING)).orElse(false);
 
 				if(searching)
 					return stack;
@@ -116,7 +88,7 @@ public class PathfindersQuillItem extends ZetaItem implements CreativeTabManager
 
 		for(ItemStack stack : player.getInventory().offhand)
 			if(stack.getItem() instanceof PathfindersQuillItem) {
-				boolean searching = ItemNBTHelper.getBoolean(stack, TAG_IS_SEARCHING, false);
+				boolean searching = Optional.ofNullable(stack.get(QuarkDataComponents.IS_SEARCHING)).orElse(false);
 
 				if(searching)
 					return stack;
@@ -124,7 +96,7 @@ public class PathfindersQuillItem extends ZetaItem implements CreativeTabManager
 
 		for(ItemStack stack : player.getInventory().armor)
 			if(stack.getItem() instanceof PathfindersQuillItem) {
-				boolean searching = ItemNBTHelper.getBoolean(stack, TAG_IS_SEARCHING, false);
+				boolean searching = Optional.ofNullable(stack.get(QuarkDataComponents.IS_SEARCHING)).orElse(false);
 
 				if(searching)
 					return stack;
@@ -154,9 +126,9 @@ public class PathfindersQuillItem extends ZetaItem implements CreativeTabManager
 		Vec3 pos = player.getPosition(1F);
 		level.playSound(null, pos.x, pos.y, pos.z, SoundEvents.BOOK_PAGE_TURN, SoundSource.PLAYERS, 0.5F, 1F);
 
-		ItemNBTHelper.setBoolean(stack, TAG_IS_SEARCHING, true);
-		ItemNBTHelper.setInt(stack, TAG_SOURCE_X, player.getBlockX());
-		ItemNBTHelper.setInt(stack, TAG_SOURCE_Z, player.getBlockZ());
+		stack.set(QuarkDataComponents.IS_SEARCHING, true);
+		stack.set(QuarkDataComponents.TAG_SOURCE_X, player.getBlockX());
+		stack.set(QuarkDataComponents.TAG_SOURCE_Z, player.getBlockZ());
 		return InteractionResultHolder.sidedSuccess(stack, level.isClientSide);
 	}
 
@@ -176,7 +148,7 @@ public class PathfindersQuillItem extends ZetaItem implements CreativeTabManager
 	public void inventoryTick(ItemStack stack, Level level, Entity entity, int slot, boolean held) {
 		if(!level.isClientSide
 				&& level instanceof ServerLevel sl
-				&& ItemNBTHelper.getBoolean(stack, TAG_IS_SEARCHING, false)
+				&& Optional.ofNullable(stack.get(QuarkDataComponents.IS_SEARCHING)).orElse(false)
 				&& entity instanceof Player player
 				&& getActiveQuill(player) == stack) {
 
@@ -197,7 +169,7 @@ public class PathfindersQuillItem extends ZetaItem implements CreativeTabManager
 				player.displayClientMessage(Component.translatable(msg), true);
 
 				Vec3 pos = player.getPosition(1F);
-				level.playSound(null, pos.x, pos.y, pos.z, SoundEvents.NOTE_BLOCK_CHIME.get(), SoundSource.PLAYERS, 0.5F, 1F);
+				level.playSound(null, pos.x, pos.y, pos.z, SoundEvents.NOTE_BLOCK_CHIME, SoundSource.PLAYERS, 0.5F, 1F);
 
 				//we have to check for off hand manually as game uses same slot index....
 				if(player.getOffhandItem() == stack){
@@ -210,13 +182,13 @@ public class PathfindersQuillItem extends ZetaItem implements CreativeTabManager
 	}
 
 	protected ItemStack resetSearchingTags(ItemStack stack) {
-		stack.removeTagKey(TAG_SOURCE_X);
-		stack.removeTagKey(TAG_SOURCE_Z);
-		stack.removeTagKey(TAG_IS_SEARCHING);
-		stack.removeTagKey(TAG_POS_Z);
-		stack.removeTagKey(TAG_POS_Z);
-		stack.removeTagKey(TAG_POS_LEG);
-		stack.removeTagKey(TAG_POS_LEG_INDEX);
+		stack.remove(QuarkDataComponents.TAG_SOURCE_X);
+		stack.remove(QuarkDataComponents.TAG_SOURCE_Z);
+		stack.remove(QuarkDataComponents.IS_SEARCHING);
+		stack.remove(QuarkDataComponents.TAG_POS_X);
+		stack.remove(QuarkDataComponents.TAG_POS_Z);
+		stack.remove(QuarkDataComponents.TAG_POS_LEG);
+		stack.remove(QuarkDataComponents.TAG_POS_LEG_INDEX);
 		return stack;
 	}
 
@@ -254,10 +226,9 @@ public class PathfindersQuillItem extends ZetaItem implements CreativeTabManager
 		}
 	}
 
-	protected InteractionResultHolder<BlockPos> searchConcurrent(
-			ResourceLocation searchKey, ItemStack stack, ServerLevel level, Player player) {
-		int sourceX = ItemNBTHelper.getInt(stack, TAG_SOURCE_X, 0);
-		int sourceZ = ItemNBTHelper.getInt(stack, TAG_SOURCE_Z, 0);
+	protected InteractionResultHolder<BlockPos> searchConcurrent(ResourceLocation searchKey, ItemStack stack, ServerLevel level, Player player) {
+		int sourceX = Optional.ofNullable(stack.get(QuarkDataComponents.TAG_SOURCE_X)).orElse(0);
+		int sourceZ = Optional.ofNullable(stack.get(QuarkDataComponents.TAG_SOURCE_Z)).orElse(0);
 		BlockPos centerPos = new BlockPos(sourceX, 64, sourceZ);
 		Key key = new Key(GlobalPos.of(level.dimension(), centerPos), searchKey);
 		if(COMPUTING.contains(key)) {
@@ -326,13 +297,13 @@ public class PathfindersQuillItem extends ZetaItem implements CreativeTabManager
 	protected static BlockPos nextPos(ItemStack stack) {
 		final int step = 32;
 
-		int sourceX = ItemNBTHelper.getInt(stack, TAG_SOURCE_X, 0);
-		int sourceZ = ItemNBTHelper.getInt(stack, TAG_SOURCE_Z, 0);
+		int sourceX = Optional.ofNullable(stack.get(QuarkDataComponents.TAG_SOURCE_X)).orElse(0);
+		int sourceZ = Optional.ofNullable(stack.get(QuarkDataComponents.TAG_SOURCE_Z)).orElse(0);
 
-		int x = ItemNBTHelper.getInt(stack, TAG_POS_X, 0);
-		int z = ItemNBTHelper.getInt(stack, TAG_POS_Z, 0);
-		int leg = ItemNBTHelper.getInt(stack, TAG_POS_LEG, -1);
-		int legIndex = ItemNBTHelper.getInt(stack, TAG_POS_LEG_INDEX, 0);
+		int x = Optional.ofNullable(stack.get(QuarkDataComponents.TAG_POS_X)).orElse(0);
+		int z = Optional.ofNullable(stack.get(QuarkDataComponents.TAG_POS_Z)).orElse(0);
+		int leg = Optional.ofNullable(stack.get(QuarkDataComponents.TAG_POS_LEG)).orElse(0);
+		int legIndex = Optional.ofNullable(stack.get(QuarkDataComponents.TAG_POS_LEG_INDEX)).orElse(0);
 
 		BlockPos cursor = new BlockPos(x, 0, z).relative(DIRECTIONS[(leg + 4) % 4]);
 
@@ -352,10 +323,10 @@ public class PathfindersQuillItem extends ZetaItem implements CreativeTabManager
 
 		legIndex++;
 
-		ItemNBTHelper.setInt(stack, TAG_POS_X, newX);
-		ItemNBTHelper.setInt(stack, TAG_POS_Z, newZ);
-		ItemNBTHelper.setInt(stack, TAG_POS_LEG, leg);
-		ItemNBTHelper.setInt(stack, TAG_POS_LEG_INDEX, legIndex);
+		stack.set(QuarkDataComponents.TAG_POS_X, newX);
+		stack.set(QuarkDataComponents.TAG_POS_Z, newZ);
+		stack.set(QuarkDataComponents.TAG_POS_LEG, leg);
+		stack.set(QuarkDataComponents.TAG_POS_LEG_INDEX, legIndex);
 
 		int retX = sourceX + newX * step;
 		int retZ = sourceZ + newZ * step;
@@ -366,16 +337,13 @@ public class PathfindersQuillItem extends ZetaItem implements CreativeTabManager
 	public ItemStack createMap(ServerLevel level, BlockPos targetPos, ResourceLocation target, ItemStack original) {
 		int color = getOverlayColor(original);
 		Component biomeComponent = Component.translatable("biome." + target.getNamespace() + "." + target.getPath());
-
 		ItemStack stack = MapItem.create(level, targetPos.getX(), targetPos.getZ(), (byte) 2, true, true);
 
 		MapItem.renderBiomePreviewMap(level, stack);
-		MapItemSavedData.addTargetDecoration(stack, targetPos, "+", Type.RED_X);
-		stack.setHoverName(Component.translatable("item.quark.biome_map", biomeComponent));
-
-		stack.getOrCreateTagElement("display").putInt("MapColor", color);
-		ItemNBTHelper.setBoolean(stack, PathfinderMapsModule.TAG_IS_PATHFINDER, true);
-
+		MapItemSavedData.addTargetDecoration(stack, targetPos, "+", MapDecorationTypes.RED_X);
+		stack.set(DataComponents.CUSTOM_NAME, Component.translatable("item.quark.biome_map", biomeComponent));
+		stack.set(QuarkDataComponents.MAP_COLOR, color);
+		stack.set(QuarkDataComponents.IS_PATHFINDER, true);
 		return stack;
 	}
 
@@ -383,7 +351,7 @@ public class PathfindersQuillItem extends ZetaItem implements CreativeTabManager
 	public static MutableComponent getSearchingComponent() {
 		MutableComponent comp = Component.translatable("quark.misc.quill_searching");
 
-		int dots = ((QuarkClient.ticker.ticksInGame / 10) % 4);
+		int dots = ((AnimationTickHolder.getTicks() / 10) % 4);
 		for(int i = 0; i < dots; i++)
 			comp.append(".");
 
@@ -403,32 +371,30 @@ public class PathfindersQuillItem extends ZetaItem implements CreativeTabManager
 		}
 
 		if(!generatedWeald &&
-				Quark.ZETA.modules.isEnabled(StonelingsModule.class) &&
-				Quark.ZETA.modules.isEnabled(GlimmeringWealdModule.class) &&
-				StonelingsModule.wealdPathfinderMaps) {
+                Quark.ZETA.modules.isEnabled(StonelingsModule.class) &&
+                Quark.ZETA.modules.isEnabled(GlimmeringWealdModule.class) &&
+                StonelingsModule.wealdPathfinderMaps) {
 
 			items.add(forBiome(GlimmeringWealdModule.BIOME_NAME.toString(), 0x317546));
 		}
-
 		return items;
 	}
 
 	@Override
 	@OnlyIn(Dist.CLIENT)
-	public void appendHoverText(ItemStack stack, Level level, List<Component> comps, TooltipFlag flags) {
+	public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> components, TooltipFlag flags) {
 		ResourceLocation biome = this.getTarget(stack);
 		if(biome != null) {
-			if(ItemNBTHelper.getBoolean(stack, TAG_IS_SEARCHING, false))
-				comps.add(getSearchingComponent().withStyle(ChatFormatting.BLUE));
+			if(Optional.ofNullable(stack.get(QuarkDataComponents.IS_SEARCHING)).orElse(false))
+				components.add(getSearchingComponent().withStyle(ChatFormatting.BLUE));
 
-			comps.add(Component.translatable("biome." + biome.getNamespace() + "." + biome.getPath()).withStyle(ChatFormatting.GRAY));
+			components.add(Component.translatable("biome." + biome.getNamespace() + "." + biome.getPath()).withStyle(ChatFormatting.GRAY));
 		} else
-			comps.add(Component.translatable("quark.misc.quill_blank").withStyle(ChatFormatting.GRAY));
+			components.add(Component.translatable("quark.misc.quill_blank").withStyle(ChatFormatting.GRAY));
 	}
 
 	//new concurrent search stuff. Experimental
-	private record Key(GlobalPos pos, ResourceLocation structure) {
-	}
+	private record Key(GlobalPos pos, ResourceLocation structure) {}
 
 	private static final Map<Key, InteractionResultHolder<BlockPos>> RESULTS = new ConcurrentHashMap<>();
 	private static final Set<Key> COMPUTING = ConcurrentHashMap.newKeySet();

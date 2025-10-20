@@ -12,18 +12,22 @@ package org.violetmoon.quark.content.mobs.entity;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.Holder;
+import net.minecraft.core.component.DataComponents;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
+import net.minecraft.network.protocol.game.ClientboundAddEntityPacket;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.server.level.ServerEntity;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.tags.BlockTags;
-import net.minecraft.tags.ItemTags;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.Difficulty;
 import net.minecraft.world.InteractionHand;
@@ -32,18 +36,21 @@ import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.damagesource.DamageSources;
 import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.entity.*;
+import net.minecraft.world.entity.ai.Brain;
 import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier.Operation;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.goal.*;
+import net.minecraft.world.entity.ai.memory.MemoryModuleType;
 import net.minecraft.world.entity.animal.Animal;
 import net.minecraft.world.entity.animal.Bucketable;
 import net.minecraft.world.entity.animal.axolotl.Axolotl;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.vehicle.DismountHelper;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.component.CustomData;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
@@ -53,30 +60,28 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.LevelEvent;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.gameevent.*;
-import net.minecraft.world.level.pathfinder.BlockPathTypes;
+import net.minecraft.world.level.pathfinder.PathType;
+import net.minecraft.world.level.storage.loot.LootTable;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.common.ForgeMod;
-import net.minecraftforge.entity.IEntityAdditionalSpawnData;
-import net.minecraftforge.fluids.FluidType;
-import net.minecraftforge.network.NetworkHooks;
-
+import net.neoforged.neoforge.entity.IEntityWithComplexSpawn;
+import net.neoforged.neoforge.fluids.FluidType;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-
 import org.violetmoon.quark.base.Quark;
+import org.violetmoon.quark.base.components.QuarkDataComponents;
 import org.violetmoon.quark.base.handler.QuarkSounds;
 import org.violetmoon.quark.content.mobs.ai.RaveGoal;
 import org.violetmoon.quark.content.mobs.module.CrabsModule;
+import org.w3c.dom.Attr;
 
 import java.util.function.BiConsumer;
 
-public class Crab extends Animal implements IEntityAdditionalSpawnData, Bucketable {
+public class Crab extends Animal implements IEntityWithComplexSpawn, Bucketable {
 
 	public static final int COLORS = 3;
-	public static final ResourceLocation CRAB_LOOT_TABLE = new ResourceLocation("quark", "entities/crab");
+	public static final ResourceKey<LootTable> CRAB_LOOT_TABLE = Quark.asResourceKey(Registries.LOOT_TABLE, "entities/crab");
 
-	private static final EntityDataAccessor<Float> SIZE_MODIFIER = SynchedEntityData.defineId(Crab.class, EntityDataSerializers.FLOAT);
 	private static final EntityDataAccessor<Integer> VARIANT = SynchedEntityData.defineId(Crab.class, EntityDataSerializers.INT);
 	private static final EntityDataAccessor<Boolean> RAVING = SynchedEntityData.defineId(Crab.class, EntityDataSerializers.BOOLEAN);
 	private static final EntityDataAccessor<Boolean> FROM_BUCKET = SynchedEntityData.defineId(Crab.class, EntityDataSerializers.BOOLEAN);
@@ -89,18 +94,12 @@ public class Crab extends Animal implements IEntityAdditionalSpawnData, Bucketab
 	private final DynamicGameEventListener<JukeboxListener> dynamicJukeboxListener;
 
 	public Crab(EntityType<? extends Crab> type, Level worldIn) {
-		this(type, worldIn, 1);
-	}
+        super(type, worldIn);
+        this.setPathfindingMalus(PathType.LAVA, -1.0F);
 
-	public Crab(EntityType<? extends Crab> type, Level worldIn, float sizeModifier) {
-		super(type, worldIn);
-		this.setPathfindingMalus(BlockPathTypes.LAVA, -1.0F);
-		if(sizeModifier != 1)
-			entityData.set(SIZE_MODIFIER, sizeModifier);
-
-		PositionSource source = new EntityPositionSource(this, this.getEyeHeight());
-		this.dynamicJukeboxListener = new DynamicGameEventListener<>(new JukeboxListener(source, GameEvent.JUKEBOX_PLAY.getNotificationRadius()));
-	}
+        PositionSource source = new EntityPositionSource(this, this.getEyeHeight());
+        this.dynamicJukeboxListener = new DynamicGameEventListener<>(new JukeboxListener(source, GameEvent.JUKEBOX_PLAY.value().notificationRadius()));
+    }
 
 	@Override
 	public boolean fromBucket() {
@@ -116,11 +115,13 @@ public class Crab extends Animal implements IEntityAdditionalSpawnData, Bucketab
 	@SuppressWarnings("deprecation")
 	public void saveToBucketTag(@NotNull ItemStack stack) {
 		Bucketable.saveDefaultDataToBucketTag(this, stack);
-		CompoundTag tag = stack.getOrCreateTag();
 
-		if(noSpike)
-			tag.putBoolean("NoSpike", true);
-		tag.putInt(Axolotl.VARIANT_TAG, getVariant());
+
+		stack.set(DataComponents.BUCKET_ENTITY_DATA, CustomData.EMPTY);
+		CustomData.update(DataComponents.BUCKET_ENTITY_DATA, stack, tag -> {
+			tag.putInt("Variant", this.getVariant());
+			tag.putBoolean("NoSpike", noSpike);
+		});
 	}
 
 	@Override
@@ -128,8 +129,7 @@ public class Crab extends Animal implements IEntityAdditionalSpawnData, Bucketab
 	public void loadFromBucketTag(@NotNull CompoundTag tag) {
 		Bucketable.loadDefaultDataFromBucketTag(this, tag);
 
-		if(tag.contains("NoSpike"))
-			noSpike = tag.getBoolean("NoSpike");
+		if(tag.contains("NoSpike")) noSpike = tag.getBoolean("NoSpike");
 		entityData.set(VARIANT, tag.getInt(Axolotl.VARIANT_TAG));
 	}
 
@@ -167,30 +167,18 @@ public class Crab extends Animal implements IEntityAdditionalSpawnData, Bucketab
 	}
 
 	@Override
-	public boolean canBreatheUnderwater() {
-		return true;
-	}
+	protected void defineSynchedData(SynchedEntityData.Builder builder) {
+		super.defineSynchedData(builder);
 
-	@NotNull
-	@Override
-	public MobType getMobType() {
-		return MobType.ARTHROPOD;
-	}
-
-	@Override
-	protected void defineSynchedData() {
-		super.defineSynchedData();
-
-		entityData.define(SIZE_MODIFIER, 1f);
-		entityData.define(VARIANT, -1);
-		entityData.define(RAVING, false);
-		entityData.define(FROM_BUCKET, false);
+		builder.define(VARIANT, -1);
+		builder.define(RAVING, false);
+		builder.define(FROM_BUCKET, false);
 	}
 
 	@NotNull
 	@Override
 	public InteractionResult mobInteract(@NotNull Player player, @NotNull InteractionHand hand) {
-		if(getSizeModifier() >= 2) {
+		if(getScale() >= 2) {
 			if(!this.isFood(player.getItemInHand(hand)) && !this.isVehicle() && !player.isSecondaryUseActive()) {
 				if(!this.level().isClientSide)
 					player.startRiding(this);
@@ -207,8 +195,8 @@ public class Crab extends Animal implements IEntityAdditionalSpawnData, Bucketab
 	}
 
 	@Override
-	public double getPassengersRidingOffset() {
-		return super.getPassengersRidingOffset() / 0.75 * 0.9;
+    protected Vec3 getPassengerAttachmentPoint(Entity entity, EntityDimensions dimensions, float partialTick) {
+		return super.getPassengerAttachmentPoint(entity, dimensions, partialTick);
 	}
 
 	@NotNull
@@ -226,9 +214,9 @@ public class Crab extends Animal implements IEntityAdditionalSpawnData, Bucketab
 
 				for(int[] aint1 : aint) {
 					mutPos.set(blockpos.getX() + aint1[0] * scale, blockpos.getY(), blockpos.getZ() + aint1[1] * scale);
-					double d0 = this.level().getBlockFloorHeight(mutPos);
-					if(DismountHelper.isBlockFloorValid(d0)) {
-						Vec3 vec3 = Vec3.upFromBottomCenterOf(mutPos, d0);
+					double blockFloorHeight = this.level().getBlockFloorHeight(mutPos);
+					if(DismountHelper.isBlockFloorValid(blockFloorHeight)) {
+						Vec3 vec3 = Vec3.upFromBottomCenterOf(mutPos, blockFloorHeight);
 						if(DismountHelper.canDismountTo(this.level(), entity, aabb.move(vec3))) {
 							entity.setPose(pose);
 							return vec3;
@@ -257,15 +245,6 @@ public class Crab extends Animal implements IEntityAdditionalSpawnData, Bucketab
 	@Override
 	protected SoundEvent getHurtSound(@NotNull DamageSource source) {
 		return QuarkSounds.ENTITY_CRAB_HURT;
-	}
-
-	@Override
-	protected float getStandingEyeHeight(@NotNull Pose pose, EntityDimensions size) {
-		return 0.2f * size.height;
-	}
-
-	public float getSizeModifier() {
-		return entityData.get(SIZE_MODIFIER);
 	}
 
 	@Override
@@ -320,22 +299,30 @@ public class Crab extends Animal implements IEntityAdditionalSpawnData, Bucketab
 			setRaving(false);
 			jukeboxPosition = null;
 		}
+
+		if(!level().isClientSide){
+			recalculateStepHeight();
+		}
 	}
 
-	@Override
-	public float getStepHeight() {
-		float baseStep = wasTouchingWater ? 1F : 0.6F;
-		AttributeInstance stepHeightAttribute = getAttribute(ForgeMod.STEP_HEIGHT_ADDITION.get());
-		if(stepHeightAttribute != null)
-			return (float) Math.max(0, baseStep + stepHeightAttribute.getValue());
-		return baseStep;
+	//Todo: Double check this doesnt cause any issues
+	public void recalculateStepHeight() {
+		float baseStep = isInWater() ? 1F : 0.6F;
+		AttributeInstance stepHeightAttribute = getAttribute(Attributes.STEP_HEIGHT);
+		if(stepHeightAttribute != null) {
+			stepHeightAttribute.removeModifier(Quark.asResource("step_height"));
+			stepHeightAttribute.addPermanentModifier(new AttributeModifier(Quark.asResource("step_height"), Math.max(0, baseStep + stepHeightAttribute.getValue()), Operation.ADD_VALUE));
+		}
 	}
 
+	//Todo: Double check this doesnt cause any issues
+	/*
 	@NotNull
 	@Override
 	public EntityDimensions getDimensions(@NotNull Pose poseIn) {
 		return super.getDimensions(poseIn).scale(this.getSizeModifier());
 	}
+	*/
 
 	@Override
 	public boolean isPushedByFluid(FluidType type) {
@@ -355,12 +342,12 @@ public class Crab extends Animal implements IEntityAdditionalSpawnData, Bucketab
 				source == sources.cactus() ||
 				source == sources.sweetBerryBush() ||
 				source == sources.lightningBolt() ||
-				getSizeModifier() > 1 && source.is(DamageTypes.IN_FIRE) || source.is(DamageTypes.ON_FIRE);
+				getScale() > 1 && source.is(DamageTypes.IN_FIRE) || source.is(DamageTypes.ON_FIRE);
 	}
 
 	@Override
 	public boolean fireImmune() {
-		return super.fireImmune() || getSizeModifier() > 1;
+		return super.fireImmune() || getScale() > 1;
 	}
 
 	@Override
@@ -368,23 +355,25 @@ public class Crab extends Animal implements IEntityAdditionalSpawnData, Bucketab
 		if(lightningCooldown > 0 || level().isClientSide)
 			return;
 
-		float sizeMod = getSizeModifier();
+		float sizeMod = getScale();
 		if(sizeMod <= 15) {
 
 			var healthAttr = this.getAttribute(Attributes.MAX_HEALTH);
 			if(healthAttr != null)
-				healthAttr.addPermanentModifier(new AttributeModifier("Lightning Bonus", 0.5, Operation.ADDITION));
+				healthAttr.addPermanentModifier(new AttributeModifier(Quark.asResource("lightning_max_health_bonus_" + sizeMod), 0.5, Operation.ADD_VALUE));
 
 			var speedAttr = this.getAttribute(Attributes.MOVEMENT_SPEED);
 			if(speedAttr != null)
-				speedAttr.addPermanentModifier(new AttributeModifier("Lightning Debuff", -0.05, Operation.ADDITION));
+				speedAttr.addPermanentModifier(new AttributeModifier(Quark.asResource("lightning_speed_debuff_" + sizeMod), -0.05, Operation.ADD_MULTIPLIED_TOTAL));
 
 			var armorAttr = this.getAttribute(Attributes.ARMOR);
 			if(armorAttr != null)
-				armorAttr.addPermanentModifier(new AttributeModifier("Lightning Bonus", 0.125, Operation.ADDITION));
+				armorAttr.addPermanentModifier(new AttributeModifier(Quark.asResource("lightning_armor_bonus_" + sizeMod), 0.125, Operation.ADD_VALUE));
 
-			float sizeModifier = Math.min(sizeMod + 1, 16);
-			this.entityData.set(SIZE_MODIFIER, sizeModifier);
+			float scale = Math.min(sizeMod + 1, 16);
+            var scaleAttr = this.getAttribute(Attributes.SCALE);
+            if (scaleAttr != null)
+                scaleAttr.addOrReplacePermanentModifier(new AttributeModifier(Quark.asResource("lightning_size_increase"), scale, Operation.ADD_VALUE));
 			refreshDimensions();
 
 			lightningCooldown = 150;
@@ -393,14 +382,14 @@ public class Crab extends Animal implements IEntityAdditionalSpawnData, Bucketab
 
 	@Override
 	public void push(@NotNull Entity entityIn) {
-		if(getSizeModifier() <= 1)
+		if (getScale() <= 1)
 			super.push(entityIn);
 	}
 
 	@Override
 	protected void doPush(@NotNull Entity entityIn) {
 		super.doPush(entityIn);
-		if(level().getDifficulty() != Difficulty.PEACEFUL && !noSpike && !hasPassenger(entityIn))
+		if (level().getDifficulty() != Difficulty.PEACEFUL && !noSpike && !hasPassenger(entityIn))
 			if(entityIn instanceof LivingEntity && !(entityIn instanceof Crab))
 				entityIn.hurt(level().damageSources().cactus(), 1f);
 	}
@@ -413,7 +402,7 @@ public class Crab extends Animal implements IEntityAdditionalSpawnData, Bucketab
 	private Ingredient getTemptationItems() {
 		if(temptationItems == null)
 			temptationItems = Ingredient.of(
-					ItemTags.create(new ResourceLocation(Quark.MOD_ID, "crab_tempt_items")));
+					Quark.asTagKey(Registries.ITEM, "crab_tempt_items"));
 
 		return temptationItems;
 	}
@@ -424,9 +413,8 @@ public class Crab extends Animal implements IEntityAdditionalSpawnData, Bucketab
 		return new Crab(CrabsModule.crabType, level());
 	}
 
-	@NotNull
 	@Override
-	protected ResourceLocation getDefaultLootTable() {
+	protected ResourceKey<LootTable> getDefaultLootTable() {
 		return CRAB_LOOT_TABLE;
 	}
 
@@ -447,10 +435,9 @@ public class Crab extends Animal implements IEntityAdditionalSpawnData, Bucketab
 	}
 
 	public boolean shouldStopRaving() {
-		return jukeboxPosition == null ||
-				!jukeboxPosition.closerToCenterThan(position(), GameEvent.JUKEBOX_PLAY.getNotificationRadius()) ||
-				!level().getBlockState(jukeboxPosition).is(Blocks.JUKEBOX);
-
+		return jukeboxPosition == null
+				|| !jukeboxPosition.closerToCenterThan(position(), GameEvent.JUKEBOX_PLAY.value().notificationRadius())
+				|| !level().getBlockState(jukeboxPosition).is(Blocks.JUKEBOX);
 	}
 
 	public boolean isRaving() {
@@ -463,26 +450,13 @@ public class Crab extends Animal implements IEntityAdditionalSpawnData, Bucketab
 
 	@Override
 	public void onSyncedDataUpdated(@NotNull EntityDataAccessor<?> parameter) {
-		if(parameter.equals(SIZE_MODIFIER))
-			refreshDimensions();
-
 		super.onSyncedDataUpdated(parameter);
 	}
 
 	@NotNull
 	@Override
-	public Packet<ClientGamePacketListener> getAddEntityPacket() {
-		return NetworkHooks.getEntitySpawningPacket(this);
-	}
-
-	@Override
-	public void writeSpawnData(FriendlyByteBuf buffer) {
-		buffer.writeFloat(getSizeModifier());
-	}
-
-	@Override
-	public void readSpawnData(FriendlyByteBuf buffer) {
-		entityData.set(SIZE_MODIFIER, buffer.readFloat());
+	public Packet<ClientGamePacketListener> getAddEntityPacket(ServerEntity entity) {
+		return new ClientboundAddEntityPacket(this, entity);
 	}
 
 	@Override
@@ -494,7 +468,10 @@ public class Crab extends Animal implements IEntityAdditionalSpawnData, Bucketab
 
 		if(compound.contains("EnemyCrabRating")) {
 			float sizeModifier = compound.getFloat("EnemyCrabRating");
-			entityData.set(SIZE_MODIFIER, sizeModifier);
+            var scaleAttr = this.getAttribute(Attributes.SCALE);
+            if (scaleAttr != null)
+                scaleAttr.addOrReplacePermanentModifier(new AttributeModifier(Quark.asResource("lightning_size_increase"), sizeModifier, Operation.ADD_VALUE));
+            refreshDimensions();
 		}
 
 		if(compound.contains("Variant"))
@@ -506,14 +483,23 @@ public class Crab extends Animal implements IEntityAdditionalSpawnData, Bucketab
 	@Override
 	public void addAdditionalSaveData(@NotNull CompoundTag compound) {
 		super.addAdditionalSaveData(compound);
-		compound.putFloat("EnemyCrabRating", getSizeModifier());
 		compound.putInt("LightningCooldown", lightningCooldown);
 		compound.putInt("Variant", entityData.get(VARIANT));
 		compound.putBoolean("NoSpike", noSpike);
 		compound.putBoolean("FromBucket", this.fromBucket());
 	}
 
-	public class JukeboxListener implements GameEventListener {
+    @Override
+    public void writeSpawnData(RegistryFriendlyByteBuf additionalData) {
+
+    }
+
+    @Override
+    public void readSpawnData(RegistryFriendlyByteBuf additionalData) {
+
+    }
+
+    public class JukeboxListener implements GameEventListener {
 		private final PositionSource listenerSource;
 		private final int listenerRadius;
 
@@ -534,12 +520,11 @@ public class Crab extends Animal implements IEntityAdditionalSpawnData, Bucketab
 		}
 
 		@Override
-		public boolean handleGameEvent(@NotNull ServerLevel serverLevel, @NotNull GameEvent gameEvent,
-				@NotNull GameEvent.Context context, @NotNull Vec3 vec3) {
-			if(gameEvent == GameEvent.JUKEBOX_PLAY) {
+		public boolean handleGameEvent(ServerLevel level, Holder<GameEvent> holder, GameEvent.Context context, Vec3 vec3) {
+			if (holder == GameEvent.JUKEBOX_PLAY) {
 				Crab.this.party(BlockPos.containing(vec3), true);
 				return true;
-			} else if(gameEvent == GameEvent.JUKEBOX_STOP_PLAY) {
+			} else if (holder == GameEvent.JUKEBOX_STOP_PLAY) {
 				Crab.this.party(BlockPos.containing(vec3), false);
 				return true;
 			} else

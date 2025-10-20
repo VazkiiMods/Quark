@@ -1,54 +1,51 @@
 package org.violetmoon.quark.addons.oddities.item;
 
-import com.google.common.collect.ImmutableMultimap;
-import com.google.common.collect.Multimap;
-
+import net.minecraft.core.Holder;
+import net.minecraft.core.Holder.Reference;
+import net.minecraft.core.HolderLookup.RegistryLookup;
+import net.minecraft.core.component.DataComponents;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.Unit;
 import net.minecraft.world.Containers;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.ai.attributes.Attribute;
-import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.*;
+import net.minecraft.world.item.component.ItemAttributeModifiers;
 import net.minecraft.world.item.enchantment.Enchantment;
-import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.item.enchantment.Enchantments;
+import net.minecraft.world.item.enchantment.ItemEnchantments;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.common.capabilities.ForgeCapabilities;
-import net.minecraftforge.common.capabilities.ICapabilityProvider;
-import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.items.IItemHandler;
-import net.minecraftforge.items.ItemStackHandler;
-
+import net.neoforged.neoforge.capabilities.Capabilities;
+import net.neoforged.neoforge.items.IItemHandler;
+import net.neoforged.neoforge.items.ItemStackHandler;
 import org.jetbrains.annotations.NotNull;
-
 import org.jetbrains.annotations.Nullable;
+import org.violetmoon.quark.addons.oddities.inventory.BackpackContainer;
 import org.violetmoon.quark.addons.oddities.inventory.BackpackMenu;
 import org.violetmoon.quark.addons.oddities.module.BackpackModule;
 import org.violetmoon.quark.base.Quark;
-import org.violetmoon.quark.base.handler.ProxiedItemStackHandler;
 import org.violetmoon.zeta.item.IZetaItem;
-import org.violetmoon.zeta.item.ZetaItem;
 import org.violetmoon.zeta.item.ext.IZetaItemExtensions;
 import org.violetmoon.zeta.module.ZetaModule;
 import org.violetmoon.zeta.registry.CreativeTabManager;
-import org.violetmoon.zeta.util.ItemNBTHelper;
 
-import java.util.Map;
+import java.util.Optional;
 import java.util.function.BooleanSupplier;
 import java.util.function.Consumer;
 
-public class BackpackItem extends DyeableArmorItem implements IZetaItem, IZetaItemExtensions, MenuProvider {
+public class BackpackItem extends ArmorItem implements IZetaItem, IZetaItemExtensions, MenuProvider {
 
-	private static final String WORN_TEXTURE = Quark.MOD_ID + ":textures/misc/backpack_worn.png";
-	private static final String WORN_OVERLAY_TEXTURE = Quark.MOD_ID + ":textures/misc/backpack_worn_overlay.png";
+	private static final ResourceLocation WORN_TEXTURE = Quark.asResource("textures/misc/backpack_worn.png");
+	private static final ResourceLocation WORN_OVERLAY_TEXTURE = Quark.asResource("textures/misc/backpack_worn_overlay.png");
 
 	@Nullable
 	private final ZetaModule module;
@@ -58,21 +55,22 @@ public class BackpackItem extends DyeableArmorItem implements IZetaItem, IZetaIt
 				new Item.Properties()
 						.stacksTo(1)
 						.durability(0)
-						.rarity(Rarity.RARE));
+						.rarity(Rarity.RARE)
+						.attributes(createAttributes()));
 
 		this.module = module;
 
 		if (module == null)return;
 
-		module.zeta().registry.registerItem(this, "backpack");
+		module.zeta().registry.registerItem(this.getItem(), "backpack");
 
-		CreativeTabManager.addToCreativeTabNextTo(CreativeModeTabs.TOOLS_AND_UTILITIES, this, Items.SADDLE, true);
+		CreativeTabManager.addNextToItem(CreativeModeTabs.TOOLS_AND_UTILITIES, this.getItem(), Items.SADDLE, true);
 	}
 
-	@Override
+	/*@Override
 	public int getDefaultTooltipHideFlagsZeta(@NotNull ItemStack stack) {
-		return stack.isEnchanted() ? ItemStack.TooltipPart.ENCHANTMENTS.getMask() : 0;
-	}
+		return stack.isEnchanted() & stack.has(DataComponents.HIDE_TOOLTIP) ? 1 : 0;
+	}*/
 
 	@Override
 	public ZetaModule getModule() {
@@ -90,31 +88,25 @@ public class BackpackItem extends DyeableArmorItem implements IZetaItem, IZetaIt
 	}
 
 	public static boolean doesBackpackHaveItems(ItemStack stack) {
-		LazyOptional<IItemHandler> handlerOpt = stack.getCapability(ForgeCapabilities.ITEM_HANDLER, null);
-
-		if(!handlerOpt.isPresent())
+		if (!stack.has(DataComponents.CONTAINER) && stack.is(BackpackModule.backpack)) {
 			return false;
+		}
+		BackpackContainer backpackInv = new BackpackContainer(stack);
 
-		IItemHandler handler = handlerOpt.orElse(new ItemStackHandler());
-		for(int i = 0; i < handler.getSlots(); i++)
-			if(!handler.getStackInSlot(i).isEmpty())
+		for(int i = 0; i < backpackInv.getContainerSize(); i++)
+			if(!backpackInv.getItem(i).isEmpty())
 				return true;
 
 		return false;
 	}
 
 	@Override
-	public boolean canEquipZeta(ItemStack stack, EquipmentSlot equipmentSlot, Entity ent) {
-		return equipmentSlot == EquipmentSlot.CHEST;
+	public boolean canEquipZeta(ItemStack stack, EquipmentSlot armorType, LivingEntity entity) {
+		return armorType == EquipmentSlot.CHEST;
 	}
 
 	@Override
 	public boolean isBookEnchantableZeta(ItemStack stack, ItemStack book) {
-		return false;
-	}
-
-	@Override
-	public boolean canApplyAtEnchantingTableZeta(ItemStack stack, Enchantment enchantment) {
 		return false;
 	}
 
@@ -124,35 +116,38 @@ public class BackpackItem extends DyeableArmorItem implements IZetaItem, IZetaIt
 	}
 
 	@Override
-	public boolean canBeDepleted() {
-		return false;
-	}
-
-	@Override
-	public <T extends LivingEntity> int damageItemZeta(ItemStack stack, int amount, T entity, Consumer<T> onBroken) {
+	public <T extends LivingEntity> int damageItemZeta(ItemStack stack, int amount, T entity, Consumer<Item> onBroken) {
 		return 0;
 	}
 
 	@Override
+	public ResourceLocation getArmorTexture(ItemStack stack, Entity entity, EquipmentSlot slot, ArmorMaterial.Layer layer, boolean innerModel) {
+		return type != null && type.equals("overlay") ? WORN_OVERLAY_TEXTURE : WORN_TEXTURE;
+	}
+
+	@Override
 	public void inventoryTick(@NotNull ItemStack stack, Level worldIn, @NotNull Entity entityIn, int itemSlot, boolean isSelected) {
-		if(worldIn.isClientSide)
-			return;
+		if(worldIn.isClientSide) return;
+
+		RegistryLookup<Enchantment> enchantmentLookup = worldIn.registryAccess().lookupOrThrow(Registries.ENCHANTMENT);
+
+		Reference<Enchantment> bindingCurse = enchantmentLookup.getOrThrow(Enchantments.BINDING_CURSE);
 
 		boolean hasItems = !BackpackModule.superOpMode && doesBackpackHaveItems(stack);
+		ItemEnchantments.Mutable enchants = new ItemEnchantments.Mutable(stack.getOrDefault(DataComponents.ENCHANTMENTS, ItemEnchantments.EMPTY));
+		boolean isCursed = enchants.getLevel(bindingCurse) == 1;
 
-		Map<Enchantment, Integer> enchants = EnchantmentHelper.getEnchantments(stack);
-		boolean isCursed = enchants.containsKey(Enchantments.BINDING_CURSE);
 		boolean changedEnchants = false;
 
 		if(hasItems) {
 			if(BackpackModule.isEntityWearingBackpack(entityIn, stack)) {
 				if(!isCursed) {
-					enchants.put(Enchantments.BINDING_CURSE, 1);
+					enchants.set(bindingCurse, 1);
 					changedEnchants = true;
 				}
 
 				if(BackpackModule.itemsInBackpackTick) {
-					LazyOptional<IItemHandler> handlerOpt = stack.getCapability(ForgeCapabilities.ITEM_HANDLER, null);
+					Optional<IItemHandler> handlerOpt = Optional.ofNullable(stack.getCapability(Capabilities.ItemHandler.ITEM, null));
 					IItemHandler handler = handlerOpt.orElse(new ItemStackHandler());
 					for(int i = 0; i < handler.getSlots(); i++) {
 						ItemStack inStack = handler.getStackInSlot(i);
@@ -166,26 +161,21 @@ public class BackpackItem extends DyeableArmorItem implements IZetaItem, IZetaIt
 				entityIn.spawnAtLocation(copy, 0);
 			}
 		} else if(isCursed) {
-			enchants.remove(Enchantments.BINDING_CURSE);
+			enchants.removeIf(e -> e.is(bindingCurse.key()));
 			changedEnchants = true;
 		}
 
 		if(changedEnchants)
-			EnchantmentHelper.setEnchantments(enchants, stack);
+			stack.set(DataComponents.ENCHANTMENTS, enchants.toImmutable());
 	}
 
 	@Override
 	public boolean onEntityItemUpdateZeta(ItemStack stack, ItemEntity entityItem) {
-		if(BackpackModule.superOpMode || entityItem.level().isClientSide)
-			return false;
+		if (BackpackModule.superOpMode || entityItem.level().isClientSide) return false;
 
-		if(!stack.hasTag())
-			return false;
+		Optional<IItemHandler> handlerOpt = Optional.ofNullable(stack.getCapability(Capabilities.ItemHandler.ITEM, null));
 
-		LazyOptional<IItemHandler> handlerOpt = stack.getCapability(ForgeCapabilities.ITEM_HANDLER, null);
-
-		if(!handlerOpt.isPresent())
-			return false;
+		if (handlerOpt.isEmpty()) return false;
 
 		IItemHandler handler = handlerOpt.orElse(new ItemStackHandler());
 
@@ -197,22 +187,23 @@ public class BackpackItem extends DyeableArmorItem implements IZetaItem, IZetaIt
 			}
 		}
 
-		Map<Enchantment, Integer> enchants = EnchantmentHelper.getEnchantments(stack);
-		boolean isCursed = enchants.containsKey(Enchantments.BINDING_CURSE);
-		if(isCursed) {
-			enchants.remove(Enchantments.BINDING_CURSE);
-			EnchantmentHelper.setEnchantments(enchants, stack);
+		ItemEnchantments enchantments = Optional.ofNullable(stack.get(DataComponents.ENCHANTMENTS)).orElse(ItemEnchantments.EMPTY);
+		Holder<Enchantment> binding_curse = entityItem.level().registryAccess().lookupOrThrow(Registries.ENCHANTMENT).getOrThrow(Enchantments.BINDING_CURSE);
+		ItemEnchantments.Mutable replaceEnch = new ItemEnchantments.Mutable(enchantments);
+		if (replaceEnch.keySet().contains(binding_curse)) {
+			replaceEnch.set(binding_curse, 0);
+			stack.set(DataComponents.ENCHANTMENTS, replaceEnch.toImmutable());
 		}
-		
-		stack.removeTagKey("Inventory");
-		
+
+		//Originally removed an inventory tag, but that no longer exists. I assume its the Container tag now?
+		stack.remove(DataComponents.CONTAINER);
 		return false;
 	}
 
 	//TODO: IForgeItem
-	@NotNull
+	/*@NotNull
 	@Override
-	public ICapabilityProvider initCapabilities(ItemStack stack, CompoundTag oldCapNbt) {
+	public IC initCapabilities(ItemStack stack, CompoundTag oldCapNbt) {
 		ProxiedItemStackHandler handler = new ProxiedItemStackHandler(stack, 27);
 
 		if(oldCapNbt != null && oldCapNbt.contains("Parent")) {
@@ -227,17 +218,16 @@ public class BackpackItem extends DyeableArmorItem implements IZetaItem, IZetaIt
 		}
 
 		return handler;
+	}*/
+
+	public static ItemAttributeModifiers createAttributes(){
+		return ItemAttributeModifiers.builder().build();
 	}
 
-	@Override
-	public Multimap<Attribute, AttributeModifier> getDefaultAttributeModifiers(EquipmentSlot p_40390_) {
-		return ImmutableMultimap.of();
-	}
-
-	@Override
+	/*@Override
 	public String getArmorTextureZeta(ItemStack stack, Entity entity, EquipmentSlot slot, String type) {
 		return type != null && type.equals("overlay") ? WORN_OVERLAY_TEXTURE : WORN_TEXTURE;
-	}
+	}*/
 
 	@Override
 	public boolean isFoil(@NotNull ItemStack stack) {
@@ -259,5 +249,7 @@ public class BackpackItem extends DyeableArmorItem implements IZetaItem, IZetaIt
 	public Component getDisplayName() {
 		return Component.translatable(getDescriptionId());
 	}
+
+
 
 }

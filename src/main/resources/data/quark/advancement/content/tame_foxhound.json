@@ -1,0 +1,40 @@
+{
+  "parent": "minecraft:nether/brew_potion",
+  "criteria": {
+    "tame_foxhound": {
+      "conditions": {
+        "entity": {
+          "type": "quark:foxhound"
+        }
+      },
+      "trigger": "minecraft:tame_animal"
+    }
+  },
+  "display": {
+    "announce_to_chat": true,
+    "description": {
+      "translate": "advancements.quark.tame_foxhound.description"
+    },
+    "frame": "task",
+    "hidden": false,
+    "icon": {
+      "id": "minecraft:coal"
+    },
+    "show_toast": true,
+    "title": {
+      "translate": "advancements.quark.tame_foxhound.title"
+    }
+  },
+  "requirements": [
+    [
+      "tame_foxhound"
+    ]
+  ],
+  "neoforge:conditions": [
+    {
+      "type": "zeta:flag",
+      "flag": "foxhound"
+    }
+  ]
+
+}

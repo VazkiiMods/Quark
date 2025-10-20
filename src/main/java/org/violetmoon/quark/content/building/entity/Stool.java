@@ -3,8 +3,7 @@ package org.violetmoon.quark.content.building.entity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.protocol.Packet;
-import net.minecraft.network.protocol.game.ClientGamePacketListener;
+import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MoverType;
@@ -13,10 +12,7 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.piston.PistonMovingBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.network.NetworkHooks;
-
 import org.jetbrains.annotations.NotNull;
-
 import org.violetmoon.quark.content.building.block.StoolBlock;
 
 import java.util.List;
@@ -76,12 +72,12 @@ public class Stool extends Entity {
 	}
 
 	@Override
-	public double getPassengersRidingOffset() {
-		return -0.3;
+	public Vec3 getPassengerRidingPosition(Entity entity) {
+		return super.getPassengerRidingPosition(entity).subtract(0, 0.5, 0);//this.position().add(this.getPassengerAttachmentPoint(entity, entity.getType().getDimensions(), -0.3F));
 	}
 
 	@Override
-	protected void defineSynchedData() {
+	protected void defineSynchedData(SynchedEntityData.Builder builder) {
 		// NO-OP
 	}
 
@@ -94,10 +90,4 @@ public class Stool extends Entity {
 	protected void addAdditionalSaveData(@NotNull CompoundTag compound) {
 		// NO-OP
 	}
-
-	@Override
-	public Packet<ClientGamePacketListener> getAddEntityPacket() {
-		return NetworkHooks.getEntitySpawningPacket(this);
-	}
-
 }

@@ -1,0 +1,26 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "zeta:flag",
+      "flag": "hedges"
+    }
+  ],
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "key": {
+    "L": {
+      "item": "minecraft:cherry_leaves"
+    },
+    "W": {
+      "tag": "minecraft:cherry_logs"
+    }
+  },
+  "pattern": [
+    "L",
+    "W"
+  ],
+  "result": {
+    "count": 2,
+    "id": "quark:cherry_hedge"
+  }
+}

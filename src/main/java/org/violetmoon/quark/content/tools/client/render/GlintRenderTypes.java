@@ -1,6 +1,6 @@
 package org.violetmoon.quark.content.tools.client.render;
 
-import com.mojang.blaze3d.vertex.BufferBuilder;
+import com.mojang.blaze3d.vertex.ByteBufferBuilder;
 import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 import com.mojang.blaze3d.vertex.VertexFormat;
 import it.unimi.dsi.fastutil.objects.Object2ObjectLinkedOpenHashMap;
@@ -11,8 +11,6 @@ import net.minecraft.resources.ResourceLocation;
 import org.violetmoon.quark.base.Quark;
 import org.violetmoon.quark.content.tools.base.RuneColor;
 
-import java.util.EnumMap;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
 
@@ -30,7 +28,7 @@ public class GlintRenderTypes extends RenderType {
 	public static Map<RuneColor, RenderType> armorGlint = newRenderMap(GlintRenderTypes::buildArmorGlintRenderType);
 	public static Map<RuneColor, RenderType> armorEntityGlint = newRenderMap(GlintRenderTypes::buildArmorEntityGlintRenderType);
 
-	public static void addGlintTypes(Object2ObjectLinkedOpenHashMap<RenderType, BufferBuilder> map) {
+	public static void addGlintTypes(Object2ObjectLinkedOpenHashMap<RenderType, ByteBufferBuilder> map) {
 		addGlintTypes(map, glint);
 		addGlintTypes(map, glintTranslucent);
 		addGlintTypes(map, entityGlint);
@@ -49,10 +47,10 @@ public class GlintRenderTypes extends RenderType {
 		return map;
 	}
 
-	private static void addGlintTypes(Object2ObjectLinkedOpenHashMap<RenderType, BufferBuilder> map, Map<RuneColor, RenderType> typeMap) {
+	private static void addGlintTypes(Object2ObjectLinkedOpenHashMap<RenderType, ByteBufferBuilder> map, Map<RuneColor, RenderType> typeMap) {
 		for(RenderType renderType : typeMap.values())
 			if(!map.containsKey(renderType))
-				map.put(renderType, new BufferBuilder(renderType.bufferSize()));
+				map.put(renderType, new ByteBufferBuilder(renderType.bufferSize()));
 	}
 
 	private static RenderType buildGlintRenderType(String name) {
@@ -96,7 +94,7 @@ public class GlintRenderTypes extends RenderType {
 
 	private static RenderType buildGlintDirectRenderType(String name) {
 		return RenderType.create("glint_direct_" + name, DefaultVertexFormat.POSITION_TEX, VertexFormat.Mode.QUADS, 256, false, false, CompositeState.builder()
-				.setShaderState(RenderStateShard.RENDERTYPE_GLINT_DIRECT_SHADER)
+				.setShaderState(RenderStateShard.RENDERTYPE_ENTITY_GLINT_DIRECT_SHADER)
 				.setTextureState(new TextureStateShard(texture(name), true, false))
 				.setWriteMaskState(RenderStateShard.COLOR_WRITE)
 				.setCullState(RenderStateShard.NO_CULL)
@@ -120,7 +118,7 @@ public class GlintRenderTypes extends RenderType {
 
 	private static RenderType buildArmorGlintRenderType(String name) {
 		return RenderType.create("armor_glint_" + name, DefaultVertexFormat.POSITION_TEX, VertexFormat.Mode.QUADS, 256, false, false, CompositeState.builder()
-				.setShaderState(RenderStateShard.RENDERTYPE_ARMOR_GLINT_SHADER)
+				.setShaderState(RenderStateShard.RENDERTYPE_ARMOR_ENTITY_GLINT_SHADER)
 				.setTextureState(new TextureStateShard(texture(name), true, false))
 				.setWriteMaskState(RenderStateShard.COLOR_WRITE)
 				.setCullState(RenderStateShard.NO_CULL)
@@ -145,6 +143,6 @@ public class GlintRenderTypes extends RenderType {
 	}
 
 	private static ResourceLocation texture(String name) {
-		return new ResourceLocation(Quark.MOD_ID, "textures/glint/enchanted_item_glint_" + name + ".png");
+		return Quark.asResource("textures/glint/enchanted_item_glint_" + name + ".png");
 	}
 }

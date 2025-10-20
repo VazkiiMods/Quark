@@ -25,13 +25,10 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.lwjgl.opengl.GL11;
 
-import org.violetmoon.quark.content.experimental.item.HammerItem;
 import org.violetmoon.quark.content.experimental.module.VariantSelectorModule;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class VariantSelectorScreen extends Screen {
 
@@ -88,14 +85,13 @@ public class VariantSelectorScreen extends Screen {
         slotSelected = -1;
 
         Tesselator tess = Tesselator.getInstance();
-        BufferBuilder buf = tess.getBuilder();
+        BufferBuilder buf = tess.begin(VertexFormat.Mode.TRIANGLE_FAN, DefaultVertexFormat.POSITION_COLOR);
 
         RenderSystem.disableCull();
         RenderSystem.enableBlend();
         RenderSystem.setShader(GameRenderer::getPositionColorShader);
 
         drawStacks.clear();
-        buf.begin(VertexFormat.Mode.TRIANGLE_FAN, DefaultVertexFormat.POSITION_COLOR);
 
         for (int seg = 0; seg < segments; seg++) {
             //we need 1 extra
@@ -137,7 +133,7 @@ public class VariantSelectorScreen extends Screen {
             }
 
             if (seg == 0)
-                buf.vertex(x, y, 0).color(r, g, b, a).endVertex();
+                buf.addVertex(x, y, 0).setColor(r, g, b, a);
 
             if (mouseInSector) {
                 slotSelected = seg;
@@ -153,8 +149,8 @@ public class VariantSelectorScreen extends Screen {
             float exp = x + Mth.cos(end) * radius;
             float eyp = y + Mth.sin(end) * radius;
 
-            buf.vertex(sxp, syp, 0).color(r, g, b, a).endVertex();
-            buf.vertex(exp, eyp, 0).color(r, g, b, a).endVertex();
+            buf.addVertex(sxp, syp, 0).setColor(r, g, b, a);
+            buf.addVertex(exp, eyp, 0).setColor(r, g, b, a);
 
             float center = (seg + 0.5f) * degPer + pad;
             float cxp = x + Mth.cos(center) * radius;
@@ -166,7 +162,6 @@ public class VariantSelectorScreen extends Screen {
             int ydp = (int) ((cyp - y) * mod + y);
             drawStacks.add(new DrawStack(variantStack, xdp - 8, ydp - 8));
         }
-        tess.end();
 
         RenderSystem.enableBlend();
         RenderSystem.blendFuncSeparate(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA, 1, 0);

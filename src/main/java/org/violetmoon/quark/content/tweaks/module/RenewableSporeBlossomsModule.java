@@ -8,7 +8,6 @@ import net.minecraft.world.level.block.Blocks;
 
 import org.violetmoon.zeta.config.Config;
 import org.violetmoon.zeta.event.bus.PlayEvent;
-import org.violetmoon.zeta.event.bus.ZResult;
 import org.violetmoon.zeta.event.play.ZBonemeal;
 import org.violetmoon.zeta.module.ZetaLoadModule;
 import org.violetmoon.zeta.module.ZetaModule;
@@ -28,8 +27,8 @@ public class RenewableSporeBlossomsModule extends ZetaModule {
 		if(event.getBlock().is(Blocks.SPORE_BLOSSOM) && boneMealChance > 0) {
 			if(Math.random() < boneMealChance)
 				Block.popResource(event.getLevel(), event.getPos(), new ItemStack(Items.SPORE_BLOSSOM));
-
-			event.setResult(ZResult.ALLOW);
+			
+			event.setSuccessful(true);
 		}
 	}
 

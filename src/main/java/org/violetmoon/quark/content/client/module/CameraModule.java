@@ -70,35 +70,35 @@ public class CameraModule extends ZetaModule {
 
 		private static final ResourceLocation[] SHADERS = new ResourceLocation[] {
 				null,
-				new ResourceLocation(Quark.MOD_ID, "shaders/post/grayscale.json"),
-				new ResourceLocation(Quark.MOD_ID, "shaders/post/sepia.json"),
-				new ResourceLocation(Quark.MOD_ID, "shaders/post/desaturate.json"),
-				new ResourceLocation(Quark.MOD_ID, "shaders/post/oversaturate.json"),
-				new ResourceLocation(Quark.MOD_ID, "shaders/post/cool.json"),
-				new ResourceLocation(Quark.MOD_ID, "shaders/post/warm.json"),
-				new ResourceLocation(Quark.MOD_ID, "shaders/post/conjugate.json"),
+				Quark.asResource("shaders/post/grayscale.json"),
+				Quark.asResource("shaders/post/sepia.json"),
+				Quark.asResource("shaders/post/desaturate.json"),
+				Quark.asResource("shaders/post/oversaturate.json"),
+				Quark.asResource("shaders/post/cool.json"),
+				Quark.asResource("shaders/post/warm.json"),
+				Quark.asResource("shaders/post/conjugate.json"),
 
-				new ResourceLocation(Quark.MOD_ID, "shaders/post/redfocus.json"),
-				new ResourceLocation(Quark.MOD_ID, "shaders/post/greenfocus.json"),
-				new ResourceLocation(Quark.MOD_ID, "shaders/post/bluefocus.json"),
-				new ResourceLocation(Quark.MOD_ID, "shaders/post/yellowfocus.json"),
+				Quark.asResource("shaders/post/redfocus.json"),
+				Quark.asResource("shaders/post/greenfocus.json"),
+				Quark.asResource("shaders/post/bluefocus.json"),
+				Quark.asResource("shaders/post/yellowfocus.json"),
 
-				new ResourceLocation("shaders/post/bumpy.json"),
-				new ResourceLocation("shaders/post/notch.json"),
-				new ResourceLocation("shaders/post/creeper.json"),
-				new ResourceLocation(Quark.MOD_ID, "shaders/post/enderman.json"),
+				//ResourceLocation.withDefaultNamespace("shaders/post/bumpy.json"), //TODO this seems to not exist anymore
+				//ResourceLocation.withDefaultNamespace("shaders/post/notch.json"),
+				ResourceLocation.withDefaultNamespace("shaders/post/creeper.json"),
+				Quark.asResource("shaders/post/enderman.json"),
 
-				new ResourceLocation(Quark.MOD_ID, "shaders/post/bits.json"),
-				new ResourceLocation("shaders/post/blobs.json"),
-				new ResourceLocation("shaders/post/pencil.json"),
-				new ResourceLocation(Quark.MOD_ID, "shaders/post/watercolor.json"),
-				new ResourceLocation(Quark.MOD_ID, "shaders/post/monochrome.json"),
-				new ResourceLocation("shaders/post/sobel.json"),
+				Quark.asResource("shaders/post/bits.json"),
+				//ResourceLocation.withDefaultNamespace("shaders/post/blobs.json"),
+				//ResourceLocation.withDefaultNamespace("shaders/post/pencil.json"),
+				//Quark.asResource("shaders/post/watercolor.json"),
+				Quark.asResource("shaders/post/monochrome.json"),
+				//ResourceLocation.withDefaultNamespace("shaders/post/sobel.json"),
 
-				new ResourceLocation(Quark.MOD_ID, "shaders/post/colorblind/deuteranopia.json"),
-				new ResourceLocation(Quark.MOD_ID, "shaders/post/colorblind/protanopia.json"),
-				new ResourceLocation(Quark.MOD_ID, "shaders/post/colorblind/tritanopia.json"),
-				new ResourceLocation(Quark.MOD_ID, "shaders/post/colorblind/achromatopsia.json")
+				Quark.asResource("shaders/post/colorblind/deuteranopia.json"),
+				Quark.asResource("shaders/post/colorblind/protanopia.json"),
+				Quark.asResource("shaders/post/colorblind/tritanopia.json"),
+				Quark.asResource("shaders/post/colorblind/achromatopsia.json")
 		};
 
 		private static KeyMapping cameraModeKey;
@@ -376,7 +376,7 @@ public class CameraModule extends ZetaModule {
 				text = I18n.get("quark.camera.info", Component.keybind("quark.keybind.camera_mode").getString());
 				guiGraphics.drawString(mc.font, text, (float) (twidth / 2 - mc.font.width(text) / 2), 16, 0xFFFFFF, true);
 
-				ResourceLocation CAMERA_TEXTURE = new ResourceLocation(Quark.MOD_ID, "textures/misc/camera.png");
+				ResourceLocation CAMERA_TEXTURE = Quark.asResource("textures/misc/camera.png");
 				RenderSystem.setShader(GameRenderer::getPositionTexShader);
 				RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
 				guiGraphics.blit(CAMERA_TEXTURE, left - 22, top + 18, 0, 0, 0, 16, 16, 16, 16);

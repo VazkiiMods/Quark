@@ -1,0 +1,36 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:and",
+      "values": [
+        {
+          "type": "zeta:flag",
+          "flag": "direct_chest_boat"
+        },
+        {
+          "type": "zeta:flag",
+          "flag": "ancient_wood"
+        }
+      ]
+    }
+  ],
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "group": "direct_chest_boat",
+  "key": {
+    "#": {
+      "item": "quark:ancient_planks"
+    },
+    "X": {
+      "tag": "c:chests/wooden"
+    }
+  },
+  "pattern": [
+    "#X#",
+    "###"
+  ],
+  "result": {
+    "count": 1,
+    "id": "quark:ancient_chest_boat"
+  }
+}

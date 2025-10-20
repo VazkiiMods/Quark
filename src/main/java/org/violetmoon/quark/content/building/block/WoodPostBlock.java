@@ -1,6 +1,5 @@
 package org.violetmoon.quark.content.building.block;
 
-import net.minecraft.world.level.block.state.BlockBehaviour;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.violetmoon.quark.base.Quark;

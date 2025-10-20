@@ -6,7 +6,7 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.ModifyVariable;
 
-import org.violetmoon.quark.content.management.module.EasyTransferingModule;
+import org.violetmoon.quark.content.management.module.EasyTransferringModule;
 
 @Mixin(AbstractContainerScreen.class)
 public class ContainerScreenMixin {
@@ -17,7 +17,7 @@ public class ContainerScreenMixin {
 		index = 15
 	)
 	private boolean hasShiftDownClick(boolean curr) {
-		return EasyTransferingModule.Client.hasShiftDown(curr);
+		return EasyTransferringModule.Client.hasShiftDown(curr);
 	}
 
 	@ModifyVariable(
@@ -26,7 +26,7 @@ public class ContainerScreenMixin {
 		index = 12
 	)
 	private boolean hasShiftDownRelease(boolean curr) {
-		return EasyTransferingModule.Client.hasShiftDown(curr);
+		return EasyTransferringModule.Client.hasShiftDown(curr);
 	}
 
 }

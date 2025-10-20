@@ -2,7 +2,6 @@ package org.violetmoon.quark.content.automation.module;
 
 import com.google.common.collect.ImmutableSet;
 import com.mojang.authlib.GameProfile;
-import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
@@ -14,9 +13,9 @@ import net.minecraft.world.entity.ai.village.poi.PoiManager;
 import net.minecraft.world.entity.ai.village.poi.PoiType;
 import net.minecraft.world.entity.animal.Animal;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.flag.FeatureFlagSet;
 import net.minecraft.world.inventory.DispenserMenu;
 import net.minecraft.world.inventory.MenuType;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.GameRules;
@@ -27,17 +26,19 @@ import net.minecraft.world.level.material.MapColor;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.common.extensions.IForgeMenuType;
-import net.minecraftforge.common.util.FakePlayer;
-import net.minecraftforge.common.util.FakePlayerFactory;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.ModContainer;
+import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.neoforge.client.event.RegisterMenuScreensEvent;
+import net.neoforged.neoforge.common.extensions.IMenuTypeExtension;
+import net.neoforged.neoforge.common.util.FakePlayer;
+import net.neoforged.neoforge.common.util.FakePlayerFactory;
 import org.jetbrains.annotations.Nullable;
 import org.violetmoon.quark.base.Quark;
 import org.violetmoon.quark.content.automation.block.FeedingTroughBlock;
 import org.violetmoon.quark.content.automation.block.be.FeedingTroughBlockEntity;
-import org.violetmoon.quark.content.automation.client.screen.CrafterScreen;
 import org.violetmoon.quark.content.automation.client.screen.TroughScreen;
 import org.violetmoon.quark.mixin.mixins.accessor.AccessorTemptingSensor;
-import org.violetmoon.zeta.client.event.load.ZClientSetup;
 import org.violetmoon.zeta.config.Config;
 import org.violetmoon.zeta.event.bus.LoadEvent;
 import org.violetmoon.zeta.event.bus.PlayEvent;
@@ -47,9 +48,9 @@ import org.violetmoon.zeta.event.play.entity.living.ZBabyEntitySpawn;
 import org.violetmoon.zeta.module.ZetaLoadModule;
 import org.violetmoon.zeta.module.ZetaModule;
 import org.violetmoon.zeta.util.Hint;
-import org.violetmoon.zeta.util.MiscUtil;
 
 import java.util.*;
+import java.util.function.Predicate;
 
 /**
  * @author WireSegal
@@ -59,7 +60,7 @@ import java.util.*;
 public class FeedingTroughModule extends ZetaModule {
 
     //using a ResourceKey because they're interned, and Holder.Reference#is leverages this for a very efficient implementation
-    private static final ResourceKey<PoiType> FEEDING_TROUGH_POI_KEY = ResourceKey.create(Registries.POINT_OF_INTEREST_TYPE, Quark.asResource("feeding_trough"));
+    private static final ResourceKey<PoiType> FEEDING_TROUGH_POI_KEY = Quark.asResourceKey(Registries.POINT_OF_INTEREST_TYPE, "feeding_trough");
     private static final Set<FakePlayer> FREE_FAKE_PLAYERS = new HashSet<>();
     //fake players created are either stored here above or in the cache below.
     //this way each animal has its own player which is needed as they are moved in diff pos
@@ -70,7 +71,7 @@ public class FeedingTroughModule extends ZetaModule {
     public static BlockEntityType<FeedingTroughBlockEntity> blockEntityType;
     public static MenuType<DispenserMenu> menuType;
     @Hint
-    Block feeding_trough;
+    public static Block feeding_trough;
 
     @Config(description = "How long, in game ticks, between animals being able to eat from the trough")
     @Config.Min(1)
@@ -122,7 +123,7 @@ public class FeedingTroughModule extends ZetaModule {
         return modifyTempt(level, animal, goal.items);
     }
 
-    private static @Nullable Player modifyTempt(ServerLevel level, Animal animal, Ingredient temptations) {
+    private static @Nullable Player modifyTempt(ServerLevel level, Animal animal, Predicate<ItemStack> temptations) {
         //early-exit conditions
         if (!Quark.ZETA.modules.isEnabled(FeedingTroughModule.class) ||
                 !animal.canFallInLove() ||
@@ -187,7 +188,7 @@ public class FeedingTroughModule extends ZetaModule {
         PoiType feedingTroughPoi = new PoiType(ImmutableSet.copyOf(feeding_trough.getStateDefinition().getPossibleStates()), 1, 32);
         event.getRegistry().register(feedingTroughPoi, FEEDING_TROUGH_POI_KEY.location(), Registries.POINT_OF_INTEREST_TYPE);
 
-        menuType = IForgeMenuType.create((windowId, inv, data) -> new DispenserMenu(windowId, inv));
+        menuType = IMenuTypeExtension.create((windowId, inv, data) -> new DispenserMenu(windowId, inv));
         event.getRegistry().register(menuType, "feeding_trough", Registries.MENU);
     }
 
@@ -195,11 +196,11 @@ public class FeedingTroughModule extends ZetaModule {
     private static final class TroughPointer {
         private final BlockPos pos;
         private final FakePlayer fakePlayer;
-        private final Ingredient temptations;
+        private final Predicate<ItemStack> temptations;
         private int eatCooldown = 0; //Ideally cooldown should be per entity... Assuming troughs don't change much this is fine
         private int giveUpCooldown = 20 * 20; //max seconds till we give up
 
-        private TroughPointer(BlockPos pos, FakePlayer player, Ingredient temptations) {
+        private TroughPointer(BlockPos pos, FakePlayer player, Predicate<ItemStack> temptations) {
             this.pos = pos;
             this.fakePlayer = player;
             this.temptations = temptations;
@@ -268,7 +269,7 @@ public class FeedingTroughModule extends ZetaModule {
 
 
         @Nullable
-        static TroughPointer find(ServerLevel level, Animal animal, Ingredient temptations) {
+        static TroughPointer find(ServerLevel level, Animal animal, Predicate<ItemStack> temptations) {
             // this is an expensive part
             BlockPos position = animal.getOnPos();
             Optional<BlockPos> opt = level.getPoiManager().findClosest(
@@ -307,7 +308,17 @@ public class FeedingTroughModule extends ZetaModule {
         }
     }
 
+    // TODO: Replace with Zeta event
+    @EventBusSubscriber(bus = EventBusSubscriber.Bus.MOD)
+    public static final class Client {
 
+        @SubscribeEvent
+        public static void clientSetup(RegisterMenuScreensEvent event) {
+            event.register(menuType, TroughScreen::new);
+        }
+    }
+
+    /*
     @ZetaLoadModule(clientReplacement = true)
     public static final class Client extends FeedingTroughModule{
 
@@ -316,5 +327,5 @@ public class FeedingTroughModule extends ZetaModule {
             event.enqueueWork(() -> MenuScreens.register(menuType, TroughScreen::new));
         }
     }
-
+     */
 }

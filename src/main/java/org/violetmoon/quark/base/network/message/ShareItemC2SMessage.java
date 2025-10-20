@@ -1,46 +1,37 @@
 package org.violetmoon.quark.base.network.message;
 
+import net.neoforged.neoforge.network.PacketDistributor;
+import org.violetmoon.quark.catnip.net.base.ServerboundPacketPayload;
+import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.ItemStack;
-
-import org.violetmoon.quark.base.Quark;
+import org.violetmoon.quark.base.network.QuarkNetwork;
 import org.violetmoon.quark.content.management.module.ItemSharingModule;
-import org.violetmoon.zeta.network.IZetaMessage;
-import org.violetmoon.zeta.network.IZetaNetworkEventContext;
 
 // The client, requesting "hey I'd like to share this item"
-public class ShareItemC2SMessage implements IZetaMessage {
-	public ItemStack toShare;
+public record ShareItemC2SMessage(ItemStack toShare) implements ServerboundPacketPayload {
+	public static final StreamCodec<RegistryFriendlyByteBuf, ShareItemC2SMessage> STREAM_CODEC = ItemStack.STREAM_CODEC
+			.map(ShareItemC2SMessage::new, ShareItemC2SMessage::toShare);
 
-	public ShareItemC2SMessage() {
+	@Override
+	public void handle(ServerPlayer player) {
+		MinecraftServer server = player.getServer();
+		if(server == null)
+			return;
 
-	}
+		if(!ItemSharingModule.canShare(player.getUUID(), server))
+			return;
 
-	public ShareItemC2SMessage(ItemStack stack) {
-		this.toShare = stack;
+		Component senderName = player.getDisplayName();
+
+		PacketDistributor.sendToAllPlayers(new ShareItemS2CMessage(player.getUUID(), senderName, toShare));
 	}
 
 	@Override
-	public boolean receive(IZetaNetworkEventContext context) {
-		ServerPlayer sender = context.getSender();
-		context.enqueueWork(() -> {
-			if(sender == null)
-				return;
-
-			MinecraftServer server = sender.getServer();
-			if(server == null)
-				return;
-
-			if(!ItemSharingModule.canShare(sender.getUUID(), server))
-				return;
-
-			Component senderName = sender.getDisplayName();
-
-			Quark.ZETA.network.sendToAllPlayers(new ShareItemS2CMessage(sender.getUUID(), senderName, toShare), server);
-		});
-
-		return true;
+	public PacketTypeProvider getTypeProvider() {
+		return QuarkNetwork.SHARE_ITEM_C2S_MESSAGE;
 	}
 }

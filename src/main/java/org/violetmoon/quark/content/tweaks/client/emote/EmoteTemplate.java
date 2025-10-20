@@ -386,7 +386,7 @@ public class EmoteTemplate {
 				throw new IllegalArgumentException("Illegal number in function sound", ex);
 			}
 
-			ResourceLocation soundEvent = new ResourceLocation(type);
+			ResourceLocation soundEvent = ResourceLocation.parse(type);
 
 			List<BaseTween<?>> children = timeline.getChildren();
 

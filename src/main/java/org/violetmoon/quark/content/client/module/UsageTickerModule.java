@@ -1,9 +1,12 @@
 package org.violetmoon.quark.content.client.module;
 
 import com.mojang.blaze3d.platform.Window;
-
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.core.Holder;
+import net.minecraft.core.RegistryAccess;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.EquipmentSlot.Type;
@@ -13,9 +16,10 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.ProjectileWeaponItem;
+import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.Enchantments;
-
-import net.minecraftforge.common.MinecraftForge;
+import net.neoforged.neoforge.client.gui.VanillaGuiLayers;
+import net.neoforged.neoforge.common.NeoForge;
 import org.violetmoon.quark.api.IUsageTickerOverride;
 import org.violetmoon.quark.api.event.UsageTickerEvent;
 import org.violetmoon.quark.base.Quark;
@@ -81,16 +85,18 @@ public class UsageTickerModule extends ZetaModule {
 		}
 
 		@PlayEvent
-		public void renderHUD(ZRenderGuiOverlay.Hotbar.Post event) {
-			Window window = event.getWindow();
-			Player player = Minecraft.getInstance().player;
-			float partial = event.getPartialTick();
+		public void renderHUD(ZRenderGuiOverlay.Post event) {
+			if (event.getLayerName().equals(VanillaGuiLayers.HOTBAR) && !Minecraft.getInstance().options.hideGui) {
+				Window window = event.getWindow();
+				LocalPlayer player = Minecraft.getInstance().player;
+				float partial = event.getPartialTick().getGameTimeDeltaTicks();
 
-			GuiGraphics guiGraphics = event.getGuiGraphics();
+				GuiGraphics guiGraphics = event.getGuiGraphics();
 
-			for(TickerElement ticker : elements)
-				if(ticker != null)
-					ticker.render(guiGraphics, window, player, invert, partial);
+				for (TickerElement ticker : elements)
+					if (ticker != null)
+						ticker.render(guiGraphics, window, player, invert, partial);
+			}
 		}
 
 		public static class TickerElement {
@@ -108,7 +114,7 @@ public class UsageTickerModule extends ZetaModule {
 				this.slot = slot;
 			}
 
-			public void tick(Player player) {
+			public void tick(LocalPlayer player) {
 				ItemStack realStack = getStack(player);
 				int count = getStackCount(player, realStack, realStack, false);
 
@@ -136,7 +142,7 @@ public class UsageTickerModule extends ZetaModule {
 				currRealStack = realStack;
 			}
 
-			public void render(GuiGraphics guiGraphics, Window window, Player player, boolean invert, float partialTicks) {
+			public void render(GuiGraphics guiGraphics, Window window, LocalPlayer player, boolean invert, float partialTicks) {
 				if(liveTicks > 0) {
 					float animProgress;
 
@@ -151,7 +157,7 @@ public class UsageTickerModule extends ZetaModule {
 					float y = window.getGuiScaledHeight() - anim;
 
 					int barWidth = 190;
-					boolean armor = slot.getType() == Type.ARMOR;
+					boolean armor = slot.getType() == Type.HUMANOID_ARMOR;
 
 					HumanoidArm primary = player.getMainArm();
 					HumanoidArm ourSide = (armor != invert) ? primary : primary.getOpposite();
@@ -185,16 +191,16 @@ public class UsageTickerModule extends ZetaModule {
 				return player.getItemBySlot(slot);
 			}
 
-			public ItemStack getLogicalStack(ItemStack stack, int count, Player player, boolean renderPass) {
+			public ItemStack getLogicalStack(ItemStack stack, int count, LocalPlayer player, boolean renderPass) {
 				boolean verifySize = true;
 				ItemStack returnStack = stack;
 				boolean logicLock = false;
 
 				if(stack.getItem() instanceof IUsageTickerOverride over) {
-					stack = over.getUsageTickerItem(stack);
+					stack = over.getUsageTickerItem(stack, player.level().registryAccess());
 					returnStack = stack;
 					verifySize = over.shouldUsageTickerCheckMatchSize(currStack);
-				} else if(isProjectileWeapon(stack)) {
+				} else if(isProjectileWeapon(player.level().registryAccess(), stack)) {
 					returnStack = player.getProjectile(stack);
 					logicLock = true;
 				}
@@ -209,7 +215,7 @@ public class UsageTickerModule extends ZetaModule {
 
 				//TODO ZETA: readd this
 				UsageTickerEvent.GetStack event = new UsageTickerEvent.GetStack(slot, returnStack, stack, count, renderPass, player);
-				MinecraftForge.EVENT_BUS.post(event);
+				NeoForge.EVENT_BUS.post(event);
 				return event.isCanceled() ? ItemStack.EMPTY : event.getResultStack();
 			}
 
@@ -217,7 +223,7 @@ public class UsageTickerModule extends ZetaModule {
 				int val = 1;
 
 				if(displayStack.isStackable() || (displayStack.getItem() instanceof BlockItem)) {
-					Predicate<ItemStack> predicate = (stackAt) -> ItemStack.isSameItemSameTags(stackAt, displayStack);
+					Predicate<ItemStack> predicate = (stackAt) -> ItemStack.isSameItemSameComponents(stackAt, displayStack);
 
 					int total = 0;
 					Inventory inventory = player.getInventory();
@@ -236,15 +242,16 @@ public class UsageTickerModule extends ZetaModule {
 
 				//TODO ZETA: readd this
 				UsageTickerEvent.GetCount event = new UsageTickerEvent.GetCount(slot, displayStack, original, val, renderPass, player);
-				MinecraftForge.EVENT_BUS.post(event);
+				NeoForge.EVENT_BUS.post(event);
 				return event.isCanceled() ? 0 : event.getResultCount();
 			}
 
-			private static boolean isProjectileWeapon(ItemStack stack) {
-				return stack.getItem() instanceof ProjectileWeaponItem && Quark.ZETA.itemExtensions.get(stack).getEnchantmentLevelZeta(stack, Enchantments.INFINITY_ARROWS) == 0;
+			private static boolean isProjectileWeapon(RegistryAccess access, ItemStack stack) {
+				Holder<Enchantment> enchantment = access.lookupOrThrow(Registries.ENCHANTMENT).getOrThrow(Enchantments.INFINITY);
+				return stack.getItem() instanceof ProjectileWeaponItem && Quark.ZETA.itemExtensions.get(stack).getEnchantmentLevelZeta(stack, enchantment) == 0;
 			}
 
-			public ItemStack getRenderedStack(Player player) {
+			public ItemStack getRenderedStack(LocalPlayer player) {
 				ItemStack stack = getStack(player);
 				int count = getStackCount(player, stack, stack, true);
 				ItemStack logicalStack = getLogicalStack(stack, count, player, true).copy();

@@ -1,0 +1,38 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "zeta:flag",
+      "flag": "shale"
+    }
+  ],
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_shale": {
+      "conditions": {
+        "items": [
+          {
+            "items": "quark:shale"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "quark:world/crafting/slabs/shale_slab"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    }
+  },
+  "requirements": [
+    [
+      "has_the_recipe",
+      "has_shale"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "quark:world/crafting/slabs/shale_slab"
+    ]
+  }
+}

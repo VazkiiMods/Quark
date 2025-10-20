@@ -1,5 +1,6 @@
 package org.violetmoon.quark.content.management.inventory;
 
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.Container;
 import net.minecraft.world.MenuProvider;
@@ -7,12 +8,15 @@ import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.component.CustomData;
+import net.minecraft.world.item.component.ItemContainerContents;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.ShulkerBoxBlockEntity;
-
 import org.violetmoon.quark.base.handler.SimilarBlockTypeHandler;
 import org.violetmoon.quark.content.management.module.ExpandedItemInteractionsModule;
-import org.violetmoon.zeta.util.ItemNBTHelper;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class HeldShulkerBoxContainer implements Container, MenuProvider {
 
@@ -29,17 +33,24 @@ public class HeldShulkerBoxContainer implements Container, MenuProvider {
 		ShulkerBoxBlockEntity gotBe = null;
 
 		if(SimilarBlockTypeHandler.isShulkerBox(stack)) {
-			BlockEntity tile = ExpandedItemInteractionsModule.getShulkerBoxEntity(stack);
-			if(tile instanceof ShulkerBoxBlockEntity shulker)
-				gotBe = shulker;
-		}
+			BlockEntity tile = ExpandedItemInteractionsModule.getShulkerBoxEntity(stack, player.level().registryAccess());
+			if(tile instanceof ShulkerBoxBlockEntity shulker) {
+                gotBe = shulker;
+            }
+        }
 
-		be = gotBe;
+        if (stack.has(DataComponents.CONTAINER) && gotBe != null) {
+            for (int i = 0; i < stack.get(DataComponents.CONTAINER).getSlots(); i++) {
+                gotBe.setItem(i, stack.get(DataComponents.CONTAINER).getStackInSlot(i));
+            }
+        }
+
+        be = gotBe;
 	}
 
 	@Override
-	public AbstractContainerMenu createMenu(int p_39954_, Inventory p_39955_, Player p_39956_) {
-		return new HeldShulkerBoxMenu(p_39954_, p_39955_, this, slot);
+	public AbstractContainerMenu createMenu(int containerID, Inventory playerInv, Player player) {
+		return new HeldShulkerBoxMenu(containerID, playerInv, this, slot);
 	}
 
 	@Override
@@ -63,30 +74,35 @@ public class HeldShulkerBoxContainer implements Container, MenuProvider {
 	}
 
 	@Override
-	public ItemStack getItem(int p_18941_) {
-		return be.getItem(p_18941_);
+	public ItemStack getItem(int slot) {
+		return be.getItem(slot);
 	}
 
 	@Override
-	public ItemStack removeItem(int p_18942_, int p_18943_) {
-		return be.removeItem(p_18942_, p_18943_);
+	public ItemStack removeItem(int slot, int amount) {
+		return be.removeItem(slot, amount);
 	}
 
 	@Override
-	public ItemStack removeItemNoUpdate(int p_18951_) {
-		return be.removeItemNoUpdate(p_18951_);
+	public ItemStack removeItemNoUpdate(int slot) {
+		return be.removeItemNoUpdate(slot);
 	}
 
 	@Override
-	public void setItem(int p_18944_, ItemStack p_18945_) {
-		be.setItem(p_18944_, p_18945_);
+	public void setItem(int slot, ItemStack itemStack) {
+		be.setItem(slot, itemStack);
 	}
 
 	@Override
 	public void setChanged() {
 		be.setChanged();
-
-		ItemNBTHelper.setCompound(stack, "BlockEntityTag", be.saveWithId());
+        List<ItemStack> stacks = new ArrayList<>();
+        for (int i = 0; i < be.getContainerSize(); i++) {
+            stacks.add(this.getItem(i));
+        }
+        stack.set(DataComponents.CONTAINER, ItemContainerContents.fromItems(stacks));
+        //stack.set(DataComponents.BLOCK_ENTITY_DATA, CustomData.of(be.saveWithId(be.getLevel().registryAccess())));
+		//ItemNBTHelper.setCompound(stack, "BlockEntityTag", be.saveWithId());
 	}
 
 	@Override

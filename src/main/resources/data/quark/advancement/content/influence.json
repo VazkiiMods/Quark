@@ -1,0 +1,35 @@
+{
+  "parent": "minecraft:story/enchant_item",
+  "criteria": {
+    "influence": {
+      "trigger": "quark:influence"
+    }
+  },
+  "display": {
+    "announce_to_chat": true,
+    "description": {
+      "translate": "advancements.quark.influence.description"
+    },
+    "frame": "goal",
+    "hidden": false,
+    "icon": {
+      "id": "minecraft:lime_candle"
+    },
+    "show_toast": true,
+    "title": {
+      "translate": "advancements.quark.influence.title"
+    }
+  },
+  "requirements": [
+    [
+      "influence"
+    ]
+  ],
+  "neoforge:conditions": [
+    {
+      "type": "zeta:flag",
+      "flag": "candle_influencing"
+    }
+  ]
+
+}

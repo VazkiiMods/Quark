@@ -2,19 +2,11 @@ package org.violetmoon.quark.content.mobs.client.model;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-
 import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.model.geom.PartPose;
-import net.minecraft.client.model.geom.builders.CubeDeformation;
-import net.minecraft.client.model.geom.builders.CubeListBuilder;
-import net.minecraft.client.model.geom.builders.LayerDefinition;
-import net.minecraft.client.model.geom.builders.MeshDefinition;
-import net.minecraft.client.model.geom.builders.PartDefinition;
+import net.minecraft.client.model.geom.builders.*;
 import net.minecraft.client.renderer.RenderType;
-
-import org.jetbrains.annotations.NotNull;
-
 import org.violetmoon.quark.content.mobs.entity.Wraith;
 
 import java.util.Random;
@@ -98,14 +90,10 @@ public class WraithModel extends EntityModel<Wraith> {
 	}
 
 	@Override
-	public void renderToBuffer(PoseStack matrix, @NotNull VertexConsumer bufferIn, int packedLightIn, int packedOverlayIn, float red, float green, float blue, float alpha) {
-		alpha *= alphaMult;
-
-		matrix.pushPose();
-		matrix.translate(0, offset, -0.1); // -0.1 is to ensure the model is inside the hitbox
-		main.render(matrix, bufferIn, packedLightIn, packedOverlayIn, red, green, blue, alpha);
-		matrix.popPose();
-
+	public void renderToBuffer(PoseStack poseStack, VertexConsumer bufferIn, int packedLight, int packedOverlay, int color) {
+		poseStack.pushPose();
+		poseStack.translate(0, offset, -0.1); // -0.1 is to ensure the model is inside the hitbox
+		main.render(poseStack, bufferIn, packedLight, packedOverlay, color); // TODO: change color alphaMult
+		poseStack.popPose();
 	}
-
 }

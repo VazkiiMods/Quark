@@ -31,8 +31,8 @@ public class VariantFurnacesModule extends ZetaModule {
 
 	@LoadEvent
 	public final void register(ZRegister event) {
-		deepslateFurnace = new VariantFurnaceBlock("deepslate", this, Properties.copy(Blocks.DEEPSLATE).lightLevel(litBlockEmission(13)));
-		blackstoneFurnace = new SoulFurnaceBlock("blackstone", this, Properties.copy(Blocks.BLACKSTONE).lightLevel(litBlockEmission(13)));
+		deepslateFurnace = new VariantFurnaceBlock("deepslate", this, Properties.ofFullCopy(Blocks.DEEPSLATE).lightLevel(litBlockEmission(13)));
+		blackstoneFurnace = new SoulFurnaceBlock("blackstone", this, Properties.ofFullCopy(Blocks.BLACKSTONE).lightLevel(litBlockEmission(13)));
 
 		blockEntityType = BlockEntityType.Builder.of(VariantFurnaceBlockEntity::new, deepslateFurnace, blackstoneFurnace).build(null);
 		Quark.ZETA.registry.register(blockEntityType, "variant_furnace", Registries.BLOCK_ENTITY_TYPE);

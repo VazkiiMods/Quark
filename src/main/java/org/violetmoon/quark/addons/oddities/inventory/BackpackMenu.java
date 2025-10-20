@@ -3,18 +3,14 @@ package org.violetmoon.quark.addons.oddities.inventory;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.EquipmentSlot.Type;
-import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.*;
 import net.minecraft.world.item.ItemStack;
-
 import org.jetbrains.annotations.NotNull;
-
 import org.violetmoon.quark.addons.oddities.inventory.slot.BackpackSlot;
 import org.violetmoon.quark.addons.oddities.inventory.slot.CachedItemHandlerSlot;
 import org.violetmoon.quark.addons.oddities.module.BackpackModule;
-import org.violetmoon.quark.base.util.InventoryIIH;
 
 public class BackpackMenu extends InventoryMenu {
 
@@ -33,12 +29,12 @@ public class BackpackMenu extends InventoryMenu {
 
 		ItemStack backpack = inventory.armor.get(2);
 		if(backpack.getItem() == BackpackModule.backpack) {
-			InventoryIIH inv = new InventoryIIH(backpack);
+			BackpackContainer backpackInv = new BackpackContainer(backpack);
 
 			for(int i = 0; i < 3; ++i)
 				for(int j = 0; j < 9; ++j) {
 					int k = j + i * 9;
-					addSlot(new BackpackSlot(inv, k, left + j * 18, top + i * 18));
+					addSlot(new BackpackSlot(backpackInv, k, left + j * 18, top + i * 18));
 				}
 		}
 	}
@@ -53,22 +49,20 @@ public class BackpackMenu extends InventoryMenu {
 		final int topSlots = 8;
 		final int invStart = topSlots + 1;
 		final int invEnd = invStart + 27;
-		final int hotbarStart = invEnd;
-		final int hotbarEnd = hotbarStart + 9;
-		final int shieldSlot = hotbarEnd;
-		final int backpackStart = shieldSlot + 1;
+        final int hotbarEnd = invEnd + 9;
+        final int backpackStart = hotbarEnd + 1;
 		final int backpackEnd = backpackStart + 27;
 
 		ItemStack baseStack = ItemStack.EMPTY;
 		Slot slot = this.slots.get(index);
 
-		if(slot != null && slot.hasItem()) {
+		if(slot.hasItem()) {
 			ItemStack stack = slot.getItem();
 			baseStack = stack.copy();
-			EquipmentSlot slotType = Mob.getEquipmentSlotForItem(stack);
-			int equipIndex = topSlots - (slotType == null ? 0 : slotType.getIndex());
+			EquipmentSlot slotType = playerIn.getEquipmentSlotForItem(stack);
+			int equipIndex = topSlots - slotType.getIndex();
 
-			if(index < invStart || index == shieldSlot) { // crafting and armor slots
+			if(index < invStart || index == hotbarEnd) { // crafting and armor slots
 				ItemStack target = null;
 				if(!this.moveItemStackTo(stack, invStart, hotbarEnd, false) && !this.moveItemStackTo(stack, backpackStart, backpackEnd, false))
 					target = ItemStack.EMPTY;
@@ -79,18 +73,18 @@ public class BackpackMenu extends InventoryMenu {
 					slot.onQuickCraft(stack, baseStack);
 			}
 
-			else if(slotType != null && slotType.getType() == Type.ARMOR && !this.slots.get(equipIndex).hasItem()) { // shift clicking armor
+			else if(slotType.getType() == Type.HUMANOID_ARMOR && !this.slots.get(equipIndex).hasItem()) { // shift clicking armor
 				if(!this.moveItemStackTo(stack, equipIndex, equipIndex + 1, false))
 					return ItemStack.EMPTY;
 			}
 
-			else if(slotType != null && slotType == EquipmentSlot.OFFHAND && !this.slots.get(shieldSlot).hasItem()) { // shift clicking shield
-				if(!this.moveItemStackTo(stack, shieldSlot, shieldSlot + 1, false))
+			else if(slotType == EquipmentSlot.OFFHAND && !this.slots.get(hotbarEnd).hasItem()) { // shift clicking shield
+				if(!this.moveItemStackTo(stack, hotbarEnd, hotbarEnd + 1, false))
 					return ItemStack.EMPTY;
 			}
 
 			else if(index < invEnd) {
-				if(!this.moveItemStackTo(stack, backpackStart, backpackEnd, false) && !this.moveItemStackTo(stack, hotbarStart, hotbarEnd, false))
+				if(!this.moveItemStackTo(stack, backpackStart, backpackEnd, false) && !this.moveItemStackTo(stack, invEnd, hotbarEnd, false))
 					return ItemStack.EMPTY;
 			}
 
@@ -99,7 +93,7 @@ public class BackpackMenu extends InventoryMenu {
 					return ItemStack.EMPTY;
 			}
 
-			else if(!this.moveItemStackTo(stack, hotbarStart, hotbarEnd, false) && !this.moveItemStackTo(stack, invStart, invEnd, false))
+			else if(!this.moveItemStackTo(stack, invEnd, hotbarEnd, false) && !this.moveItemStackTo(stack, invStart, invEnd, false))
 				return ItemStack.EMPTY;
 
 			if(stack.isEmpty())
@@ -122,16 +116,16 @@ public class BackpackMenu extends InventoryMenu {
 	// and was like yeah just take whatever you want lol
 	// https://github.com/CoFH/CoFHCore/blob/d4a79b078d257e88414f5eed598d57490ec8e97f/src/main/java/cofh/core/util/helpers/InventoryHelper.java
 	@Override
-	public boolean moveItemStackTo(ItemStack stack, int start, int length, boolean r) {
+	public boolean moveItemStackTo(ItemStack stack, int start, int length, boolean reversed) {
 		boolean successful = false;
-		int i = !r ? start : length - 1;
-		int iterOrder = !r ? 1 : -1;
+		int i = !reversed ? start : length - 1;
+		int iterOrder = !reversed ? 1 : -1;
 
 		Slot slot;
 		ItemStack existingStack;
 
 		if(stack.isStackable())
-			while(stack.getCount() > 0 && (!r && i < length || r && i >= start)) {
+			while(stack.getCount() > 0 && (!reversed && i < length || reversed && i >= start)) {
 				slot = slots.get(i);
 
 				existingStack = slot.getItem();
@@ -140,7 +134,7 @@ public class BackpackMenu extends InventoryMenu {
 					int maxStack = Math.min(stack.getMaxStackSize(), slot.getMaxStackSize());
 					int rmv = Math.min(maxStack, stack.getCount());
 
-					if(slot.mayPlace(cloneStack(stack, rmv)) && existingStack.getItem().equals(stack.getItem()) && ItemStack.isSameItemSameTags(stack, existingStack)) {
+					if(slot.mayPlace(cloneStack(stack, rmv)) && existingStack.getItem().equals(stack.getItem()) && ItemStack.isSameItemSameComponents(stack, existingStack)) {
 						int existingSize = existingStack.getCount() + stack.getCount();
 
 						if(existingSize <= maxStack) {
@@ -159,8 +153,8 @@ public class BackpackMenu extends InventoryMenu {
 				i += iterOrder;
 			}
 		if(stack.getCount() > 0) {
-			i = !r ? start : length - 1;
-			while(stack.getCount() > 0 && (!r && i < length || r && i >= start)) {
+			i = !reversed ? start : length - 1;
+			while(stack.getCount() > 0 && (!reversed && i < length || reversed && i >= start)) {
 				slot = slots.get(i);
 				existingStack = slot.getItem();
 
@@ -209,5 +203,4 @@ public class BackpackMenu extends InventoryMenu {
 	public @NotNull MenuType<?> getType() {
 		return BackpackModule.menyType;
 	}
-
 }

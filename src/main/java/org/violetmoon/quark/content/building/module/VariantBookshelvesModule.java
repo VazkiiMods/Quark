@@ -1,5 +1,6 @@
 package org.violetmoon.quark.content.building.module;
 
+import net.minecraft.world.item.CreativeModeTabs;
 import net.minecraft.world.level.block.Blocks;
 
 import org.violetmoon.zeta.util.VanillaWoods;
@@ -13,22 +14,30 @@ import org.violetmoon.zeta.module.ZetaLoadModule;
 import org.violetmoon.zeta.module.ZetaModule;
 import org.violetmoon.zeta.registry.CreativeTabManager;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @ZetaLoadModule(category = "building", antiOverlap = { "woodworks", "woodster" })
 public class VariantBookshelvesModule extends ZetaModule {
+
+	public static List<VariantBookshelfBlock> variantBookshelves = new ArrayList<>();
 
 	@Config
 	public static boolean changeNames = true;
 
 	@LoadEvent
 	public final void register(ZRegister event) {
-		CreativeTabManager.daisyChain();
-		for(Wood type : VanillaWoods.NON_OAK)
-			new VariantBookshelfBlock(type.name(), this, !type.nether(), type.soundPlanks());
-		CreativeTabManager.endDaisyChain();
+		CreativeTabManager.startChain(CreativeModeTabs.FUNCTIONAL_BLOCKS, false, false, Blocks.BOOKSHELF);
+		for(Wood type : VanillaWoods.NON_OAK){
+			VariantBookshelfBlock bookshelf = new VariantBookshelfBlock(type.name(), this, !type.nether(), type.soundPlanks());
+			variantBookshelves.add(bookshelf);
+		}
+
+		CreativeTabManager.endChain();
 	}
 
 	@LoadEvent
 	public final void configChanged(ZConfigChanged event) {
-		zeta().nameChanger.changeBlock(Blocks.BOOKSHELF, "block.quark.oak_bookshelf", changeNames && enabled);
+		zeta().nameChanger.changeBlock(Blocks.BOOKSHELF, "block.quark.oak_bookshelf", changeNames && isEnabled());
 	}
 }

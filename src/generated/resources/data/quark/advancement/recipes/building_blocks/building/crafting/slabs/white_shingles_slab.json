@@ -1,0 +1,38 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "zeta:flag",
+      "flag": "shingles"
+    }
+  ],
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "quark:building/crafting/slabs/white_shingles_slab"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    },
+    "has_white_shingles": {
+      "conditions": {
+        "items": [
+          {
+            "items": "quark:white_shingles"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "requirements": [
+    [
+      "has_the_recipe",
+      "has_white_shingles"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "quark:building/crafting/slabs/white_shingles_slab"
+    ]
+  }
+}

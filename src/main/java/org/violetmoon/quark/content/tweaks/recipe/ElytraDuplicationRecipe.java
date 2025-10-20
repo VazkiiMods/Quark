@@ -1,17 +1,11 @@
 package org.violetmoon.quark.content.tweaks.recipe;
 
+import net.minecraft.core.HolderLookup;
 import net.minecraft.core.NonNullList;
-import net.minecraft.core.RegistryAccess;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.inventory.CraftingContainer;
 import net.minecraft.world.item.ElytraItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import net.minecraft.world.item.crafting.CraftingBookCategory;
-import net.minecraft.world.item.crafting.CustomRecipe;
-import net.minecraft.world.item.crafting.Ingredient;
-import net.minecraft.world.item.crafting.RecipeSerializer;
-import net.minecraft.world.item.crafting.SimpleCraftingRecipeSerializer;
+import net.minecraft.world.item.crafting.*;
 import net.minecraft.world.level.Level;
 
 import org.jetbrains.annotations.NotNull;
@@ -22,43 +16,34 @@ public class ElytraDuplicationRecipe extends CustomRecipe {
 
 	public static final SimpleCraftingRecipeSerializer<?> SERIALIZER = new SimpleCraftingRecipeSerializer<>(ElytraDuplicationRecipe::new);
 
-	public ElytraDuplicationRecipe(ResourceLocation id, CraftingBookCategory cat) {
-		super(id, cat);
+	public ElytraDuplicationRecipe(CraftingBookCategory category) {
+		super(category);
 	}
 
 	@Override
-	public boolean matches(@NotNull CraftingContainer var1, @NotNull Level var2) {
-		int sources = 0;
-		boolean foundTarget = false;
+	public boolean matches(CraftingInput input, Level level) {
+		if (input.ingredientCount() != 2) return false;
+		boolean hasElytra = false, hasScale = false;
 
-		for(int i = 0; i < var1.getContainerSize(); i++) {
-			ItemStack stack = var1.getItem(i);
-			if(!stack.isEmpty()) {
-				if(stack.getItem() instanceof ElytraItem) {
-					if(foundTarget)
-						return false;
-					foundTarget = true;
-				} else if(stack.getItem() == DragonScalesModule.dragon_scale) {
-					if(sources >= 1)
-						return false;
-					sources++;
-				} else
-					return false;
+		for (int i = 0; i < input.size(); ++i) {
+			ItemStack stack = input.getItem(i);
+			if (stack.getItem() instanceof ElytraItem) {
+				hasElytra = true;
+			} else if (stack.getItem() == DragonScalesModule.dragon_scale) {
+				hasScale = true;
 			}
 		}
+		return hasElytra && hasScale;
+	}
 
-		return sources == 1 && foundTarget;
+	@Override
+	public ItemStack assemble(CraftingInput input, HolderLookup.Provider provider) {
+		return getResultItem(provider);
 	}
 
 	@NotNull
 	@Override
-	public ItemStack assemble(@NotNull CraftingContainer var1, RegistryAccess gaming) {
-		return getResultItem(gaming);
-	}
-
-	@NotNull
-	@Override
-	public ItemStack getResultItem(RegistryAccess gaming) {
+	public ItemStack getResultItem(HolderLookup.Provider provider) {
 		ItemStack stack = new ItemStack(Items.ELYTRA);
 
 //		if(EnderdragonScales.dyeBlack && ModuleLoader.isFeatureEnabled(DyableElytra.class))
@@ -69,15 +54,14 @@ public class ElytraDuplicationRecipe extends CustomRecipe {
 
 	@NotNull
 	@Override
-	public NonNullList<ItemStack> getRemainingItems(CraftingContainer inv) {
-		NonNullList<ItemStack> ret = NonNullList.withSize(inv.getContainerSize(), ItemStack.EMPTY);
+	public NonNullList<ItemStack> getRemainingItems(CraftingInput inv) {
+		NonNullList<ItemStack> ret = NonNullList.withSize(inv.ingredientCount(), ItemStack.EMPTY);
 
-		for(int i = 0; i < inv.getContainerSize(); i++) {
+		for(int i = 0; i < inv.size(); i++) {
 			ItemStack stack = inv.getItem(i);
 			if(stack.getItem() == Items.ELYTRA)
 				ret.set(i, stack.copy());
 		}
-
 		return ret;
 	}
 

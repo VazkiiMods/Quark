@@ -2,12 +2,14 @@ package org.violetmoon.quark.addons.oddities.block;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.Containers;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
@@ -19,6 +21,7 @@ import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.EntityBlock;
 import net.minecraft.world.level.block.RenderShape;
@@ -37,18 +40,16 @@ import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
-
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-
 import org.violetmoon.quark.addons.oddities.block.be.TinyPotatoBlockEntity;
 import org.violetmoon.quark.addons.oddities.item.TinyPotatoBlockItem;
 import org.violetmoon.quark.addons.oddities.module.TinyPotatoModule;
+import org.violetmoon.quark.base.components.QuarkDataComponents;
 import org.violetmoon.zeta.block.OldMaterials;
 import org.violetmoon.zeta.block.ZetaBlock;
 import org.violetmoon.zeta.module.ZetaModule;
 import org.violetmoon.zeta.registry.IZetaBlockItemProvider;
-import org.violetmoon.zeta.util.ItemNBTHelper;
 
 /**
  * @author WireSegal
@@ -64,7 +65,7 @@ public class TinyPotatoBlock extends ZetaBlock implements SimpleWaterloggedBlock
 	public static final String ANGRY = "angery";
 
 	public static boolean isAngry(ItemStack stack) {
-		return ItemNBTHelper.getBoolean(stack, ANGRY, false);
+		return Boolean.TRUE.equals(stack.get(QuarkDataComponents.IS_ANGRY));
 	}
 
 	public TinyPotatoBlock(@Nullable ZetaModule module) {
@@ -113,15 +114,15 @@ public class TinyPotatoBlock extends ZetaBlock implements SimpleWaterloggedBlock
 
 	@SuppressWarnings("deprecation")
 	@Override
-	public ItemStack getCloneItemStack(BlockGetter level, BlockPos pos, BlockState state) {
+	public ItemStack getCloneItemStack(LevelReader level, BlockPos pos, BlockState state) {
 		ItemStack stack = super.getCloneItemStack(level, pos, state);
 		BlockEntity be = level.getBlockEntity(pos);
 		if(be instanceof TinyPotatoBlockEntity tater) {
 			if(tater.hasCustomName())
-				stack.setHoverName(tater.getCustomName());
+				stack.set(DataComponents.CUSTOM_NAME, tater.getCustomName());
 
 			if(tater.angry)
-				ItemNBTHelper.setBoolean(stack, ANGRY, true);
+				stack.set(QuarkDataComponents.IS_ANGRY, true);
 		}
 		return stack;
 	}
@@ -132,9 +133,10 @@ public class TinyPotatoBlock extends ZetaBlock implements SimpleWaterloggedBlock
 		return SHAPE;
 	}
 
+
 	@NotNull
 	@Override
-	public InteractionResult use(@NotNull BlockState state, Level world, @NotNull BlockPos pos, @NotNull Player player, @NotNull InteractionHand hand, @NotNull BlockHitResult hit) {
+	protected ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
 		BlockEntity be = world.getBlockEntity(pos);
 		if(be instanceof TinyPotatoBlockEntity tater) {
 			tater.interact(player, hand, player.getItemInHand(hand), hit.getDirection());
@@ -147,7 +149,7 @@ public class TinyPotatoBlock extends ZetaBlock implements SimpleWaterloggedBlock
 				serverLevel.sendParticles(ParticleTypes.HEART, pos.getX() + box.minX + Math.random() * (box.maxX - box.minX), pos.getY() + box.maxY, pos.getZ() + box.minZ + Math.random() * (box.maxZ - box.minZ), 1, 0, 0, 0, 0);
 			}
 		}
-		return InteractionResult.sidedSuccess(world.isClientSide);
+		return ItemInteractionResult.sidedSuccess(world.isClientSide);
 	}
 
 	@NotNull
@@ -170,7 +172,7 @@ public class TinyPotatoBlock extends ZetaBlock implements SimpleWaterloggedBlock
 
 	@Override
 	public void setPlacedBy(@NotNull Level world, @NotNull BlockPos pos, @NotNull BlockState state, @Nullable LivingEntity living, ItemStack stack) {
-		boolean hasCustomName = stack.hasCustomHoverName();
+		boolean hasCustomName = stack.has(DataComponents.CUSTOM_NAME);
 		boolean isAngry = isAngry(stack);
 		if(hasCustomName || isAngry) {
 			BlockEntity be = world.getBlockEntity(pos);

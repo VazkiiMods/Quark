@@ -1,12 +1,5 @@
 package org.violetmoon.quark.content.building.block;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-import org.violetmoon.quark.base.Quark;
-import org.violetmoon.zeta.module.ZetaModule;
-import org.violetmoon.zeta.registry.RenderLayerRegistry;
-import org.violetmoon.zeta.util.MiscUtil;
-
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.item.context.UseOnContext;
@@ -19,6 +12,13 @@ import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.phys.Vec3;
+import net.neoforged.neoforge.common.ItemAbility;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+import org.violetmoon.quark.base.Quark;
+import org.violetmoon.zeta.module.ZetaModule;
+import org.violetmoon.zeta.registry.RenderLayerRegistry;
+import org.violetmoon.zeta.util.MiscUtil;
 
 /**
  * Unfortunately, due to Ladder Weirdness (tm) this block is NYI
@@ -80,16 +80,15 @@ public class HollowWoodBlock extends HollowFrameBlock {
 		return newState;
 	}
 
-	// Temporary method
 	@Override
-	public @Nullable BlockState getToolModifiedStateZeta(BlockState state, UseOnContext context, String toolActionType, boolean simulate) {
-		if("axe_strip".equals(toolActionType)) {
+	public @Nullable BlockState getToolModifiedState(BlockState state, UseOnContext context, ItemAbility itemAbility, boolean simulate) {
+		if("axe_strip".equals(String.valueOf(itemAbility))) {
 			Vec3 exactPos = context.getClickLocation();
 			BlockPos centerPos = context.getClickedPos();
 			Direction face = Direction.getNearest(exactPos.x - (centerPos.getX() + 0.5), exactPos.y - (centerPos.getY() + 0.5), exactPos.z - (centerPos.getZ() + 0.5));
 			return state.cycle(MiscUtil.directionProperty(face));
 		}
-		return super.getToolModifiedStateZeta(state, context, toolActionType, simulate);
+		return super.getToolModifiedStateZeta(state, context, ItemAbility.get(String.valueOf(itemAbility)), simulate);
 	}
 
 	@Override

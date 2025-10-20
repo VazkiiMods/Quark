@@ -1,7 +1,14 @@
 package org.violetmoon.quark.addons.oddities.client.screen;
 
-import java.util.List;
-
+import com.google.common.collect.Lists;
+import com.mojang.blaze3d.systems.RenderSystem;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
+import net.minecraft.client.renderer.GameRenderer;
+import net.minecraft.client.renderer.Rect2i;
+import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.player.Inventory;
 import org.jetbrains.annotations.NotNull;
 import org.violetmoon.quark.addons.oddities.inventory.CrateMenu;
 import org.violetmoon.quark.addons.oddities.module.CrateModule;
@@ -12,19 +19,10 @@ import org.violetmoon.quark.base.client.handler.InventoryButtonHandler;
 import org.violetmoon.quark.base.client.handler.InventoryButtonHandler.ButtonTargetType;
 import org.violetmoon.quark.content.client.module.ChestSearchingModule;
 
-import com.google.common.collect.Lists;
-import com.mojang.blaze3d.systems.RenderSystem;
-
-import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
-import net.minecraft.client.renderer.GameRenderer;
-import net.minecraft.client.renderer.Rect2i;
-import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.entity.player.Inventory;
+import java.util.List;
 
 public class CrateScreen extends AbstractContainerScreen<CrateMenu> implements IQuarkButtonAllowed {
-	private static final ResourceLocation TEXTURE = new ResourceLocation(Quark.MOD_ID, "textures/gui/crate.png");
+	private static final ResourceLocation TEXTURE = Quark.asResource("textures/gui/crate.png");
 
 	private int lastScroll;
 	private int scrollOffs;
@@ -55,7 +53,7 @@ public class CrateScreen extends AbstractContainerScreen<CrateMenu> implements I
 
 	@Override
 	public void render(@NotNull GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTicks) {
-		renderBackground(guiGraphics);
+		renderBackground(guiGraphics, mouseX, mouseY, partialTicks);
 		super.render(guiGraphics, mouseX, mouseY, partialTicks);
 		renderTooltip(guiGraphics, mouseX, mouseY);
 	}
@@ -65,14 +63,13 @@ public class CrateScreen extends AbstractContainerScreen<CrateMenu> implements I
 	}
 
 	private float getPxPerScroll() {
-		return 95F / (menu.getStackCount() / CrateMenu.numCols);
+		return 95F / ((float) menu.getStackCount() / CrateMenu.numCols);
 	}
 
 	@Override
-	public boolean mouseScrolled(double mouseX, double mouseY, double delta) {
-		menu.scroll(delta < 0, true);
-		lastScroll = scrollOffs = Math.round((menu.scroll / CrateMenu.numCols) * getPxPerScroll());
-
+	public boolean mouseScrolled(double mouseX, double mouseY, double scrollX, double scrollY) { // TODO: Fix later, likely incorrect
+		menu.scroll(scrollY < 0, true);
+		lastScroll = scrollOffs = Math.round(((float) menu.scroll / CrateMenu.numCols) * getPxPerScroll());
 		return true;
 	}
 
@@ -116,7 +113,7 @@ public class CrateScreen extends AbstractContainerScreen<CrateMenu> implements I
 				boolean up = diff > 0;
 
 				menu.scroll(up, true);
-				lastScroll = Math.round((menu.scroll / CrateMenu.numCols) * pixelsNeeded);
+				lastScroll = Math.round(((float) menu.scroll / CrateMenu.numCols) * pixelsNeeded);
 				diff = (float) (scrollOffs - lastScroll);
 			}
 

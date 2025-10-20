@@ -4,8 +4,6 @@ import net.minecraft.core.particles.BlockParticleOption;
 import net.minecraft.core.particles.DustParticleOptions;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.protocol.Packet;
-import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
@@ -15,11 +13,8 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.network.NetworkHooks;
-
 import org.jetbrains.annotations.NotNull;
 import org.joml.Vector3f;
-
 import org.violetmoon.quark.base.handler.QuarkSounds;
 
 public class SoulBead extends Entity {
@@ -41,9 +36,9 @@ public class SoulBead extends Entity {
 	}
 
 	@Override
-	protected void defineSynchedData() {
-		entityData.define(TARGET_X, 0);
-		entityData.define(TARGET_Z, 0);
+	protected void defineSynchedData(SynchedEntityData.Builder builder) {
+		builder.define(TARGET_X, 0);
+		builder.define(TARGET_Z, 0);
 	}
 
 	@Override
@@ -98,10 +93,4 @@ public class SoulBead extends Entity {
 		compound.putInt(TAG_TARGET_X, entityData.get(TARGET_X));
 		compound.putInt(TAG_TARGET_Z, entityData.get(TARGET_Z));
 	}
-
-	@Override
-	public Packet<ClientGamePacketListener> getAddEntityPacket() {
-		return NetworkHooks.getEntitySpawningPacket(this);
-	}
-
 }

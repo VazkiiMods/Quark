@@ -13,7 +13,11 @@ import org.violetmoon.zeta.event.bus.LoadEvent;
 import org.violetmoon.zeta.event.load.ZRegister;
 import org.violetmoon.zeta.module.ZetaLoadModule;
 import org.violetmoon.zeta.module.ZetaModule;
+import org.violetmoon.zeta.registry.CreativeTabManager;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 import java.util.function.BooleanSupplier;
 
 @ZetaLoadModule(category = "building")
@@ -26,39 +30,47 @@ public class MoreBrickTypesModule extends ZetaModule {
 	public boolean enableSandstoneBricks = true;
 
 	@Config(flag = "cobblestone_bricks", description = "This also includes Mossy Cobblestone Bricks")
-	private static boolean enableCobblestoneBricks = true;
+    public boolean enableCobblestoneBricks = true;
 
 	@Config(flag = "blackstone_bricks", description = "Requires Cobblestone Bricks to be enabled")
-	private static boolean enableBlackstoneBricks = true;
+    public boolean enableBlackstoneBricks = true;
 
 	@Config(flag = "dirt_bricks", description = "Requires Cobblestone Bricks to be enabled")
-	private static boolean enableDirtBricks = true;
+    public boolean enableDirtBricks = true;
 
 	@Config(flag = "netherrack_bricks", description = "Requires Cobblestone Bricks to be enabled")
-	private static boolean enableNetherrackBricks = true;
+    public boolean enableNetherrackBricks = true;
+
+    public static List<Block> blocks = new ArrayList<>();
 
 	@LoadEvent
 	public final void register(ZRegister event) {
-		add(event, "blue_nether", Blocks.NETHER_BRICKS, () -> enableBlueNetherBricks, Blocks.BASALT);
+		add(event, "blue_nether", Blocks.NETHER_BRICKS, () -> enableBlueNetherBricks, Blocks.BASALT); //0
 
-		add(event, "sandstone", Blocks.SANDSTONE, () -> enableSandstoneBricks, Blocks.RED_SANDSTONE);
-		add(event, "red_sandstone", Blocks.RED_SANDSTONE, () -> enableSandstoneBricks, Blocks.SEA_LANTERN);
-		add(event, "soul_sandstone", Blocks.SANDSTONE, () -> enableSandstoneBricks && Quark.ZETA.modules.isEnabled(SoulSandstoneModule.class), Blocks.SEA_LANTERN);
+		add(event, "sandstone", Blocks.SANDSTONE, () -> enableSandstoneBricks, Blocks.RED_SANDSTONE); //1
+		add(event, "red_sandstone", Blocks.RED_SANDSTONE, () -> enableSandstoneBricks, Blocks.SEA_LANTERN); //2
+		add(event, "soul_sandstone", Blocks.SANDSTONE, () -> enableSandstoneBricks && Quark.ZETA.modules.isEnabled(SoulSandstoneModule.class), Blocks.SEA_LANTERN); //3
 
-		add(event, "cobblestone", Blocks.COBBLESTONE, () -> enableCobblestoneBricks, Blocks.MOSSY_COBBLESTONE);
-		add(event, "mossy_cobblestone", Blocks.MOSSY_COBBLESTONE, () -> enableCobblestoneBricks, Blocks.SMOOTH_STONE);
+		add(event, "cobblestone", Blocks.COBBLESTONE, () -> enableCobblestoneBricks, Blocks.MOSSY_COBBLESTONE); //4
+		add(event, "mossy_cobblestone", Blocks.MOSSY_COBBLESTONE, () -> enableCobblestoneBricks, Blocks.SMOOTH_STONE); //5
 
-		add(event, "blackstone", Blocks.BLACKSTONE, () -> enableBlackstoneBricks && enableCobblestoneBricks, Blocks.END_STONE);
-		add(event, "dirt", Blocks.DIRT, () -> enableDirtBricks && enableCobblestoneBricks, Blocks.PACKED_MUD);
-		add(event, "netherrack", Blocks.NETHERRACK, () -> enableNetherrackBricks && enableCobblestoneBricks, Blocks.NETHER_BRICKS);
+		add(event, "blackstone", Blocks.BLACKSTONE, () -> enableBlackstoneBricks && enableCobblestoneBricks, Blocks.END_STONE); //6
+		add(event, "dirt", Blocks.DIRT, () -> enableDirtBricks && enableCobblestoneBricks, Blocks.PACKED_MUD); //7
+		add(event, "netherrack", Blocks.NETHERRACK, () -> enableNetherrackBricks && enableCobblestoneBricks, Blocks.NETHER_BRICKS); //8
 	}
 
-	private void add(ZRegister event, String name, Block parent, BooleanSupplier cond, Block placeBehind) {
-		event.getVariantRegistry().addSlabStairsWall((IZetaBlock) new ZetaBlock(name + "_bricks", this,
-				BlockPropertyUtil.copyPropertySafe(parent)
-						.requiresCorrectToolForDrops())
-				.setCondition(cond)
-				.setCreativeTab(CreativeModeTabs.BUILDING_BLOCKS, placeBehind, true), null);
+	private void add(ZRegister event, String name, Block parent, BooleanSupplier cond, Block placeBehind, boolean actuallyNoPlaceInFront) {
+        ZetaBlock brickBlock = (ZetaBlock) new ZetaBlock(name + "_bricks", this,
+                BlockPropertyUtil.copyPropertySafe(parent)
+                        .requiresCorrectToolForDrops())
+                .setCondition(cond)
+                .setCreativeTab(CreativeModeTabs.BUILDING_BLOCKS, placeBehind, actuallyNoPlaceInFront);
+        blocks.add(brickBlock);
+		event.getVariantRegistry().addSlabStairsWall(brickBlock, CreativeModeTabs.BUILDING_BLOCKS);
 	}
+
+    private void add(ZRegister event, String name, Block parent, BooleanSupplier cond, Block placeBehind) {
+        add(event, name, parent, cond, placeBehind, false);
+    }
 
 }

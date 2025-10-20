@@ -2,9 +2,9 @@ package org.violetmoon.quark.content.building.block;
 
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
-import net.minecraft.world.level.BlockGetter;
 import org.jetbrains.annotations.Nullable;
 import org.violetmoon.zeta.block.ZetaBlock;
 import org.violetmoon.zeta.module.ZetaModule;
@@ -18,10 +18,10 @@ public class CelebratoryLampBlock extends ZetaBlock {
     }
 
     @Override
-    public void appendHoverText(ItemStack pStack, @Nullable BlockGetter pLevel, List<Component> pTooltip, TooltipFlag pFlag) {
-        super.appendHoverText(pStack, pLevel, pTooltip, pFlag);
-        if (pFlag.isAdvanced()) {
-            pTooltip.add(1, Component.translatable("quark.misc.celebration").withStyle(ChatFormatting.GRAY));
+    public void appendHoverText(ItemStack stack, Item.TooltipContext context, List<Component> components, TooltipFlag flag) {
+        super.appendHoverText(stack, context, components, flag);
+        if (flag.isAdvanced()) {
+            components.add(1, Component.translatable("quark.misc.celebration").withStyle(ChatFormatting.GRAY));
         }
     }
 }

@@ -1,12 +1,7 @@
 package org.violetmoon.quark.addons.oddities.block.be;
 
-import java.util.Random;
-
-import org.jetbrains.annotations.NotNull;
-import org.violetmoon.zeta.util.MiscUtil;
-import org.violetmoon.zeta.util.SimpleInventoryBlockEntity;
-
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.Packet;
@@ -19,6 +14,11 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
+import org.jetbrains.annotations.NotNull;
+import org.violetmoon.zeta.util.MiscUtil;
+import org.violetmoon.zeta.util.SimpleInventoryBlockEntity;
+
+import java.util.Random;
 
 public abstract class AbstractEnchantingTableBlockEntity extends SimpleInventoryBlockEntity implements Nameable {
 
@@ -43,19 +43,19 @@ public abstract class AbstractEnchantingTableBlockEntity extends SimpleInventory
 	}
 
 	@Override
-	protected void saveAdditional(CompoundTag compoundTag) {
-		super.saveAdditional(compoundTag);
+	protected void saveAdditional(CompoundTag tag, HolderLookup.Provider provider) {
+		super.saveAdditional(tag, provider);
 
 		if(hasCustomName())
-			compoundTag.putString("CustomName", Component.Serializer.toJson(customName));
+			tag.putString("CustomName", Component.Serializer.toJson(customName, provider));
 	}
 
 	@Override
-	public void load(CompoundTag compound) {
-		super.load(compound);
+	protected void loadAdditional(CompoundTag tag, HolderLookup.Provider provider) {
+		super.loadAdditional(tag, provider);
 
-		if(compound.contains("CustomName", 8))
-			customName = Component.Serializer.fromJson(compound.getString("CustomName"));
+		if(tag.contains("CustomName", 8))
+			customName = Component.Serializer.fromJson(tag.getString("CustomName"), provider);
 	}
 
 	public void tick() {
@@ -142,8 +142,7 @@ public abstract class AbstractEnchantingTableBlockEntity extends SimpleInventory
 
 	@Override
 	public void inventoryChanged(int i) {
-		super.inventoryChanged(i);
-		sync();
+        sync();
 	}
 
 	@Override

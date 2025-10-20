@@ -1,0 +1,38 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "zeta:flag",
+      "flag": "corundum"
+    }
+  ],
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "quark:world/crafting/yellow_waxed_corundum"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    },
+    "has_yellow_corundum": {
+      "conditions": {
+        "items": [
+          {
+            "items": "quark:yellow_corundum"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "requirements": [
+    [
+      "has_the_recipe",
+      "has_yellow_corundum"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "quark:world/crafting/yellow_waxed_corundum"
+    ]
+  }
+}

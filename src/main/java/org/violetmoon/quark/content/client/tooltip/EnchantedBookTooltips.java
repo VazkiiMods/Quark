@@ -10,7 +10,10 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent;
+import net.minecraft.core.Holder;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.FormattedText;
 import net.minecraft.resources.ResourceLocation;
@@ -22,15 +25,16 @@ import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.item.enchantment.EnchantmentInstance;
 
+import net.minecraft.world.item.enchantment.ItemEnchantments;
 import org.jetbrains.annotations.NotNull;
 
 import org.violetmoon.quark.base.Quark;
+import org.violetmoon.quark.base.components.QuarkDataComponents;
 import org.violetmoon.quark.content.client.module.ImprovedTooltipsModule;
 import org.violetmoon.quark.content.tools.item.AncientTomeItem;
 import org.violetmoon.quark.content.tools.module.AncientTomesModule;
 import org.violetmoon.zeta.client.event.play.ZGatherTooltipComponents;
 import org.violetmoon.zeta.module.IDisableable;
-import org.violetmoon.zeta.util.ItemNBTHelper;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -62,20 +66,20 @@ public class EnchantedBookTooltips {
 			for(EnchantmentInstance ed : enchants) {
 				Component match;
 				if(stack.getItem() == Items.ENCHANTED_BOOK)
-					match = ed.enchantment.getFullname(ed.level);
+					match = Enchantment.getFullname(ed.enchantment, ed.level);
 				else
 					match = AncientTomeItem.getFullTooltipText(ed.enchantment);
 
 				for(; tooltipIndex < tooltip.size(); tooltipIndex++) {
 					Either<FormattedText, TooltipComponent> elmAt = tooltip.get(tooltipIndex);
 					if(elmAt.left().isPresent() && elmAt.left().get().equals(match)) {
-						boolean tableOnly = ItemNBTHelper.getBoolean(stack, TABLE_ONLY_DISPLAY, false);
-						List<ItemStack> items = getItemsForEnchantment(ed.enchantment, tableOnly);
+						boolean tableOnly = stack.has(QuarkDataComponents.TABLE_ONLY_ENCHANTS) && stack.get(QuarkDataComponents.TABLE_ONLY_ENCHANTS);
+						List<ItemStack> items = getItemsForEnchantment(ed.enchantment.value(), tableOnly);
 						int itemCount = items.size();
 						int lines = (int) Math.ceil((double) itemCount / 10.0);
 
 						int len = 3 + Math.min(10, itemCount) * 9;
-						tooltip.add(tooltipIndex + 1, Either.right(new EnchantedBookComponent(len, lines * 10, ed.enchantment, tableOnly)));
+						tooltip.add(tooltipIndex + 1, Either.right(new EnchantedBookComponent(len, lines * 10, ed.enchantment.value(), tableOnly)));
 
 						break;
 					}
@@ -95,7 +99,7 @@ public class EnchantedBookTooltips {
 				continue;
 
 			if(!stack.isEmpty() && e.canEnchant(stack)) {
-				if(onlyForTable && (!e.canApplyAtEnchantingTable(stack) || !stack.isEnchantable() || Quark.ZETA.itemExtensions.get(stack).getEnchantmentValueZeta(stack) <= 0))
+				if((!e.isPrimaryItem(stack) || !stack.isEnchantable() || Quark.ZETA.itemExtensions.get(stack).getEnchantmentValueZeta(stack) <= 0))
 					continue;
 				list.add(stack);
 			}
@@ -114,13 +118,22 @@ public class EnchantedBookTooltips {
 	}
 
 	private static List<EnchantmentInstance> getEnchantedBookEnchantments(ItemStack stack) {
-		Map<Enchantment, Integer> enchantments = EnchantmentHelper.getEnchantments(stack);
+		ItemEnchantments enchantments;
+		if (stack.has(DataComponents.ENCHANTMENTS) && !stack.get(DataComponents.ENCHANTMENTS).isEmpty()) {
+			enchantments = stack.get(DataComponents.ENCHANTMENTS);
+		}
+		else if (stack.has(DataComponents.STORED_ENCHANTMENTS) && !stack.get(DataComponents.STORED_ENCHANTMENTS).isEmpty()) {
+			enchantments = stack.get(DataComponents.STORED_ENCHANTMENTS);
+		} else {
+			return List.of();
+		}
+
 
 		List<EnchantmentInstance> retList = new ArrayList<>(enchantments.size());
 
-		for(Enchantment enchantment : enchantments.keySet()) {
+		for(Holder<Enchantment> enchantment : enchantments.keySet()) {
 			if(enchantment != null) {
-				int level = enchantments.get(enchantment);
+				int level = enchantments.getLevel(enchantment);
 				retList.add(new EnchantmentInstance(enchantment, level));
 			}
 		}
@@ -142,7 +155,7 @@ public class EnchantedBookTooltips {
 
 	private static void computeTestItems() {
 		testItems = ImprovedTooltipsModule.enchantingStacks.stream()
-				.map(ResourceLocation::new)
+				.map(ResourceLocation::parse)
 				.map(BuiltInRegistries.ITEM::get)
 				.filter(i -> i != Items.AIR)
 				.map(ItemStack::new)
@@ -160,10 +173,11 @@ public class EnchantedBookTooltips {
 			String left = tokens[0];
 			String right = tokens[1];
 
-			BuiltInRegistries.ENCHANTMENT.getOptional(new ResourceLocation(left))
+			//Evil getConnection
+			Minecraft.getInstance().getConnection().registryAccess().registry(Registries.ENCHANTMENT).get().getOptional(ResourceLocation.parse(left))
 					.ifPresent(ench -> {
 						for(String itemId : right.split(",")) {
-							BuiltInRegistries.ITEM.getOptional(new ResourceLocation(itemId)).ifPresent(item -> additionalStacks.put(ench, new ItemStack(item)));
+							BuiltInRegistries.ITEM.getOptional(ResourceLocation.parse(itemId)).ifPresent(item -> additionalStacks.put(ench, new ItemStack(item)));
 						}
 					});
 		}

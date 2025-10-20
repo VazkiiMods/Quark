@@ -18,7 +18,8 @@ import org.jetbrains.annotations.NotNull;
 
 import org.violetmoon.quark.base.Quark;
 import org.violetmoon.quark.base.client.handler.ModelHandler;
-import org.violetmoon.quark.content.mobs.client.layer.FoxhoundCollarLayer;
+import org.violetmoon.quark.content.mobs.client.layer.foxhound.FoxhoundArmorLayer;
+import org.violetmoon.quark.content.mobs.client.layer.foxhound.FoxhoundCollarLayer;
 import org.violetmoon.quark.content.mobs.client.model.FoxhoundModel;
 import org.violetmoon.quark.content.mobs.entity.Foxhound;
 
@@ -26,23 +27,24 @@ import java.util.UUID;
 
 public class FoxhoundRenderer extends MobRenderer<Foxhound, FoxhoundModel> {
 
-	private static final ResourceLocation FOXHOUND_IDLE = new ResourceLocation(Quark.MOD_ID, "textures/model/entity/foxhound/red/idle.png");
-	private static final ResourceLocation FOXHOUND_HOSTILE = new ResourceLocation(Quark.MOD_ID, "textures/model/entity/foxhound/red/hostile.png");
-	private static final ResourceLocation FOXHOUND_SLEEPING = new ResourceLocation(Quark.MOD_ID, "textures/model/entity/foxhound/red/sleeping.png");
+	private static final ResourceLocation FOXHOUND_IDLE = Quark.asResource("textures/model/entity/foxhound/red/idle.png");
+	private static final ResourceLocation FOXHOUND_HOSTILE = Quark.asResource("textures/model/entity/foxhound/red/hostile.png");
+	private static final ResourceLocation FOXHOUND_SLEEPING = Quark.asResource("textures/model/entity/foxhound/red/sleeping.png");
 
-	private static final ResourceLocation SOULHOUND_IDLE = new ResourceLocation(Quark.MOD_ID, "textures/model/entity/foxhound/blue/idle.png");
-	private static final ResourceLocation SOULHOUND_HOSTILE = new ResourceLocation(Quark.MOD_ID, "textures/model/entity/foxhound/blue/hostile.png");
-	private static final ResourceLocation SOULHOUND_SLEEPING = new ResourceLocation(Quark.MOD_ID, "textures/model/entity/foxhound/blue/sleeping.png");
+	private static final ResourceLocation SOULHOUND_IDLE = Quark.asResource("textures/model/entity/foxhound/blue/idle.png");
+	private static final ResourceLocation SOULHOUND_HOSTILE = Quark.asResource("textures/model/entity/foxhound/blue/hostile.png");
+	private static final ResourceLocation SOULHOUND_SLEEPING = Quark.asResource("textures/model/entity/foxhound/blue/sleeping.png");
 
-	private static final ResourceLocation BASALT_FOXHOUND_IDLE = new ResourceLocation(Quark.MOD_ID, "textures/model/entity/foxhound/black/idle.png");
-	private static final ResourceLocation BASALT_FOXHOUND_HOSTILE = new ResourceLocation(Quark.MOD_ID, "textures/model/entity/foxhound/black/hostile.png");
-	private static final ResourceLocation BASALT_FOXHOUND_SLEEPING = new ResourceLocation(Quark.MOD_ID, "textures/model/entity/foxhound/black/sleeping.png");
+	private static final ResourceLocation BASALT_FOXHOUND_IDLE = Quark.asResource("textures/model/entity/foxhound/black/idle.png");
+	private static final ResourceLocation BASALT_FOXHOUND_HOSTILE = Quark.asResource("textures/model/entity/foxhound/black/hostile.png");
+	private static final ResourceLocation BASALT_FOXHOUND_SLEEPING = Quark.asResource("textures/model/entity/foxhound/black/sleeping.png");
 
 	private static final int SHINY_CHANCE = 256;
 
 	public FoxhoundRenderer(EntityRendererProvider.Context context) {
 		super(context, ModelHandler.model(ModelHandler.foxhound), 0.5F);
-		addLayer(new FoxhoundCollarLayer(this));
+        this.addLayer(new FoxhoundArmorLayer(this, context.getModelSet()));
+        this.addLayer(new FoxhoundCollarLayer(this));
 	}
 
 	@NotNull

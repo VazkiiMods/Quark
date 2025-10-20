@@ -1,6 +1,7 @@
 package org.violetmoon.quark.content.tweaks.module;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
@@ -12,20 +13,20 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.item.component.CustomData;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.ShulkerBoxBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.common.Tags;
-import net.minecraftforge.items.ItemHandlerHelper;
-
+import net.neoforged.neoforge.common.Tags;
+import net.neoforged.neoforge.items.ItemHandlerHelper;
+import org.violetmoon.quark.mixin.mixins.accessor.AccessorBaseContainerBlockEntity;
 import org.violetmoon.zeta.event.bus.PlayEvent;
 import org.violetmoon.zeta.event.play.entity.player.ZRightClickBlock;
 import org.violetmoon.zeta.module.ZetaLoadModule;
 import org.violetmoon.zeta.module.ZetaModule;
 import org.violetmoon.zeta.util.Hint;
-import org.violetmoon.zeta.util.ItemNBTHelper;
 
 @ZetaLoadModule(category = "tweaks")
 public class ShulkerPackingModule extends ZetaModule {
@@ -66,8 +67,8 @@ public class ShulkerPackingModule extends ZetaModule {
 						if(be instanceof Nameable nameable && nameable.hasCustomName()) {
 							Component component = nameable.getCustomName();
 							if(component != null) {
-								shulkerBoxData.setCustomName(component);
-								newShulkerBox.setHoverName(component);
+								((AccessorBaseContainerBlockEntity)shulkerBoxData).setName(component);
+								newShulkerBox.set(DataComponents.CUSTOM_NAME, component);
 							}
 						}
 
@@ -81,8 +82,7 @@ public class ShulkerPackingModule extends ZetaModule {
 							offHand.shrink(1);
 						}
 
-						ItemNBTHelper.setCompound(newShulkerBox, "BlockEntityTag", shulkerBoxData.saveWithFullMetadata());
-
+						newShulkerBox.set(DataComponents.BLOCK_ENTITY_DATA, CustomData.of(shulkerBoxData.saveWithFullMetadata(level.registryAccess())));
 						ItemHandlerHelper.giveItemToPlayer(player, newShulkerBox, player.getInventory().selected);
 					}
 				}

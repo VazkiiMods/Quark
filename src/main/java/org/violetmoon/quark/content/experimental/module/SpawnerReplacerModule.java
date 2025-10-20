@@ -2,7 +2,6 @@ package org.violetmoon.quark.content.experimental.module;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
-
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
@@ -10,7 +9,6 @@ import net.minecraft.world.level.BaseSpawner;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.SpawnerBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
-
 import org.violetmoon.zeta.config.Config;
 import org.violetmoon.zeta.event.bus.LoadEvent;
 import org.violetmoon.zeta.event.load.ZConfigChanged;
@@ -36,7 +34,7 @@ public class SpawnerReplacerModule extends ZetaModule {
 
 	@LoadEvent
 	public final void configChanged(ZConfigChanged event) {
-		staticEnabled = enabled;
+		staticEnabled = isEnabled();
 
 		spawnerReplacements.clear();
 
@@ -57,7 +55,7 @@ public class SpawnerReplacerModule extends ZetaModule {
 			return;
 
 		BaseSpawner spawner = be.getSpawner();
-		Entity example = spawner.getOrCreateDisplayEntity(level, level.getRandom(), pos);
+		Entity example = spawner.getOrCreateDisplayEntity(level, pos);
 		if(example != null) {
 			EntityType<?> present = example.getType();
 			if(spawnerReplacements.containsKey(present)) {

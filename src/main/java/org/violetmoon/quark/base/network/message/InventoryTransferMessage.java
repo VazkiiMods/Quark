@@ -1,29 +1,27 @@
 package org.violetmoon.quark.base.network.message;
 
+import io.netty.buffer.ByteBuf;
+import org.violetmoon.quark.catnip.net.base.ServerboundPacketPayload;
+import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.server.level.ServerPlayer;
 import org.violetmoon.quark.base.handler.InventoryTransferHandler;
-import org.violetmoon.zeta.network.IZetaMessage;
-import org.violetmoon.zeta.network.IZetaNetworkEventContext;
+import org.violetmoon.quark.base.network.QuarkNetwork;
 
-import java.io.Serial;
+public record InventoryTransferMessage(boolean smart, boolean restock) implements ServerboundPacketPayload {
+	public static final StreamCodec<ByteBuf, InventoryTransferMessage> STREAM_CODEC = StreamCodec.composite(
+		ByteBufCodecs.BOOL, InventoryTransferMessage::smart,
+		ByteBufCodecs.BOOL, InventoryTransferMessage::restock,
+	    InventoryTransferMessage::new
+	);
 
-public class InventoryTransferMessage implements IZetaMessage {
-
-	@Serial
-	private static final long serialVersionUID = 3825599549474465007L;
-
-	public boolean smart, restock;
-
-	public InventoryTransferMessage() {}
-
-	public InventoryTransferMessage(boolean smart, boolean restock) {
-		this.smart = smart;
-		this.restock = restock;
+	@Override
+	public void handle(ServerPlayer player) {
+		InventoryTransferHandler.transfer(player, restock, smart);
 	}
 
 	@Override
-	public boolean receive(IZetaNetworkEventContext context) {
-		context.enqueueWork(() -> InventoryTransferHandler.transfer(context.getSender(), restock, smart));
-		return true;
+	public PacketTypeProvider getTypeProvider() {
+		return QuarkNetwork.INVENTORY_TRANSFER_MESSAGE;
 	}
-
 }

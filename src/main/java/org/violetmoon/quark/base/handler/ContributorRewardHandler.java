@@ -9,6 +9,7 @@ import net.minecraft.client.player.AbstractClientPlayer;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
 
+import net.minecraft.world.entity.player.PlayerModelPart;
 import org.violetmoon.quark.base.Quark;
 import org.violetmoon.zeta.client.event.play.ZRenderPlayer;
 import org.violetmoon.zeta.event.bus.LoadEvent;
@@ -116,29 +117,12 @@ public class ContributorRewardHandler {
 				Quark.LOG.error("Failed to load patreon information", e);
 			}
 		}
-
 	}
 
 	public static class Client {
 		@LoadEvent
 		public static void getLocalName(ZCommonSetup event) {
 			name = Minecraft.getInstance().getUser().getName().toLowerCase(Locale.ROOT);
-		}
-
-		@PlayEvent
-		public static void onRenderPlayer(ZRenderPlayer.Post event) {
-			Player player = event.getEntity();
-			String uuid = player.getUUID().toString();
-			if(player instanceof AbstractClientPlayer clientPlayer && DEV_UUID.contains(uuid) && !done.contains(uuid)) {
-				if(clientPlayer.isCapeLoaded()) {
-					PlayerInfo info = clientPlayer.playerInfo;
-					Map<MinecraftProfileTexture.Type, ResourceLocation> textures = info.textureLocations;
-					ResourceLocation loc = new ResourceLocation("quark", "textures/misc/dev_cape.png");
-					textures.put(MinecraftProfileTexture.Type.CAPE, loc);
-					textures.put(MinecraftProfileTexture.Type.ELYTRA, loc);
-					done.add(uuid);
-				}
-			}
 		}
 	}
 }

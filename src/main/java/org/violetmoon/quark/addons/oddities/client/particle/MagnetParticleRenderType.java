@@ -7,22 +7,17 @@ import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 import com.mojang.blaze3d.vertex.Tesselator;
 import com.mojang.blaze3d.vertex.VertexFormat;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.particle.ItemPickupParticle;
-import net.minecraft.client.particle.ParticleEngine;
 import net.minecraft.client.particle.ParticleRenderType;
 import net.minecraft.client.renderer.GameRenderer;
-import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.client.renderer.ShaderInstance;
 import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.client.renderer.texture.TextureManager;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.client.event.RegisterParticleProvidersEvent;
-import net.minecraftforge.client.event.RegisterShadersEvent;
-import net.minecraftforge.client.event.RenderLevelStageEvent;
-import net.minecraftforge.client.gui.overlay.VanillaGuiOverlay;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.neoforge.client.event.RegisterParticleProvidersEvent;
+import net.neoforged.neoforge.client.event.RegisterShadersEvent;
+import org.jetbrains.annotations.NotNull;
 import org.lwjgl.opengl.GL13;
 import org.violetmoon.quark.addons.oddities.module.MagnetsModule;
 import org.violetmoon.quark.base.Quark;
@@ -32,15 +27,15 @@ import java.util.function.Supplier;
 import static com.mojang.blaze3d.vertex.DefaultVertexFormat.PARTICLE;
 
 // Im putting here some stuff idk where else to put
-@Mod.EventBusSubscriber(modid = "quark", value = Dist.CLIENT, bus = Mod.EventBusSubscriber.Bus.MOD)
+@EventBusSubscriber(modid = "quark", value = Dist.CLIENT, bus = EventBusSubscriber.Bus.MOD)
 public class MagnetParticleRenderType {
 
     //I think this just makes it so stuff with low alpha isn't cutoff
     private static Supplier<ShaderInstance> PARTICLE_SHADER = GameRenderer::getParticleShader;
-
     public static final ParticleRenderType ADDITIVE_TRANSLUCENCY = new ParticleRenderType() {
+
         @Override
-        public void begin(BufferBuilder builder, TextureManager textureManager) {
+        public @NotNull BufferBuilder begin(Tesselator tesselator, TextureManager manager) {
             Minecraft.getInstance().gameRenderer.lightTexture().turnOnLightLayer();
             RenderSystem.activeTexture(GL13.GL_TEXTURE2);
             RenderSystem.activeTexture(GL13.GL_TEXTURE0);
@@ -50,12 +45,7 @@ public class MagnetParticleRenderType {
             RenderSystem.setShaderTexture(0, TextureAtlas.LOCATION_PARTICLES);
             RenderSystem.enableBlend();
             RenderSystem.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE);
-            builder.begin(VertexFormat.Mode.QUADS, PARTICLE);
-        }
-
-        @Override
-        public void end(Tesselator tesselator) {
-            tesselator.end();
+            return tesselator.begin(VertexFormat.Mode.QUADS, PARTICLE);
         }
 
         @Override
@@ -83,16 +73,4 @@ public class MagnetParticleRenderType {
         event.registerSpriteSet(MagnetsModule.attractorParticle, MagnetParticle.Provider::new);
         event.registerSpriteSet(MagnetsModule.repulsorParticle, MagnetParticle.Provider::new);
     }
-/*
-    static{
-        MinecraftForge.EVENT_BUS.addListener(MagnetParticleRenderType::renderParticlesAfterEverything);
-    }
-
-    public static void renderParticlesAfterEverything(RenderLevelStageEvent event){
-        if(event.getStage() == RenderLevelStageEvent.Stage.AFTER_SKY){
-
-        }
-
-    }*/
-
 }

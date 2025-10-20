@@ -1,23 +1,18 @@
 package org.violetmoon.quark.content.world.feature;
 
-import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 import net.minecraft.util.valueproviders.IntProvider;
 import net.minecraft.world.level.LevelSimulatedReader;
 import net.minecraft.world.level.levelgen.feature.configurations.TreeConfiguration;
-import net.minecraft.world.level.levelgen.feature.foliageplacers.BlobFoliagePlacer;
 import net.minecraft.world.level.levelgen.feature.foliageplacers.FancyFoliagePlacer;
-import net.minecraft.world.level.levelgen.feature.foliageplacers.FoliagePlacer;
 import net.minecraft.world.level.levelgen.feature.foliageplacers.FoliagePlacerType;
-import net.minecraft.world.level.levelgen.feature.treedecorators.TreeDecoratorType;
-import org.violetmoon.quark.content.world.module.AncientWoodModule;
 
 // Literally FancyFoliagePlacer but applies a builtin offset since we cant offset it with negative values. Yes this has been cheating since it was added since coded wouldnt trip and make it fail cause of negative value
 public class OffsetFancyFoliagePlacer extends FancyFoliagePlacer {
 
-    public static final Codec<OffsetFancyFoliagePlacer> CODEC = RecordCodecBuilder.create((i) ->
+    public static final MapCodec<OffsetFancyFoliagePlacer> CODEC = RecordCodecBuilder.mapCodec((i) ->
             blobParts(i).apply(i, OffsetFancyFoliagePlacer::new));
 
     public static final FoliagePlacerType<OffsetFancyFoliagePlacer> TYPE = new FoliagePlacerType<>(CODEC);

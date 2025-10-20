@@ -12,6 +12,8 @@ package org.violetmoon.quark.content.building.module;
 
 import net.minecraft.world.item.CreativeModeTabs;
 
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
 import org.violetmoon.quark.content.building.block.BambooMatBlock;
 import org.violetmoon.quark.content.building.block.BambooMatCarpetBlock;
 import org.violetmoon.quark.content.building.block.PaperLanternBlock;
@@ -24,10 +26,14 @@ import org.violetmoon.zeta.module.ZetaLoadModule;
 import org.violetmoon.zeta.module.ZetaModule;
 import org.violetmoon.zeta.registry.CreativeTabManager;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.function.BooleanSupplier;
 
 @ZetaLoadModule(category = "building")
 public class JapanesePaletteModule extends ZetaModule {
+
+	public static List<Block> blocks = new ArrayList<>();
 
 	@Config(flag = "paper_decor")
 	public static boolean enablePaperBlocks = true;
@@ -35,23 +41,33 @@ public class JapanesePaletteModule extends ZetaModule {
 	@Config(flag = "bamboo_mat")
 	public static boolean enableBambooMats = true;
 
+	public static IZetaBlock paperLantern, paperLanternSakura; //datagen only
+	public static Block paperWall, paperWallBig, paperWallSakura, bambooMat, bambooMatCarpet;
+
 	@LoadEvent
 	public final void register(ZRegister event) {
 		BooleanSupplier paperBlockCond = () -> enablePaperBlocks;
 		BooleanSupplier bambooMatCond = () -> enableBambooMats;
 
-		IZetaBlock paperLantern = new PaperLanternBlock("paper_lantern", this).setCondition(paperBlockCond);
-		IZetaBlock paperLanternSakura = new PaperLanternBlock("paper_lantern_sakura", this).setCondition(paperBlockCond);
+		paperLantern = new PaperLanternBlock("paper_lantern", this).setCondition(paperBlockCond);
+		blocks.add(paperLantern.getBlock());
+		paperLanternSakura = new PaperLanternBlock("paper_lantern_sakura", this).setCondition(paperBlockCond);
+		blocks.add(paperLanternSakura.getBlock());
 
-		CreativeTabManager.daisyChain();
-		new PaperWallBlock(paperLantern, "paper_wall").setCondition(paperBlockCond).setCreativeTab(CreativeModeTabs.BUILDING_BLOCKS, paperLantern.getBlock(), false);
-		new PaperWallBlock(paperLantern, "paper_wall_big").setCondition(paperBlockCond).setCreativeTab(CreativeModeTabs.BUILDING_BLOCKS, paperLantern.getBlock(), false);
-		CreativeTabManager.endDaisyChain();
+        CreativeTabManager.startChain(CreativeModeTabs.BUILDING_BLOCKS, false, false, paperLantern.getBlock());
+        paperWall = new PaperWallBlock(paperLantern, "paper_wall").setCondition(paperBlockCond).setCreativeTab(CreativeModeTabs.BUILDING_BLOCKS, paperLantern.getBlock(), false);
+		blocks.add(paperWall);
+		paperWallBig = new PaperWallBlock(paperLantern, "paper_wall_big").setCondition(paperBlockCond).setCreativeTab(CreativeModeTabs.BUILDING_BLOCKS, paperLantern.getBlock(), false);
+		blocks.add(paperWallBig);
+		CreativeTabManager.endChain();
 
-		new PaperWallBlock(paperLantern, "paper_wall_sakura").setCondition(paperBlockCond).setCreativeTab(CreativeModeTabs.BUILDING_BLOCKS, paperLanternSakura.getBlock(), false);
+		paperWallSakura = new PaperWallBlock(paperLantern, "paper_wall_sakura").setCondition(paperBlockCond).setCreativeTab(CreativeModeTabs.BUILDING_BLOCKS, paperLanternSakura.getBlock(), false);
+		blocks.add(paperWallSakura);
 
-		new BambooMatBlock("bamboo_mat", this).setCondition(bambooMatCond);
-		new BambooMatCarpetBlock("bamboo_mat_carpet", this).setCondition(bambooMatCond);
+		bambooMat = new BambooMatBlock("bamboo_mat", this).setCondition(bambooMatCond);
+		blocks.add(bambooMat);
+		bambooMatCarpet = new BambooMatCarpetBlock("bamboo_mat_carpet", this).setCondition(bambooMatCond);
+		blocks.add(bambooMatCarpet);
 	}
 
 }

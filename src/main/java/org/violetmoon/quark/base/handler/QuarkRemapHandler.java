@@ -2,18 +2,21 @@ package org.violetmoon.quark.base.handler;
 
 import net.minecraft.core.DefaultedRegistry;
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.registries.MissingMappingsEvent;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.neoforge.registries.RegisterEvent;
 import org.violetmoon.quark.base.Quark;
+import org.violetmoon.zeta.event.bus.LoadEvent;
+import org.violetmoon.zeta.event.load.ZRegister;
 
 import java.util.HashMap;
 import java.util.Map;
 
-@Mod.EventBusSubscriber
 public class QuarkRemapHandler {
 	//datafixers could have also been used here but good luck figuring them out
+	// TODO: Replace with Registry#addAlias/DataFixers
 
 	private static final Map<String, String> REMAP = new HashMap<>();
 
@@ -36,20 +39,16 @@ public class QuarkRemapHandler {
 		REMAP.put("quark:egg_parrot_grey", "quark:egg_parrot_gray");
 	}
 
-	@SubscribeEvent
-	public static void onRemapBlocks(MissingMappingsEvent event) {
-		remapAll(event, BuiltInRegistries.BLOCK);
-		remapAll(event, BuiltInRegistries.ITEM);
-	}
 
 
-	private static <T> void remapAll(MissingMappingsEvent event, DefaultedRegistry<T> block) {
-		for (var v : event.getMappings(block.key(), Quark.MOD_ID)) {
-			String rem = REMAP.get(v.getKey().toString());
-			if (rem != null) {
-				var b = block.getOptional(new ResourceLocation(rem));
-				b.ifPresent(v::remap);
-			} else v.ignore();
+
+	//todo: Probably doesnt need to be a registry event. Perhaps we handle this on the Zeta end as well? A Zeta "RemapEvent" could work.
+
+	@LoadEvent
+	public static void onRemapBlocks(ZRegister event) {
+		for (Map.Entry<String, String> entry : REMAP.entrySet()) {
+			BuiltInRegistries.BLOCK.addAlias(ResourceLocation.parse(entry.getKey()), ResourceLocation.parse(entry.getValue()));
+			BuiltInRegistries.ITEM.addAlias(ResourceLocation.parse(entry.getKey()), ResourceLocation.parse(entry.getValue()));
 		}
 	}
 }

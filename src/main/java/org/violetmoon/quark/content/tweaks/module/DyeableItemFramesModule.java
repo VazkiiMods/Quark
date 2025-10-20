@@ -4,8 +4,8 @@ import net.minecraft.client.renderer.entity.EntityRenderers;
 import net.minecraft.client.resources.model.ModelResourceLocation;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.EntityType;
@@ -15,12 +15,12 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.item.component.CustomData;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.phys.BlockHitResult;
-
 import org.violetmoon.quark.base.Quark;
 import org.violetmoon.quark.content.tweaks.client.render.entity.DyedItemFrameRenderer;
 import org.violetmoon.quark.content.tweaks.entity.DyedItemFrame;
@@ -52,7 +52,6 @@ public class DyeableItemFramesModule extends ZetaModule {
 				.clientTrackingRange(10)
 				.updateInterval(Integer.MAX_VALUE) // update interval
 				.setShouldReceiveVelocityUpdates(false)
-				.setCustomClientFactory((spawnEntity, world) -> new DyedItemFrame(entityType, world))
 				.build("dyed_item_frame");
 		event.getRegistry().register(entityType, "dyed_item_frame", Registries.ENTITY_TYPE);
 
@@ -74,7 +73,7 @@ public class DyeableItemFramesModule extends ZetaModule {
 			BlockPos pos = event.getPos();
 			BlockState state = level.getBlockState(pos);
 
-			InteractionResult result = player.isCrouching() ? InteractionResult.PASS : state.use(level, player, hand, blockhit);
+			InteractionResult result = player.isCrouching() ? InteractionResult.PASS : state.useItemOn(stack, level, player, hand, blockhit).result();
 			if(result == InteractionResult.PASS)
 				result = useOn(context);
 
@@ -97,11 +96,11 @@ public class DyeableItemFramesModule extends ZetaModule {
 			return InteractionResult.FAIL;
 
 		Level level = context.getLevel();
-		HangingEntity hangingentity = new DyedItemFrame(level, blockpos1, direction, Quark.ZETA.dyeables.getDye(itemstack), itemstack.is(Items.GLOW_ITEM_FRAME));
+		HangingEntity hangingentity = new DyedItemFrame(level, blockpos1, direction, Quark.ZETA.dyeables.getDye(itemstack).rgb(), itemstack.is(Items.GLOW_ITEM_FRAME));
 
-		CompoundTag compoundtag = itemstack.getTag();
-		if(compoundtag != null)
-			EntityType.updateCustomEntityTag(level, player, hangingentity, compoundtag);
+		CustomData customData = itemstack.get(DataComponents.CUSTOM_DATA);
+		if(customData != null)
+			EntityType.updateCustomEntityTag(level, player, hangingentity, customData);
 
 		if(hangingentity.survives()) {
 			if(!level.isClientSide) {
@@ -128,8 +127,8 @@ public class DyeableItemFramesModule extends ZetaModule {
 
 		@LoadEvent
 		public void registerAdditionalModels(ZAddModels event) {
-			event.register(new ModelResourceLocation(Quark.MOD_ID, "extra/dyed_item_frame", "inventory"));
-			event.register(new ModelResourceLocation(Quark.MOD_ID, "extra/dyed_item_frame_map", "inventory"));
+			event.register(ModelResourceLocation.standalone(Quark.asResource("extra/dyed_item_frame")));
+			event.register(ModelResourceLocation.standalone(Quark.asResource("extra/dyed_item_frame_map")));
 		}
 
 		@LoadEvent

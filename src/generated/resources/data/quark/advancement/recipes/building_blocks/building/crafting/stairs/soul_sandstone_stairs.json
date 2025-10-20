@@ -1,0 +1,38 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "zeta:flag",
+      "flag": "soul_sandstone"
+    }
+  ],
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_soul_sandstone": {
+      "conditions": {
+        "items": [
+          {
+            "items": "quark:soul_sandstone"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "quark:building/crafting/stairs/soul_sandstone_stairs"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    }
+  },
+  "requirements": [
+    [
+      "has_the_recipe",
+      "has_soul_sandstone"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "quark:building/crafting/stairs/soul_sandstone_stairs"
+    ]
+  }
+}

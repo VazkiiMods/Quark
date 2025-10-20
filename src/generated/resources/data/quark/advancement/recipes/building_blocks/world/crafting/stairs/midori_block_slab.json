@@ -1,0 +1,38 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "zeta:flag",
+      "flag": "midori"
+    }
+  ],
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_midori_block": {
+      "conditions": {
+        "items": [
+          {
+            "items": "quark:midori_block"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "quark:world/crafting/stairs/midori_block_slab"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    }
+  },
+  "requirements": [
+    [
+      "has_the_recipe",
+      "has_midori_block"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "quark:world/crafting/stairs/midori_block_slab"
+    ]
+  }
+}

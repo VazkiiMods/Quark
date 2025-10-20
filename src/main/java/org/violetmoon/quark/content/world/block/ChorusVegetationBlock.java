@@ -30,17 +30,15 @@ import net.minecraft.world.level.material.PushReaction;
 import net.minecraft.world.level.pathfinder.PathComputationType;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import net.minecraftforge.common.IForgeShearable;
-
+import net.neoforged.neoforge.common.IShearable;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-
 import org.violetmoon.quark.content.world.module.ChorusVegetationModule;
 import org.violetmoon.zeta.block.ZetaBlock;
 import org.violetmoon.zeta.module.ZetaModule;
 import org.violetmoon.zeta.registry.RenderLayerRegistry;
 
-public class ChorusVegetationBlock extends ZetaBlock implements BonemealableBlock, IForgeShearable {
+public class ChorusVegetationBlock extends ZetaBlock implements BonemealableBlock, IShearable {
 
 	protected static final VoxelShape SHAPE = Block.box(2, 0, 2, 14, 13, 14);
 
@@ -129,7 +127,6 @@ public class ChorusVegetationBlock extends ZetaBlock implements BonemealableBloc
 			BlockState stateAt = worldIn.getBlockState(newPos);
 			if(stateAt.getBlock() == Blocks.END_STONE)
 				break;
-
 			else
 				newPos = newPos.below();
 		}
@@ -145,15 +142,13 @@ public class ChorusVegetationBlock extends ZetaBlock implements BonemealableBloc
 			}
 
 			worldIn.sendParticles(ParticleTypes.REVERSE_PORTAL, newPos.getX() + 0.5, newPos.getY() - 0.25, newPos.getZ(), 50, 0.25, 0.25, 0.25, 0.05);
-
 			return newPos;
 		}
-
 		return null;
 	}
 
 	@Override
-	public boolean isValidBonemealTarget(@NotNull LevelReader levelReader, @NotNull BlockPos blockPos, @NotNull BlockState blockState, boolean isClient) {
+	public boolean isValidBonemealTarget(@NotNull LevelReader levelReader, @NotNull BlockPos blockPos, @NotNull BlockState blockState) {
 		return true;
 	}
 
@@ -187,8 +182,7 @@ public class ChorusVegetationBlock extends ZetaBlock implements BonemealableBloc
 	}
 
 	@Override
-	public boolean isPathfindable(@NotNull BlockState state, @NotNull BlockGetter worldIn, @NotNull BlockPos pos, @NotNull PathComputationType type) {
-		return (type == PathComputationType.AIR && !this.hasCollision) || super.isPathfindable(state, worldIn, pos, type);
+	protected boolean isPathfindable(@NotNull BlockState state, @NotNull PathComputationType type) {
+		return (type == PathComputationType.AIR && !this.hasCollision) || super.isPathfindable(state, type);
 	}
-
 }

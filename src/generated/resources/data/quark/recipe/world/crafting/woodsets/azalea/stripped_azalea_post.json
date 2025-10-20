@@ -1,0 +1,33 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:and",
+      "values": [
+        {
+          "type": "zeta:flag",
+          "flag": "wooden_posts"
+        },
+        {
+          "type": "zeta:flag",
+          "flag": "azalea_wood"
+        }
+      ]
+    }
+  ],
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "key": {
+    "F": {
+      "item": "quark:stripped_azalea_wood"
+    }
+  },
+  "pattern": [
+    "F",
+    "F",
+    "F"
+  ],
+  "result": {
+    "count": 8,
+    "id": "quark:stripped_azalea_post"
+  }
+}

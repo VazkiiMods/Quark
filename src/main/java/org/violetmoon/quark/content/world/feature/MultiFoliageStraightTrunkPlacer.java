@@ -1,8 +1,8 @@
 package org.violetmoon.quark.content.world.feature;
 
 import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-
 import net.minecraft.core.BlockPos;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.LevelSimulatedReader;
@@ -28,7 +28,7 @@ public class MultiFoliageStraightTrunkPlacer extends TrunkPlacer {
 		this.maxBlobs = maxBlobs;
 	}
 
-	public static final Codec<MultiFoliageStraightTrunkPlacer> CODEC = RecordCodecBuilder.create(overengineered ->
+	public static final MapCodec<MultiFoliageStraightTrunkPlacer> CODEC = RecordCodecBuilder.mapCodec(overengineered ->
 			trunkPlacerParts(overengineered).and(
 			overengineered.group(
 					Codec.INT.fieldOf("foliageDistance").forGetter(x -> x.foliageDistance),

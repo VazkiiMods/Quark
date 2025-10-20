@@ -6,7 +6,6 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.tags.TagKey;
 import net.minecraft.util.RandomSource;
-import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.player.Player;
@@ -31,20 +30,17 @@ import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
-
+import noobanidus.mods.lootr.common.api.LootrTags;
+import noobanidus.mods.lootr.common.api.data.blockentity.ILootrBlockEntity;
+import noobanidus.mods.lootr.common.block.entity.LootrChestBlockEntity;
+import noobanidus.mods.lootr.neoforge.config.ConfigManager;
 import org.jetbrains.annotations.Nullable;
-
 import org.violetmoon.quark.content.building.block.VariantChestBlock;
 import org.violetmoon.zeta.item.ZetaBlockItem;
 import org.violetmoon.zeta.module.ZetaModule;
 import org.violetmoon.zeta.registry.IZetaBlockItemProvider;
 
 import java.util.function.Supplier;
-
-import noobanidus.mods.lootr.LootrTags;
-import noobanidus.mods.lootr.block.entities.LootrChestBlockEntity;
-import noobanidus.mods.lootr.config.ConfigManager;
-import noobanidus.mods.lootr.util.ChestUtil;
 
 /**
  * Copy of
@@ -70,11 +66,11 @@ public class LootrVariantChestBlock extends VariantChestBlock implements IZetaBl
 	}
 
 	@Override
-	public InteractionResult use(BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand, BlockHitResult trace) {
-		if(player.isShiftKeyDown()) {
-			ChestUtil.handleLootSneak(this, world, pos, player);
+	public InteractionResult useWithoutItem(BlockState state, Level world, BlockPos pos, Player player, BlockHitResult trace) {
+		if (player.isShiftKeyDown()) {
+			//ChestUtil.handleLootSneak(this, world, pos, player);
 		} else if(!ChestBlock.isChestBlockedAt(world, pos)) {
-			ChestUtil.handleLootChest(this, world, pos, player);
+			//ChestUtil.handleLootChest(this, world, pos, player);
 		}
 		return InteractionResult.sidedSuccess(world.isClientSide);
 	}
@@ -133,7 +129,7 @@ public class LootrVariantChestBlock extends VariantChestBlock implements IZetaBl
 	@Override
 	@Nullable
 	public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level pLevel, BlockState pState, BlockEntityType<T> pBlockEntityType) {
-		return pLevel.isClientSide ? LootrChestBlockEntity::lootrLidAnimateTick : null;
+		return ILootrBlockEntity::ticker;
 	}
 
 	@Override
@@ -175,12 +171,12 @@ public class LootrVariantChestBlock extends VariantChestBlock implements IZetaBl
 
 					if(state.is(key) && !state.is(block)) {
 						BlockEntity entity = level.getBlockEntity(pos);
-						CompoundTag nbt = entity == null ? null : entity.serializeNBT();
+						CompoundTag nbt = entity == null ? null : entity.serializeAttachments(context.getLevel().registryAccess());
 						level.setBlock(pos, block.withPropertiesOf(state), 18); // Same as debug stick
 						level.levelEvent(LevelEvent.PARTICLES_DESTROY_BLOCK, pos, Block.getId(state));
 						BlockEntity newEntity = level.getBlockEntity(pos);
 						if(newEntity != null && nbt != null)
-							newEntity.load(nbt);
+							newEntity.loadWithComponents(nbt, level.registryAccess());
 
 						return InteractionResult.sidedSuccess(level.isClientSide);
 					}

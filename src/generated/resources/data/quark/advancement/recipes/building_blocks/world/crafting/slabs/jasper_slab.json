@@ -1,0 +1,38 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "zeta:flag",
+      "flag": "jasper"
+    }
+  ],
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_jasper": {
+      "conditions": {
+        "items": [
+          {
+            "items": "quark:jasper"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "quark:world/crafting/slabs/jasper_slab"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    }
+  },
+  "requirements": [
+    [
+      "has_the_recipe",
+      "has_jasper"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "quark:world/crafting/slabs/jasper_slab"
+    ]
+  }
+}

@@ -1,20 +1,9 @@
 package org.violetmoon.quark.addons.oddities.block.be;
 
-import java.util.HashMap;
-import java.util.Locale;
-import java.util.Map;
-
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-import org.violetmoon.quark.addons.oddities.block.TinyPotatoBlock;
-import org.violetmoon.quark.addons.oddities.module.TinyPotatoModule;
-import org.violetmoon.quark.addons.oddities.util.TinyPotatoInfo;
-import org.violetmoon.quark.base.handler.QuarkSounds;
-import org.violetmoon.zeta.util.MiscUtil;
-import org.violetmoon.zeta.util.SimpleInventoryBlockEntity;
-
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.HolderLookup;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.Packet;
@@ -29,8 +18,21 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+import org.violetmoon.quark.addons.oddities.block.TinyPotatoBlock;
+import org.violetmoon.quark.addons.oddities.module.TinyPotatoModule;
+import org.violetmoon.quark.addons.oddities.util.TinyPotatoInfo;
+import org.violetmoon.quark.base.handler.QuarkSounds;
+import org.violetmoon.zeta.util.MiscUtil;
+import org.violetmoon.zeta.util.SimpleInventoryBlockEntity;
+
+import java.util.HashMap;
+import java.util.Locale;
+import java.util.Map;
 
 public class TinyPotatoBlockEntity extends SimpleInventoryBlockEntity implements Nameable {
+
 	public static final String TAG_NAME = "name";
 	public static final String TAG_ANGRY = TinyPotatoBlock.ANGRY;
 	private static final int JUMP_EVENT = 0;
@@ -134,7 +136,7 @@ public class TinyPotatoBlockEntity extends SimpleInventoryBlockEntity implements
 			}
 			if(!tater.isEmpty()) {
 				String taterGender = manyTater ? "children" : "son";
-				if(tater.hasCustomHoverName() && !manyTater) {
+				if(tater.getComponents().has(DataComponents.CUSTOM_NAME) && !manyTater) {
 					TinyPotatoInfo info = TinyPotatoInfo.fromComponent(tater.getHoverName());
 					taterGender = GENDER.getOrDefault(info.name(), taterGender);
 				}
@@ -199,17 +201,17 @@ public class TinyPotatoBlockEntity extends SimpleInventoryBlockEntity implements
 	}
 
 	@Override
-	public void readSharedNBT(CompoundTag cmp) {
-		super.readSharedNBT(cmp);
-		name = Component.Serializer.fromJson(cmp.getString(TAG_NAME));
-		angry = cmp.getBoolean(TAG_ANGRY);
+	public void readSharedNBT(CompoundTag tag, HolderLookup.Provider provider) {
+		super.readSharedNBT(tag, provider);
+		name = Component.Serializer.fromJson(tag.getString(TAG_NAME), provider);
+		angry = tag.getBoolean(TAG_ANGRY);
 	}
 
 	@Override
-	public void writeSharedNBT(CompoundTag cmp) {
-		super.writeSharedNBT(cmp);
-		cmp.putString(TAG_NAME, Component.Serializer.toJson(name));
-		cmp.putBoolean(TAG_ANGRY, angry);
+	public void writeSharedNBT(CompoundTag tag, HolderLookup.Provider provider) {
+		super.writeSharedNBT(tag, provider);
+		tag.putString(TAG_NAME, Component.Serializer.toJson(name, provider));
+		tag.putBoolean(TAG_ANGRY, angry);
 	}
 
 	@Override
@@ -225,6 +227,16 @@ public class TinyPotatoBlockEntity extends SimpleInventoryBlockEntity implements
 	@Override
 	public boolean canPlaceItem(int slot, @NotNull ItemStack itemstack) {
 		return this.getItem(slot).isEmpty();
+	}
+
+	@Override
+	public void startOpen(@NotNull Player player) {
+
+	}
+
+	@Override
+	public void stopOpen(@NotNull Player player) {
+
 	}
 
 	@NotNull

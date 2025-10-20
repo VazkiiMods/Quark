@@ -23,7 +23,7 @@ import net.minecraft.resources.ResourceLocation;
 
 public class ClientUtil {
 
-	public static final ResourceLocation GENERAL_ICONS = new ResourceLocation(Quark.MOD_ID, "textures/gui/general_icons.png");
+	public static final ResourceLocation GENERAL_ICONS = Quark.asResource("textures/gui/general_icons.png");
 
 	private static int progress;
 

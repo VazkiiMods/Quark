@@ -4,6 +4,7 @@ import com.google.common.collect.Lists;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderers;
+import net.minecraft.core.Holder;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
@@ -18,8 +19,8 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.common.extensions.IForgeMenuType;
-import net.minecraftforge.common.util.FakePlayer;
+import net.neoforged.neoforge.common.extensions.IMenuTypeExtension;
+import net.neoforged.neoforge.common.util.FakePlayer;
 import org.violetmoon.quark.addons.oddities.block.MatrixEnchantingTableBlock;
 import org.violetmoon.quark.addons.oddities.block.be.MatrixEnchantingTableBlockEntity;
 import org.violetmoon.quark.addons.oddities.client.render.be.MatrixEnchantingTableRenderer;
@@ -27,21 +28,23 @@ import org.violetmoon.quark.addons.oddities.client.screen.MatrixEnchantingScreen
 import org.violetmoon.quark.addons.oddities.inventory.MatrixEnchantingMenu;
 import org.violetmoon.quark.addons.oddities.util.CustomInfluence;
 import org.violetmoon.quark.addons.oddities.util.Influence;
+import org.violetmoon.quark.addons.oddities.util.InfluenceLocations;
 import org.violetmoon.quark.base.Quark;
+import org.violetmoon.quark.base.components.QuarkDataComponents;
+import org.violetmoon.quark.mixin.mixins.client.accessor.AccessorMenuScreens;
 import org.violetmoon.zeta.advancement.ManualTrigger;
 import org.violetmoon.zeta.client.event.load.ZClientSetup;
 import org.violetmoon.zeta.config.Config;
 import org.violetmoon.zeta.event.bus.LoadEvent;
 import org.violetmoon.zeta.event.bus.PlayEvent;
 import org.violetmoon.zeta.event.load.ZConfigChanged;
+import org.violetmoon.zeta.event.load.ZGatherHints;
 import org.violetmoon.zeta.event.load.ZRegister;
 import org.violetmoon.zeta.event.play.ZBlock;
 import org.violetmoon.zeta.event.play.ZItemTooltip;
 import org.violetmoon.zeta.event.play.entity.player.ZPlayerInteract;
-import org.violetmoon.zeta.event.load.ZGatherHints;
 import org.violetmoon.zeta.module.ZetaLoadModule;
 import org.violetmoon.zeta.module.ZetaModule;
-import org.violetmoon.zeta.util.ItemNBTHelper;
 import org.violetmoon.zeta.util.MiscUtil;
 
 import java.util.ArrayList;
@@ -164,7 +167,7 @@ public class MatrixEnchantingModule extends ZetaModule {
 	@Config(description = "If you set this to false, the vanilla Enchanting Table will no longer automatically convert to the Matrix Enchanting table. You'll have to add a recipe for the Matrix Enchanting Table to make use of this.", flag = "matrix_enchanting_autoconvert")
 	public static boolean automaticallyConvert = true;
 
-	public static Map<DyeColor, Influence> candleInfluences = new HashMap<>();
+	public static Map<DyeColor, InfluenceLocations> candleInfluences = new HashMap<>();
 	public static Map<BlockState, CustomInfluence> customInfluences = new HashMap<>();
 
 	public static Block matrixEnchanter;
@@ -175,7 +178,7 @@ public class MatrixEnchantingModule extends ZetaModule {
 	public final void register(ZRegister event) {
 		matrixEnchanter = new MatrixEnchantingTableBlock(this);
 
-		menuType = IForgeMenuType.create(MatrixEnchantingMenu::fromNetwork);
+		menuType = IMenuTypeExtension.create(MatrixEnchantingMenu::fromNetwork);
 		Quark.ZETA.registry.register(menuType, "matrix_enchanting", Registries.MENU);
 
 		blockEntityType = BlockEntityType.Builder.of(MatrixEnchantingTableBlockEntity::new, matrixEnchanter).build(null);
@@ -214,26 +217,23 @@ public class MatrixEnchantingModule extends ZetaModule {
 		parseInfluences();
 	}
 
-	private Influence parseEnchantmentList(String enchantmentList) {
-		List<Enchantment> boost = new ArrayList<>();
-		List<Enchantment> dampen = new ArrayList<>();
+	private InfluenceLocations parseEnchantmentList(String enchantmentList) {
+		List<ResourceLocation> boost = new ArrayList<>();
+		List<ResourceLocation> dampen = new ArrayList<>();
 		String[] enchantments = enchantmentList.split(",");
 		for(String enchStr : enchantments) {
 			boolean damp = enchStr.startsWith("-");
 			if(damp)
 				enchStr = enchStr.substring(1);
 
-			Enchantment ench = BuiltInRegistries.ENCHANTMENT.get(new ResourceLocation(enchStr));
-			if(ench != null) {
-				if(damp)
-					dampen.add(ench);
-				else
-					boost.add(ench);
-			} else {
-				Quark.LOG.error("Matrix Enchanting Influencing: Enchantment " + enchStr + " does not exist!");
-			}
+			if(damp)
+				dampen.add(ResourceLocation.parse(enchStr));
+			else
+				boost.add(ResourceLocation.parse(enchStr));
+
+			//Holder<Enchantment> ench = Holder.direct(Quark.proxy.hackilyGetCurrentClientLevelRegistryAccess().registry(Registries.ENCHANTMENT).get().get(ResourceLocation.parse(enchStr)));
 		}
-		return new Influence(boost, dampen);
+		return new InfluenceLocations(boost, dampen);
 	}
 
 	private void parseInfluences() {
@@ -251,7 +251,7 @@ public class MatrixEnchantingModule extends ZetaModule {
 				} catch (NumberFormatException e) {
 					continue;
 				}
-				Influence boosts = parseEnchantmentList(split[3]);
+				InfluenceLocations boosts = parseEnchantmentList(split[3]);
 
 				customInfluences.put(state, new CustomInfluence(strength, color, boosts));
 			}
@@ -274,14 +274,14 @@ public class MatrixEnchantingModule extends ZetaModule {
 
 		@LoadEvent
 		public final void clientSetup(ZClientSetup event) {
-			MenuScreens.register(menuType, MatrixEnchantingScreen::new);
+			AccessorMenuScreens.invokeRegister(menuType, MatrixEnchantingScreen::new);
 			BlockEntityRenderers.register(blockEntityType, MatrixEnchantingTableRenderer::new);
 		}
 
 		@PlayEvent
 		public void onTooltip(ZItemTooltip event) {
 			ItemStack stack = event.getItemStack();
-			if(showTooltip && ItemNBTHelper.verifyExistence(stack, MatrixEnchantingTableBlockEntity.TAG_STACK_MATRIX))
+			if(showTooltip && stack.has(QuarkDataComponents.STACK_MATRIX))
 				event.getToolTip().add(Component.translatable("quark.gui.enchanting.pending").withStyle(ChatFormatting.AQUA));
 		}
 	}

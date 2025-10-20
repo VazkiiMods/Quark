@@ -2,7 +2,6 @@ package org.violetmoon.quark.content.mobs.client.model;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-
 import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.model.geom.PartPose;
@@ -13,9 +12,7 @@ import net.minecraft.client.model.geom.builders.PartDefinition;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.util.Mth;
 import net.minecraft.world.level.block.state.BlockState;
-
 import org.jetbrains.annotations.NotNull;
-
 import org.violetmoon.quark.content.mobs.entity.Shiba;
 
 public class ShibaModel extends EntityModel<Shiba> {
@@ -127,7 +124,7 @@ public class ShibaModel extends EntityModel<Shiba> {
 
 	@Override
 	public void prepareMobModel(@NotNull Shiba shiba, float limbSwing, float limbSwingAmount, float partialTickTime) {
-		BlockState state = shiba.getFeetBlockState();
+		BlockState state = shiba.getBlockStateOn();
 		this.sleeping = state.is(BlockTags.BEDS);
 
 		setRotationAngle(rFrontLeg, Mth.cos(limbSwing * 0.6662F) * 1.4F * limbSwingAmount, 0, 0);
@@ -153,7 +150,7 @@ public class ShibaModel extends EntityModel<Shiba> {
 
 		boolean tongueOut = false;
 
-		BlockState state = shiba.getFeetBlockState();
+		BlockState state = shiba.getBlockStateOn();
 		boolean sleep = state.is(BlockTags.BEDS);
 
 		if(shiba.isInSittingPose()) {
@@ -192,7 +189,7 @@ public class ShibaModel extends EntityModel<Shiba> {
 	}
 
 	@Override
-	public void renderToBuffer(PoseStack matrixStack, @NotNull VertexConsumer buffer, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
+	public void renderToBuffer(PoseStack matrixStack, @NotNull VertexConsumer buffer, int packedLight, int packedOverlay, int color) {
 		matrixStack.pushPose();
 
 		if(sleeping) matrixStack.translate(0, 0.12, 0);
@@ -203,7 +200,7 @@ public class ShibaModel extends EntityModel<Shiba> {
 		if(young)
 			matrixStack.translate(0.0F, 5.0F / 16F, 0F);
 
-		head.render(matrixStack, buffer, packedLight, packedOverlay, red, green, blue, alpha);
+		head.render(matrixStack, buffer, packedLight, packedOverlay, color);
 		matrixStack.popPose();
 
 		matrixStack.pushPose();
@@ -226,5 +223,4 @@ public class ShibaModel extends EntityModel<Shiba> {
 		modelRenderer.yRot = y;
 		modelRenderer.zRot = z;
 	}
-
 }

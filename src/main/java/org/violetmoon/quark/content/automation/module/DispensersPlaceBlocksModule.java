@@ -1,11 +1,10 @@
 package org.violetmoon.quark.content.automation.module;
 
 import com.google.common.collect.Lists;
-
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.BlockSource;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
+import net.minecraft.core.dispenser.BlockSource;
 import net.minecraft.core.dispenser.DefaultDispenseItemBehavior;
 import net.minecraft.core.dispenser.DispenseItemBehavior;
 import net.minecraft.core.dispenser.OptionalDispenseItemBehavior;
@@ -20,7 +19,6 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.DispenserBlock;
 import net.minecraft.world.level.block.SlabBlock;
 import net.minecraft.world.level.block.StairBlock;
-
 import org.jetbrains.annotations.NotNull;
 import org.violetmoon.zeta.config.Config;
 import org.violetmoon.zeta.event.bus.LoadEvent;
@@ -49,7 +47,7 @@ public class DispensersPlaceBlocksModule extends ZetaModule {
 
 	@LoadEvent
 	public void setup(ZCommonSetup e) {
-		if(!enabled)
+		if(!isEnabled())
 			return;
 
 		BlockBehavior baseBehavior = new BlockBehavior();
@@ -103,9 +101,9 @@ public class DispensersPlaceBlocksModule extends ZetaModule {
 
 			setSuccess(false);
 
-			Direction direction = source.getBlockState().getValue(DispenserBlock.FACING);
+			Direction direction = source.state().getValue(DispenserBlock.FACING);
 			Direction against = direction;
-			BlockPos pos = source.getPos().relative(direction);
+			BlockPos pos = source.pos().relative(direction);
 
 			if(stack.getItem() instanceof BlockItem item) {
 				Block block = item.getBlock();
@@ -114,7 +112,7 @@ public class DispensersPlaceBlocksModule extends ZetaModule {
 				else if(block instanceof SlabBlock)
 					against = Direction.UP;
 
-				setSuccess(item.place(new NotStupidDirectionalPlaceContext(source.getLevel(), pos, direction, stack, against))
+				setSuccess(item.place(new NotStupidDirectionalPlaceContext(source.level(), pos, direction, stack, against))
 						.consumesAction());
 			}
 

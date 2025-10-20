@@ -4,14 +4,15 @@ import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
+import org.violetmoon.quark.base.Quark;
 
 public class EmoteDescriptor {
 
-	public static final ResourceLocation TIER_1 = new ResourceLocation("quark", "textures/emote/patreon_t1.png");
-	public static final ResourceLocation TIER_2 = new ResourceLocation("quark", "textures/emote/patreon_t2.png");
-	public static final ResourceLocation TIER_3 = new ResourceLocation("quark", "textures/emote/patreon_t3.png");
-	public static final ResourceLocation TIER_4 = new ResourceLocation("quark", "textures/emote/patreon_t4.png");
-	public static final ResourceLocation TIER_GOD = new ResourceLocation("quark", "textures/emote/patreon_t99.png");
+	public static final ResourceLocation TIER_1 = Quark.asResource("textures/emote/patreon_t1.png");
+	public static final ResourceLocation TIER_2 = Quark.asResource("textures/emote/patreon_t2.png");
+	public static final ResourceLocation TIER_3 = Quark.asResource("textures/emote/patreon_t3.png");
+	public static final ResourceLocation TIER_4 = Quark.asResource("textures/emote/patreon_t4.png");
+	public static final ResourceLocation TIER_GOD = Quark.asResource("textures/emote/patreon_t99.png");
 
 	public final Class<? extends EmoteBase> clazz;
 	public final int index;
@@ -23,7 +24,7 @@ public class EmoteDescriptor {
 	private int tier;
 
 	public EmoteDescriptor(Class<? extends EmoteBase> clazz, String name, String regName, int index) {
-		this(clazz, name, regName, index, new ResourceLocation("quark", "textures/emote/" + name + ".png"), new EmoteTemplate(name + ".emote"));
+		this(clazz, name, regName, index, Quark.asResource("textures/emote/" + name + ".png"), new EmoteTemplate(name + ".emote"));
 	}
 
 	public EmoteDescriptor(Class<? extends EmoteBase> clazz, String name, String regName, int index, ResourceLocation texture, EmoteTemplate template) {

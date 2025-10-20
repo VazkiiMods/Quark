@@ -12,8 +12,8 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.decoration.ItemFrame;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.item.component.DyedItemColor;
 import net.minecraft.world.level.Level;
-
 import org.violetmoon.quark.base.Quark;
 import org.violetmoon.quark.content.tweaks.module.DyeableItemFramesModule;
 
@@ -37,10 +37,10 @@ public class DyedItemFrame extends ItemFrame {
 	}
 
 	@Override
-	protected void defineSynchedData() {
-		super.defineSynchedData();
-		getEntityData().define(DATA_COLOR, 0);
-		getEntityData().define(DATA_GLOW, false);
+	protected void defineSynchedData(SynchedEntityData.Builder builder) {
+		super.defineSynchedData(builder);
+		builder.define(DATA_COLOR, 0);
+		builder.define(DATA_GLOW, false);
 	}
 
 	@Override
@@ -59,7 +59,7 @@ public class DyedItemFrame extends ItemFrame {
 		getEntityData().set(DATA_GLOW, cmp.getBoolean(TAG_GLOW));
 	}
 
-	public int getColor() {
+	public Integer getColor() {
 		return getEntityData().get(DATA_COLOR);
 	}
 
@@ -95,7 +95,7 @@ public class DyedItemFrame extends ItemFrame {
 	@Override
 	protected ItemStack getFrameItemStack() {
 		ItemStack stack = new ItemStack(isGlow() ? Items.GLOW_ITEM_FRAME : Items.ITEM_FRAME);
-		Quark.ZETA.dyeables.applyDye(stack, getColor());
+		Quark.ZETA.dyeables.applyDye(stack, new DyedItemColor(getColor(), false));
 
 		return stack;
 	}

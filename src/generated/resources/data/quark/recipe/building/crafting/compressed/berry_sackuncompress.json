@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    {
+      "item": "quark:berry_sack"
+    }
+  ],
+  "result": {
+    "count": 9,
+    "id": "minecraft:sweet_berries"
+  }
+}

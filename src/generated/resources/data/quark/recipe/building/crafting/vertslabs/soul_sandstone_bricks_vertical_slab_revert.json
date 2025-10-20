@@ -1,0 +1,24 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:and",
+      "values": [
+        {
+          "type": "zeta:flag",
+          "flag": "soul_sandstone"
+        }
+      ]
+    }
+  ],
+  "type": "minecraft:crafting_shapeless",
+  "category": "building",
+  "ingredients": [
+    {
+      "item": "quark:soul_sandstone_bricks_vertical_slab"
+    }
+  ],
+  "result": {
+    "count": 1,
+    "id": "quark:soul_sandstone_bricks_slab"
+  }
+}

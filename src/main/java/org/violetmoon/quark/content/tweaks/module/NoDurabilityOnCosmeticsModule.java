@@ -1,7 +1,6 @@
 package org.violetmoon.quark.content.tweaks.module;
 
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.tags.ItemTags;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -25,7 +24,7 @@ public class NoDurabilityOnCosmeticsModule extends ZetaModule {
 
 	@LoadEvent
 	public final void setup(ZCommonSetup event) {
-		cosmeticTag = ItemTags.create(new ResourceLocation(Quark.MOD_ID, "cosmetic_anvil_items"));
+		cosmeticTag = Quark.asTagKey(Registries.ITEM,"cosmetic_anvil_items");
 	}
 
 	@PlayEvent

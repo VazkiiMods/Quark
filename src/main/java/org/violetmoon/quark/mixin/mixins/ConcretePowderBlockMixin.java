@@ -23,7 +23,7 @@ public class ConcretePowderBlockMixin {
 		}
 	}
 	
-	@Inject(method = "shouldSolidify", at = @At("HEAD"), cancellable = true, remap = false)
+	@Inject(method = "shouldSolidify(Lnet/minecraft/world/level/BlockGetter;Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/level/block/state/BlockState;Lnet/minecraft/world/level/material/FluidState;)Z", at = @At("HEAD"), cancellable = true, remap = false)
 	private static void shouldSolidify(BlockGetter pLevel, BlockPos pPos, BlockState pState, FluidState fluidState, CallbackInfoReturnable<Boolean> cbi) {
 		if(MagmaKeepsConcretePowderModule.preventSolidify(pLevel, pPos, pState)) {
 			cbi.setReturnValue(false);

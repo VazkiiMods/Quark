@@ -39,7 +39,7 @@ public class EnderWatcherBlockEntity extends ZetaBlockEntity {
 		int range = 80;
 
 		int newWatch = 0;
-		List<Player> players = level.getEntitiesOfClass(Player.class, new AABB(be.worldPosition.offset(-range, -range, -range), be.worldPosition.offset(range, range, range)));
+		List<Player> players = level.getEntitiesOfClass(Player.class, new AABB(be.worldPosition.offset(-range, -range, -range).getCenter(), be.worldPosition.offset(range, range, range).getCenter()));
 
 		EnderMan fakeEnderman = new EnderMan(EntityType.ENDERMAN, level);
 		fakeEnderman.setPos(pos.getX() + 0.5, pos.getY() + 0.5 - fakeEnderman.getEyeHeight(), pos.getZ() + 0.5);

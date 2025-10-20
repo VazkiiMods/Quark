@@ -1,10 +1,8 @@
 package org.violetmoon.quark.content.automation.block;
 
 import net.minecraft.core.BlockPos;
-import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.Containers;
-import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.Entity;
@@ -20,21 +18,15 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.EntityBlock;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.world.level.block.entity.BlockEntityTicker;
-import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.*;
-import net.minecraftforge.common.util.ForgeSoundType;
-
-import net.minecraftforge.network.NetworkHooks;
+import net.neoforged.neoforge.common.util.DeferredSoundType;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-
 import org.violetmoon.quark.content.automation.block.be.FeedingTroughBlockEntity;
-import org.violetmoon.quark.content.automation.module.FeedingTroughModule;
 import org.violetmoon.zeta.block.ZetaBlock;
 import org.violetmoon.zeta.module.ZetaModule;
 
@@ -44,7 +36,7 @@ import org.violetmoon.zeta.module.ZetaModule;
  */
 public class FeedingTroughBlock extends ZetaBlock implements EntityBlock {
 
-	private static final SoundType WOOD_WITH_PLANT_STEP = new ForgeSoundType(1.0F, 1.0F, () -> SoundEvents.WOOD_BREAK, () -> SoundEvents.GRASS_STEP, () -> SoundEvents.WOOD_PLACE, () -> SoundEvents.WOOD_HIT, () -> SoundEvents.WOOD_FALL);
+	private static final SoundType WOOD_WITH_PLANT_STEP = new DeferredSoundType(1.0F, 1.0F, () -> SoundEvents.WOOD_BREAK, () -> SoundEvents.GRASS_STEP, () -> SoundEvents.WOOD_PLACE, () -> SoundEvents.WOOD_HIT, () -> SoundEvents.WOOD_FALL);
 
 	public static final BooleanProperty FULL = BooleanProperty.create("full");
 
@@ -90,10 +82,9 @@ public class FeedingTroughBlock extends ZetaBlock implements EntityBlock {
 	}
 
 	@Override
-	public SoundType getSoundType(BlockState pState) {
-		if(pState.getValue(FULL))
-			return WOOD_WITH_PLANT_STEP;
-		return super.getSoundType(pState);
+	public SoundType getSoundType(BlockState state, LevelReader level, BlockPos pos, @Nullable Entity entity) {
+		if(state.getValue(FULL)) return WOOD_WITH_PLANT_STEP;
+		return super.getSoundType(state, level, pos, entity);
 	}
 
 	@Override
@@ -129,13 +120,13 @@ public class FeedingTroughBlock extends ZetaBlock implements EntityBlock {
 
 	@NotNull
 	@Override
-	public InteractionResult use(@NotNull BlockState state, Level world, @NotNull BlockPos pos, @NotNull Player player, @NotNull InteractionHand hand, @NotNull BlockHitResult trace) {
+	public InteractionResult useWithoutItem(@NotNull BlockState state, Level world, @NotNull BlockPos pos, @NotNull Player player, @NotNull BlockHitResult trace) {
 		if(world.isClientSide)
 			return InteractionResult.SUCCESS;
 		else {
 			MenuProvider container = this.getMenuProvider(state, world, pos);
 			if(container != null)
-				NetworkHooks.openScreen((ServerPlayer) player, container);
+				player.openMenu(container);
 
 			return InteractionResult.CONSUME;
 		}

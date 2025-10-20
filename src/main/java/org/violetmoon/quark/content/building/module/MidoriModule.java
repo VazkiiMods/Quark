@@ -20,10 +20,14 @@ import org.violetmoon.zeta.module.ZetaLoadModule;
 import org.violetmoon.zeta.module.ZetaModule;
 import org.violetmoon.zeta.registry.CreativeTabManager;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @ZetaLoadModule(category = "building")
 public class MidoriModule extends ZetaModule {
+	public static List<Block> blocks = new ArrayList<>();
 
-	private static Item moss_paste;
+	public static Item moss_paste;
 
 	@LoadEvent
 	public final void register(ZRegister event) {
@@ -35,11 +39,13 @@ public class MidoriModule extends ZetaModule {
 				.requiresCorrectToolForDrops()
 				.strength(1.5F, 6.0F);
 
-		CreativeTabManager.daisyChain();
+		CreativeTabManager.startChain(CreativeModeTabs.BUILDING_BLOCKS, false, true, Blocks.COAL_BLOCK);
 		Block midori = new ZetaBlock("midori_block", this, props).setCreativeTab(CreativeModeTabs.BUILDING_BLOCKS, Blocks.COAL_BLOCK, true);
-		new ZetaPillarBlock("midori_pillar", this, props).setCreativeTab(CreativeModeTabs.BUILDING_BLOCKS);
+		blocks.add(midori); //0
+		Block pillar = new ZetaPillarBlock("midori_pillar", this, props).setCreativeTab(CreativeModeTabs.BUILDING_BLOCKS);
+		blocks.add(pillar); //1
 		event.getVariantRegistry().addSlabAndStairs((IZetaBlock) midori, null);
-		CreativeTabManager.endDaisyChain();
+		CreativeTabManager.endChain();
 	}
 
 	@LoadEvent

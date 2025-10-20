@@ -7,16 +7,16 @@ import net.minecraft.client.resources.sounds.SoundInstance;
 import net.minecraft.client.sounds.SoundManager;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
-import net.minecraft.sounds.SoundEvent;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.monster.Skeleton;
 import net.minecraft.world.entity.monster.Spider;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.*;
 import net.minecraft.world.level.block.entity.JukeboxBlockEntity;
-
-import org.violetmoon.quark.base.handler.QuarkSounds;
-import org.violetmoon.quark.base.item.QuarkMusicDiscItem;
+import org.violetmoon.quark.base.Quark;
+import org.violetmoon.quark.content.tools.item.AmbientDiscItem;
+import org.violetmoon.quark.mixin.mixins.client.accessor.AccessorLevelRenderer;
 import org.violetmoon.zeta.config.Config;
 import org.violetmoon.zeta.event.bus.LoadEvent;
 import org.violetmoon.zeta.event.bus.PlayEvent;
@@ -39,22 +39,30 @@ public class AmbientDiscsModule extends ZetaModule {
 
 	@Hint(key = "ambience_discs")
 	private final List<Item> discs = new ArrayList<>();
-
-	@LoadEvent
+    
+    public static final ResourceKey<JukeboxSong> AMBIENT_DRIPS = Quark.asResourceKey(Registries.JUKEBOX_SONG,"ambient/drips");
+    public static final ResourceKey<JukeboxSong> AMBIENT_OCEAN = Quark.asResourceKey(Registries.JUKEBOX_SONG,"ambient/ocean");
+    public static final ResourceKey<JukeboxSong> AMBIENT_RAIN = Quark.asResourceKey(Registries.JUKEBOX_SONG,"ambient/rain");
+    public static final ResourceKey<JukeboxSong> AMBIENT_WIND = Quark.asResourceKey(Registries.JUKEBOX_SONG,"ambient/wind");
+    public static final ResourceKey<JukeboxSong> AMBIENT_FIRE = Quark.asResourceKey(Registries.JUKEBOX_SONG,"ambient/fire");
+    public static final ResourceKey<JukeboxSong> AMBIENT_CLOCK = Quark.asResourceKey(Registries.JUKEBOX_SONG,"ambient/clock");
+    public static final ResourceKey<JukeboxSong> AMBIENT_CRICKETS = Quark.asResourceKey(Registries.JUKEBOX_SONG,"ambient/crickets");
+    public static final ResourceKey<JukeboxSong> AMBIENT_CHATTER = Quark.asResourceKey(Registries.JUKEBOX_SONG,"ambient/chatter");
+    
+    @LoadEvent
 	public void register(ZRegister event) {
-		disc(QuarkSounds.AMBIENT_DRIPS);
-		disc(QuarkSounds.AMBIENT_OCEAN);
-		disc(QuarkSounds.AMBIENT_RAIN);
-		disc(QuarkSounds.AMBIENT_WIND);
-		disc(QuarkSounds.AMBIENT_FIRE);
-		disc(QuarkSounds.AMBIENT_CLOCK);
-		disc(QuarkSounds.AMBIENT_CRICKETS);
-		disc(QuarkSounds.AMBIENT_CHATTER);
+		disc(AMBIENT_DRIPS, "drips");
+		disc(AMBIENT_OCEAN, "ocean");
+		disc(AMBIENT_RAIN, "rain");
+		disc(AMBIENT_WIND, "wind");
+		disc(AMBIENT_FIRE, "fire");
+		disc(AMBIENT_CLOCK, "clock");
+		disc(AMBIENT_CRICKETS, "crickets");
+		disc(AMBIENT_CHATTER, "chatter");
 	}
 
-	private void disc(SoundEvent sound) {
-		String name = sound.getLocation().getPath().replaceAll(".+\\.", "");
-		discs.add(new QuarkMusicDiscItem(15, () -> sound, name, this, Integer.MAX_VALUE));
+	private void disc(ResourceKey<JukeboxSong> song, String name) {
+		discs.add(new AmbientDiscItem("music_disc_" + name, this, new Item.Properties().rarity(Rarity.RARE).stacksTo(1), song).setCreativeTab(CreativeModeTabs.TOOLS_AND_UTILITIES));
 	}
 
 	@PlayEvent
@@ -73,38 +81,33 @@ public class AmbientDiscsModule extends ZetaModule {
 			LevelRenderer render = mc.levelRenderer;
 			BlockPos pos = tile.getBlockPos();
 
-			SoundInstance sound = render.playingRecords.get(pos);
+			SoundInstance sound = ((AccessorLevelRenderer)render).getPlayingJukeboxSongs().get(pos);
 			SoundManager soundEngine = mc.getSoundManager();
 			if(sound == null || !soundEngine.isActive(sound)) {
 				if(sound != null) {
 					soundEngine.play(sound);
 				} else {
-					ItemStack stack = tile.getFirstItem();
-					if(stack.getItem() instanceof QuarkMusicDiscItem disc)
+					ItemStack stack = tile.getTheItem();
+					if (stack.getItem() instanceof AmbientDiscItem disc)
 						playAmbientSound(disc, pos);
 				}
 			}
 		}
 
-		public static boolean playAmbientSound(QuarkMusicDiscItem disc, BlockPos pos) {
-			if(disc.isAmbient) {
-				Minecraft mc = Minecraft.getInstance();
-				SoundManager soundEngine = mc.getSoundManager();
-				LevelRenderer render = mc.levelRenderer;
+		public static boolean playAmbientSound(AmbientDiscItem disc, BlockPos pos) {
+            Minecraft mc = Minecraft.getInstance();
+            SoundManager soundEngine = mc.getSoundManager();
+            LevelRenderer render = mc.levelRenderer;
 
-				SimpleSoundInstance simplesound = new SimpleSoundInstance(disc.soundSupplier.get().getLocation(), SoundSource.RECORDS, (float) AmbientDiscsModule.volume, 1.0F, SoundInstance.createUnseededRandom(), true, 0, SoundInstance.Attenuation.LINEAR, pos.getX(), pos.getY(), pos.getZ(), false);
+            SimpleSoundInstance simplesound = new SimpleSoundInstance(disc.song.location(), SoundSource.RECORDS, (float) AmbientDiscsModule.volume, 1.0F, SoundInstance.createUnseededRandom(), true, 0, SoundInstance.Attenuation.LINEAR, pos.getX(), pos.getY(), pos.getZ(), false);
 
-				render.playingRecords.put(pos, simplesound);
-				soundEngine.play(simplesound);
+            ((AccessorLevelRenderer)render).getPlayingJukeboxSongs().put(pos, simplesound);
+            soundEngine.play(simplesound);
 
-				if(mc.level != null)
-					mc.level.addParticle(ParticleTypes.NOTE, pos.getX() + Math.random(), pos.getY() + 1.1, pos.getZ() + Math.random(), Math.random(), 0, 0);
+            if(mc.level != null)
+                mc.level.addParticle(ParticleTypes.NOTE, pos.getX() + Math.random(), pos.getY() + 1.1, pos.getZ() + Math.random(), Math.random(), 0, 0);
 
-				return true;
-			}
-
-			return false;
-		}
-
+            return true;
+        }
 	}
 }

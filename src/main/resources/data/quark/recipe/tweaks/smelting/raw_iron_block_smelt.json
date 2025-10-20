@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:smelting",
+  "ingredient": {
+    "item": "minecraft:raw_iron_block"
+  },
+  "result": {
+		"id": "minecraft:iron_block"
+},
+ "experience": 6.3,
+  "cookingtime": 1800,
+  "neoforge:conditions": [
+    {
+      "type": "zeta:flag",
+      "flag": "smelt_ore_blocks"
+    }
+  ]
+}

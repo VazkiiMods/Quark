@@ -57,10 +57,9 @@ public class TinyPotatoModule extends ZetaModule {
 	public static class Client extends TinyPotatoModule {
 		@LoadEvent
 		public void modelBake(ZModel.ModifyBakingResult event) {
-			ResourceLocation tinyPotato = new ModelResourceLocation(new ResourceLocation("quark", "tiny_potato"), "inventory");
-			Map<ResourceLocation, BakedModel> map = event.getModels();
-			BakedModel originalPotato = map.get(tinyPotato);
-			map.put(tinyPotato, new TinyPotatoModel(originalPotato));
+			ModelResourceLocation tinyPotato = ModelResourceLocation.standalone(Quark.asResource("tiny_potato"));
+			Map<ModelResourceLocation, BakedModel> map = event.getModels();
+            map.compute(tinyPotato, (k, originalPotato) -> new TinyPotatoModel(originalPotato));
 		}
 
 		@LoadEvent
@@ -84,7 +83,7 @@ public class TinyPotatoModule extends ZetaModule {
 					usedNames.add(path);
 
 					path = path.substring("models/".length(), path.length() - ".json".length());
-					event.register(new ResourceLocation("quark", path));
+					event.register(ModelResourceLocation.standalone(Quark.asResource(path)));
 				}
 			}
 		}

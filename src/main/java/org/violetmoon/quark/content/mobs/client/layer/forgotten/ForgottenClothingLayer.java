@@ -19,7 +19,7 @@ import org.violetmoon.quark.base.Quark;
 
 public class ForgottenClothingLayer<T extends Mob & RangedAttackMob, M extends EntityModel<T>> extends RenderLayer<T, M> {
 
-	private static final ResourceLocation TEXTURE = new ResourceLocation(Quark.MOD_ID, "textures/model/entity/forgotten/overlay.png");
+	private static final ResourceLocation TEXTURE = Quark.asResource("textures/model/entity/forgotten/overlay.png");
 	private final SkeletonModel<T> layerModel;
 
 	public ForgottenClothingLayer(RenderLayerParent<T, M> parent, EntityModelSet model) {
@@ -29,6 +29,6 @@ public class ForgottenClothingLayer<T extends Mob & RangedAttackMob, M extends E
 
 	@Override
 	public void render(@NotNull PoseStack matrixStackIn, @NotNull MultiBufferSource bufferIn, int packedLightIn, @NotNull T entitylivingbaseIn, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch) {
-		coloredCutoutModelCopyLayerRender(getParentModel(), layerModel, TEXTURE, matrixStackIn, bufferIn, packedLightIn, entitylivingbaseIn, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch, partialTicks, 1.0F, 1.0F, 1.0F);
+		coloredCutoutModelCopyLayerRender(getParentModel(), layerModel, TEXTURE, matrixStackIn, bufferIn, packedLightIn, entitylivingbaseIn, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch, partialTicks, 1);
 	}
 }

@@ -2,6 +2,7 @@ package org.violetmoon.quark.content.client.module;
 
 import com.mojang.blaze3d.platform.Window;
 
+import net.minecraft.Util;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.OptionInstance;
@@ -9,8 +10,11 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.player.Input;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.resources.language.I18n;
+import net.minecraft.world.entity.ai.attributes.AttributeInstance;
+import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
 
+import net.neoforged.neoforge.client.gui.VanillaGuiLayers;
 import org.violetmoon.quark.base.QuarkClient;
 import org.violetmoon.zeta.client.event.load.ZKeyMapping;
 import org.violetmoon.zeta.client.event.play.ZInput;
@@ -21,6 +25,8 @@ import org.violetmoon.zeta.event.bus.LoadEvent;
 import org.violetmoon.zeta.event.bus.PlayEvent;
 import org.violetmoon.zeta.module.ZetaLoadModule;
 import org.violetmoon.zeta.module.ZetaModule;
+
+import java.util.concurrent.TimeUnit;
 
 @ZetaLoadModule(category = "client")
 public class AutoWalkKeybindModule extends ZetaModule {
@@ -55,8 +61,8 @@ public class AutoWalkKeybindModule extends ZetaModule {
 		}
 
 		@PlayEvent
-		public void drawHUD(ZRenderGuiOverlay.Hotbar.Post event) {
-			if(drawHud && autorunning) {
+		public void drawHUD(ZRenderGuiOverlay.Post event) {
+			if(drawHud && event.getLayerName().equals(VanillaGuiLayers.HOTBAR) && autorunning && !Minecraft.getInstance().options.hideGui) {
 				String message = I18n.get("quark.misc.autowalking");
 
 				GuiGraphics guiGraphics = event.getGuiGraphics();
@@ -69,10 +75,11 @@ public class AutoWalkKeybindModule extends ZetaModule {
 				int y = hudHeight;
 
 				String displayMessage = message;
-				int dots = (QuarkClient.ticker.ticksInGame / 10) % 2;
-				switch(dots) {
-				case 0 -> displayMessage = "OoO " + message + " oOo";
-				case 1 -> displayMessage = "oOo " + message + " OoO";
+
+				int time = (int) ((Util.timeSource.get(TimeUnit.MILLISECONDS) / 500) % 2);
+				switch (time) {
+				    case 0 -> displayMessage = "OoO " + message + " oOo";
+				    case 1 -> displayMessage = "oOo " + message + " OoO";
 				}
 
 				guiGraphics.drawString(mc.font, displayMessage, x, y, 0xFFFFFFFF, true);
@@ -93,17 +100,20 @@ public class AutoWalkKeybindModule extends ZetaModule {
 					if(shouldAccept) {
 						shouldAccept = false;
 						Player player = mc.player;
-						float height = player.getStepHeight();
+						AttributeInstance stepHeight = player.getAttribute(Attributes.STEP_HEIGHT);
+						if(stepHeight != null){
+							double height = stepHeight.getValue();
 
-						autorunning = !autorunning;
+							autorunning = !autorunning;
 
-						if(autorunning) {
-							hadAutoJump = opt.get();
+							if(autorunning) {
+								hadAutoJump = opt.get();
 
-							if(height < 1)
-								opt.set(true);
-						} else
-							opt.set(hadAutoJump);
+								if(height < 1)
+									opt.set(true);
+							} else
+								opt.set(hadAutoJump);
+						}
 					}
 				} else
 					shouldAccept = true;

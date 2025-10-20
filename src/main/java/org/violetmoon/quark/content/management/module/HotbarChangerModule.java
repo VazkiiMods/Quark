@@ -3,21 +3,19 @@ package org.violetmoon.quark.content.management.module;
 import com.mojang.blaze3d.platform.Window;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
-
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.renderer.GameRenderer;
-import net.minecraft.client.renderer.entity.ItemRenderer;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-
+import net.neoforged.neoforge.client.gui.VanillaGuiLayers;
+import net.neoforged.neoforge.network.PacketDistributor;
 import org.lwjgl.opengl.GL11;
-
 import org.violetmoon.quark.base.QuarkClient;
 import org.violetmoon.quark.base.network.message.ChangeHotbarMessage;
 import org.violetmoon.zeta.client.event.load.ZKeyMapping;
@@ -32,7 +30,7 @@ import org.violetmoon.zeta.module.ZetaModule;
 
 @ZetaLoadModule(category = "management")
 public class HotbarChangerModule extends ZetaModule {
-	private static final ResourceLocation WIDGETS = new ResourceLocation("textures/gui/widgets.png");
+	private static final ResourceLocation HOTBAR = ResourceLocation.withDefaultNamespace("textures/gui/sprites/hud/hotbar.png");
 
 	private static final int MAX_HEIGHT = 90;
 
@@ -66,26 +64,34 @@ public class HotbarChangerModule extends ZetaModule {
 		}
 
 		@PlayEvent
-		public void hudHeathPre(ZRenderGuiOverlay.PlayerHealth.Pre event) {
-			float shift = -getRealHeight(event.getPartialTick()) + 22;
-			if(shift < 0) {
-				event.getGuiGraphics().pose().translate(0, shift, 0);
-				shifting = true;
+		public void hudHeathPre(ZRenderGuiOverlay.Pre event) {
+			boolean shouldShift = event.getLayerName().equals(VanillaGuiLayers.EXPERIENCE_BAR);
+			if (shouldShift && !Minecraft.getInstance().options.hideGui) {
+				float shift = -getRealHeight(event.getPartialTick().getGameTimeDeltaTicks()) + 22;
+				if (shift < 0) {
+					event.getGuiGraphics().pose().translate(0, shift, 0);
+					shifting = true;
+				}
 			}
 		}
 
+		// Why?
 		@PlayEvent
-		public void hudDebugTextPre(ZRenderGuiOverlay.DebugText.Pre event) {
-			hudOverlay(event);
+		public void hudDebugTextPre(ZRenderGuiOverlay.Pre event) {
+			boolean shouldShift = event.getLayerName().equals(VanillaGuiLayers.DEBUG_OVERLAY) || event.getLayerName().equals(VanillaGuiLayers.EFFECTS);
+			if (shouldShift && !Minecraft.getInstance().options.hideGui) {
+				hudOverlay(event);
+			}
 		}
 
+		// What?
 		@PlayEvent
-		public void hudPotionIconsPre(ZRenderGuiOverlay.PotionIcons.Pre event) {
-			hudOverlay(event);
+		public void hudPotionIconsPre(ZRenderGuiOverlay.Pre event) {
+
 		}
 
 		public void hudOverlay(ZRenderGuiOverlay event) {
-			float shift = -getRealHeight(event.getPartialTick()) + 22;
+			float shift = -getRealHeight(event.getPartialTick().getGameTimeDeltaTicks()) + 22;
 			if(shifting) {
 				event.getGuiGraphics().pose().translate(0, -shift, 0);
 				shifting = false;
@@ -93,64 +99,65 @@ public class HotbarChangerModule extends ZetaModule {
 		}
 
 		@PlayEvent
-		public void hudPost(ZRenderGuiOverlay.Hotbar.Pre event) {
-			if(height <= 0)
-				return;
-
+		public void hudPost(ZRenderGuiOverlay.Pre event) {
 			Minecraft mc = Minecraft.getInstance();
-			Player player = mc.player;
-			GuiGraphics guiGraphics = event.getGuiGraphics();
-			PoseStack matrix = guiGraphics.pose();
+			if (event.getLayerName().equals(VanillaGuiLayers.HOTBAR) && !Minecraft.getInstance().options.hideGui) {
+				if (height <= 0)
+					return;
 
-			matrix.pushPose();
-			matrix.translate(0,0, -500);
-			RenderSystem.enableDepthTest();
+				Player player = mc.player;
+				GuiGraphics guiGraphics = event.getGuiGraphics();
+				PoseStack matrix = guiGraphics.pose();
 
-			Window res = event.getWindow();
-			float realHeight = getRealHeight(event.getPartialTick());
-			float xStart = res.getGuiScaledWidth() / 2f - 91;
-			float yStart = res.getGuiScaledHeight() - realHeight;
-
-			RenderSystem.enableBlend();
-			RenderSystem.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
-
-			RenderSystem.setShader(GameRenderer::getPositionTexShader);
-			for(int i = 0; i < 3; i++) {
 				matrix.pushPose();
-				RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 0.75F);
-				matrix.translate(xStart, yStart + i * 21, 0);
-				guiGraphics.blit(WIDGETS, 0, 0, 0, 0, 182, 22);
-				matrix.popPose();
-			}
+				matrix.translate(0, 0, -500);
+				RenderSystem.enableDepthTest();
 
-			RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
+				Window res = event.getWindow();
+				float realHeight = getRealHeight(event.getPartialTick().getGameTimeDeltaTicks());
+				float xStart = res.getGuiScaledWidth() / 2f - 91;
+				float yStart = res.getGuiScaledHeight() - realHeight;
 
-			for(int i = 0; i < 3; i++) {
-				String draw = Integer.toString(i + 1);
-				KeyMapping key = mc.options.keyHotbarSlots[i];
-				if(!key.isUnbound()) {
-					draw = key.getTranslatedKeyMessage().getString();
+				RenderSystem.enableBlend();
+				RenderSystem.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+
+				RenderSystem.setShader(GameRenderer::getPositionTexShader);
+				for (int i = 0; i < 3; i++) {
+					matrix.pushPose();
+					RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 0.75F);
+					matrix.translate(xStart, yStart + i * 21, 0);
+					guiGraphics.blit(HOTBAR, 0, 0, 0, 0, 182, 22, 182, 22);
+					matrix.popPose();
 				}
 
-				draw = ChatFormatting.BOLD + draw;
+				RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
 
-				guiGraphics.drawString(mc.font, draw, xStart - mc.font.width(draw) - 2, yStart + i * 21 + 7, 0xFFFFFF, true);
+				for (int i = 0; i < 3; i++) {
+					String draw = Integer.toString(i + 1);
+					KeyMapping key = mc.options.keyHotbarSlots[i];
+					if (!key.isUnbound()) {
+						draw = key.getTranslatedKeyMessage().getString();
+					}
+
+					draw = ChatFormatting.BOLD + draw;
+
+					guiGraphics.drawString(mc.font, draw, xStart - mc.font.width(draw) - 2, yStart + i * 21 + 7, 0xFFFFFF, true);
+				}
+
+				for (int i = 0; i < 27; i++) {
+					ItemStack invStack = player.getInventory().getItem(i + 9);
+					int x = (int) (xStart + (i % 9) * 20 + 3);
+					int y = (int) (yStart + (i / 9) * 21 + 3);
+
+					guiGraphics.renderItem(invStack, x, y);
+					guiGraphics.renderItemDecorations(mc.font, invStack, x, y);
+				}
+				matrix.popPose();
 			}
-
-			for(int i = 0; i < 27; i++) {
-				ItemStack invStack = player.getInventory().getItem(i + 9);
-				int x = (int) (xStart + (i % 9) * 20 + 3);
-				int y = (int) (yStart + (i / 9) * 21 + 3);
-
-				guiGraphics.renderItem(invStack, x, y);
-				guiGraphics.renderItemDecorations(mc.font, invStack, x, y);
-			}
-			matrix.popPose();
 		}
 
 		@PlayEvent
 		public void clientTick(ZClientTick.End event) {
-
 			Player player = Minecraft.getInstance().player;
 
 			if(player != null) {
@@ -187,7 +194,7 @@ public class HotbarChangerModule extends ZetaModule {
 				else if(hotbarChangeOpen)
 					for(int i = 0; i < 3; i++)
 						if(isKeyDownOrFallback(mc.options.keyHotbarSlots[i], 49 + i, currInput)) {
-							QuarkClient.ZETA_CLIENT.sendToServer(new ChangeHotbarMessage(i + 1));
+							PacketDistributor.sendToServer(new ChangeHotbarMessage(i + 1));
 							hotbarChangeOpen = false;
 							currentHeldItem = mc.player.getInventory().selected;
 							return;

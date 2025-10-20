@@ -1,8 +1,8 @@
 package org.violetmoon.quark.content.world.feature;
 
 import com.google.common.collect.ImmutableSet;
-import com.mojang.serialization.Codec;
 
+import com.mojang.serialization.MapCodec;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Vec3i;
 import net.minecraft.world.level.block.state.BlockState;
@@ -16,7 +16,7 @@ import java.util.Optional;
 
 public class AncientTreeTopperDecorator extends TreeDecorator {
 
-	public static final Codec<AncientTreeTopperDecorator> CODEC = Codec.unit(AncientTreeTopperDecorator::new);
+	public static final MapCodec<AncientTreeTopperDecorator> CODEC = MapCodec.unit(AncientTreeTopperDecorator::new);
 
 	//Registered in AncientWoodModule
 	public static final TreeDecoratorType<AncientTreeTopperDecorator> TYPE = new TreeDecoratorType<>(CODEC);

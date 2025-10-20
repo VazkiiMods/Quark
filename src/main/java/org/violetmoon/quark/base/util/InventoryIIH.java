@@ -1,12 +1,12 @@
 package org.violetmoon.quark.base.util;
 
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.common.capabilities.ForgeCapabilities;
-import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.items.IItemHandler;
-import net.minecraftforge.items.IItemHandlerModifiable;
-
+import net.neoforged.neoforge.capabilities.Capabilities;
+import net.neoforged.neoforge.items.IItemHandler;
+import net.neoforged.neoforge.items.IItemHandlerModifiable;
 import org.jetbrains.annotations.NotNull;
+
+import java.util.Optional;
 
 // formerly from AutoRegLib
 public class InventoryIIH implements IItemHandlerModifiable {
@@ -16,14 +16,11 @@ public class InventoryIIH implements IItemHandlerModifiable {
 
 	public InventoryIIH(ItemStack stack) {
 		this.stack = stack;
-		LazyOptional<IItemHandler> opt = stack.getCapability(ForgeCapabilities.ITEM_HANDLER, null);
+		Optional<IItemHandler> opt = Optional.ofNullable(stack.getCapability(Capabilities.ItemHandler.ITEM, null));
 
 		if(opt.isPresent()) {
 			IItemHandler handler = opt.orElse(null);
-			if(handler instanceof IItemHandlerModifiable)
-				iih = (IItemHandlerModifiable) handler;
-			else
-				iih = null;
+			iih = handler instanceof IItemHandlerModifiable ? (IItemHandlerModifiable) handler : null;
 		} else
 			iih = null;
 

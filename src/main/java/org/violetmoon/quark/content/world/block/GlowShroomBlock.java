@@ -26,7 +26,7 @@ public class GlowShroomBlock extends ZetaBushBlock implements BonemealableBlock 
 
 	public GlowShroomBlock(@Nullable ZetaModule module) {
 		super("glow_shroom", module, null,
-				Properties.copy(Blocks.RED_MUSHROOM)
+				Properties.ofFullCopy(Blocks.RED_MUSHROOM)
 						.randomTicks()
 						.lightLevel(s -> 10));
 	}
@@ -57,7 +57,7 @@ public class GlowShroomBlock extends ZetaBushBlock implements BonemealableBlock 
 	}
 
 	@Override
-	public boolean isValidBonemealTarget(@NotNull LevelReader levelReader, @NotNull BlockPos pos, @NotNull BlockState state, boolean isClient) {
+	public boolean isValidBonemealTarget(LevelReader reader, BlockPos pos, BlockState state) {
 		return true;
 	}
 

@@ -1,0 +1,35 @@
+{
+  "parent": "minecraft:nether/create_beacon",
+  "criteria": {
+    "redirect_beacon": {
+      "trigger": "quark:redirect_beacon"
+    }
+  },
+  "display": {
+    "announce_to_chat": true,
+    "description": {
+      "translate": "advancements.quark.redirect_beacon.description"
+    },
+    "frame": "task",
+    "hidden": false,
+    "icon": {
+      "id": "minecraft:beacon"
+    },
+    "show_toast": true,
+    "title": {
+      "translate": "advancements.quark.redirect_beacon.title"
+    }
+  },
+  "requirements": [
+    [
+      "redirect_beacon"
+    ]
+  ],
+  "neoforge:conditions": [
+    {
+      "type": "zeta:flag",
+      "flag": "beacon_redirection"
+    }
+  ]
+
+}

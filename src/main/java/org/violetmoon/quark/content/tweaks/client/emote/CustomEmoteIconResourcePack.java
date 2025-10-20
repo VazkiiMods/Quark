@@ -4,9 +4,14 @@ import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Lists;
 
 import net.minecraft.ResourceLocationException;
+import net.minecraft.SharedConstants;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.AbstractPackResources;
+import net.minecraft.server.packs.PackLocationInfo;
 import net.minecraft.server.packs.PackType;
+import net.minecraft.server.packs.repository.KnownPack;
+import net.minecraft.server.packs.repository.PackSource;
 import net.minecraft.server.packs.resources.IoSupplier;
 
 import org.jetbrains.annotations.NotNull;
@@ -20,10 +25,7 @@ import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.net.URISyntaxException;
 import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.function.Predicate;
 
 public class CustomEmoteIconResourcePack extends AbstractPackResources {
@@ -32,8 +34,15 @@ public class CustomEmoteIconResourcePack extends AbstractPackResources {
 	private final List<String> existingNames = new ArrayList<>();
 
 	public CustomEmoteIconResourcePack() {
-		super("quark-emote-pack", true);
-		//super(EmotesModule.emotesDir);
+		super(new PackLocationInfo("quark-emote-pack", Component.translatable("quark.pack.emote_icon_pack"),
+				PackSource.BUILT_IN,
+				Optional.of(
+						new KnownPack(
+								"quark",
+								"emote_pack",
+								SharedConstants.getCurrentVersion().getId()
+						))));
+		//
 	}
 
 	@Nullable
@@ -104,9 +113,9 @@ public class CustomEmoteIconResourcePack extends AbstractPackResources {
 				if(file.isDirectory()) {
 					if(maxDepth > 0)
 						this.crawl(file, maxDepth - 1, namespace, allResources, path + file.getName() + "/", filter);
-				} else if(!file.getName().endsWith(".mcmeta") && filter.test(new ResourceLocation(namespace, path + file.getName()))) {
+				} else if(!file.getName().endsWith(".mcmeta") && filter.test(ResourceLocation.fromNamespaceAndPath(namespace, path + file.getName()))) {
 					try {
-						allResources.add(new ResourceLocation(namespace, path + file.getName()));
+						allResources.add(ResourceLocation.fromNamespaceAndPath(namespace, path + file.getName()));
 					} catch (ResourceLocationException e) {
 						Quark.LOG.error(e.getMessage());
 					}

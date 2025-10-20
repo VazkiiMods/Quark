@@ -9,8 +9,8 @@ public class DeliverFetchedItemGoal extends FollowOwnerGoal {
 	private final Shiba shiba;
 	private int timeTilNextJump = 20;
 
-	public DeliverFetchedItemGoal(Shiba shiba, double speed, float minDist, float maxDist, boolean teleportToLeaves) {
-		super(shiba, speed, minDist, maxDist, teleportToLeaves);
+	public DeliverFetchedItemGoal(Shiba shiba, double speed, float minDist, float maxDist) {
+		super(shiba, speed, minDist, maxDist);
 		this.shiba = shiba;
 	}
 

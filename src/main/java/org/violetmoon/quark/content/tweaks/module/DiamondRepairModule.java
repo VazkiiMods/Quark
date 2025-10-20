@@ -2,14 +2,12 @@ package org.violetmoon.quark.content.tweaks.module;
 
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
-
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-
 import org.violetmoon.zeta.config.Config;
 import org.violetmoon.zeta.event.bus.LoadEvent;
 import org.violetmoon.zeta.event.bus.PlayEvent;
@@ -57,19 +55,19 @@ public class DiamondRepairModule extends ZetaModule {
 
 	@LoadEvent
 	public final void configChanged(ZConfigChanged event) {
-		staticEnabled = enabled;
+		staticEnabled = isEnabled();
 
 		repairChanges.clear();
 		for(String s : repairChangesList) {
 			String[] toks = s.split("=");
 			if(toks.length == 2) {
-				ResourceLocation itemRes = new ResourceLocation(toks[0]);
+				ResourceLocation itemRes = ResourceLocation.parse(toks[0]);
 
 				if(BuiltInRegistries.ITEM.containsKey(itemRes)) {
 					String repairItems = toks[1];
 					String[] repairToks = repairItems.split(",");
 					for(String repairTok : repairToks) {
-						ResourceLocation repairItemRes = new ResourceLocation(repairTok);
+						ResourceLocation repairItemRes = ResourceLocation.parse(repairTok);
 
 						if(BuiltInRegistries.ITEM.containsKey(repairItemRes)) {
 							Item item = BuiltInRegistries.ITEM.get(itemRes);

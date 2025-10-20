@@ -1,9 +1,0 @@
-{
-  "type": "quark:elytra_duplication",
-  "conditions": [
-    {
-      "type": "quark:flag",
-      "flag": "dragon_scales"
-    }
-  ]
-} 

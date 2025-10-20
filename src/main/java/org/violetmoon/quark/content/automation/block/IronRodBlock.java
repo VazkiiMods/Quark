@@ -42,7 +42,7 @@ public class IronRodBlock extends EndRodBlock implements ICollateralMover, IZeta
 				.forceSolidOn());
 
 		module.zeta().registry.registerBlock(this, "iron_rod", true);
-		CreativeTabManager.addToCreativeTab(CreativeModeTabs.REDSTONE_BLOCKS, this);
+		CreativeTabManager.addToTab(CreativeModeTabs.REDSTONE_BLOCKS, this);
 
 		module.zeta().renderLayerRegistry.put(this, RenderLayerRegistry.Layer.CUTOUT);
 

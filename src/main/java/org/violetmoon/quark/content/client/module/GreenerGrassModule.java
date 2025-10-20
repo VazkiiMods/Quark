@@ -84,7 +84,7 @@ public class GreenerGrassModule extends ZetaModule {
 			"minecraft:tall_grass",
 			"minecraft:grass_block",
 			"minecraft:fern",
-			"minecraft:grass",
+			"minecraft:short_grass",
 			"minecraft:potted_fern",
 			"minecraft:sugar_cane",
 			"environmental:giant_tall_grass",
@@ -132,7 +132,7 @@ public class GreenerGrassModule extends ZetaModule {
 			BlockColors colors = Minecraft.getInstance().getBlockColors();
 
 			for(String id : ids) {
-				Block block = BuiltInRegistries.BLOCK.get(new ResourceLocation(id));
+				Block block = BuiltInRegistries.BLOCK.get(ResourceLocation.parse(id));
 				if(block == Blocks.AIR)
 					continue;
 
@@ -146,7 +146,7 @@ public class GreenerGrassModule extends ZetaModule {
 		private BlockColor getConvulsedColor(BlockColor color, BooleanSupplier condition) {
 			return (state, world, pos, tintIndex) -> {
 				int originalColor = color.getColor(state, world, pos, tintIndex);
-				if(!enabled || !condition.getAsBoolean())
+				if(!isEnabled() || !condition.getAsBoolean())
 					return originalColor;
 
 				return colorMatrix.convolve(originalColor);
@@ -155,7 +155,7 @@ public class GreenerGrassModule extends ZetaModule {
 
 		@Override
 		public int getWaterColor(int currColor) {
-			if(!enabled || !affectWater)
+			if(!isEnabled() || !affectWater)
 				return currColor;
 
 			return waterMatrix.convolve(currColor);

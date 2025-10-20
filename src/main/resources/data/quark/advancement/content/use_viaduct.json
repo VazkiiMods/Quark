@@ -1,0 +1,35 @@
+{
+  "parent": "minecraft:end/enter_end_gateway",
+  "criteria": {
+    "use_viaduct": {
+      "trigger": "quark:use_viaduct"
+    }
+  },
+  "display": {
+    "announce_to_chat": true,
+    "description": {
+      "translate": "advancements.quark.use_viaduct.description"
+    },
+    "frame": "goal",
+    "hidden": false,
+    "icon": {
+      "id": "quark:myalite_crystal"
+    },
+    "show_toast": true,
+    "title": {
+      "translate": "advancements.quark.use_viaduct.title"
+    }
+  },
+  "requirements": [
+    [
+      "use_viaduct"
+    ]
+  ],
+  "neoforge:conditions": [
+    {
+      "type": "zeta:flag",
+      "flag": "myalite_viaduct"
+    }
+  ]
+
+}

@@ -36,7 +36,7 @@ public class VariantLadderBlock extends LadderBlock implements IZetaBlock {
 			return;
 
 		module.zeta().registry.registerBlock(this, type + "_ladder", true);
-		CreativeTabManager.addToCreativeTabNextTo(CreativeModeTabs.FUNCTIONAL_BLOCKS, this, Blocks.LADDER, false);
+		CreativeTabManager.addNextToItem(CreativeModeTabs.FUNCTIONAL_BLOCKS, this, Blocks.LADDER, false);
 		module.zeta().renderLayerRegistry.put(this, RenderLayerRegistry.Layer.CUTOUT);
 	}
 

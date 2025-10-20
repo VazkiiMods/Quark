@@ -2,6 +2,7 @@ package org.violetmoon.quark.addons.oddities.inventory;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.world.Container;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
@@ -9,15 +10,10 @@ import net.minecraft.world.inventory.ContainerData;
 import net.minecraft.world.inventory.SimpleContainerData;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.items.IItemHandler;
-import net.minecraftforge.items.SlotItemHandler;
-
+import net.neoforged.neoforge.network.PacketDistributor;
 import org.jetbrains.annotations.NotNull;
-
 import org.violetmoon.quark.addons.oddities.block.be.CrateBlockEntity;
-import org.violetmoon.quark.addons.oddities.capability.CrateItemHandler;
 import org.violetmoon.quark.addons.oddities.module.CrateModule;
-import org.violetmoon.quark.base.QuarkClient;
 import org.violetmoon.quark.base.network.message.oddities.ScrollCrateMessage;
 
 public class CrateMenu extends AbstractContainerMenu {
@@ -45,20 +41,19 @@ public class CrateMenu extends AbstractContainerMenu {
 		this.playerInv = inv;
 		this.crateData = data;
 
-		int i = (numRows - 4) * 18;
+		int rowHeight = (numRows - 4) * 18;
 
-		CrateItemHandler handler = crate.itemHandler();
-		totalSlots = handler.getSlots();
+		totalSlots = crate.getContainerSize();
 
-		for(int j = 0; j < totalSlots; ++j)
-			addSlot(new CrateSlot(handler, j, 8 + (j % numCols) * 18, 18 + (j / numCols) * 18));
+		for(int index = 0; index < totalSlots; ++index)
+			addSlot(new CrateSlot(crate, index, 8 + (index % numCols) * 18, 18 + (index / numCols) * 18));
 
-		for(int l = 0; l < 3; ++l)
-			for(int j1 = 0; j1 < 9; ++j1)
-				addSlot(new Slot(inv, j1 + l * 9 + 9, 8 + j1 * 18, 103 + l * 18 + i));
+		for(int yIndex = 0; yIndex < 3; ++yIndex)
+			for(int xIndex = 0; xIndex < 9; ++xIndex)
+				addSlot(new Slot(inv, xIndex + yIndex * 9 + 9, 8 + xIndex * 18, 103 + yIndex * 18 + rowHeight));
 
-		for(int i1 = 0; i1 < 9; ++i1)
-			addSlot(new Slot(inv, i1, 8 + i1 * 18, 161 + i));
+		for(int index = 0; index < 9; ++index)
+			addSlot(new Slot(inv, index, 8 + index * 18, 161 + rowHeight));
 
 		addDataSlots(crateData);
 	}
@@ -101,67 +96,69 @@ public class CrateMenu extends AbstractContainerMenu {
 	// https://github.com/CoFH/CoFHCore/blob/d4a79b078d257e88414f5eed598d57490ec8e97f/src/main/java/cofh/core/util/helpers/InventoryHelper.java
 	@Override
 	public boolean moveItemStackTo(ItemStack stack, int start, int length, boolean reverse) {
-		boolean successful = false;
-		int i = reverse ? (length - 1) : start;
-		int iterOrder = reverse ? -1 : 1;
+        boolean successful = false;
+        int i = reverse ? (length - 1) : start;
+        int iterOrder = reverse ? -1 : 1;
 
-		Slot slot;
-		ItemStack existingStack;
+        Slot slot;
+        ItemStack existingStack;
 
-		// First pass, try to merge
-		if(stack.isStackable())
-			while(stack.getCount() > 0 && (!reverse && i < length || reverse && i >= start)) {
-				slot = slots.get(i);
+        // First pass, try to merge
+        if(stack.isStackable())
+            while(!stack.isEmpty() && (reverse ? i >= start : i < length)) {
+                slot = slots.get(i);
 
-				existingStack = slot.getItem();
+                existingStack = slot.getItem();
 
-				if(!existingStack.isEmpty()) {
-					int maxStack = Math.min(stack.getMaxStackSize(), slot.getMaxStackSize());
-					int rmv = Math.min(maxStack, stack.getCount());
+                if(!existingStack.isEmpty()) {
+                    int maxStack = Math.min(Math.min(stack.getMaxStackSize(), slot.getMaxStackSize()), slot instanceof CrateSlot ? CrateModule.maxItems - crate.getTotal() : 64);
+                    int rmv = Math.min(maxStack, stack.getCount());
 
-					if(slot.mayPlace(cloneStack(stack, rmv)) && existingStack.getItem().equals(stack.getItem()) && ItemStack.isSameItemSameTags(stack, existingStack)) {
-						int existingSize = existingStack.getCount() + stack.getCount();
-						ItemStack existingStackCopy = existingStack.copy();
+                    if(slot.mayPlace(cloneStack(stack, rmv)) && existingStack.getItem().equals(stack.getItem()) && ItemStack.isSameItemSameComponents(stack, existingStack)) {
+                        int existingSize = existingStack.getCount() + stack.getCount();
+                        ItemStack existingStackCopy = existingStack.copy();
 
-						if(existingSize <= maxStack) {
-							stack.setCount(0);
-							existingStackCopy.setCount(existingSize);
-							slot.set(existingStackCopy);
-							successful = true;
-						} else if(existingStackCopy.getCount() < maxStack) {
-							stack.shrink(maxStack - existingStackCopy.getCount());
+                        if(existingSize <= maxStack) {
+                            stack.setCount(0);
+                            existingStackCopy.setCount(existingSize);
+                            slot.set(existingStackCopy);
+                            successful = true;
+                        } else if(existingStackCopy.getCount() < maxStack) {
+                            stack.shrink(maxStack - existingStackCopy.getCount());
 
-							existingStackCopy.setCount(maxStack);
-							slot.set(existingStackCopy);
-							successful = true;
-						}
-					}
-				}
-				i += iterOrder;
-			}
+                            existingStackCopy.setCount(maxStack);
+                            slot.set(existingStackCopy);
+                            successful = true;
+                        }
+                    }
+                }
+                i += iterOrder;
+            }
 
-		// Second pass, after marged, if any remaining, try to insert into empty slots
-		if(stack.getCount() > 0) {
-			i = reverse ? (length - 1) : start;
-			while(stack.getCount() > 0 && (!reverse && i < length || reverse && i >= start)) {
-				slot = slots.get(i);
-				existingStack = slot.getItem();
+        // Second pass, after marged, if any remaining, try to insert into empty slots
+        if(!stack.isEmpty()) {
+            i = reverse ? (length - 1) : start;
+            while(!stack.isEmpty() && (!reverse && i < length || reverse && i >= start) && (!(slots.get(i) instanceof CrateSlot) || CrateModule.maxItems - crate.getTotal() > 0)) {
+                slot = slots.get(i);
+                existingStack = slot.getItem();
 
-				if(existingStack.isEmpty()) {
-					int maxStack = Math.min(stack.getMaxStackSize(), slot.getMaxStackSize());
-					int rmv = Math.min(maxStack, stack.getCount());
+                if(existingStack.isEmpty()) {
+                    int maxStack = Math.min(Math.min(stack.getMaxStackSize(), slot.getMaxStackSize()), slot instanceof CrateSlot ? CrateModule.maxItems - crate.getTotal() : 64);
+                    int rmv = Math.min(maxStack, stack.getCount());
 
-					if(slot.mayPlace(cloneStack(stack, rmv))) {
-						existingStack = stack.split(rmv);
-						slot.set(existingStack);
-						successful = true;
-					}
-				}
-				i += iterOrder;
-			}
-		}
+                    if(slot.mayPlace(cloneStack(stack, rmv))) {
+                        existingStack = stack.split(rmv);
+                        slot.set(existingStack);
+                        successful = true;
+                    }
+                }
+                i += iterOrder;
+            }
+        }
 
-		return successful;
+        return successful;
+
+
 	}
 
 	private static ItemStack cloneStack(ItemStack stack, int size) {
@@ -221,18 +218,18 @@ public class CrateMenu extends AbstractContainerMenu {
 			broadcastChanges();
 
 			if(packet)
-				QuarkClient.ZETA_CLIENT.sendToServer(new ScrollCrateMessage(down));
+				PacketDistributor.sendToServer(new ScrollCrateMessage(down));
 		}
 	}
 
-	private class CrateSlot extends SlotItemHandler {
-		public CrateSlot(IItemHandler itemHandler, int index, int xPosition, int yPosition) {
-			super(itemHandler, index, xPosition, yPosition);
+	private class CrateSlot extends Slot {
+		public CrateSlot(Container container, int index, int xPosition, int yPosition) {
+			super(container, index, xPosition, yPosition);
 		}
 
 		@Override
 		public void setChanged() {
-			crate.itemHandler().onContentsChanged(getSlotIndex());
+			crate.setChanged();
 		}
 
 		@Override
@@ -240,5 +237,31 @@ public class CrateMenu extends AbstractContainerMenu {
 			int index = getSlotIndex();
 			return index >= scroll && index < scroll + displayedSlots;
 		}
-	}
+
+        //todo: Could be made a mixin for better cross-mod support
+        @Override
+        public ItemStack safeInsert(ItemStack stack, int increment) {
+            if (!stack.isEmpty() && this.mayPlace(stack)) {
+                ItemStack itemstack = this.getItem();
+                int amount = Math.max(Math.min(Math.min(increment, stack.getCount()), CrateModule.maxItems - ((CrateBlockEntity)container).getTotal()), 0);
+                if (itemstack.isEmpty()) {
+                    this.setByPlayer(stack.split(amount));
+                } else if (ItemStack.isSameItemSameComponents(itemstack, stack)) {
+                    stack.shrink(amount);
+                    itemstack.grow(amount);
+                    this.setByPlayer(itemstack);
+                }
+
+                ((CrateBlockEntity)container).refreshCachedTotal();
+                return stack;
+            } else {
+                return stack;
+            }
+        }
+
+        @Override
+        public boolean mayPlace(ItemStack stack) {
+            return super.mayPlace(stack) && ((CrateBlockEntity)container).getSlotLimit(index) > 0;
+        }
+    }
 }

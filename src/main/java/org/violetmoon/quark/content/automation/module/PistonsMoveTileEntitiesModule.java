@@ -1,7 +1,6 @@
 package org.violetmoon.quark.content.automation.module;
 
 import com.google.common.collect.Lists;
-
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -17,11 +16,8 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.piston.PistonStructureResolver;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.ChestType;
-import net.minecraftforge.common.util.NonNullConsumer;
-
 import org.apache.commons.lang3.tuple.Pair;
 import org.jetbrains.annotations.Nullable;
-
 import org.violetmoon.quark.api.IPistonCallback;
 import org.violetmoon.quark.api.QuarkCapabilities;
 import org.violetmoon.quark.base.Quark;
@@ -31,14 +27,15 @@ import org.violetmoon.zeta.config.Config;
 import org.violetmoon.zeta.event.bus.LoadEvent;
 import org.violetmoon.zeta.event.bus.PlayEvent;
 import org.violetmoon.zeta.event.load.ZConfigChanged;
+import org.violetmoon.zeta.event.load.ZGatherHints;
 import org.violetmoon.zeta.event.load.ZRegister;
 import org.violetmoon.zeta.event.play.ZLevelTick;
-import org.violetmoon.zeta.event.load.ZGatherHints;
 import org.violetmoon.zeta.module.ZetaLoadModule;
 import org.violetmoon.zeta.module.ZetaModule;
 import org.violetmoon.zeta.piston.ZetaPistonStructureResolver;
 
 import java.util.*;
+import java.util.function.Consumer;
 import java.util.function.Predicate;
 
 @ZetaLoadModule(category = "automation")
@@ -56,7 +53,34 @@ public class PistonsMoveTileEntitiesModule extends ZetaModule {
 	public static List<String> renderBlacklist = Lists.newArrayList("psi:programmer", "botania:starfield");
 	// todo: shouldn't this be a tag? Its more efficient and clean than checking the id every time
 	@Config
-	public static List<String> movementBlacklist = Lists.newArrayList("minecraft:spawner", "integrateddynamics:cable", "randomthings:blockbreaker", "minecraft:ender_chest", "minecraft:enchanting_table", "minecraft:trapped_chest", "quark:spruce_trapped_chest", "quark:birch_trapped_chest", "quark:jungle_trapped_chest", "quark:acacia_trapped_chest", "quark:dark_oak_trapped_chest", "endergetic:bolloom_bud");
+	public static List<String> movementBlacklist = Lists.newArrayList(
+            "minecraft:spawner",
+            "minecraft:trial_spawner",
+            "minecraft:vault",
+            "integrateddynamics:cable",
+            "randomthings:blockbreaker",
+            "minecraft:ender_chest",
+            "minecraft:enchanting_table",
+            "minecraft:trapped_chest",
+            "quark:trapped_oak_chest",
+            "quark:trapped_spruce_chest",
+            "quark:trapped_birch_chest",
+            "quark:trapped_jungle_chest",
+            "quark:trapped_acacia_chest",
+            "quark:trapped_dark_oak_chest",
+            "quark:trapped_warped_chest",
+            "quark:trapped_crimson_chest",
+            "quark:trapped_nether_brick_chest",
+            "quark:trapped_purpur_chest",
+            "quark:trapped_prismarine_chest",
+            "quark:trapped_azalea_chest",
+            "quark:trapped_blossom_chest",
+            "quark:trapped_mangrove_chest",
+            "quark:trapped_ancient_chest",
+            "quark:trapped_cherry_chest",
+            "quark:trapped_bamboo_chest",
+            "endergetic:bolloom_bud"
+    );
 	@Config
 	public static List<String> delayedUpdateList = Lists.newArrayList("minecraft:dispenser", "minecraft:dropper");
 
@@ -67,7 +91,7 @@ public class PistonsMoveTileEntitiesModule extends ZetaModule {
 
 	@LoadEvent
 	public final void configChanged(ZConfigChanged event) {
-		staticEnabled = enabled;
+		staticEnabled = isEnabled();
 	}
 
 	@PlayEvent
@@ -121,7 +145,7 @@ public class PistonsMoveTileEntitiesModule extends ZetaModule {
 			return true;
 
 		ResourceLocation res = BuiltInRegistries.BLOCK.getKey(state.getBlock());
-		return res == null || PistonsMoveTileEntitiesModule.movementBlacklist.contains(res.toString()) || PistonsMoveTileEntitiesModule.movementBlacklist.contains(res.getNamespace());
+		return PistonsMoveTileEntitiesModule.movementBlacklist.contains(res.toString()) || PistonsMoveTileEntitiesModule.movementBlacklist.contains(res.getNamespace());
 	}
 
 	public static void detachTileEntities(Level world, PistonStructureResolver helper, Direction facing, boolean extending) {
@@ -140,7 +164,7 @@ public class PistonsMoveTileEntitiesModule extends ZetaModule {
 				if(tile != null) {
 					callCallback(tile, IPistonCallback::onPistonMovementStarted);
 
-					CompoundTag tag = tile.saveWithFullMetadata();
+					CompoundTag tag = tile.saveWithFullMetadata(world.registryAccess());
 					setMovingBlockEntityData(world, pos.relative(facing), tag);
 					world.removeBlockEntity(pos);
 				}
@@ -163,7 +187,7 @@ public class PistonsMoveTileEntitiesModule extends ZetaModule {
 		if(entityTag != null) {
 			BlockState currState = world.getBlockState(pos);
 			BlockEntity currEntity = world.getBlockEntity(pos);
-			CompoundTag currTag = currEntity == null ? null : currEntity.saveWithFullMetadata();
+			CompoundTag currTag = currEntity == null ? null : currEntity.saveWithFullMetadata(world.registryAccess());
 
 			world.removeBlock(pos, false);
 			if(!state.canSurvive( world, pos)) {
@@ -249,12 +273,12 @@ public class PistonsMoveTileEntitiesModule extends ZetaModule {
 		delayedUpdates.get(world).add(Pair.of(pos, tag));
 	}
 
-	private static void callCallback(@Nullable BlockEntity entity, NonNullConsumer<? super IPistonCallback> caller) {
-		if(entity != null) {
+	private static void callCallback(@Nullable BlockEntity entity, Consumer<? super IPistonCallback> caller) {
+		/*if(entity != null) {
 			IPistonCallback cb = Quark.ZETA.capabilityManager.getCapability(QuarkCapabilities.PISTON_CALLBACK, entity);
 			if(cb != null)
 				caller.accept(cb);
-		}
+		}*/
 	}
 
 	public static class ChestConnection implements IIndirectConnector {
@@ -299,11 +323,11 @@ public class PistonsMoveTileEntitiesModule extends ZetaModule {
 		if(inWorldEntity == null) {
 			Quark.LOG.warn("No block entity found at {} (expected {})", pos.toShortString(), expectedTypeStr);
 			return null;
-		} else if(inWorldEntity.getType() != BuiltInRegistries.BLOCK_ENTITY_TYPE.get(new ResourceLocation(expectedTypeStr))) {
+		} else if(inWorldEntity.getType() != BuiltInRegistries.BLOCK_ENTITY_TYPE.get(ResourceLocation.parse(expectedTypeStr))) {
 			Quark.LOG.warn("Wrong block entity found at {} (expected {}, got {})", pos.toShortString(), expectedTypeStr, BlockEntityType.getKey(inWorldEntity.getType()));
 			return null;
 		} else {
-			inWorldEntity.load(tag);
+			inWorldEntity.loadWithComponents(tag, level.registryAccess());
 			inWorldEntity.setChanged();
 			return inWorldEntity;
 		}

@@ -25,7 +25,7 @@ public class HammerItem extends ZetaItem {
 	public HammerItem(ZetaModule module) {
 		super("hammer", module, new Item.Properties()
 				.stacksTo(1));
-		CreativeTabManager.addToCreativeTab(CreativeModeTabs.TOOLS_AND_UTILITIES, this);
+		CreativeTabManager.addToTab(CreativeModeTabs.TOOLS_AND_UTILITIES, this);
 	}
 
 	@NotNull

@@ -9,7 +9,6 @@ import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.ShulkerBoxSlot;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
-
 import org.violetmoon.quark.api.ISortingLockedSlots;
 import org.violetmoon.quark.content.management.module.ExpandedItemInteractionsModule;
 
@@ -19,72 +18,72 @@ public class HeldShulkerBoxMenu extends AbstractContainerMenu implements ISortin
 	private final Player player;
 	public final int blockedSlot;
 
-	public HeldShulkerBoxMenu(int p_40188_, Inventory p_40189_, int blockedSlot) {
-		this(p_40188_, p_40189_, new SimpleContainer(27), blockedSlot);
+	public HeldShulkerBoxMenu(int containerID, Inventory playerInventory, int blockedSlot) {
+		this(containerID, playerInventory, new SimpleContainer(27), blockedSlot);
 	}
 
-	public HeldShulkerBoxMenu(int p_40191_, Inventory p_40192_, Container p_40193_, int blockedSlot) {
-		super(ExpandedItemInteractionsModule.heldShulkerBoxMenuType, p_40191_);
-		checkContainerSize(p_40193_, 27);
-		this.container = p_40193_;
-		this.player = p_40192_.player;
+	public HeldShulkerBoxMenu(int containerID, Inventory playerInventory, FriendlyByteBuf buf) {
+		this(containerID, playerInventory, buf.readInt());
+	}
+
+    // Fun fact! Slots are order-sensitive! The more you know.
+	public HeldShulkerBoxMenu(int containerID, Inventory playerInventory, Container container, int blockedSlot) {
+		super(ExpandedItemInteractionsModule.heldShulkerBoxMenuType, containerID);
+		checkContainerSize(container, 27);
+		this.container = container;
+		this.player = playerInventory.player;
 		this.blockedSlot = blockedSlot;
-		p_40193_.startOpen(p_40192_.player);
+		container.startOpen(player);
 
-		for(int k = 0; k < 3; ++k) {
-			for(int l = 0; l < 9; ++l) {
-				this.addSlot(new ShulkerBoxSlot(p_40193_, l + k * 9, 8 + l * 18, 18 + k * 18));
+        for (int row = 0; row < 3; row++) {
+            for (int column = 0; column < 9; column++) {
+                int slot = column + row * 9;
+                this.addSlot(new ShulkerBoxSlot(container, slot, 8 + column * 18, 18 + row * 18));
+            }
+        }
+
+        for (int row = 0; row < 3; row++) {
+            for (int column = 0; column < 9; column++) {
+                int slot = column + row * 9 + 9;
+                if (slot != blockedSlot)
+                    this.addSlot(new Slot(playerInventory, slot, 8 + column * 18, 84 + row * 18));
+            }
+        }
+
+		for (int slot = 0; slot < 9; ++slot) {
+			if (slot != blockedSlot) {
+				this.addSlot(new Slot(playerInventory, slot, 8 + slot * 18, 142));
 			}
 		}
-
-		for(int i1 = 0; i1 < 3; ++i1) {
-			for(int k1 = 0; k1 < 9; ++k1) {
-				int id = k1 + i1 * 9 + 9;
-				if(id != blockedSlot)
-					this.addSlot(new Slot(p_40192_, id, 8 + k1 * 18, 84 + i1 * 18));
-			}
-		}
-
-		for(int j1 = 0; j1 < 9; ++j1) {
-			if(j1 != blockedSlot)
-				this.addSlot(new Slot(p_40192_, j1, 8 + j1 * 18, 142));
-		}
-	}
-
-	public static HeldShulkerBoxMenu fromNetwork(int windowId, Inventory playerInventory, FriendlyByteBuf buf) {
-		int slot = buf.readInt();
-		HeldShulkerBoxContainer container = new HeldShulkerBoxContainer(playerInventory.player, slot);
-		return new HeldShulkerBoxMenu(windowId, playerInventory, container, slot);
 	}
 
 	@Override
-	public boolean stillValid(Player p_40195_) {
-		return this.container.stillValid(p_40195_);
+	public boolean stillValid(Player checkedPlayer) {
+		return this.container.stillValid(checkedPlayer);
 	}
 
 	@Override
-	public ItemStack quickMoveStack(Player p_40199_, int p_40200_) {
-		ItemStack itemstack = ItemStack.EMPTY;
-		Slot slot = this.slots.get(p_40200_);
-		if(slot != null && slot.hasItem()) {
-			ItemStack itemstack1 = slot.getItem();
-			itemstack = itemstack1.copy();
-			if(p_40200_ < this.container.getContainerSize()) {
-				if(!this.moveItemStackTo(itemstack1, this.container.getContainerSize(), this.slots.size(), true)) {
+	public ItemStack quickMoveStack(Player checkedPlayer, int slotIndex) {
+		ItemStack copy = ItemStack.EMPTY;
+		Slot slot = this.slots.get(slotIndex);
+		if (slot != null && slot.hasItem()) {
+			ItemStack stack = slot.getItem();
+			copy = stack.copy();
+			if (slotIndex < this.container.getContainerSize()) {
+				if (!this.moveItemStackTo(stack, this.container.getContainerSize(), this.slots.size(), true)) {
 					return ItemStack.EMPTY;
 				}
-			} else if(!this.moveItemStackTo(itemstack1, 0, this.container.getContainerSize(), false)) {
+			} else if(!this.moveItemStackTo(stack, 0, this.container.getContainerSize(), false)) {
 				return ItemStack.EMPTY;
 			}
 
-			if(itemstack1.isEmpty()) {
-				slot.set(ItemStack.EMPTY);
+			if(stack.isEmpty()) {
+				slot.setByPlayer(ItemStack.EMPTY);
 			} else {
 				slot.setChanged();
 			}
 		}
-
-		return itemstack;
+		return copy;
 	}
 
 	@Override
@@ -100,14 +99,13 @@ public class HeldShulkerBoxMenu extends AbstractContainerMenu implements ISortin
 	}
 
 	@Override
-	public void removed(Player p_40197_) {
-		super.removed(p_40197_);
-		this.container.stopOpen(p_40197_);
+	public void removed(Player checkedPlayer) {
+		super.removed(checkedPlayer);
+		this.container.stopOpen(checkedPlayer);
 	}
 
 	@Override
 	public int[] getSortingLockedSlots(boolean sortingPlayerInventory) {
 		return sortingPlayerInventory ? new int[] { blockedSlot } : null;
 	}
-
 }

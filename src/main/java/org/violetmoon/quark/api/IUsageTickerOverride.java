@@ -1,5 +1,6 @@
 package org.violetmoon.quark.api;
 
+import net.minecraft.core.RegistryAccess;
 import net.minecraft.world.item.ItemStack;
 
 import java.util.function.Predicate;
@@ -17,6 +18,6 @@ public interface IUsageTickerOverride {
 		return false;
 	}
 
-	ItemStack getUsageTickerItem(ItemStack stack);
+	ItemStack getUsageTickerItem(ItemStack stack, RegistryAccess access);
 
 }

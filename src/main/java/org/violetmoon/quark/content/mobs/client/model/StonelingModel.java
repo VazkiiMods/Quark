@@ -95,12 +95,12 @@ public class StonelingModel extends EntityModel<Stoneling> {
 	}
 
 	@Override
-	public void renderToBuffer(@NotNull PoseStack matrix, @NotNull VertexConsumer vb, int packedLightIn, int packedOverlayIn, float red, float green, float blue, float alpha) {
-		body.render(matrix, vb, packedLightIn, packedOverlayIn, red, green, blue, alpha);
-		arm_right.render(matrix, vb, packedLightIn, packedOverlayIn, red, green, blue, alpha);
-		arm_left.render(matrix, vb, packedLightIn, packedOverlayIn, red, green, blue, alpha);
-		leg_right.render(matrix, vb, packedLightIn, packedOverlayIn, red, green, blue, alpha);
-		leg_left.render(matrix, vb, packedLightIn, packedOverlayIn, red, green, blue, alpha);
+	public void renderToBuffer(@NotNull PoseStack matrix, @NotNull VertexConsumer vb, int packedLightIn, int packedOverlayIn, int color) {
+		body.render(matrix, vb, packedLightIn, packedOverlayIn, color);
+		arm_right.render(matrix, vb, packedLightIn, packedOverlayIn, color);
+		arm_left.render(matrix, vb, packedLightIn, packedOverlayIn, color);
+		leg_right.render(matrix, vb, packedLightIn, packedOverlayIn, color);
+		leg_left.render(matrix, vb, packedLightIn, packedOverlayIn, color);
 	}
 
 	public void setRotationAngle(ModelPart modelRenderer, float x, float y, float z) {

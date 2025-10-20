@@ -1,22 +1,24 @@
 package org.violetmoon.quark.content.tweaks.module;
 
 import com.google.common.collect.Lists;
-
 import it.unimi.dsi.fastutil.objects.Object2IntArrayMap;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
-
 import net.minecraft.ChatFormatting;
+import net.minecraft.core.Holder;
+import net.minecraft.core.HolderLookup;
+import net.minecraft.core.component.DataComponentType;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.ListTag;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.*;
+import net.minecraft.world.item.component.Tool;
 import net.minecraft.world.item.enchantment.Enchantment;
-import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.item.enchantment.Enchantments;
-
-import org.violetmoon.quark.base.Quark;
+import net.minecraft.world.item.enchantment.ItemEnchantments;
+import net.minecraft.world.level.block.state.BlockState;
 import org.violetmoon.zeta.config.Config;
 import org.violetmoon.zeta.config.Config.Max;
 import org.violetmoon.zeta.config.Config.Min;
@@ -26,17 +28,12 @@ import org.violetmoon.zeta.module.ZetaLoadModule;
 import org.violetmoon.zeta.module.ZetaModule;
 import org.violetmoon.zeta.util.Hint;
 
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @ZetaLoadModule(category = "tweaks")
 public class GoldToolsHaveFortuneModule extends ZetaModule {
 
-	private static final Tier[] TIERS = new Tier[] {
-			Tiers.WOOD, Tiers.STONE, Tiers.IRON, Tiers.DIAMOND, Tiers.NETHERITE
-	};
+	private static final Tier[] TIERS = new Tier[] {Tiers.WOOD, Tiers.STONE, Tiers.IRON, Tiers.DIAMOND, Tiers.NETHERITE};
 
 	@Config
 	@Min(0)
@@ -52,11 +49,10 @@ public class GoldToolsHaveFortuneModule extends ZetaModule {
 	@Config
 	public static boolean italicTooltip = true;
 
-	@Config(description = "Enchantments other than Gold's Fortune/Looting to bake into items. Format is \"item+enchant@level\", such as \"minecraft:stick+sharpness@10\".")
-	public static List<String> bakedEnchantments = Lists.newArrayList();
+	@Config(description = "Enchantments other than Gold's Fortune/Looting to bake into items. Format is \"item+enchant@level\", such as \"minecraft:stick+minecraft:sharpness@10\".")
+	public static List<String> itemEnchantments = Lists.newArrayList();
 
-	// Daschbun
-	private static final Map<Item, Object2IntMap<Enchantment>> wellBakedEnchantments = new HashMap<>();
+	public static final Map<Item, Object2IntMap<ResourceKey<Enchantment>>> BUILTIN_ENCHANTMENTS = new HashMap<>();
 
 	@Hint(key = "gold_tool_fortune", content = "fortuneLevel")
 	List<Item> gold_tools = Arrays.asList(Items.GOLDEN_AXE, Items.GOLDEN_HOE, Items.GOLDEN_PICKAXE, Items.GOLDEN_SHOVEL, Items.GOLDEN_SWORD);
@@ -65,135 +61,103 @@ public class GoldToolsHaveFortuneModule extends ZetaModule {
 
 	private static boolean staticEnabled;
 
+	/**
+	 * Full module refactor. Config setting needs testing with other enchantments, including modded ones.
+	 * @author BrokenKeyboard
+	 */
+
 	@LoadEvent
 	public final void configChanged(ZConfigChanged event) {
-		staticEnabled = enabled;
-		wellBakedEnchantments.clear();
-		for(String enchantment : bakedEnchantments) {
-			String[] split1 = enchantment.split("\\+");
-			if(split1.length == 2) {
-				ResourceLocation itemLoc = ResourceLocation.tryParse(split1[0]);
-				if(itemLoc != null) {
-					Item item = BuiltInRegistries.ITEM.get(itemLoc);
-					if(item != Items.AIR) {
-						String[] split2 = split1[1].split("@");
-						if(split2.length == 0 || split2.length > 2)
-							continue;
-						ResourceLocation enchantLoc = ResourceLocation.tryParse(split2[0]);
-						if(enchantLoc != null) {
-							Enchantment enchant = BuiltInRegistries.ENCHANTMENT.get(enchantLoc);
-							if(enchant != null) {
-								try {
-									int strength = split2.length == 1 ? 1 : Integer.parseInt(split2[1]);
-									var pastry = wellBakedEnchantments.computeIfAbsent(item, it -> new Object2IntArrayMap<>());
-									pastry.put(enchant, Math.max(strength, pastry.getOrDefault(enchant, 0)));
-								} catch (NumberFormatException e) {
-									// NO-OP
-								}
-							}
-						}
-					}
-				}
+		staticEnabled = isEnabled();
+		BUILTIN_ENCHANTMENTS.clear();
+
+		for(String configEntry : itemEnchantments) {
+			String[] configPair = configEntry.split("\\+");
+			if (configPair.length != 2) continue;
+
+			ResourceLocation itemLocation = ResourceLocation.tryParse(configPair[0]);
+			if (itemLocation != null) {
+				Item item = BuiltInRegistries.ITEM.get(itemLocation);
+				String[] enchantment = configPair[1].split("@");
+				if (enchantment.length != 2) continue;
+
+				ResourceKey<Enchantment> enchantmentKey = ResourceKey.create(Registries.ENCHANTMENT, ResourceLocation.parse(enchantment[0]));
+				Object2IntMap<ResourceKey<Enchantment>> entry = BUILTIN_ENCHANTMENTS.computeIfAbsent(item, it -> new Object2IntArrayMap<>());
+				entry.computeIfAbsent(enchantmentKey, ench -> Integer.parseInt(enchantment[1]));
 			}
 		}
 
-		if(fortuneLevel > 0) {
-			for(Item item : BuiltInRegistries.ITEM) {
-				if(item instanceof TieredItem tiered && tiered.getTier() == Tiers.GOLD) {
-					Enchantment enchant = item instanceof SwordItem ? Enchantments.MOB_LOOTING : Enchantments.BLOCK_FORTUNE;
-					var pastry = wellBakedEnchantments.computeIfAbsent(item, it -> new Object2IntArrayMap<>());
-					pastry.put(enchant, Math.max(fortuneLevel, pastry.getOrDefault(enchant, 0)));
+		if (fortuneLevel > 0) {
+			for (Item item : BuiltInRegistries.ITEM) {
+				if (item instanceof TieredItem tiered && tiered.getTier() == Tiers.GOLD) {
+					Object2IntMap<ResourceKey<Enchantment>> entry = BUILTIN_ENCHANTMENTS.computeIfAbsent(item, it -> new Object2IntArrayMap<>());
+					entry.computeIfAbsent(item instanceof SwordItem ? Enchantments.LOOTING : Enchantments.FORTUNE, ench -> fortuneLevel);
 				}
 			}
 		}
 	}
 
-	public static int getActualEnchantmentLevel(Enchantment enchant, ItemStack stack, int prev) {
-		Item item = stack.getItem();
+	public static boolean shouldOverrideCorrectTool(ItemStack stack, BlockState state) {
+		if (!staticEnabled || !(stack.getItem() instanceof TieredItem tiered && tiered.getTier() == Tiers.GOLD)) return false;
 
-		if(staticEnabled && wellBakedEnchantments.containsKey(item)) {
-			var pastry = wellBakedEnchantments.get(item);
-			if(pastry.containsKey(enchant)) {
-				int forcedLevel = pastry.getOrDefault(enchant, 0);
-				if(forcedLevel > prev)
-					return forcedLevel;
+		Tool tool = stack.get(DataComponents.TOOL);
+		if (tool == null) return false;
+
+		for (Tool.Rule rule : tool.rules()) {
+			if (rule.correctForDrops().isPresent() && !state.is(TIERS[harvestLevel].getIncorrectBlocksForDrops())) return true;
+		}
+		return false;
+	}
+
+	public static int getActualEnchantmentLevel(Holder<Enchantment> holder, ItemStack stack, int original) {
+		if (!staticEnabled) return original;
+
+		if (BUILTIN_ENCHANTMENTS.containsKey(stack.getItem())) {
+			Object2IntMap<ResourceKey<Enchantment>> enchantmentList = BUILTIN_ENCHANTMENTS.get(stack.getItem());
+
+			if (enchantmentList.containsKey(holder.getKey())) {
+				int level = enchantmentList.getOrDefault(holder.getKey(), 0);
+				return Math.max(level, original);
 			}
 		}
-
-		return prev;
+		return original;
 	}
 
-	public static void addEnchantmentsIfMissing(ItemStack stack, Map<Enchantment, Integer> map) {
-		Item item = stack.getItem();
+	public static ItemStack createTooltipStack(ItemStack stack, DataComponentType<?> componentType, HolderLookup.Provider provider) {
+		if (!staticEnabled || !displayBakedEnchantmentsInTooltip || componentType != DataComponents.ENCHANTMENTS) return stack;
 
-		if(staticEnabled && wellBakedEnchantments.containsKey(item)) {
-			var pastry = wellBakedEnchantments.get(item);
-			for(Enchantment enchantment : pastry.keySet()) {
-				int level = map.getOrDefault(enchantment, 0);
-				int effectiveLevel = getActualEnchantmentLevel(enchantment, stack, level);
-				if(level < effectiveLevel)
-					map.put(enchantment, effectiveLevel);
+		if (BUILTIN_ENCHANTMENTS.containsKey(stack.getItem())) {
+			ItemStack copy = stack.copy();
+			Object2IntMap<ResourceKey<Enchantment>> builtInEnchantments = BUILTIN_ENCHANTMENTS.get(stack.getItem());
+			ItemEnchantments itemEnchantments = Optional.ofNullable(copy.get(DataComponents.ENCHANTMENTS)).orElse(ItemEnchantments.EMPTY);
+			ItemEnchantments.Mutable newEnchantments = new ItemEnchantments.Mutable(itemEnchantments);
+
+			for (ResourceKey<Enchantment> enchantmentKey : builtInEnchantments.keySet()) {
+				Holder<Enchantment> holder = provider.lookupOrThrow(Registries.ENCHANTMENT).getOrThrow(enchantmentKey);
+				newEnchantments.set(holder, Math.max(newEnchantments.getLevel(holder), builtInEnchantments.getOrDefault(enchantmentKey, 0)));
 			}
+
+			copy.set(DataComponents.ENCHANTMENTS, newEnchantments.toImmutable());
+			return copy;
 		}
+		return stack;
 	}
 
-	// Tier
+	public static void modifyTooltip(ItemStack stack, List<Component> list, HolderLookup.Provider provider) {
+		if (!displayBakedEnchantmentsInTooltip || !italicTooltip) return;
 
-	public static Tier getEffectiveTier(Tier realTier) {
-		if(!staticEnabled || (realTier != Tiers.GOLD))
-			return realTier;
+		if (BUILTIN_ENCHANTMENTS.containsKey(stack.getItem())) {
+			Object2IntMap<ResourceKey<Enchantment>> builtInEnchantments = BUILTIN_ENCHANTMENTS.get(stack.getItem());
 
-		return TIERS[harvestLevel];
-	}
-
-	// Tooltip stuff
-
-	public static boolean shouldShowEnchantments(ItemStack stack) {
-		return wellBakedEnchantments.containsKey(stack.getItem());
-	}
-
-	public static void fakeEnchantmentTooltip(ItemStack stack, List<Component> components) {
-		if(staticEnabled && displayBakedEnchantmentsInTooltip)
-			for(Map.Entry<Enchantment, Integer> entry : Quark.ZETA.itemExtensions.get(stack).getAllEnchantmentsZeta(stack).entrySet()) {
-				int actualLevel = EnchantmentHelper.getTagEnchantmentLevel(entry.getKey(), stack);
-				if(actualLevel != entry.getValue()) {
-					Component comp = entry.getKey().getFullname(entry.getValue());
-					if(italicTooltip)
-						comp = comp.copy().withStyle(ChatFormatting.ITALIC);
-
-					if(actualLevel != 0)
-						comp = Component.translatable("quark.misc.enchantment_with_actual_level", comp,
-								Component.translatable("enchantment.level." + actualLevel)).withStyle(ChatFormatting.GRAY);
-
-					components.add(comp);
+			for (ResourceKey<Enchantment> enchantmentKey : builtInEnchantments.keySet()) {
+				Holder<Enchantment> holder = provider.lookupOrThrow(Registries.ENCHANTMENT).getOrThrow(enchantmentKey);
+				int level = builtInEnchantments.getInt(enchantmentKey);
+				Component enchantmentEntry = Enchantment.getFullname(holder, level);
+				if (list.contains(enchantmentEntry)) {
+					int index = list.indexOf(enchantmentEntry);
+					list.set(index, Enchantment.getFullname(holder, level).copy().withStyle(ChatFormatting.ITALIC));
 				}
 			}
-	}
-
-	public static ListTag hideSmallerEnchantments(ItemStack stack, ListTag tag) {
-		if(staticEnabled && displayBakedEnchantmentsInTooltip) {
-			List<ResourceLocation> toRemove = Lists.newArrayList();
-			for(Map.Entry<Enchantment, Integer> entry : Quark.ZETA.itemExtensions.get(stack).getAllEnchantmentsZeta(stack).entrySet()) {
-				int actualLevel = EnchantmentHelper.getTagEnchantmentLevel(entry.getKey(), stack);
-				if(actualLevel != entry.getValue() && actualLevel != 0) {
-					toRemove.add(EnchantmentHelper.getEnchantmentId(entry.getKey()));
-				}
-			}
-
-			if(!toRemove.isEmpty()) {
-				tag = tag.copy();
-				tag.removeIf(it -> {
-					if(it instanceof CompoundTag compound) {
-						ResourceLocation loc = EnchantmentHelper.getEnchantmentId(compound);
-						if(loc != null) {
-							return toRemove.contains(loc);
-						}
-					}
-					return false;
-				});
-			}
 		}
-		return tag;
 	}
-
 }

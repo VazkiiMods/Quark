@@ -45,7 +45,7 @@ public class FairyRingsModule extends ZetaModule {
 	public final void configChanged(ZConfigChanged event) {
 		ores.clear();
 		for(String s : oresRaw) {
-			Block b = BuiltInRegistries.BLOCK.get(new ResourceLocation(s));
+			Block b = BuiltInRegistries.BLOCK.get(ResourceLocation.parse(s));
 			if(b != Blocks.AIR) {
 				ores.add(b.defaultBlockState());
 			} else {

@@ -2,6 +2,8 @@ package org.violetmoon.quark.content.tweaks.block;
 
 import java.util.function.BooleanSupplier;
 
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.phys.HitResult;
 import org.jetbrains.annotations.Nullable;
 import org.violetmoon.zeta.block.IZetaBlock;
 import org.violetmoon.zeta.module.ZetaModule;
@@ -11,7 +13,6 @@ import org.violetmoon.zeta.util.BooleanSuppliers;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.PinkPetalsBlock;
@@ -34,12 +35,12 @@ public class WaterPetalBlock extends PinkPetalsBlock implements IZetaBlock {
 
         module.zeta().registry.registerBlock(this, regname, false);
 
-		module.zeta().renderLayerRegistry.put(this, RenderLayerRegistry.Layer.CUTOUT);
+        module.zeta().renderLayerRegistry.put(this, RenderLayerRegistry.Layer.CUTOUT);
     }
-    
+
     @Override
-    public ItemStack getCloneItemStack(BlockGetter pLevel, BlockPos pPos, BlockState pState) {
-    	return new ItemStack(base);
+    public ItemStack getCloneItemStack(BlockState state, HitResult target, LevelReader level, BlockPos pos, Player player) {
+        return new ItemStack(base);
     }
     
     @Override

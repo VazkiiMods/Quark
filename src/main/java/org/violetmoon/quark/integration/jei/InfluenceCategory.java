@@ -21,7 +21,9 @@ import org.violetmoon.quark.base.Quark;
 
 public class InfluenceCategory implements IRecipeCategory<InfluenceEntry> {
 
-	public static final ResourceLocation TEXTURE = new ResourceLocation(Quark.MOD_ID, "textures/gui/jei_influence.png");
+	public static final ResourceLocation UID = Quark.asResource("influence");
+
+	public static final ResourceLocation TEXTURE = Quark.asResource("textures/gui/jei_influence.png");
 
 	private final IDrawable icon;
 	private final IDrawableStatic background;

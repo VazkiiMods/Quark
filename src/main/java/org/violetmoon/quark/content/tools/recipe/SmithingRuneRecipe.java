@@ -1,22 +1,19 @@
 package org.violetmoon.quark.content.tools.recipe;
 
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonSyntaxException;
-import net.minecraft.core.RegistryAccess;
-import net.minecraft.network.FriendlyByteBuf;
+import com.mojang.serialization.MapCodec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
+import net.minecraft.core.HolderLookup;
+import net.minecraft.core.component.DataComponents;
+import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.util.GsonHelper;
-import net.minecraft.util.RandomSource;
-import net.minecraft.world.Container;
+import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.RecipeSerializer;
+import net.minecraft.world.item.crafting.SmithingRecipeInput;
 import net.minecraft.world.item.crafting.SmithingTrimRecipe;
-import net.minecraft.world.item.enchantment.EnchantmentHelper;
-import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.Level;
 import org.violetmoon.quark.base.Quark;
 import org.violetmoon.quark.content.client.module.ImprovedTooltipsModule;
@@ -36,24 +33,17 @@ import java.util.stream.Stream;
 public final class SmithingRuneRecipe extends SmithingTrimRecipe { // Extends to allow JEI to pick it up
 
 	public static final Serializer SERIALIZER = new Serializer();
-	private final ResourceLocation id;
+
 	private final Ingredient template;
 	private final Ingredient addition;
 	private final RuneColor runeColor;
-
 	private static Ingredient used;
-	private static final RandomSource BASE_INGREDIENT_RANDOM = RandomSource.createThreadSafe();
 
 	private static ItemStack makeEnchantedDisplayItem(ItemStack input) {
 		ItemStack stack = input.copy();
-		stack.hideTooltipPart(ItemStack.TooltipPart.ENCHANTMENTS);
-		stack.hideTooltipPart(ItemStack.TooltipPart.MODIFIERS);
-		stack.setHoverName(Component.translatable("quark.jei.any_enchanted"));
-		if(Quark.ZETA.itemExtensions.get(stack).getEnchantmentValueZeta(stack) <= 0) { // If it can't take anything in ench. tables...
-			stack.enchant(Enchantments.UNBREAKING, 3); // it probably accepts unbreaking anyways
-			return stack;
-		}
-		return EnchantmentHelper.enchantItem(BASE_INGREDIENT_RANDOM, stack, 25, false);
+		stack.set(DataComponents.CUSTOM_NAME, Component.translatable("quark.jei.any_enchanted"));
+		stack.set(DataComponents.ENCHANTMENT_GLINT_OVERRIDE, true);
+		return stack;
 	}
 
 	private static Ingredient createBaseIngredient() {
@@ -76,23 +66,21 @@ public final class SmithingRuneRecipe extends SmithingTrimRecipe { // Extends to
 		return used;
 	}
 
-	private SmithingRuneRecipe(ResourceLocation id, Ingredient template, Ingredient addition, RuneColor runeColor) {
-		super(id, template, createBaseIngredient(), addition);
-		this.id = id;
+	private SmithingRuneRecipe(Ingredient template, Ingredient addition, RuneColor runeColor) {
+		super(template, createBaseIngredient(), addition);
 		this.template = template;
 		this.addition = addition;
 		this.runeColor = runeColor;
 	}
 
 	@Override
-	public boolean matches(Container container, @Nonnull Level level) {
-		return isTemplateIngredient(container.getItem(0)) && isBaseIngredient(container.getItem(1)) && isAdditionIngredient(container.getItem(2));
+	public boolean matches(SmithingRecipeInput input, Level level) {
+		return isTemplateIngredient(input.getItem(0)) && isBaseIngredient(input.getItem(1)) && isAdditionIngredient(input.getItem(2));
 	}
 
-	@Nonnull
 	@Override
-	public ItemStack assemble(Container container, @Nonnull RegistryAccess registry) {
-		ItemStack baseItem = container.getItem(1);
+	public ItemStack assemble(SmithingRecipeInput input, HolderLookup.Provider provider) {
+		ItemStack baseItem = input.getItem(1);
 		if (isBaseIngredient(baseItem)) {
 			if (ColorRunesModule.getStackColor(baseItem) == runeColor)
 				return ItemStack.EMPTY;
@@ -101,16 +89,14 @@ public final class SmithingRuneRecipe extends SmithingTrimRecipe { // Extends to
 			newStack.setCount(1);
 			return ColorRunesModule.withRune(newStack, runeColor);
 		}
-
 		return ItemStack.EMPTY;
 	}
 
 	@Nonnull
 	@Override
-	public ItemStack getResultItem(@Nonnull RegistryAccess registry) {
+	public ItemStack getResultItem(@Nonnull HolderLookup.Provider provider) {
 		ItemStack displayStack = makeEnchantedDisplayItem(new ItemStack(Items.IRON_CHESTPLATE));
 		ColorRunesModule.withRune(displayStack, runeColor);
-
 		return displayStack;
 	}
 
@@ -126,56 +112,48 @@ public final class SmithingRuneRecipe extends SmithingTrimRecipe { // Extends to
 
 	@Override
 	public boolean isAdditionIngredient(@Nonnull ItemStack stack) {
-		if (this.addition.isEmpty())
-			return stack.isEmpty();
-		return this.addition.test(stack);
-	}
-
-	@Nonnull
-	@Override
-	public ResourceLocation getId() {
-		return this.id;
+		return this.addition.isEmpty() ? stack.isEmpty() : this.addition.test(stack);
 	}
 
 	@Nonnull
 	@Override
 	public RecipeSerializer<?> getSerializer() {
-		return SERIALIZER;
+		return RecipeSerializer.SMITHING_TRIM;
 	}
 
-	public static class Serializer implements RecipeSerializer<SmithingRuneRecipe> {
+    public static class Serializer implements RecipeSerializer<SmithingRuneRecipe> {
+        public static final MapCodec<SmithingRuneRecipe> CODEC = RecordCodecBuilder.mapCodec(
+                inst -> inst.group(
+                        Ingredient.CODEC.fieldOf("template").forGetter(smithingRuneRecipe -> smithingRuneRecipe.template),
+                        Ingredient.CODEC.optionalFieldOf("addition", Ingredient.EMPTY).forGetter(smithingRuneRecipe -> smithingRuneRecipe.addition),
+                        RuneColor.RUNE_COLOR_CODEC.fieldOf("color").forGetter(smithingRuneRecipe -> smithingRuneRecipe.runeColor)
+                ).apply(inst, SmithingRuneRecipe::new)
+        );
+        public static final StreamCodec<RegistryFriendlyByteBuf, SmithingRuneRecipe> STREAM_CODEC = StreamCodec.of(
+                SmithingRuneRecipe.Serializer::toNetwork, SmithingRuneRecipe.Serializer::fromNetwork
+        );
 
-		@Nonnull
-		@Override
-		public SmithingRuneRecipe fromJson(@Nonnull ResourceLocation id, @Nonnull JsonObject serialized) {
-			Ingredient template = Ingredient.fromJson(GsonHelper.getNonNull(serialized, "template"));
+        @Override
+        public MapCodec<SmithingRuneRecipe> codec() {
+            return CODEC;
+        }
 
-			JsonElement additionElement = serialized.get("addition");
-			Ingredient addition = additionElement != null && !additionElement.isJsonNull() ? Ingredient.fromJson(additionElement) : Ingredient.EMPTY;
+        @Override
+        public StreamCodec<RegistryFriendlyByteBuf, SmithingRuneRecipe> streamCodec() {
+            return STREAM_CODEC;
+        }
 
-			RuneColor runeColor = RuneColor.byName(GsonHelper.getAsString(serialized, "color"));
-			if (runeColor == null)
-				throw new JsonSyntaxException("Rune color must be a valid dye color, rainbow, or blank");
-			return new SmithingRuneRecipe(id, template, addition, runeColor);
-		}
+        private static SmithingRuneRecipe fromNetwork(RegistryFriendlyByteBuf registryFriendlyByteBuf) {
+            Ingredient template = Ingredient.CONTENTS_STREAM_CODEC.decode(registryFriendlyByteBuf);
+            RuneColor color = RuneColor.byName(ByteBufCodecs.stringUtf8(32).decode(registryFriendlyByteBuf));
+            Ingredient addition = Ingredient.CONTENTS_STREAM_CODEC.decode(registryFriendlyByteBuf);
+            return new SmithingRuneRecipe(template, addition, color);
+        }
 
-		@Override
-		public SmithingRuneRecipe fromNetwork(@Nonnull ResourceLocation id, @Nonnull FriendlyByteBuf buf) {
-			Ingredient template = Ingredient.fromNetwork(buf);
-			Ingredient addition = buf.readBoolean() ? Ingredient.EMPTY : Ingredient.fromNetwork(buf);
-			RuneColor runeColor = RuneColor.byName(buf.readUtf());
-			return new SmithingRuneRecipe(id, template, addition, runeColor);
-		}
-
-		@Override
-		public void toNetwork(@Nonnull FriendlyByteBuf buf, SmithingRuneRecipe recipe) {
-			recipe.template.toNetwork(buf);
-			boolean additionIsEmpty = recipe.addition.isEmpty();
-			buf.writeBoolean(additionIsEmpty);
-			if (!additionIsEmpty)
-				recipe.addition.toNetwork(buf);
-
-			buf.writeUtf(recipe.runeColor.getSerializedName());
-		}
-	}
+        private static void toNetwork(RegistryFriendlyByteBuf registryFriendlyByteBuf, SmithingRuneRecipe recipe) {
+            Ingredient.CONTENTS_STREAM_CODEC.encode(registryFriendlyByteBuf, recipe.template);
+            ByteBufCodecs.stringUtf8(32).encode(registryFriendlyByteBuf, recipe.runeColor.getSerializedName());
+            Ingredient.CONTENTS_STREAM_CODEC.encode(registryFriendlyByteBuf, recipe.addition);
+        }
+    }
 }

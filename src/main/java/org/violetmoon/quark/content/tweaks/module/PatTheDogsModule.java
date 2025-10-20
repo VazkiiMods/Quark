@@ -88,7 +88,7 @@ public class PatTheDogsModule extends ZetaModule {
 
 					if(wolf instanceof Foxhound && !player.isInWater() && !player.hasEffect(MobEffects.FIRE_RESISTANCE)
 							&& !player.getAbilities().invulnerable)
-						player.setSecondsOnFire(5);
+						player.setRemainingFireTicks(5);
 				}
 
 				event.setCanceled(true);

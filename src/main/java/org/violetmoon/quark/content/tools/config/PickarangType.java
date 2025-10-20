@@ -1,5 +1,6 @@
 package org.violetmoon.quark.content.tools.config;
 
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
@@ -77,7 +78,7 @@ public class PickarangType<T extends AbstractPickarang<T>> implements IConfigTyp
 	}
 
 	public boolean isFireResistant() {
-		return pickaxeEquivalent != null && pickaxeEquivalent.isFireResistant();
+		return pickaxeEquivalent != null && pickaxeEquivalent.components().has(DataComponents.FIRE_RESISTANT);
 	}
 
 	public EntityType<T> getEntityType() {

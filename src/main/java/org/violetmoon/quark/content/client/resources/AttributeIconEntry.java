@@ -49,8 +49,8 @@ public record AttributeIconEntry(
 			}
 
 			String texturePath = GsonHelper.getAsString(obj, "texture");
-			ResourceLocation truncatedPath = new ResourceLocation(texturePath);
-			ResourceLocation texture = new ResourceLocation(truncatedPath.getNamespace(), "textures/" + truncatedPath.getPath() + ".png");
+			ResourceLocation truncatedPath = ResourceLocation.parse(texturePath);
+			ResourceLocation texture = ResourceLocation.fromNamespaceAndPath(truncatedPath.getNamespace(), "textures/" + truncatedPath.getPath() + ".png");
 
 			String compareStr = GsonHelper.getAsString(obj, "compare", "no_compare");
 			CompareType type = CompareType.valueOf(compareStr.toUpperCase(Locale.ROOT));

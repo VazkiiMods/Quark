@@ -1,0 +1,27 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "zeta:flag",
+      "flag": "pipes"
+    }
+  ],
+  "type": "minecraft:crafting_shaped",
+  "category": "redstone",
+  "key": {
+    "G": {
+      "tag": "c:glass_blocks"
+    },
+    "I": {
+      "tag": "c:ingots/copper"
+    }
+  },
+  "pattern": [
+    "I",
+    "G",
+    "I"
+  ],
+  "result": {
+    "count": 1,
+    "id": "quark:pipe"
+  }
+}

@@ -3,8 +3,6 @@ package org.violetmoon.quark.content.tools.module;
 import net.minecraft.client.renderer.entity.EntityRenderers;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.damagesource.DamageType;
@@ -61,9 +59,9 @@ public class PickarangModule extends ZetaModule {
     private static final List<PickarangType<?>> knownTypes = new ArrayList<>();
     private static boolean isEnabled;
 
-    public static final TagKey<Block> pickarangImmuneTag = BlockTags.create(new ResourceLocation(Quark.MOD_ID, "pickarang_immune"));
+    public static final TagKey<Block> pickarangImmuneTag = Quark.asTagKey(Registries.BLOCK,"pickarang_immune");
 
-    public static final ResourceKey<DamageType> pickarangDamageType = ResourceKey.create(Registries.DAMAGE_TYPE, new ResourceLocation(Quark.MOD_ID, "pickarang"));
+    public static final ResourceKey<DamageType> pickarangDamageType = Quark.asResourceKey(Registries.DAMAGE_TYPE,"pickarang");
 
     public static ManualTrigger throwPickarangTrigger;
     public static ManualTrigger useFlamerangTrigger;
@@ -90,24 +88,25 @@ public class PickarangModule extends ZetaModule {
                 .sized(0.4F, 0.4F)
                 .clientTrackingRange(4)
                 .updateInterval(10)
-                .setCustomClientFactory((t, l) -> entityFactory.create(type.getEntityType(), l))
                 .build(name);
         Quark.ZETA.registry.register(entityType, name, Registries.ENTITY_TYPE);
 
         knownTypes.add(type);
         type.setEntityType(entityType, thrownFactory);
-        return (PickarangItem) new PickarangItem(name, this, propertiesFor(type.durability, type.isFireResistant()), type).setCondition(condition);
+        return (PickarangItem) new PickarangItem(name, this, propertiesFor(type), type).setCondition(condition);
     }
 
-    private Item.Properties propertiesFor(int durability, boolean fireResist) {
+    private <T extends AbstractPickarang<T>> Item.Properties propertiesFor(PickarangType<T> type) {
         Item.Properties properties = new Item.Properties()
                 .stacksTo(1);
 
-        if (durability > 0)
-            properties.durability(durability);
+        if (type.durability > 0)
+            properties.durability(type.durability);
 
-        if (fireResist)
+        if (type.isFireResistant())
             properties.fireResistant();
+
+        properties.attributes(PickarangItem.createAttributes(type));
 
         return properties;
     }
@@ -115,7 +114,7 @@ public class PickarangModule extends ZetaModule {
     @LoadEvent
     public final void configChanged(ZConfigChanged event) {
         // Pass over to a static reference for easier computing the coremod hook
-        isEnabled = this.enabled;
+        isEnabled = this.isEnabled();
     }
 
     public static boolean getIsFireResistant(boolean vanillaVal, Entity entity) {

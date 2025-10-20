@@ -2,6 +2,7 @@ package org.violetmoon.quark.content.world.module;
 
 import java.util.List;
 
+import net.minecraft.core.registries.Registries;
 import org.apache.commons.lang3.tuple.Pair;
 import org.violetmoon.quark.base.Quark;
 import org.violetmoon.quark.base.util.CorundumColor;
@@ -19,8 +20,8 @@ import org.violetmoon.zeta.event.bus.LoadEvent;
 import org.violetmoon.zeta.event.bus.PlayEvent;
 import org.violetmoon.zeta.event.load.ZCommonSetup;
 import org.violetmoon.zeta.event.load.ZConfigChanged;
-import org.violetmoon.zeta.event.load.ZRegister;
 import org.violetmoon.zeta.event.load.ZGatherHints;
+import org.violetmoon.zeta.event.load.ZRegister;
 import org.violetmoon.zeta.module.ZetaLoadModule;
 import org.violetmoon.zeta.module.ZetaModule;
 import org.violetmoon.zeta.util.Hint;
@@ -32,9 +33,7 @@ import com.google.common.collect.Lists;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.BiomeTags;
-import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.CreativeModeTabs;
 import net.minecraft.world.level.Level;
@@ -89,9 +88,11 @@ public class CorundumModule extends ZetaModule {
 	public static boolean staticEnabled;
 
 	public static List<CorundumBlock> crystals = Lists.newArrayList();
+	public static List<CorundumBlock> waxedCrystals = Lists.newArrayList();
 	public static List<CorundumClusterBlock> clusters = Lists.newArrayList();
+	public static List<Block> panes = Lists.newArrayList();
 	@Hint
-	public static final TagKey<Block> corundumTag = BlockTags.create(new ResourceLocation(Quark.MOD_ID, "corundum"));
+	public static final TagKey<Block> corundumTag = Quark.asTagKey(Registries.BLOCK,"corundum");
 
 	@LoadEvent
 	public final void register(ZRegister event) {
@@ -101,7 +102,7 @@ public class CorundumModule extends ZetaModule {
 
 	@LoadEvent
 	public final void configChanged(ZConfigChanged event) {
-		staticEnabled = enabled;
+		staticEnabled = isEnabled();
 	}
 
 	@LoadEvent
@@ -129,9 +130,11 @@ public class CorundumModule extends ZetaModule {
 		crystals.add(crystal);
 
 		CorundumBlock waxed = new CorundumBlock("waxed_" + name + "_corundum", color, this, mapColor, true);
+		waxedCrystals.add(waxed);
 		ToolInteractionHandler.registerWaxedBlock(this, crystal, waxed);
 
-		new ZetaInheritedPaneBlock(crystal).setCreativeTab(CreativeModeTabs.COLORED_BLOCKS);
+		Block pane = new ZetaInheritedPaneBlock(crystal).setCreativeTab(CreativeModeTabs.COLORED_BLOCKS);
+		panes.add(pane);
 		CorundumClusterBlock cluster = new CorundumClusterBlock(crystal);
 		clusters.add(cluster);
 
@@ -159,6 +162,18 @@ public class CorundumModule extends ZetaModule {
 			return sourceState.getBlock() == cluster.base;
 		}
 
+	}
+
+	public static Block getCrystal(CorundumColor corundumColor){
+		return CorundumModule.crystals.get(corundumColor.ordinal());
+	}
+
+	public static Block getWaxedCrystal(CorundumColor corundumColor){
+		return CorundumModule.waxedCrystals.get(corundumColor.ordinal());
+	}
+
+	public static Block getPane(CorundumColor corundumColor){
+		return CorundumModule.panes.get(corundumColor.ordinal());
 	}
 
 }

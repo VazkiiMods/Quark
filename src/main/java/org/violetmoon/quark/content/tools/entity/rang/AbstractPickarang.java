@@ -1,15 +1,16 @@
 package org.violetmoon.quark.content.tools.entity.rang;
 
+import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Multimap;
 import it.unimi.dsi.fastutil.ints.IntOpenHashSet;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Holder;
 import net.minecraft.core.particles.BlockParticleOption;
 import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtUtils;
 import net.minecraft.nbt.Tag;
-import net.minecraft.network.protocol.Packet;
-import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
@@ -20,7 +21,10 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.effect.MobEffectUtil;
 import net.minecraft.world.effect.MobEffects;
-import net.minecraft.world.entity.*;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.ExperienceOrb;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.*;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier.Builder;
 import net.minecraft.world.entity.item.ItemEntity;
@@ -29,6 +33,8 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.entity.projectile.ProjectileUtil;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.component.ItemAttributeModifiers;
+import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.ClipContext;
@@ -43,10 +49,8 @@ import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.HitResult.Type;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.common.ForgeHooks;
-import net.minecraftforge.common.ForgeMod;
-import net.minecraftforge.event.ForgeEventFactory;
-import net.minecraftforge.network.NetworkHooks;
+import net.neoforged.neoforge.common.NeoForgeMod;
+import net.neoforged.neoforge.event.EventHooks;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.violetmoon.quark.base.Quark;
@@ -64,7 +68,6 @@ public abstract class AbstractPickarang<T extends AbstractPickarang<T>> extends 
 	private static final EntityDataAccessor<Boolean> RETURNING = SynchedEntityData.defineId(AbstractPickarang.class, EntityDataSerializers.BOOLEAN);
 
 	private UUID ownerId;
-
 	protected int liveTime;
 	private int slot;
 	private int blockHitCount;
@@ -136,9 +139,9 @@ public abstract class AbstractPickarang<T extends AbstractPickarang<T>> extends 
 	}
 
 	@Override
-	protected void defineSynchedData() {
-		entityData.define(STACK, new ItemStack(PickarangModule.pickarang));
-		entityData.define(RETURNING, false);
+	protected void defineSynchedData(SynchedEntityData.Builder builder) {
+		builder.define(STACK, new ItemStack(PickarangModule.pickarang));
+		builder.define(RETURNING, false);
 	}
 
 	protected void checkImpact() {
@@ -221,10 +224,11 @@ public abstract class AbstractPickarang<T extends AbstractPickarang<T>> extends 
 				&& equivalentHardness >= 0
 				&& !isBlockBlackListead(state)) || player.getAbilities().instabuild) {
 
-				if(player.gameMode.destroyBlock(hit))
+				if(player.gameMode.destroyBlock(hit)) {
 					level().levelEvent(null, LevelEvent.PARTICLES_DESTROY_BLOCK, hit, Block.getId(state));
-				else
+				} else {
 					clank(result);
+				}
 
 				setStack(player.getInventory().getSelected());
 
@@ -252,12 +256,18 @@ public abstract class AbstractPickarang<T extends AbstractPickarang<T>> extends 
 			return;
 		}
 		ItemStack pickarang = getStack();
-		Multimap<Attribute, AttributeModifier> modifiers = pickarang.getAttributeModifiers(EquipmentSlot.MAINHAND);
+
+		ItemAttributeModifiers modifiers = pickarang.getAttributeModifiers();
+		Multimap<Holder<Attribute>, AttributeModifier> attributeModifiers = ArrayListMultimap.create();
+
+		for (ItemAttributeModifiers.Entry entry : modifiers.modifiers()) {
+			attributeModifiers.put(entry.attribute(), entry.modifier());
+		}
 
 		if (owner instanceof LivingEntity leOwner) {
 			ItemStack prev = leOwner.getMainHandItem();
 			leOwner.setItemInHand(InteractionHand.MAIN_HAND, pickarang);
-			leOwner.getAttributes().addTransientAttributeModifiers(modifiers);
+			leOwner.getAttributes().addTransientAttributeModifiers(attributeModifiers);
 			PickarangModule.setActivePickarangDamage(PickarangModule.getDamageSource(this, leOwner));
 
 			int ticksSinceLastSwing = leOwner.attackStrengthTicker;
@@ -289,7 +299,6 @@ public abstract class AbstractPickarang<T extends AbstractPickarang<T>> extends 
 				else
 					leOwner.doHurtTarget(hit);
 
-
 				if (hit instanceof LivingEntity && ((LivingEntity) hit).getHealth() == prevHealth)
 					clank(result);
 			}
@@ -298,24 +307,31 @@ public abstract class AbstractPickarang<T extends AbstractPickarang<T>> extends 
 
 			setStack(leOwner.getMainHandItem());
 			leOwner.setItemInHand(InteractionHand.MAIN_HAND, prev);
-			leOwner.getAttributes().addTransientAttributeModifiers(modifiers);
+			leOwner.getAttributes().addTransientAttributeModifiers(attributeModifiers);
 			PickarangModule.setActivePickarangDamage(null);
 		} else {
 			Builder mapBuilder = new Builder();
 			mapBuilder.add(Attributes.ATTACK_DAMAGE, 1);
 			AttributeSupplier map = mapBuilder.build();
 			AttributeMap manager = new AttributeMap(map);
-			manager.addTransientAttributeModifiers(modifiers);
+			manager.addTransientAttributeModifiers(attributeModifiers);
 
 			ItemStack stack = getStack();
-			stack.hurt(1, level().random, null);
+			stack.hurtAndBreak(1, (LivingEntity) owner, null);
 			setStack(stack);
 
-			hit.hurt(PickarangModule.getDamageSource (this, owner),
-					(float) manager.getValue(Attributes.ATTACK_DAMAGE));
+			hit.hurt(PickarangModule.getDamageSource(this, owner), (float) manager.getValue(Attributes.ATTACK_DAMAGE));
 		}
 	}
 
+	private void setTransientModifiers(ItemAttributeModifiers modifiers, LivingEntity living) {
+		for (ItemAttributeModifiers.Entry entry : modifiers.modifiers()) {
+			AttributeInstance instance = living.getAttribute(entry.attribute());
+			if (instance != null) {
+				instance.addTransientModifier(entry.modifier());
+			}
+		}
+	}
 
 	//equivalent of BlockState::getDestroyProgress
 	private float getBlockDestroyProgress(BlockState state, Player player, BlockGetter level, BlockPos pos) {
@@ -323,7 +339,7 @@ public abstract class AbstractPickarang<T extends AbstractPickarang<T>> extends 
 		if(f == -1.0F) {
 			return 0.0F;
 		} else {
-			float i = ForgeHooks.isCorrectToolForDrops(state, player) ? 30 : 100;
+			float i = EventHooks.doPlayerHarvestCheck(player, state, level, pos) ? 30 : 100;
 			float digSpeed = getPlayerDigSpeed(player, state, pos);
 			return (digSpeed / (f * i));
 		}
@@ -347,10 +363,10 @@ public abstract class AbstractPickarang<T extends AbstractPickarang<T>> extends 
 
 			f *= f1;
 		}
-		if(this.isEyeInFluidType(ForgeMod.WATER_TYPE.get())) {
+		if(this.isEyeInFluidType(NeoForgeMod.WATER_TYPE.value())) {
 			f /= 5.0F;
 		}
-		f = ForgeEventFactory.getBreakSpeed(player, state, f, pos);
+		f = EventHooks.getBreakSpeed(player, state, f, pos);
 		return f;
 	}
 
@@ -511,7 +527,7 @@ public abstract class AbstractPickarang<T extends AbstractPickarang<T>> extends 
 				if(!level.isClientSide) {
 					playSound(QuarkSounds.ENTITY_PICKARANG_PICKUP, 1, 1);
 
-					if(player instanceof ServerPlayer sp && (this instanceof Flamerang) && isOnFire() && getPassengers().size() > 0)
+					if(player instanceof ServerPlayer sp && (this instanceof Flamerang) && isOnFire() && !getPassengers().isEmpty())
 						PickarangModule.useFlamerangTrigger.trigger(sp);
 
 					if(!stack.isEmpty())
@@ -575,13 +591,14 @@ public abstract class AbstractPickarang<T extends AbstractPickarang<T>> extends 
 	}
 
 	@Override
-	protected boolean canAddPassenger(@NotNull Entity passenger) {
-		return super.canAddPassenger(passenger) || passenger instanceof ItemEntity || passenger instanceof ExperienceOrb;
+    @NotNull
+	public Vec3 getPassengerRidingPosition(@NotNull Entity entity) {
+        return super.getPassengerRidingPosition(entity).subtract(0, 0.4, 0);
 	}
 
 	@Override
-	public double getPassengersRidingOffset() {
-		return 0;
+	protected boolean canAddPassenger(@NotNull Entity passenger) {
+		return super.canAddPassenger(passenger) || passenger instanceof ItemEntity || passenger instanceof ExperienceOrb;
 	}
 
 	@NotNull
@@ -591,11 +608,13 @@ public abstract class AbstractPickarang<T extends AbstractPickarang<T>> extends 
 	}
 
 	public int getEfficiencyModifier() {
-		return Quark.ZETA.itemExtensions.get(getStack()).getEnchantmentLevelZeta(getStack(), Enchantments.BLOCK_EFFICIENCY);
+		Holder<Enchantment> holder = level().registryAccess().lookupOrThrow(Registries.ENCHANTMENT).getOrThrow(Enchantments.EFFICIENCY);
+		return Quark.ZETA.itemExtensions.get(getStack()).getEnchantmentLevelZeta(getStack(), holder);
 	}
 
 	public int getPiercingModifier() {
-		return Quark.ZETA.itemExtensions.get(getStack()).getEnchantmentLevelZeta(getStack(), Enchantments.PIERCING);
+		Holder<Enchantment> holder = level().registryAccess().lookupOrThrow(Registries.ENCHANTMENT).getOrThrow(Enchantments.PIERCING);
+		return Quark.ZETA.itemExtensions.get(getStack()).getEnchantmentLevelZeta(getStack(), holder);
 	}
 
 	public ItemStack getStack() {
@@ -614,7 +633,7 @@ public abstract class AbstractPickarang<T extends AbstractPickarang<T>> extends 
 		slot = compound.getInt(TAG_RETURN_SLOT);
 
 		if(compound.contains(TAG_ITEM_STACK))
-			setStack(ItemStack.of(compound.getCompound(TAG_ITEM_STACK)));
+			setStack(ItemStack.parseOptional(level().registryAccess(), compound.getCompound(TAG_ITEM_STACK)));
 		else
 			setStack(new ItemStack(PickarangModule.pickarang));
 
@@ -631,16 +650,8 @@ public abstract class AbstractPickarang<T extends AbstractPickarang<T>> extends 
 		compound.putInt(TAG_LIVE_TIME, liveTime);
 		compound.putInt(TAG_BLOCKS_BROKEN, blockHitCount);
 		compound.putInt(TAG_RETURN_SLOT, slot);
-
-		compound.put(TAG_ITEM_STACK, getStack().serializeNBT());
+		compound.put(TAG_ITEM_STACK, getStack().save(level().registryAccess()));
 		if(this.ownerId != null)
 			compound.put("owner", NbtUtils.createUUID(this.ownerId));
 	}
-
-	@NotNull
-	@Override
-	public Packet<ClientGamePacketListener> getAddEntityPacket() {
-		return NetworkHooks.getEntitySpawningPacket(this);
-	}
-
 }

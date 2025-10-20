@@ -1,13 +1,12 @@
 package org.violetmoon.quark.content.world.undergroundstyle.base;
 
+import net.minecraft.core.registries.Registries;
 import org.violetmoon.quark.base.Quark;
 import org.violetmoon.quark.content.world.undergroundstyle.base.UndergroundStyleGenerator.Context;
 import org.violetmoon.zeta.util.MiscUtil;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.Block;
@@ -15,7 +14,7 @@ import net.minecraft.world.level.block.state.BlockState;
 
 public abstract class UndergroundStyle {
 
-	private static final TagKey<Block> UNDERGROUND_BIOME_REPLACEABLE = BlockTags.create(new ResourceLocation(Quark.MOD_ID, "underground_biome_replaceable"));
+	private static final TagKey<Block> UNDERGROUND_BIOME_REPLACEABLE = Quark.asTagKey(Registries.BLOCK, "underground_biome_replaceable");
 
 	public boolean canReplace(BlockState state) {
 		return state.canBeReplaced() || state.is(UNDERGROUND_BIOME_REPLACEABLE);

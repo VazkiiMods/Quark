@@ -38,8 +38,8 @@ public class QuarkPistonBlockEntityRenderer {
 		if(tile == null)
 			return false;
 		CompoundTag tileTag = PistonsMoveTileEntitiesModule.getMovingBlockEntityData(piston.getLevel(), truePos);
-		if(tileTag != null && tile.getType() == BuiltInRegistries.BLOCK_ENTITY_TYPE.get(new ResourceLocation(tileTag.getString("id"))))
-			tile.load(tileTag);
+		if(tileTag != null && tile.getType() == BuiltInRegistries.BLOCK_ENTITY_TYPE.get(ResourceLocation.parse(tileTag.getString("id"))))
+			tile.loadWithComponents(tileTag, piston.getLevel().registryAccess());
 		Vec3 offset = new Vec3(piston.getXOff(partialTicks), piston.getYOff(partialTicks), piston.getZOff(partialTicks));
 		return renderTESafely(piston.getLevel(), truePos, state, tile, piston, partialTicks, offset, matrix, bufferIn, combinedLightIn, combinedOverlayIn);
 	}
@@ -62,7 +62,7 @@ public class QuarkPistonBlockEntityRenderer {
 
 				matrix.translate(offset.x, offset.y, offset.z);
 
-				tile.blockState = state;
+				tile.setBlockState(state);
 				tileentityrenderer.render(tile, partialTicks, matrix, bufferIn, combinedLightIn, combinedOverlayIn);
 			}
 		} catch (Exception e) {

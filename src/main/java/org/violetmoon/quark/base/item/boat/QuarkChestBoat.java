@@ -35,9 +35,9 @@ public class QuarkChestBoat extends ChestBoat implements IQuarkBoat {
 	}
 
 	@Override
-	protected void defineSynchedData() {
-		super.defineSynchedData();
-		entityData.define(DATA_QUARK_TYPE, "blossom");
+	protected void defineSynchedData(SynchedEntityData.Builder builder) {
+		super.defineSynchedData(builder);
+		builder.define(DATA_QUARK_TYPE, "blossom");
 	}
 
 	public String getQuarkBoatType() {

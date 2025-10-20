@@ -17,7 +17,7 @@ import net.minecraft.world.entity.ai.goal.Goal;
 import net.minecraft.world.entity.ai.navigation.FlyingPathNavigation;
 import net.minecraft.world.entity.ai.navigation.GroundPathNavigation;
 import net.minecraft.world.entity.ai.navigation.PathNavigation;
-import net.minecraft.world.level.pathfinder.BlockPathTypes;
+import net.minecraft.world.level.pathfinder.PathType;
 
 import java.util.EnumSet;
 
@@ -74,15 +74,15 @@ public class NuzzleGoal extends Goal {
 	public void start() {
 		this.timeUntilRebuildPath = 0;
 		this.whineCooldown = 10;
-		this.oldWaterCost = this.creature.getPathfindingMalus(BlockPathTypes.WATER);
-		this.creature.setPathfindingMalus(BlockPathTypes.WATER, 0.0F);
+		this.oldWaterCost = this.creature.getPathfindingMalus(PathType.WATER);
+		this.creature.setPathfindingMalus(PathType.WATER, 0.0F);
 	}
 
 	@Override
 	public void stop() {
 		this.owner = null;
 		this.petPathfinder.stop();
-		this.creature.setPathfindingMalus(BlockPathTypes.WATER, this.oldWaterCost);
+		this.creature.setPathfindingMalus(PathType.WATER, this.oldWaterCost);
 	}
 
 	@Override

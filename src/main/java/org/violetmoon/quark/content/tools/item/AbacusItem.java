@@ -15,13 +15,11 @@ import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
-
 import org.jetbrains.annotations.NotNull;
-
+import org.violetmoon.quark.base.components.QuarkDataComponents;
 import org.violetmoon.zeta.item.ZetaItem;
 import org.violetmoon.zeta.module.ZetaModule;
 import org.violetmoon.zeta.registry.CreativeTabManager;
-import org.violetmoon.zeta.util.ItemNBTHelper;
 
 public class AbacusItem extends ZetaItem {
 
@@ -34,7 +32,7 @@ public class AbacusItem extends ZetaItem {
 
 	public AbacusItem(ZetaModule module) {
 		super("abacus", module, new Item.Properties().stacksTo(1));
-		CreativeTabManager.addToCreativeTabNextTo(CreativeModeTabs.TOOLS_AND_UTILITIES, this, Items.SPYGLASS, true);
+		CreativeTabManager.addNextToItem(CreativeModeTabs.TOOLS_AND_UTILITIES, this, Items.SPYGLASS, true);
 	}
 
 	@NotNull
@@ -52,22 +50,20 @@ public class AbacusItem extends ZetaItem {
 
 	public static void setBlockPos(ItemStack stack, BlockPos pos) {
 		if(pos == null)
-			ItemNBTHelper.setInt(stack, TAG_POS_Y, DEFAULT_Y);
+			stack.set(QuarkDataComponents.BOUNDS_POS, new BlockPos(0, DEFAULT_Y, 0));
 		else {
-			ItemNBTHelper.setInt(stack, TAG_POS_X, pos.getX());
-			ItemNBTHelper.setInt(stack, TAG_POS_Y, pos.getY());
-			ItemNBTHelper.setInt(stack, TAG_POS_Z, pos.getZ());
+			stack.set(QuarkDataComponents.BOUNDS_POS, pos);
 		}
 	}
 
 	public static BlockPos getBlockPos(ItemStack stack) {
-		int y = ItemNBTHelper.getInt(stack, TAG_POS_Y, DEFAULT_Y);
-		if(y == DEFAULT_Y)
-			return null;
-
-		int x = ItemNBTHelper.getInt(stack, TAG_POS_X, 0);
-		int z = ItemNBTHelper.getInt(stack, TAG_POS_Z, 0);
-		return new BlockPos(x, y, z);
+		if (stack.has(QuarkDataComponents.BOUNDS_POS)) {
+			BlockPos pos = stack.get(QuarkDataComponents.BOUNDS_POS);
+			if (pos.getY() == DEFAULT_Y)
+				return null;
+			return pos;
+		}
+		return null;
 	}
 
 	public static int getCount(ItemStack stack, BlockPos target, Level world) {

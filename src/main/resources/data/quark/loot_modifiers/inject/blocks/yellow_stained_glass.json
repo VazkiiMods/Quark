@@ -1,0 +1,10 @@
+{
+  "type": "neoforge:add_table",
+  "conditions": [
+    {
+      "condition": "neoforge:loot_table_id",
+      "loot_table_id": "minecraft:blocks/yellow_stained_glass"
+    }
+  ],
+  "table": "quark:inject/blocks/yellow_stained_glass"
+}

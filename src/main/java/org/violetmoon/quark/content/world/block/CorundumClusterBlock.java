@@ -22,9 +22,7 @@ import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.level.pathfinder.PathComputationType;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
-
 import org.jetbrains.annotations.NotNull;
-
 import org.violetmoon.quark.base.Quark;
 import org.violetmoon.quark.base.util.BlockPropertyUtil;
 import org.violetmoon.zeta.block.ZetaBlock;
@@ -124,8 +122,8 @@ public class CorundumClusterBlock extends ZetaBlock implements SimpleWaterlogged
 	}
 
 	@Override
-	public boolean isPathfindable(@NotNull BlockState state, @NotNull BlockGetter worldIn, @NotNull BlockPos pos, @NotNull PathComputationType type) {
-		return type == PathComputationType.WATER && worldIn.getFluidState(pos).is(FluidTags.WATER);
+	protected boolean isPathfindable(BlockState state, PathComputationType type) {
+		return type == PathComputationType.WATER && state.getFluidState().is(FluidTags.WATER);
 	}
 
 	@Override

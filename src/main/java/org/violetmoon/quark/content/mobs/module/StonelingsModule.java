@@ -5,10 +5,11 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.tags.BiomeTags;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobCategory;
-import net.minecraft.world.entity.SpawnPlacements.Type;
+import net.minecraft.world.entity.SpawnPlacementTypes;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.Rarity;
 import net.minecraft.world.level.levelgen.Heightmap.Types;
-import net.minecraftforge.common.Tags;
+import net.neoforged.neoforge.common.Tags;
 import org.violetmoon.quark.base.Quark;
 import org.violetmoon.quark.content.mobs.client.render.entity.StonelingRenderer;
 import org.violetmoon.quark.content.mobs.entity.Stoneling;
@@ -57,18 +58,17 @@ public class StonelingsModule extends ZetaModule {
 	@LoadEvent
 	public final void register(ZRegister event) {
 		this.registered = true;
-		diamondHeart = new DiamondHeartItem("diamond_heart", this, new Item.Properties());
+		diamondHeart = new DiamondHeartItem("diamond_heart", this, new Item.Properties().rarity(Rarity.UNCOMMON));
 
 		stonelingType = EntityType.Builder.of(Stoneling::new, MobCategory.CREATURE)
 				.sized(0.5F, 0.9F)
 				.clientTrackingRange(8)
-				.setCustomClientFactory((spawnEntity, world) -> new Stoneling(stonelingType, world))
 				.build("stoneling");
 		Quark.ZETA.registry.register(stonelingType, "stoneling", Registries.ENTITY_TYPE);
 
 		makeStonelingTrigger = event.getAdvancementModifierRegistry().registerManualTrigger("make_stoneling");
 
-		Quark.ZETA.entitySpawn.registerSpawn(stonelingType, MobCategory.MONSTER, Type.ON_GROUND, Types.MOTION_BLOCKING_NO_LEAVES, Stoneling::spawnPredicate, spawnConfig);
+		Quark.ZETA.entitySpawn.registerSpawn(stonelingType, MobCategory.MONSTER, SpawnPlacementTypes.ON_GROUND, Types.MOTION_BLOCKING_NO_LEAVES, Stoneling::spawnPredicate, spawnConfig);
 		//secondary placement is done in GW biome definition json.
 		Quark.ZETA.entitySpawn.addEgg(this, stonelingType, 0xA1A1A1, 0x505050, spawnConfig);
 	}

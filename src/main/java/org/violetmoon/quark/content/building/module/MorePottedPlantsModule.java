@@ -1,32 +1,32 @@
 package org.violetmoon.quark.content.building.module;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
+import com.google.common.base.Functions;
+import com.google.common.collect.Lists;
+import net.minecraft.client.color.block.BlockColor;
 import net.minecraft.client.color.block.BlockColors;
+import net.minecraft.world.level.ItemLike;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.FlowerPotBlock;
+import net.minecraft.world.level.block.state.BlockState;
 import org.violetmoon.zeta.client.event.load.ZAddBlockColorHandlers;
-import org.violetmoon.zeta.client.event.load.ZClientSetup;
 import org.violetmoon.zeta.event.bus.LoadEvent;
 import org.violetmoon.zeta.event.load.ZRegister;
 import org.violetmoon.zeta.module.ZetaLoadModule;
 import org.violetmoon.zeta.module.ZetaModule;
 import org.violetmoon.zeta.util.Hint;
 
-import com.google.common.base.Functions;
-import com.google.common.collect.Lists;
-
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.color.block.BlockColor;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.FlowerPotBlock;
-import net.minecraft.world.level.block.state.BlockState;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @ZetaLoadModule(category = "building")
 public class MorePottedPlantsModule extends ZetaModule {
 
-	private static Map<Block, Block> tintedBlocks = new HashMap<>();
+	public static List<FlowerPotBlock> pottedPlants = new ArrayList<>();
+	private static final Map<Block, Block> tintedBlocks = new HashMap<>();
+	private static final Map<Block, Block> blockMapForDatagen = new HashMap<>();
 
 	@Hint(key = "pottable_stuff")
 	List<Block> pottableBlocks = Lists.newArrayList();
@@ -38,7 +38,7 @@ public class MorePottedPlantsModule extends ZetaModule {
 		add(event, Blocks.CARROTS, "carrot");
 		add(event, Blocks.CHORUS_FLOWER, "chorus");
 		add(event, Blocks.COCOA, "cocoa_bean");
-		Block grass = add(event, Blocks.GRASS, "grass");
+		Block grass = add(event, Blocks.SHORT_GRASS, "short_grass");
 		add(event, Blocks.PEONY, "peony");
 		Block largeFern = add(event, Blocks.LARGE_FERN, "large_fern");
 		add(event, Blocks.LILAC, "lilac");
@@ -59,16 +59,23 @@ public class MorePottedPlantsModule extends ZetaModule {
 		event.getVariantRegistry().addFlowerPot(Blocks.CAVE_VINES, "cave_vines", p -> p.lightLevel(b -> 14));
 		add(event, Blocks.PITCHER_PLANT, "pitcher_plant");
 
-		tintedBlocks.put(grass, Blocks.GRASS);
+		tintedBlocks.put(grass, Blocks.SHORT_GRASS);
 		tintedBlocks.put(largeFern, Blocks.LARGE_FERN);
 		tintedBlocks.put(sugarCane, Blocks.SUGAR_CANE);
 		tintedBlocks.put(tallGrass, Blocks.TALL_GRASS);
 		tintedBlocks.put(vine, Blocks.VINE);
 	}
 
+	public static ItemLike getItemLikeFromBlock(Block block) {
+		return blockMapForDatagen.get(block).asItem();
+	}
+
 	private FlowerPotBlock add(ZRegister event, Block block, String name) {
 		pottableBlocks.add(block);
-		return event.getVariantRegistry().addFlowerPot(block, name, Functions.identity());
+		FlowerPotBlock pot = event.getVariantRegistry().addFlowerPot(block, name, Functions.identity());
+		pottedPlants.add(pot);
+		blockMapForDatagen.put(pot, block);
+		return pot;
 	}
 
 	@ZetaLoadModule(clientReplacement = true)

@@ -65,7 +65,7 @@ public class VariantAnimalTexturesModule extends ZetaModule {
 	protected static final List<String> BEE_VARIANTS = List.of(
 			"acebee", "agenbee", "arobee", "beefluid", "beesexual",
 			"beequeer", "enbee", "gaybee", "interbee", "lesbeean",
-			"panbee", "polysexbee", "transbee", "helen");
+			"panbee", "polysexbee", "transbee", "helen", "mlbeem");
 
 	@Config(description = "The chance for an animal to have a special \"Shiny\" skin, like a shiny pokemon. This is 1 in X. Set to 0 to disable.")
 	public static int shinyAnimalChance = 2048;
@@ -83,9 +83,9 @@ public class VariantAnimalTexturesModule extends ZetaModule {
 			textures = Multimaps.newListMultimap(new EnumMap<>(VariantTextureType.class), ArrayList::new);
 			shinyTextures = new HashMap<>();
 
-			registerTextures(VariantTextureType.COW, COW_COUNT, new ResourceLocation("textures/entity/cow/cow.png"));
-			registerTextures(VariantTextureType.PIG, PIG_COUNT, new ResourceLocation("textures/entity/pig/pig.png"));
-			registerTextures(VariantTextureType.CHICKEN, CHICKEN_COUNT, new ResourceLocation("textures/entity/chicken.png"));
+			registerTextures(VariantTextureType.COW, COW_COUNT, ResourceLocation.withDefaultNamespace("textures/entity/cow/cow.png"));
+			registerTextures(VariantTextureType.PIG, PIG_COUNT, ResourceLocation.withDefaultNamespace("textures/entity/pig/pig.png"));
+			registerTextures(VariantTextureType.CHICKEN, CHICKEN_COUNT, ResourceLocation.withDefaultNamespace("textures/entity/chicken.png"));
 			registerShiny(VariantTextureType.RABBIT);
 			registerShiny(VariantTextureType.LLAMA);
 			registerShiny(VariantTextureType.DOLPHIN);
@@ -95,21 +95,20 @@ public class VariantAnimalTexturesModule extends ZetaModule {
 		@LoadEvent
 		public final void configChanged(ZConfigChanged event) {
 			// Pass over to a static reference for easier computing the coremod hook
-			staticEnabled = this.enabled;
+			staticEnabled = isEnabled();
 		}
 
 		@PlayEvent
 		public void doShinySparkles(ZLivingTick event) {
-			if(!shinySparkles)
-				return;
-			LivingEntity entity = event.getEntity();
+			if(!shinySparkles || !(event.getEntity() instanceof LivingEntity)) return;
+			LivingEntity entity = (LivingEntity) event.getEntity();
 			Level level = entity.level();
 			if(level.isClientSide() && level.getGameTime() % 10 == 0) {
 				if(isSparkly(entity)) {
 					double angle = Math.random() * 2 * Math.PI;
 					double dist = Math.random() * 0.5 + 0.25;
 					double dX = Math.cos(angle) * dist;
-					double dY = entity.getDimensions(entity.getPose()).height + (Math.random() - 0.5) * 0.2;
+					double dY = entity.getDimensions(entity.getPose()).height() + (Math.random() - 0.5) * 0.2;
 					double dZ = Math.sin(angle) * dist;
 					level.addParticle(ParticleTypes.HAPPY_VILLAGER, entity.getX() + dX, entity.getY() + dY, entity.getZ() + dZ, Math.random() - 0.5, Math.random() - 0.5, Math.random() - 0.5);
 				}
@@ -205,7 +204,7 @@ public class VariantAnimalTexturesModule extends ZetaModule {
 						type = "nectar";
 
 					String path = String.format(Locale.ROOT, "textures/model/entity/variants/bees/%s/%s.png", name, type);
-					return new ResourceLocation(Quark.MOD_ID, path);
+					return Quark.asResource(path);
 				}
 			}
 
@@ -253,7 +252,7 @@ public class VariantAnimalTexturesModule extends ZetaModule {
 		private static void registerTextures(VariantTextureType type, int count, ResourceLocation vanilla) {
 			String name = type.name().toLowerCase(Locale.ROOT);
 			for(int i = 1; i < count + 1; i++)
-				textures.put(type, new ResourceLocation(Quark.MOD_ID, String.format(Locale.ROOT, "textures/model/entity/variants/%s%d.png", name, i)));
+				textures.put(type, Quark.asResource(String.format(Locale.ROOT, "textures/model/entity/variants/%s%d.png", name, i)));
 
 			if(vanilla != null)
 				textures.put(type, vanilla);
@@ -261,7 +260,7 @@ public class VariantAnimalTexturesModule extends ZetaModule {
 		}
 
 		private static void registerShiny(VariantTextureType type) {
-			shinyTextures.put(type, new ResourceLocation(Quark.MOD_ID, String.format(Locale.ROOT, "textures/model/entity/variants/%s_shiny.png", type.name().toLowerCase(Locale.ROOT))));
+			shinyTextures.put(type, Quark.asResource(String.format(Locale.ROOT, "textures/model/entity/variants/%s_shiny.png", type.name().toLowerCase(Locale.ROOT))));
 		}
 
 	}

@@ -1,8 +1,5 @@
 package org.violetmoon.quark.base.client.config;
 
-import com.google.common.collect.ImmutableSet;
-
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.events.GuiEventListener;

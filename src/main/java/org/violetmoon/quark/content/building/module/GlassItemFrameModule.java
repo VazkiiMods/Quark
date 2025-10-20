@@ -5,8 +5,9 @@ import net.minecraft.client.resources.model.ModelResourceLocation;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobCategory;
+import net.minecraft.world.item.CreativeModeTabs;
 import net.minecraft.world.item.Item;
-
+import net.minecraft.world.item.Items;
 import org.violetmoon.quark.base.Quark;
 import org.violetmoon.quark.content.building.client.render.entity.GlassItemFrameRenderer;
 import org.violetmoon.quark.content.building.entity.GlassItemFrame;
@@ -50,11 +51,10 @@ public class GlassItemFrameModule extends ZetaModule {
 				.clientTrackingRange(10)
 				.updateInterval(Integer.MAX_VALUE) // update interval
 				.setShouldReceiveVelocityUpdates(false)
-				.setCustomClientFactory((spawnEntity, world) -> new GlassItemFrame(glassFrameEntity, world))
 				.build("glass_frame");
 		Quark.ZETA.registry.register(glassFrameEntity, "glass_frame", Registries.ENTITY_TYPE);
 
-		CreativeTabManager.daisyChain();
+        CreativeTabManager.startChain(CreativeModeTabs.FUNCTIONAL_BLOCKS, false, false, Items.GLOW_ITEM_FRAME);
 		glassFrame = new QuarkItemFrameItem("glass_item_frame", this, GlassItemFrame::new);
 		glowingGlassFrame = new QuarkItemFrameItem("glowing_glass_item_frame", this,
 				(w, p, d) -> {
@@ -62,7 +62,7 @@ public class GlassItemFrameModule extends ZetaModule {
 					e.getEntityData().set(GlassItemFrame.IS_SHINY, true);
 					return e;
 				});
-		CreativeTabManager.endDaisyChain();
+		CreativeTabManager.endChain();
 	}
 
 
@@ -76,8 +76,7 @@ public class GlassItemFrameModule extends ZetaModule {
 
 		@LoadEvent
 		public void registerAdditionalModels(ZAddModels event) {
-			event.register(new ModelResourceLocation(Quark.MOD_ID, "extra/glass_item_frame", "inventory"));
+			event.register(ModelResourceLocation.standalone(Quark.asResource("extra/glass_item_frame")));
 		}
-
 	}
 }

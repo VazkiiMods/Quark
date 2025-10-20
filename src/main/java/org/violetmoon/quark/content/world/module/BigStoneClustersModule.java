@@ -11,7 +11,7 @@ import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.levelgen.GenerationStep.Decoration;
-import net.minecraftforge.common.Tags;
+import net.neoforged.neoforge.common.Tags;
 import org.violetmoon.quark.base.util.QuarkWorldGenWeights;
 import org.violetmoon.quark.content.world.config.AirStoneClusterConfig;
 import org.violetmoon.quark.content.world.config.BigStoneClusterConfig;
@@ -117,7 +117,7 @@ public class BigStoneClustersModule extends ZetaModule {
 			}
 
 			String dimFinal = dimension;
-			BuiltInRegistries.BLOCK.getOptional(new ResourceLocation(bname)).ifPresent(blockObj -> {
+			BuiltInRegistries.BLOCK.getOptional(ResourceLocation.parse(bname)).ifPresent(blockObj -> {
 				if(blockObj != Blocks.AIR) {
 					if(dimFinal == null)
 						blockReplacePredicate = blockReplacePredicate.or((w, b) -> blockObj == b);

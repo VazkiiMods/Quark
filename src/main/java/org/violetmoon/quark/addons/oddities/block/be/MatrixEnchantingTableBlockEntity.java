@@ -2,13 +2,15 @@ package org.violetmoon.quark.addons.oddities.block.be;
 
 import com.google.common.collect.Lists;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Holder;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleTypes;
-import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.BlockTags;
-import net.minecraft.util.RandomSource;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
@@ -17,9 +19,11 @@ import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.EnchantedBookItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.item.component.CustomData;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.item.enchantment.EnchantmentInstance;
+import net.minecraft.world.item.enchantment.ItemEnchantments;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
@@ -35,10 +39,10 @@ import org.violetmoon.quark.addons.oddities.inventory.EnchantmentMatrix;
 import org.violetmoon.quark.addons.oddities.inventory.EnchantmentMatrix.Piece;
 import org.violetmoon.quark.addons.oddities.inventory.MatrixEnchantingMenu;
 import org.violetmoon.quark.addons.oddities.module.MatrixEnchantingModule;
-import org.violetmoon.quark.addons.oddities.util.Influence;
+import org.violetmoon.quark.addons.oddities.util.InfluenceLocations;
 import org.violetmoon.quark.api.IEnchantmentInfluencer;
 import org.violetmoon.quark.base.Quark;
-import org.violetmoon.zeta.util.ItemNBTHelper;
+import org.violetmoon.quark.base.components.QuarkDataComponents;
 
 import java.util.HashMap;
 import java.util.List;
@@ -167,14 +171,14 @@ public class MatrixEnchantingTableBlockEntity extends AbstractEnchantingTableBlo
 				book = true;
 			}
 
-			Map<Enchantment, Integer> enchantments = new HashMap<>();
+			Map<Holder<Enchantment>, Integer> enchantments = new HashMap<>();
 
 			for(int i : matrix.placedPieces) {
 				Piece p = matrix.pieces.get(i);
 
 				if(p != null && p.enchant != null) {
-					for(Enchantment o : enchantments.keySet())
-						if(o == p.enchant || !p.enchant.isCompatibleWith(o) || !o.isCompatibleWith(p.enchant))
+					for (Holder<Enchantment> o : enchantments.keySet())
+						if(o == p.enchant || p.enchant.value().exclusiveSet().contains(o) || o.value().exclusiveSet().contains(p.enchant))
 							return; // Incompatible
 
 					enchantments.put(p.enchant, p.level);
@@ -182,11 +186,15 @@ public class MatrixEnchantingTableBlockEntity extends AbstractEnchantingTableBlo
 			}
 
 			if(book)
-				for(Entry<Enchantment, Integer> e : enchantments.entrySet())
-					EnchantedBookItem.addEnchantment(out, new EnchantmentInstance(e.getKey(), e.getValue()));
+				for(Entry<Holder<Enchantment>, Integer> e : enchantments.entrySet())
+					EnchantedBookItem.createForEnchantment(new EnchantmentInstance(e.getKey(), e.getValue()));
 			else {
-				EnchantmentHelper.setEnchantments(enchantments, out);
-				out.removeTagKey(TAG_STACK_MATRIX);
+				ItemEnchantments.Mutable mutableEnchList = new ItemEnchantments.Mutable(net.minecraft.world.item.enchantment.ItemEnchantments.EMPTY);
+				for (Entry<Holder<Enchantment>, Integer> e : enchantments.entrySet()) {
+					mutableEnchList.set(e.getKey(), e.getValue());
+				}
+				EnchantmentHelper.setEnchantments(out,mutableEnchList.toImmutable());
+				out.remove(QuarkDataComponents.STACK_MATRIX);
 			}
 
 			setItem(2, out);
@@ -200,14 +208,13 @@ public class MatrixEnchantingTableBlockEntity extends AbstractEnchantingTableBlo
 			matrix = null;
 
 			if(stack.isEnchantable()) {
-				matrix = new EnchantmentMatrix(stack, level.random);
+				matrix = new EnchantmentMatrix(stack, level);
 				matrixDirty = true;
 				makeUUID();
 
-				if(ItemNBTHelper.verifyExistence(stack, TAG_STACK_MATRIX)) {
-					CompoundTag cmp = ItemNBTHelper.getCompound(stack, TAG_STACK_MATRIX, true);
-					if(cmp != null)
-						matrix.readFromNBT(cmp);
+			if (stack.has(QuarkDataComponents.STACK_MATRIX)) {
+					CompoundTag cmp = stack.get(QuarkDataComponents.STACK_MATRIX).copyTag();
+                	matrix.readFromNBT(cmp);
 				}
 			}
 		}
@@ -219,7 +226,7 @@ public class MatrixEnchantingTableBlockEntity extends AbstractEnchantingTableBlo
 
 		CompoundTag cmp = new CompoundTag();
 		matrix.writeToNBT(cmp);
-		ItemNBTHelper.setCompound(stack, TAG_STACK_MATRIX, cmp);
+		stack.set(QuarkDataComponents.STACK_MATRIX, CustomData.of(cmp));
 
 		matrixDirty = true;
 		makeUUID();
@@ -274,8 +281,7 @@ public class MatrixEnchantingTableBlockEntity extends AbstractEnchantingTableBlo
 
 	public static boolean isShortBlock(Level level, BlockPos pos) {
 		BlockState state = level.getBlockState(pos);
-		Block block = state.getBlock();
-		VoxelShape shape = block.getShape(state, level, pos, CollisionContext.empty());
+		VoxelShape shape = state.getShape(level, pos, CollisionContext.empty());
 		if (shape.isEmpty())
 			return true;
 		AABB bounds = shape.bounds();
@@ -293,19 +299,19 @@ public class MatrixEnchantingTableBlockEntity extends AbstractEnchantingTableBlo
 			if(influencer != null) {
 				int count = influencer.getInfluenceStack(world, pos, state);
 
-				List<Enchantment> influencedEnchants = BuiltInRegistries.ENCHANTMENT.stream()
+				List<Holder.Reference<Enchantment>> influencedEnchants = world.registryAccess().lookupOrThrow(Registries.ENCHANTMENT).listElements()
 						.filter((it) -> influencer.influencesEnchantment(world, pos, state, it)).toList();
-				List<Enchantment> dampenedEnchants = BuiltInRegistries.ENCHANTMENT.stream()
+				List<Holder.Reference<Enchantment>> dampenedEnchants = world.registryAccess().lookupOrThrow(Registries.ENCHANTMENT).listElements()
 						.filter((it) -> influencer.dampensEnchantment(world, pos, state, it)).toList();
 				if(!influencedEnchants.isEmpty() || !dampenedEnchants.isEmpty()) {
-					for(Enchantment e : influencedEnchants) {
-						int curr = influences.getOrDefault(e, 0);
-						influences.put(e, curr + count);
+					for(Holder.Reference<Enchantment> e : influencedEnchants) {
+						int curr = influences.getOrDefault(e.value(), 0);
+						influences.put(e.value(), curr + count);
 					}
 
-					for(Enchantment e : dampenedEnchants) {
-						int curr = influences.getOrDefault(e, 0);
-						influences.put(e, curr - count);
+					for(Holder.Reference<Enchantment> e : dampenedEnchants) {
+						int curr = influences.getOrDefault(e.value(), 0);
+						influences.put(e.value(), curr - count);
 					}
 
 					return 1;
@@ -317,8 +323,8 @@ public class MatrixEnchantingTableBlockEntity extends AbstractEnchantingTableBlo
 	}
 
 	@Override
-	public void writeSharedNBT(CompoundTag cmp) {
-		super.writeSharedNBT(cmp);
+	public void writeSharedNBT(CompoundTag cmp, HolderLookup.Provider provider) {
+		super.writeSharedNBT(cmp, provider);
 
 		CompoundTag matrixCmp = new CompoundTag();
 		if(matrix != null) {
@@ -334,8 +340,8 @@ public class MatrixEnchantingTableBlockEntity extends AbstractEnchantingTableBlo
 	}
 
 	@Override
-	public void readSharedNBT(CompoundTag cmp) {
-		super.readSharedNBT(cmp);
+	public void readSharedNBT(CompoundTag cmp, HolderLookup.Provider provider) {
+		super.readSharedNBT(cmp, provider);
 
 		if(cmp.contains(TAG_MATRIX)) {
 			long least = cmp.getLong(TAG_MATRIX_UUID_LESS);
@@ -345,7 +351,7 @@ public class MatrixEnchantingTableBlockEntity extends AbstractEnchantingTableBlo
 			if(!newId.equals(matrixId)) {
 				CompoundTag matrixCmp = cmp.getCompound(TAG_MATRIX);
 				matrixId = newId;
-				matrix = new EnchantmentMatrix(getItem(0), RandomSource.create());
+				matrix = new EnchantmentMatrix(getItem(0), level);
 				matrix.readFromNBT(matrixCmp);
 			}
 			clientMatrixDirty = true;
@@ -372,7 +378,17 @@ public class MatrixEnchantingTableBlockEntity extends AbstractEnchantingTableBlo
 			return influencer;
 		else if(MatrixEnchantingModule.customInfluences.containsKey(state))
 			return MatrixEnchantingModule.customInfluences.get(state);
-		return CandleInfluencer.forBlock(state.getBlock(), world, pos);
+		return CandleInfluencer.forBlock(state, world, pos);
+	}
+
+	@Override
+	public void startOpen(@NotNull Player player) {
+
+	}
+
+	@Override
+	public void stopOpen(@NotNull Player player) {
+
 	}
 
 	private record CandleInfluencer(boolean inverted) implements IEnchantmentInfluencer {
@@ -381,11 +397,11 @@ public class MatrixEnchantingTableBlockEntity extends AbstractEnchantingTableBlo
 		private static final CandleInfluencer INVERTED_INSTANCE = new CandleInfluencer(true);
 
 		@Nullable
-		public static CandleInfluencer forBlock(Block block, Level world, BlockPos pos) {
+		public static CandleInfluencer forBlock(BlockState blockState, Level world, BlockPos pos) {
 			if(MatrixEnchantingModule.candleInfluencingFailed)
 				return null;
 
-			if(CANDLES.contains(block)) {
+			if(CANDLES.contains(blockState.getBlock()) && blockState.getValue(CandleBlock.LIT)) {
 				if(MatrixEnchantingModule.soulCandlesInvert) {
 					BlockPos posBelow = pos.below();
 					BlockState below = world.getBlockState(posBelow);
@@ -414,9 +430,9 @@ public class MatrixEnchantingTableBlockEntity extends AbstractEnchantingTableBlo
 		}
 
 		@Override
-		public float[] getEnchantmentInfluenceColor(BlockGetter world, BlockPos pos, BlockState state) {
+		public int getEnchantmentInfluenceColor(BlockGetter world, BlockPos pos, BlockState state) {
 			DyeColor color = getColor(state);
-			return color == null ? null : color.getTextureDiffuseColors();
+			return color == null ? null : color.getTextureDiffuseColor();
 		}
 
 		@Nullable
@@ -429,7 +445,7 @@ public class MatrixEnchantingTableBlockEntity extends AbstractEnchantingTableBlo
 
 		@Override
 		public double getExtraParticleChance(BlockGetter world, BlockPos pos, BlockState state) {
-			return 0.25;
+			return 0.25d;
 		}
 
 		@Override
@@ -438,23 +454,23 @@ public class MatrixEnchantingTableBlockEntity extends AbstractEnchantingTableBlo
 		}
 
 		@Override
-		public boolean influencesEnchantment(BlockGetter world, BlockPos pos, BlockState state, Enchantment enchantment) {
+		public boolean influencesEnchantment(BlockGetter world, BlockPos pos, BlockState state, Holder<Enchantment> enchantment) {
 			DyeColor color = getColor(state);
 			if(color == null)
 				return false;
-			Influence influence = MatrixEnchantingModule.candleInfluences.get(color);
-			List<Enchantment> boosts = inverted ? influence.dampen() : influence.boost();
-			return boosts.contains(enchantment);
+			InfluenceLocations influence = MatrixEnchantingModule.candleInfluences.get(color);
+			List<ResourceLocation> boosts = inverted ? influence.dampen() : influence.boost();
+			return boosts.contains(ResourceLocation.parse(enchantment.getRegisteredName()));
 		}
 
 		@Override
-		public boolean dampensEnchantment(BlockGetter world, BlockPos pos, BlockState state, Enchantment enchantment) {
+		public boolean dampensEnchantment(BlockGetter world, BlockPos pos, BlockState state, Holder<Enchantment> enchantment) {
 			DyeColor color = getColor(state);
 			if(color == null)
 				return false;
-			Influence influence = MatrixEnchantingModule.candleInfluences.get(color);
-			List<Enchantment> dampens = inverted ? influence.boost() : influence.dampen();
-			return dampens.contains(enchantment);
+			InfluenceLocations influence = MatrixEnchantingModule.candleInfluences.get(color);
+			List<ResourceLocation> dampens = inverted ? influence.boost() : influence.dampen();
+			return dampens.contains(ResourceLocation.parse(enchantment.getRegisteredName()));
 		}
 	}
 

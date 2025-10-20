@@ -8,7 +8,6 @@ import net.minecraft.client.renderer.CubeMap;
 import net.minecraft.client.renderer.PanoramaRenderer;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -23,7 +22,7 @@ import java.util.List;
 
 public class QuarkConfigHomeScreen extends ZetaConfigHomeScreen {
 
-	private static final CubeMap CUBE_MAP = new CubeMap(new ResourceLocation(Quark.MOD_ID, "textures/misc/panorama/panorama"));
+	private static final CubeMap CUBE_MAP = new CubeMap(Quark.asResource("textures/misc/panorama/panorama"));
 	private static final PanoramaRenderer PANORAMA = new PanoramaRenderer(CUBE_MAP);
 	private float time;
 
@@ -45,40 +44,40 @@ public class QuarkConfigHomeScreen extends ZetaConfigHomeScreen {
 	}
 
 	//annoyingly it's not passed to renderBackground
-	protected float partialTicks;
+	//protected float partialTicks;
 
 	@Override
-	public void renderBackground(GuiGraphics guiGraphics) {
-		time += partialTicks;
+	public void renderBackground(GuiGraphics graphics, int mouseX, int mouseY, float partialTick) {
+		time += partialTick;
 
 		Minecraft mc = Minecraft.getInstance();
+
 		if(mc.level == null) {
-			float spin = partialTicks * 2;
+			float spin = 1f;
 			float blur = 0.85F;
 
-			if(time < 20F && !QuarkGeneralConfig.disableQMenuEffects) {
+			if (time < 20F && !QuarkGeneralConfig.disableQMenuEffects) {
 				spin += (20F - time);
 				blur = (time / 20F) * 0.75F + 0.1F;
 			}
 
-			PANORAMA.render(spin, blur);
-		} else
-			super.renderBackground(guiGraphics);
+			PANORAMA.render(graphics, this.width, this.height, blur, partialTick);
+		} else {
+			super.renderBackground(graphics, mouseX, mouseY, partialTick);
+		}
 
 		int boxWidth = 400;
-		guiGraphics.fill(width / 2 - boxWidth / 2, 0, width / 2 + boxWidth / 2, this.height, 0x66000000);
-		guiGraphics.fill(width / 2 - boxWidth / 2 - 1, 0, width / 2 - boxWidth / 2, this.height, 0x66999999); // nice
-		guiGraphics.fill(width / 2 + boxWidth / 2, 0, width / 2 + boxWidth / 2 + 1, this.height, 0x66999999);
+		graphics.fill(width / 2 - boxWidth / 2, 0, width / 2 + boxWidth / 2, this.height, 0x66000000);
+		graphics.fill(width / 2 - boxWidth / 2 - 1, 0, width / 2 - boxWidth / 2, this.height, 0x66999999); // nice
+		graphics.fill(width / 2 + boxWidth / 2, 0, width / 2 + boxWidth / 2 + 1, this.height, 0x66999999);
 	}
 
 	@Override
 	public void render(@NotNull GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTicks) {
-		this.partialTicks = partialTicks;
-
+		//this.partialTicks = partialTicks;
 		super.render(guiGraphics, mouseX, mouseY, partialTicks);
 
 		guiGraphics.drawCenteredString(font, I18n.get("quark.gui.config.subheader1", ChatFormatting.LIGHT_PURPLE, ContributorRewardHandler.featuredPatron, ChatFormatting.RESET), width / 2, 28, 0x9EFFFE);
 		guiGraphics.drawCenteredString(font, I18n.get("quark.gui.config.subheader2"), width / 2, 38, 0x9EFFFE);
 	}
-
 }

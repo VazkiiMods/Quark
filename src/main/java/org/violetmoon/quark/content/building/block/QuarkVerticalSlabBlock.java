@@ -1,5 +1,7 @@
 package org.violetmoon.quark.content.building.block;
 
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.CreativeModeTabs;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.SlabBlock;
@@ -8,6 +10,7 @@ import org.jetbrains.annotations.Nullable;
 
 import org.violetmoon.quark.base.Quark;
 import org.violetmoon.quark.base.util.BlockPropertyUtil;
+import org.violetmoon.quark.content.building.module.VerticalSlabsModule;
 import org.violetmoon.zeta.block.IZetaBlock;
 import org.violetmoon.zeta.block.ZetaSlabBlock;
 import org.violetmoon.zeta.module.ZetaModule;
@@ -31,10 +34,15 @@ public class QuarkVerticalSlabBlock extends VerticalSlabBlock implements IZetaBl
 		if(!(parent instanceof SlabBlock))
 			throw new IllegalArgumentException("Can't rotate a non-slab block into a vertical slab.");
 
-		if(parent instanceof ZetaSlabBlock quarkSlab)
-			setCondition(quarkSlab.parent::isEnabled);
+        ResourceKey<CreativeModeTab> tab = CreativeModeTabs.BUILDING_BLOCKS;
 
-		CreativeTabManager.addToCreativeTabNextTo(CreativeModeTabs.BUILDING_BLOCKS, this, parent, false);
+		if(parent instanceof ZetaSlabBlock quarkSlab) {
+            setCondition(quarkSlab.parent::isEnabled);
+            tab = CreativeTabManager.getTabOfItem(parent);
+        }
+
+		CreativeTabManager.addNextToItem(tab, this, parent, false);
+		VerticalSlabsModule.blocks.put(parent, this);
 	}
 
 	@Override

@@ -12,7 +12,7 @@ public class BlockPropertyUtil {
      * Like Property.copy but only copies ones that do not contain a funciton as those are not safe to copy since they could reference states we dont have
      */
     public static BlockBehaviour.Properties copyPropertySafe(Block blockBehaviour) {
-        var p = BlockBehaviour.Properties.copy(blockBehaviour);
+        var p = BlockBehaviour.Properties.ofFullCopy(blockBehaviour);
         BlockState state = blockBehaviour.defaultBlockState();
         p.lightLevel(s -> state.getLightEmission());
         p.offsetType(BlockBehaviour.OffsetType.NONE);

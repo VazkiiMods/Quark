@@ -1,0 +1,38 @@
+{
+  "parent": "quark:apply_color_rune",
+  "criteria": {
+    "wear_full_rainbow": {
+      "trigger": "quark:full_rainbow"
+    }
+  },
+  "display": {
+    "announce_to_chat": true,
+    "description": {
+      "translate": "advancements.quark.wear_full_rainbow.description"
+    },
+    "frame": "challenge",
+    "hidden": true,
+    "icon": {
+      "id": "quark:smithing_template_rune"
+    },
+    "show_toast": true,
+    "title": {
+      "translate": "advancements.quark.wear_full_rainbow.title"
+    }
+  },
+  "rewards": {
+    "experience": 100
+  },
+  "requirements": [
+    [
+      "wear_full_rainbow"
+    ]
+  ],
+  "neoforge:conditions": [
+    {
+      "type": "zeta:flag",
+      "flag": "color_runes"
+    }
+  ]
+
+}

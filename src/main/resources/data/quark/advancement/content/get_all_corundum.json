@@ -1,0 +1,149 @@
+{
+  "parent": "minecraft:story/smelt_iron",
+  "criteria": {
+    "red": {
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "quark:red_corundum_cluster"
+            ]
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "orange": {
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "quark:orange_corundum_cluster"
+            ]
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "yellow": {
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "quark:yellow_corundum_cluster"
+            ]
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+   "green": {
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "quark:green_corundum_cluster"
+            ]
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "blue": {
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "quark:blue_corundum_cluster"
+            ]
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "indigo": {
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "quark:indigo_corundum_cluster"
+            ]
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "violet": {
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "quark:violet_corundum_cluster"
+            ]
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "white": {
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "quark:white_corundum_cluster"
+            ]
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "black": {
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "quark:black_corundum_cluster"
+            ]
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "display": {
+    "announce_to_chat": true,
+    "description": {
+      "translate": "advancements.quark.get_all_corundum.description"
+    },
+    "frame": "challenge",
+    "hidden": false,
+    "icon": {
+      "id": "quark:blue_corundum_cluster"
+    },
+    "show_toast": true,
+    "title": {
+      "translate": "advancements.quark.get_all_corundum.title"
+    }
+  },
+  "rewards": {
+    "experience": 100
+  },
+  "requirements": [
+    [ "red" ],
+    [ "orange" ],
+    [ "yellow" ],
+    [ "green" ],
+    [ "blue" ],
+    [ "indigo" ],
+    [ "violet" ],
+    [ "white" ],
+    [ "black" ]
+  ],
+  "neoforge:conditions": [
+    {
+      "type": "zeta:flag",
+      "flag": "corundum"
+    }
+  ]
+
+}

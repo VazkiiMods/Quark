@@ -1,31 +1,26 @@
 package org.violetmoon.quark.content.automation.block.be;
 
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.world.Container;
+import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.PipeBlock;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import org.violetmoon.quark.addons.oddities.block.be.PipeBlockEntity;
+import org.violetmoon.quark.addons.oddities.module.PipesModule;
 import org.violetmoon.quark.content.automation.block.ChuteBlock;
 import org.violetmoon.quark.content.automation.module.ChuteModule;
 import org.violetmoon.quark.content.building.module.GrateModule;
-import org.violetmoon.quark.content.building.module.HollowLogsModule;
 import org.violetmoon.zeta.block.be.ZetaBlockEntity;
-
-import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
-import net.minecraft.world.entity.item.ItemEntity;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.block.RotatedPillarBlock;
-import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.capabilities.ForgeCapabilities;
-import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.items.IItemHandler;
 
 /**
  * @author WireSegal
  *         Created at 10:18 AM on 9/29/19.
  */
-public class ChuteBlockEntity extends ZetaBlockEntity {
-
+public class ChuteBlockEntity extends ZetaBlockEntity implements Container {
 	private static final AABB CLEARANCE = new AABB(BlockPos.ZERO).deflate(0.25).move(0, 0.25, 0);
 
 	public ChuteBlockEntity(BlockPos pos, BlockState state) {
@@ -38,7 +33,8 @@ public class ChuteBlockEntity extends ZetaBlockEntity {
 			BlockState state = level.getBlockState(below);
 			if (state.isAir()) return true;
 			if (state.is(GrateModule.grate)) return true;
-			//this could be cached in a blockstate property. maybe micro optimization...
+            if (state.is(PipesModule.pipesTag) && state.hasProperty(PipeBlock.UP)) return true;
+            //this could be cached in a blockstate property. maybe micro optimization...
 			var shape = state.getCollisionShape(level, below);
 			if (shape.isEmpty() ) return true;
 			if (shape.max(Direction.Axis.Y)>1) return false;
@@ -51,51 +47,66 @@ public class ChuteBlockEntity extends ZetaBlockEntity {
 		return false;
 	}
 
-	private final IItemHandler handler = new IItemHandler() {
-		@Override
-		public int getSlots() {
-			return 1;
+	@Override
+	public int getContainerSize() {
+		return 1;
+	}
+
+	@Override
+	public boolean isEmpty() {
+		return false;
+	}
+
+	@Override
+	public ItemStack getItem(int slot) {
+		return ItemStack.EMPTY;
+	}
+
+	@Override
+	public ItemStack removeItem(int slot, int amount) {
+		return ItemStack.EMPTY;
+	}
+
+	@Override
+	public ItemStack removeItemNoUpdate(int slot) {
+		return ItemStack.EMPTY;
+	}
+
+	@Override
+	public void setItem(int slot, ItemStack stack) {
+		if(!canDropItem())
+			return;
+
+        if(level != null && !stack.isEmpty()) {
+            BlockPos below = worldPosition.below();
+            BlockState state = level.getBlockState(below);
+            if (state.is(PipesModule.pipesTag) && state.hasProperty(PipeBlock.UP)) {
+                ((PipeBlockEntity)level.getBlockEntity(below)).passIn(stack, Direction.UP);
+            } else {
+                ItemEntity entity = new ItemEntity(level, worldPosition.getX() + 0.5,
+                        worldPosition.getY() - 0.5, worldPosition.getZ() + 0.5, stack.copy());
+                entity.setDeltaMovement(0, 0, 0);
+                level.addFreshEntity(entity);
+            }
 		}
+    }
 
-		@NotNull
-		@Override
-		public ItemStack getStackInSlot(int slot) {
-			return ItemStack.EMPTY;
-		}
+	@Override
+	public boolean stillValid(Player player) {
+		return true;
+	}
 
-		@NotNull
-		@Override
-		public ItemStack insertItem(int slot, @NotNull ItemStack stack, boolean simulate) {
-			if(!canDropItem())
-				return stack;
+    @Override
+    public boolean canPlaceItem(int slot, ItemStack stack) {
+        return Container.super.canPlaceItem(slot, stack) && canDropItem();
+    }
 
-			if(!simulate && level != null && !stack.isEmpty()) {
-				ItemEntity entity = new ItemEntity(level, worldPosition.getX() + 0.5,
-						worldPosition.getY() - 0.5, worldPosition.getZ() + 0.5, stack.copy());
-				entity.setDeltaMovement(0, 0, 0);
-				level.addFreshEntity(entity);
-			}
+    @Override
+	public void clearContent() {
 
-			return ItemStack.EMPTY;
-		}
+	}
 
-		@NotNull
-		@Override
-		public ItemStack extractItem(int slot, int amount, boolean simulate) {
-			return ItemStack.EMPTY;
-		}
-
-		@Override
-		public int getSlotLimit(int slot) {
-			return 64;
-		}
-
-		@Override
-		public boolean isItemValid(int slot, @NotNull ItemStack stack) {
-			return true;
-		}
-	};
-
+	/* TODO: Need to use ICapabilityProvider in registration (?)
 	@NotNull
 	@Override
 	public <T> LazyOptional<T> getCapability(@NotNull Capability<T> cap, @Nullable Direction side) {
@@ -103,4 +114,5 @@ public class ChuteBlockEntity extends ZetaBlockEntity {
 			return LazyOptional.of(() -> handler).cast();
 		return super.getCapability(cap, side);
 	}
+	 */
 }
