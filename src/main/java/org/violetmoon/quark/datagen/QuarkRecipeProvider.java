@@ -202,6 +202,14 @@ public class QuarkRecipeProvider extends RecipeProvider implements IConditionBui
         }
         //mixed_chest_wood_but_without_exclusions is manual
 
+        //chest_reversion
+        ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, Blocks.CHEST)
+                .requires(TagKey.create(Registries.ITEM, Quark.asResource("revertable_chests")))
+                .save(recipeOutput.withConditions(zCond("chest_reversion")), "quark:building/crafting/chest_revert");
+        ShapelessRecipeBuilder.shapeless(RecipeCategory.REDSTONE, Blocks.TRAPPED_CHEST)
+                .requires(TagKey.create(Registries.ITEM, Quark.asResource("revertable_trapped_chests")))
+                .save(recipeOutput.withConditions(zCond("chest_reversion")), "quark:building/crafting/trapped_chest_revert");
+
         //compressed
         compressUncompress(Items.APPLE, CompressedBlocksModule.apple, recipeOutput, null, "apple_crate");
         compressUncompress(Items.BEETROOT, CompressedBlocksModule.beetroot, recipeOutput, null, "beetroot_crate");
@@ -670,7 +678,6 @@ public class QuarkRecipeProvider extends RecipeProvider implements IConditionBui
             } else if (slab.getDescriptionId().contains("soul_sandstone")) {
                 condition = and(zCond("soul_sandstone"));
             }
-
             //probably more config-dependent vert slabs
 
             String slabName = BuiltInRegistries.BLOCK.getKey(slab).getPath().replace("_slab", "");
@@ -1816,12 +1823,31 @@ public class QuarkRecipeProvider extends RecipeProvider implements IConditionBui
                 .unlockedBy(getHasName(PermafrostModule.blocks.get(1)), has(PermafrostModule.blocks.get(1)))
                 .save(recipeOutput.withConditions(zCond("permafrost")), "quark:world/crafting/stairs/permafrost_bricks_stairs");
 
-        // world wood doors, trapdoors, fences, gates, signs, boats
+        // world wood planks, wood (bark), doors, trapdoors, fences, gates, signs, boats, pressure plates, button
         for(WoodSetHandler.WoodSet set : DataUtil.QuarkWorldWoodSets){
             ICondition cond = zCond(set.name + "_wood");
             if (set == BlossomTreesModule.woodSet) {
                 cond = zCond("blossom_trees");
             }
+
+            ShapelessRecipeBuilder.shapeless(RecipeCategory.BUILDING_BLOCKS, set.planks, 4)
+                    .requires(set.planks)
+                    .group("planks")
+                    .unlockedBy("has_log", has(set.planks))
+                    .save(recipeOutput.withConditions(cond), "quark:world/crafting/woodsets/" + set.name + "/" + set.name + "_planks");
+            ShapedRecipeBuilder.shaped(RecipeCategory.BUILDING_BLOCKS, set.wood, 3)
+                    .define('#', set.log)
+                    .pattern("##")
+                    .pattern("##")
+                    .group("bark")
+                    .unlockedBy("has_log", has(set.log))
+                    .save(recipeOutput.withConditions(cond), "quark:world/crafting/woodsets/" + set.name + "/" + set.name + "_wood");
+            stairBuilder(set.stairs, Ingredient.of(set.planks))
+                    .unlockedBy(getHasName(set.planks), has(set.planks))
+                    .save(recipeOutput.withConditions(cond), "quark:world/crafting/woodsets/" + set.name + "/" + set.name + "_stairs");
+            slabBuilder(RecipeCategory.BUILDING_BLOCKS, set.slab, Ingredient.of(set.planks))
+                    .unlockedBy(getHasName(set.planks), has(set.planks))
+                    .save(recipeOutput.withConditions(cond), "quark:world/crafting/woodsets/" + set.name + "/" + set.name + "_slab");
 
             doorBuilder(set.door, Ingredient.of(set.planks.asItem()))
                     .unlockedBy(getHasName(set.planks), has(set.planks))
@@ -1838,6 +1864,13 @@ public class QuarkRecipeProvider extends RecipeProvider implements IConditionBui
             signBuilder(set.sign, Ingredient.of(set.planks.asItem()))
                     .unlockedBy(getHasName(set.planks), has(set.planks))
                     .save(recipeOutput.withConditions(cond), "quark:world/crafting/woodsets/" + set.name + "/" + set.name + "_sign");
+
+            pressurePlateBuilder(RecipeCategory.REDSTONE, set.pressurePlate, Ingredient.of(set.planks))
+                    .unlockedBy(getHasName(set.planks), has(set.planks))
+                    .save(recipeOutput.withConditions(cond), "quark:world/crafting/woodsets/" + set.name + "/" + set.name + "_pressure_plate");
+            buttonBuilder(set.button, Ingredient.of(set.planks))
+                    .unlockedBy(getHasName(set.planks), has(set.planks))
+                    .save(recipeOutput.withConditions(cond), "quark:world/crafting/woodsets/" + set.name + "/" + set.name + "_button");
 
             ShapedRecipeBuilder.shaped(RecipeCategory.DECORATIONS, set.hangingSignItem, 6)
                     .pattern("C C")
