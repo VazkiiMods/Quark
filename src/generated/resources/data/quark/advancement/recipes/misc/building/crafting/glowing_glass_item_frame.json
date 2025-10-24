@@ -1,0 +1,31 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "zeta:flag",
+      "flag": "glass_item_frame"
+    }
+  ],
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "quark:building/crafting/glowing_glass_item_frame"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    },
+    "test": {
+      "trigger": "minecraft:tick"
+    }
+  },
+  "requirements": [
+    [
+      "has_the_recipe",
+      "test"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "quark:building/crafting/glowing_glass_item_frame"
+    ]
+  }
+}

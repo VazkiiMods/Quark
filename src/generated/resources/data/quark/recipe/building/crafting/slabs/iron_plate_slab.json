@@ -1,0 +1,22 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "zeta:flag",
+      "flag": "iron_plates"
+    }
+  ],
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "key": {
+    "#": {
+      "item": "quark:iron_plate"
+    }
+  },
+  "pattern": [
+    "###"
+  ],
+  "result": {
+    "count": 6,
+    "id": "quark:iron_plate_slab"
+  }
+}
