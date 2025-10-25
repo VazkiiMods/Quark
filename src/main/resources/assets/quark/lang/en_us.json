@@ -551,6 +551,7 @@
 	"item.quark.hammer": "Hammer",
 
 	"upgrade.quark.rune_upgrade": "Runic Etching",
+	"item.quark.smithing_template_rune": "Smithing Template",
 	"item.quark.smithing_template.rune.applies_to": "Enchanted Items",
 	"item.quark.smithing_template.rune.base_slot_description": "Add an enchanted item",
 	"item.quark.smithing_template.rune.ingredients": "Blaze Powder, Dye, or Nothing",
@@ -1528,7 +1529,7 @@
 	"advancements.quark.apply_color_rune.title": "Glorious Eminence",
 	"advancements.quark.apply_color_rune.description": "Apply a Rune to an enchanted item in an Anvil",
 	"advancements.quark.wear_full_rainbow.title": "Taste the Rainbow",
-	"advancements.quark.wear_full_rainbow.description": "Wear a full set of armor with Rainbow Runes applied",
+	"advancements.quark.wear_full_rainbow.description": "Wear a full set of armor with Rainbow Runic Etching applied",
 	"advancements.quark.throw_parrot_egg.title": "Just the Parrots",
 	"advancements.quark.throw_parrot_egg.description": "Feed Beetroot Seeds to a Parrot and toss the egg it lays",
 	"advancements.quark.pathfinder_map_center.title": "Road to Tomorrow",
@@ -1553,6 +1554,8 @@
 	"advancements.quark.poison_baby.description": "Successfully poison a baby animal with a Poisoned Potato",
 	"advancements.quark.crab_in_a_bucket.title": "Crabtured",
 	"advancements.quark.crab_in_a_bucket.description": "Capture a Crab in a Bucket",
+	"advancements.quark.tatami_gaeshi.title": "TATAMI GAESHI!",
+	"advancements.quark.tatami_gaeshi.description": "Hit another player with a Bamboo Mat",
 
 	"quark.pack.emote_icon_pack": "Quark Emote Icon Pack"
 }

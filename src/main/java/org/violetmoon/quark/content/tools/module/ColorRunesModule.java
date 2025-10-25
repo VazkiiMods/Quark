@@ -204,23 +204,29 @@ public class ColorRunesModule extends ZetaModule {
 	}
 
     public static void appendRuneTooltip(ItemStack stack, List<Component> components) {
-        ArmorTrim component = stack.get(DataComponents.TRIM);
+        ArmorTrim trim = stack.get(DataComponents.TRIM);
+		RuneColor color = ColorRunesModule.getAppliedStackColor(stack);
 
-        if (component != null && ((AccessorArmorTrim) component).showInTooltip()) {
-            RuneColor color = ColorRunesModule.getAppliedStackColor(stack);
-            if (color != null) {
-                if (!components.contains(AccessorArmorTrim.getUPGRADE_TITLE())) {
-                    components.add(AccessorArmorTrim.getUPGRADE_TITLE());
-                }
-
-                MutableComponent baseComponent = Component.translatable("rune.quark." + color.getName());
-                if (color == RuneColor.RAINBOW) {
-                    components.add(CommonComponents.space().append(ColorRunesModule.extremeRainbow(baseComponent)));
-                } else {
-                    components.add(CommonComponents.space().append(baseComponent.withStyle((style) -> style.withColor(color.getTextColor()))));
-                }
-            }
+        if (trim != null && !((AccessorArmorTrim) trim).showInTooltip()) {
+			//There IS a trim on this item and showInTooltip is false
+            return;
         }
+		else {
+			//there is NOT a trim on this item, or there is a trim but showInTooltip is true
+			if (color != null) {
+				if (!components.contains(AccessorArmorTrim.getUPGRADE_TITLE())) {
+					components.add(AccessorArmorTrim.getUPGRADE_TITLE());
+				}
+				//only add Upgrade: if it's not already there
+
+				MutableComponent baseComponent = Component.translatable("rune.quark." + color.getName());
+				if (color == RuneColor.RAINBOW) {
+					components.add(CommonComponents.space().append(ColorRunesModule.extremeRainbow(baseComponent)));
+				} else {
+					components.add(CommonComponents.space().append(baseComponent.withStyle((style) -> style.withColor(color.getTextColor()))));
+				}
+			}
+		}
     }
 
 	@ZetaLoadModule(clientReplacement = true)
