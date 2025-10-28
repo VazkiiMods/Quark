@@ -421,7 +421,10 @@ public class AncientTomesModule extends ZetaModule {
 				Enchantments.LOYALTY,
 				Enchantments.RIPTIDE,
 				Enchantments.IMPALING,
-				Enchantments.PIERCING
+				Enchantments.PIERCING,
+                Enchantments.DENSITY,
+                Enchantments.BREACH,
+                Enchantments.WIND_BURST
 		};
 
 		List<String> strings = new ArrayList<>();
