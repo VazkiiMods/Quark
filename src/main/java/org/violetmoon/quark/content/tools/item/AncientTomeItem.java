@@ -7,7 +7,9 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.*;
 import net.minecraft.world.item.enchantment.Enchantment;
+import net.minecraft.world.item.enchantment.ItemEnchantments;
 import org.jetbrains.annotations.NotNull;
+import org.violetmoon.quark.base.components.QuarkDataComponents;
 import org.violetmoon.quark.content.tools.module.AncientTomesModule;
 import org.violetmoon.zeta.item.ZetaItem;
 import org.violetmoon.zeta.module.ZetaModule;
@@ -34,9 +36,11 @@ public class AncientTomeItem extends ZetaItem implements CreativeTabManager.Appe
 		return true;
 	}
 
-	public static ItemStack getEnchantedItemStack(Holder<Enchantment> ench) {
+	public static ItemStack getEnchantedItemStack(Holder<Enchantment> enchantment) {
 		ItemStack stack = new ItemStack(AncientTomesModule.ancient_tome);
-		stack.enchant(ench, ench.value().getMaxLevel());
+        ItemEnchantments.Mutable enchantments = new ItemEnchantments.Mutable(ItemEnchantments.EMPTY);
+        enchantments.set(enchantment, enchantment.value().getMaxLevel());
+        stack.set(QuarkDataComponents.TOME_ENCHANTMENTS, enchantments.toImmutable());
 		return stack;
 	}
 
@@ -45,17 +49,14 @@ public class AncientTomeItem extends ZetaItem implements CreativeTabManager.Appe
 	}
 
 	@Override
-	public void appendHoverText(@NotNull ItemStack stack, Item.TooltipContext tooltipContext, @NotNull List<Component> tooltip, @NotNull TooltipFlag flagIn) {
-		super.appendHoverText(stack, tooltipContext, tooltip, flagIn);
-
+	public void appendHoverText(@NotNull ItemStack stack, @NotNull Item.TooltipContext tooltipContext, @NotNull List<Component> tooltips, @NotNull TooltipFlag flag) {
+		super.appendHoverText(stack, tooltipContext, tooltips, flag);
 		Holder<Enchantment> ench = AncientTomesModule.getTomeEnchantment(stack);
-		if(ench != null)
-			tooltip.add(getFullTooltipText(ench));
-		else
-			tooltip.add(Component.translatable("quark.misc.ancient_tome_tooltip_any").withStyle(ChatFormatting.GRAY));
+        Component component = ench != null ? getFullTooltipText(ench) : Component.translatable("quark.misc.ancient_tome_tooltip_any").withStyle(ChatFormatting.GRAY);
+        tooltips.add(component);
 
-		if(AncientTomesModule.curseGear) {
-			tooltip.add(Component.translatable("quark.misc.ancient_tome_tooltip_curse").withStyle(ChatFormatting.RED));
+		if (AncientTomesModule.curseGear) {
+			tooltips.add(Component.translatable("quark.misc.ancient_tome_tooltip_curse").withStyle(ChatFormatting.RED));
 		}
 	}
 

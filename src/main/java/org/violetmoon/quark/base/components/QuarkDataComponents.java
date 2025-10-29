@@ -8,12 +8,11 @@ import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Unit;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.component.CustomData;
+import net.minecraft.world.item.enchantment.ItemEnchantments;
 import org.violetmoon.quark.base.Quark;
 import org.violetmoon.zeta.event.bus.LoadEvent;
-import org.violetmoon.zeta.event.load.ZCommonSetup;
- import org.violetmoon.zeta.event.load.ZRegister;
+import org.violetmoon.zeta.event.load.ZRegister;
 
 import java.util.function.UnaryOperator;
 
@@ -160,6 +159,10 @@ public class QuarkDataComponents {
 
     public static DataComponentType<Boolean> IGNORE = register(
             Quark.asResource("ignore"), builder -> builder.persistent(Codec.BOOL).networkSynchronized(ByteBufCodecs.BOOL)
+    );
+
+    public static DataComponentType<ItemEnchantments> TOME_ENCHANTMENTS = register(
+        Quark.asResource("tome_enchantments"), build -> build.persistent(ItemEnchantments.CODEC).networkSynchronized(ItemEnchantments.STREAM_CODEC).cacheEncoding()
     );
     
     @LoadEvent
