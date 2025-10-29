@@ -236,6 +236,7 @@ public class AncientTomesModule extends ZetaModule {
 
 				Holder<Enchantment> ench = getTomeEnchantment(right);
 				ItemEnchantments enchants = left.get(DataComponents.ENCHANTMENTS);
+                if (left.is(Items.ENCHANTED_BOOK)) enchants = left.get(DataComponents.STORED_ENCHANTMENTS);
 
 				if(ench != null && enchants.keySet().contains(ench) && enchants.getLevel(ench) <= ench.value().getMaxLevel()) {
 					int lvl = enchants.getLevel(ench) + 1;
@@ -261,7 +262,7 @@ public class AncientTomesModule extends ZetaModule {
 
 			// Apply overleveled book to item
 			else if(combineWithBooks && right.is(Items.ENCHANTED_BOOK)) {
-				ItemEnchantments enchants = right.get(DataComponents.ENCHANTMENTS);
+				ItemEnchantments enchants = right.get(DataComponents.STORED_ENCHANTMENTS);
 				ItemEnchantments currentEnchants = left.get(DataComponents.ENCHANTMENTS);
 				boolean hasOverLevel = false;
 				boolean hasMatching = false;

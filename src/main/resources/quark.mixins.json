@@ -44,7 +44,6 @@
     "NetherFortressPiecesMixin",
     "NetherFortressPiecesMixin$CastleEntranceMixin",
     "OverworldBiomeBuilderMixin",
-    "accessor.AccessorOverworldBiomes",
     "PigMixin",
     "PistonBaseBlockMixin",
     "PistonMovingBlockEntityMixin",
@@ -76,12 +75,14 @@
     "accessor.AccessorLivingEntity",
     "accessor.AccessorMerchantMenu",
     "accessor.AccessorMerchantOffer",
+    "accessor.AccessorOverworldBiomes",
     "accessor.AccessorServerGamePacketListener",
     "accessor.AccessorSinglePoolElement",
     "accessor.AccessorTemptingSensor",
     "accessor.AccessorWolf"
   ],
   "client": [
+    "client.ChickenModelMixin",
     "client.AbstractCandleBlockMixin",
     "client.ArmorStandModelMixin",
     "client.BannerItemMixin",

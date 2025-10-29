@@ -115,7 +115,7 @@ public class RopeBlock extends ZetaBlock implements IZetaBlockItemProvider, Simp
 
 	@Override
 	protected InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos, Player player, BlockHitResult result) {
-		if (pullUp(level, pos)) {
+		if (player.getMainHandItem().getItem() != asItem() && pullUp(level, pos)) {
 			if(!player.getAbilities().instabuild) {
 				if(!player.addItem(new ItemStack(this)))
 					player.drop(new ItemStack(this), false);

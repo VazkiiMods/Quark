@@ -1,4 +1,4 @@
-// 1.21.1	2025-10-12T19:01:24.1090209	Recipes
+// 1.21.1	2025-10-28T12:56:43.5321442	Recipes
 8df9c4ad585c2226233ee6e8f7bc96f33806df86 data/quark/advancement/recipes/building_blocks/building/crafting/blackstone_bricks.json
 307c266fa3533af01d0f43952e4b96246cd2f89d data/quark/advancement/recipes/building_blocks/building/crafting/blaze_lantern.json
 b7acc97ba2fb12f1fbdc806798ec77524183ae15 data/quark/advancement/recipes/building_blocks/building/crafting/blue_nether_bricks.json
@@ -75,6 +75,7 @@ ee247e34a8205e00e5da02ef729c6b7a3511b642 data/quark/advancement/recipes/building
 151736682e3cfb56846826f9f92379718356cb42 data/quark/advancement/recipes/building_blocks/building/crafting/raw_iron_bricks.json
 dbb283b10ce0c723ac3bffe782aa73a71aadd882 data/quark/advancement/recipes/building_blocks/building/crafting/raw_iron_bricks_revert.json
 fb95ca62a0bcd49b4ae21dc6d5370a8e0317c5c3 data/quark/advancement/recipes/building_blocks/building/crafting/red_sandstone_bricks.json
+c57e0320675b7beba0722727835dec1ecb713b79 data/quark/advancement/recipes/building_blocks/building/crafting/rope.json
 c2168e9b41f51ceb3d2f0a4a317b40a36f87aa44 data/quark/advancement/recipes/building_blocks/building/crafting/rusty_iron_plate.json
 55e5a4346661586b05a64d8065c8bc4b1287fef1 data/quark/advancement/recipes/building_blocks/building/crafting/rusty_iron_plate_from_iron_plate.json
 a89673f22134b114f44b676b7775b45c4f814b6a data/quark/advancement/recipes/building_blocks/building/crafting/sandstone_bricks.json
@@ -693,6 +694,8 @@ d36ea7f4a4312ffb20c10124a2104a0e0f45c3e0 data/quark/advancement/recipes/misc/bui
 9b182ce042e3a7aa1ee10265b4b09cffc21e5e83 data/quark/advancement/recipes/misc/building/crafting/furnaces/deepslate_minecart.json
 395e710069b518e4dd8ef6d6dc86bca02e9cfc3f data/quark/advancement/recipes/misc/building/crafting/furnaces/deepslate_smoker.json
 db3954a3e335843fea5b71ad853b31317f1539b5 data/quark/advancement/recipes/misc/building/crafting/glass/framed_glass.json
+cea998ace4e717367ed2b1023c0c708de8c10b1a data/quark/advancement/recipes/misc/building/crafting/glass_item_frame.json
+3a39a1c2516b86bef5974623a77690546f2cc487 data/quark/advancement/recipes/misc/building/crafting/glowing_glass_item_frame.json
 802cd34c0790fd1c25176898a8403783aced9af0 data/quark/advancement/recipes/misc/building/crafting/hollowlogs/hollow_acacia_log.json
 f9c1b30352f2d12232223f47d27c422eeec3bebe data/quark/advancement/recipes/misc/building/crafting/hollowlogs/hollow_ancient_log.json
 5fb6678f6a5b53e51f864cc36eaa510d2c89db56 data/quark/advancement/recipes/misc/building/crafting/hollowlogs/hollow_azalea_log.json
@@ -1032,6 +1035,8 @@ fed1f2540cce52116f63fdb3fe8a232cce80eded data/quark/recipe/building/crafting/fur
 dca41f566cdfabad70884af6563720a1f7c216f5 data/quark/recipe/building/crafting/furnaces/deepslate_minecart.json
 8394de9572b2e21a2f61afd7051dfe82a5418e6b data/quark/recipe/building/crafting/furnaces/deepslate_smoker.json
 02872f271e3dc1d1b88a3b12a90373e5a066c394 data/quark/recipe/building/crafting/glass/framed_glass.json
+6e4f3e9a42c1781efa5cb2aea228cdb0ea0169a4 data/quark/recipe/building/crafting/glass_item_frame.json
+caaef2dc1b5f36f1187a2b3fcd2bbbe4740dab03 data/quark/recipe/building/crafting/glowing_glass_item_frame.json
 c87ad61e6ab34796f28eca8f3debc2de8771c475 data/quark/recipe/building/crafting/grate.json
 9473219b51cb809a26a3da194102ba47ff024053 data/quark/recipe/building/crafting/hedges/acacia_hedge.json
 f2873a0d3e027631609f80d803c4812969a6fff9 data/quark/recipe/building/crafting/hedges/azalea_hedge_oak.json
@@ -1138,6 +1143,7 @@ e43ec95d449686636590c71311285f841343e131 data/quark/recipe/building/crafting/raw
 ea4f124a85ed920bc8447f85940463d7dc119cb3 data/quark/recipe/building/crafting/raw_iron_bricks.json
 4e597a83c0043522333e9cb28fced79722abc9ec data/quark/recipe/building/crafting/raw_iron_bricks_revert.json
 0ed7b7cf5e8c3613af7cf58cd3789230882c1bd8 data/quark/recipe/building/crafting/red_sandstone_bricks.json
+f9c7326e512a29889ac4fc3c3b55b3afbfb80a11 data/quark/recipe/building/crafting/rope.json
 3459e31467736e32f7d01fcb253afa7c5d678b18 data/quark/recipe/building/crafting/rusty_iron_plate.json
 60bf5a152488fe0b30645f2feb97a80b6760e212 data/quark/recipe/building/crafting/rusty_iron_plate_from_iron_plate.json
 fd313db1a5012ec9e196f945afd2deb7c91e1e67 data/quark/recipe/building/crafting/sandstone_bricks.json

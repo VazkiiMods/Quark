@@ -32,10 +32,10 @@ import java.util.List;
 public class GrabChickensModule extends ZetaModule {
 
 	@Config
-	private static boolean needsNoHelmet = true;
+	private static final boolean needsNoHelmet = true;
 
 	@Config(description = "Set to 0 to disable")
-	private static int slownessLevel = 1;
+	private static final int slownessLevel = 1;
 
 	private static boolean staticEnabled;
 
@@ -117,6 +117,7 @@ public class GrabChickensModule extends ZetaModule {
 			boolean should = entity.getVehicle() == null || entity.getVehicle().getType() != EntityType.PLAYER;
 			model.leftLeg.visible = should;
 			model.rightLeg.visible = should;
+
 		}
 	}
 }

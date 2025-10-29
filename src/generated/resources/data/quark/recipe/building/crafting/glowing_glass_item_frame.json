@@ -1,0 +1,22 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "zeta:flag",
+      "flag": "glass_item_frame"
+    }
+  ],
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    {
+      "item": "minecraft:glow_ink_sac"
+    },
+    {
+      "item": "quark:glass_item_frame"
+    }
+  ],
+  "result": {
+    "count": 1,
+    "id": "quark:glowing_glass_item_frame"
+  }
+}
