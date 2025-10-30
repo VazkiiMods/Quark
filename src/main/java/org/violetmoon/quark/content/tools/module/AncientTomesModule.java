@@ -240,7 +240,7 @@ public class AncientTomesModule extends ZetaModule {
         ItemEnchantments rightEnch;
         ItemEnchantments.Mutable outputEnch = new ItemEnchantments.Mutable(ItemEnchantments.EMPTY);
 
-        if (isLeftBook && (!isRightBook && !isTome)) {
+        if ((isLeftBook || !left.is(right.getItem())) && (!isRightBook && !isTome)) {
             return;
         }
 
