@@ -1,9 +1,12 @@
 package org.violetmoon.quark.content.tools.module;
 
 import com.google.common.collect.Lists;
+import com.mojang.serialization.*;
+
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import it.unimi.dsi.fastutil.objects.Object2IntArrayMap;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
+
 import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
 import net.minecraft.core.component.DataComponentPredicate;
@@ -36,6 +39,7 @@ import net.minecraft.world.level.storage.loot.entries.LootPoolEntryContainer;
 import net.minecraft.world.level.storage.loot.functions.LootItemFunctionType;
 import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
 
+import net.neoforged.neoforge.event.AnvilUpdateEvent;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -62,9 +66,7 @@ import org.violetmoon.zeta.module.ZetaLoadModule;
 import org.violetmoon.zeta.module.ZetaModule;
 import org.violetmoon.zeta.util.Hint;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Stream;
 
 @ZetaLoadModule(category = "tools")
@@ -226,26 +228,74 @@ public class AncientTomesModule extends ZetaModule {
 		ItemStack left = event.getLeft();
 		ItemStack right = event.getRight();
 		String name = event.getName();
-        boolean canCombineBooks = combineWithBooks && left.is(Items.ENCHANTED_BOOK);
-
-		if (!(right.is(ancient_tome) && (left.isEnchanted() || canCombineBooks))) return;
-        Holder<Enchantment> enchantment = getTomeEnchantment(right);
-        ItemEnchantments itemEnchantments = canCombineBooks ? left.get(DataComponents.STORED_ENCHANTMENTS) : left.get(DataComponents.ENCHANTMENTS);
-
-        if (enchantment == null || itemEnchantments == null || !left.supportsEnchantment(enchantment) || !itemEnchantments.keySet().contains(enchantment)) return;
+        boolean isLeftBook = left.is(Items.ENCHANTED_BOOK);
+        boolean isRightBook = right.is(Items.ENCHANTED_BOOK);
+        boolean isTome = right.is(ancient_tome);
+        boolean cannotCombineWithBook = !combineWithBooks && left.is(Items.ENCHANTED_BOOK);
 
         ItemStack output = left.copy();
-        ItemEnchantments.Mutable temp = new ItemEnchantments.Mutable(itemEnchantments);
-        int newLevel = temp.getLevel(enchantment) + 1;
-        int cost = newLevel > enchantment.value().getMaxLevel() ? limitBreakUpgradeCost : normalUpgradeCost;
+        int cost = 0;
 
-        if (name != null && !name.isEmpty() && (!output.has(DataComponents.CUSTOM_NAME) || !output.getHoverName().getString().equals(name))) {
+        ItemEnchantments leftEnch;
+        ItemEnchantments rightEnch;
+        ItemEnchantments.Mutable outputEnch = new ItemEnchantments.Mutable(ItemEnchantments.EMPTY);
+
+        if (isLeftBook && (!isRightBook && !isTome)) {
+            return;
+        }
+
+        boolean leftEnchExists = left.has(DataComponents.STORED_ENCHANTMENTS) || left.has(DataComponents.ENCHANTMENTS);
+        boolean leftHasOverlevel = false;
+        if (leftEnchExists) {
+            leftEnch = (isLeftBook) ? left.get(DataComponents.STORED_ENCHANTMENTS) : left.get(DataComponents.ENCHANTMENTS);
+            for (Object2IntMap.Entry<Holder<Enchantment>> entry : leftEnch.entrySet()) {
+                if (entry.getIntValue() > entry.getKey().value().getMaxLevel()) leftHasOverlevel = true;
+                outputEnch.upgrade(entry.getKey(), entry.getIntValue());
+                cost += entry.getIntValue();
+            }
+        }
+
+        boolean rightEnchExists = right.has(DataComponents.STORED_ENCHANTMENTS) || right.has(DataComponents.ENCHANTMENTS);
+        boolean rightHasOverlevel = false;
+        if (rightEnchExists) {
+            rightEnch = (isRightBook) ? right.get(DataComponents.STORED_ENCHANTMENTS) : right.get(DataComponents.ENCHANTMENTS);
+            for (Object2IntMap.Entry<Holder<Enchantment>> entry : rightEnch.entrySet()) {
+                boolean isCompatible = true;
+                for (Holder<Enchantment> heldEnch : outputEnch.keySet()) {
+                    if (heldEnch.value().exclusiveSet().contains(entry.getKey()) && !heldEnch.equals(entry.getKey())) {
+                        isCompatible = false;
+                        break;
+                    }
+                }
+
+                if (!isCompatible) return;
+
+                if (entry.getIntValue() > entry.getKey().value().getMaxLevel()) rightHasOverlevel = true;
+                outputEnch.upgrade(entry.getKey(), entry.getIntValue());
+                cost += entry.getIntValue();
+            }
+        }
+
+        if (isTome) {
+            if (cannotCombineWithBook) return;
+            Holder<Enchantment> tomeEnch = getTomeEnchantment(right);
+            if (leftEnchExists && outputEnch.getLevel(tomeEnch) > 0 && outputEnch.getLevel(tomeEnch) < tomeEnch.value().getMaxLevel() + 1) {
+                int newLevel = outputEnch.getLevel(tomeEnch) + 1;
+                outputEnch.upgrade(tomeEnch, newLevel);
+                cost = newLevel > tomeEnch.value().getMaxLevel() ? limitBreakUpgradeCost : normalUpgradeCost;
+            } else return;
+        } else if (!leftHasOverlevel && !rightHasOverlevel) {
+            return;
+        } else {
+            cost += left.get(DataComponents.REPAIR_COST).intValue() + right.get(DataComponents.REPAIR_COST).intValue();
+        }
+
+        if(name != null && !name.isEmpty() && (!output.has(DataComponents.CUSTOM_NAME) || !output.getHoverName().getString().equals(name))) {
             output.set(DataComponents.CUSTOM_NAME, Component.literal(name));
             cost++;
         }
 
-        temp.set(enchantment, temp.getLevel(enchantment) + 1);
-        output.set(canCombineBooks ? DataComponents.STORED_ENCHANTMENTS : DataComponents.ENCHANTMENTS, temp.toImmutable());
+        output.set((isLeftBook) ? DataComponents.STORED_ENCHANTMENTS : DataComponents.ENCHANTMENTS, outputEnch.toImmutable());
         event.setOutput(output);
         event.setCost(cost);
     }
