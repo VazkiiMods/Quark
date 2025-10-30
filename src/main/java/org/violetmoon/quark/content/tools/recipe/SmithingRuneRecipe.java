@@ -82,13 +82,24 @@ public final class SmithingRuneRecipe extends SmithingTrimRecipe { // Extends to
 	public ItemStack assemble(SmithingRecipeInput input, HolderLookup.Provider provider) {
 		ItemStack baseItem = input.getItem(1);
 		if (isBaseIngredient(baseItem)) {
-			if (ColorRunesModule.getStackColor(baseItem) == runeColor)
+			if (ColorRunesModule.getStackColor(baseItem) == runeColor) {
+				/*
+				ItemStack errorItem = new ItemStack(Items.BARRIER);
+				errorItem.set(DataComponents.CUSTOM_NAME, Component.literal("Error"));
+				return errorItem;
+				 */
 				return ItemStack.EMPTY;
+			}
 
 			ItemStack newStack = baseItem.copy();
 			newStack.setCount(1);
 			return ColorRunesModule.withRune(newStack, runeColor);
 		}
+		/*
+		ItemStack errorItem = new ItemStack(Items.BARRIER);
+		errorItem.set(DataComponents.CUSTOM_NAME, Component.literal("Error"));
+		return errorItem;
+		 */
 		return ItemStack.EMPTY;
 	}
 

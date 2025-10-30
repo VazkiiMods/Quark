@@ -267,4 +267,16 @@ public class DataUtil {
 
         return null;
     }
+
+    //TODO we should never be doing this, there should be a way to reference every reg object as a constant/
+    public static Block regSearch(ResourceLocation rl){
+        Block result = BuiltInRegistries.BLOCK.get(rl);
+        if(result != Blocks.AIR){
+            return result;
+        }
+        else{
+            System.out.println("Invalid block!: " + rl.toString());
+            return Blocks.BARRIER;
+        }
+    }
 }

@@ -1,12 +1,9 @@
 package org.violetmoon.quark.content.tools.module;
 
 import com.google.common.collect.Lists;
-import com.mojang.serialization.*;
-
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import it.unimi.dsi.fastutil.objects.Object2IntArrayMap;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
-
 import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
 import net.minecraft.core.component.DataComponentPredicate;
@@ -43,7 +40,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import org.violetmoon.quark.base.Quark;
-import org.violetmoon.quark.base.util.ItemEnchantsUtil;
+import org.violetmoon.quark.base.components.QuarkDataComponents;
 import org.violetmoon.quark.content.tools.item.AncientTomeItem;
 import org.violetmoon.quark.content.tools.loot.EnchantTome;
 import org.violetmoon.quark.content.world.module.MonsterBoxModule;
@@ -65,7 +62,10 @@ import org.violetmoon.zeta.module.ZetaLoadModule;
 import org.violetmoon.zeta.module.ZetaModule;
 import org.violetmoon.zeta.util.Hint;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Stream;
 
 @ZetaLoadModule(category = "tools")
 public class AncientTomesModule extends ZetaModule {
@@ -226,111 +226,36 @@ public class AncientTomesModule extends ZetaModule {
 		ItemStack left = event.getLeft();
 		ItemStack right = event.getRight();
 		String name = event.getName();
+        boolean canCombineBooks = combineWithBooks && left.is(Items.ENCHANTED_BOOK);
 
-		if(!left.isEmpty() && !right.isEmpty() && left.getCount() == 1 && right.getCount() == 1) {
+		if (!(right.is(ancient_tome) && (left.isEnchanted() || canCombineBooks))) return;
+        Holder<Enchantment> enchantment = getTomeEnchantment(right);
+        ItemEnchantments itemEnchantments = canCombineBooks ? left.get(DataComponents.STORED_ENCHANTMENTS) : left.get(DataComponents.ENCHANTMENTS);
 
-			// Apply tome to book or item
-			if(right.is(ancient_tome)) {
-				if(!combineWithBooks && left.is(Items.ENCHANTED_BOOK))
-					return;
+        if (enchantment == null || itemEnchantments == null || !left.supportsEnchantment(enchantment) || !itemEnchantments.keySet().contains(enchantment)) return;
 
-				Holder<Enchantment> ench = getTomeEnchantment(right);
-				ItemEnchantments enchants = left.get(DataComponents.ENCHANTMENTS);
-                if (left.is(Items.ENCHANTED_BOOK)) enchants = left.get(DataComponents.STORED_ENCHANTMENTS);
+        ItemStack output = left.copy();
+        ItemEnchantments.Mutable temp = new ItemEnchantments.Mutable(itemEnchantments);
+        int newLevel = temp.getLevel(enchantment) + 1;
+        int cost = newLevel > enchantment.value().getMaxLevel() ? limitBreakUpgradeCost : normalUpgradeCost;
 
-				if(ench != null && enchants.keySet().contains(ench) && enchants.getLevel(ench) <= ench.value().getMaxLevel()) {
-					int lvl = enchants.getLevel(ench) + 1;
-					enchants = ItemEnchantsUtil.addEnchantmentToList(enchants, ench, lvl);
+        if (name != null && !name.isEmpty() && (!output.has(DataComponents.CUSTOM_NAME) || !output.getHoverName().getString().equals(name))) {
+            output.set(DataComponents.CUSTOM_NAME, Component.literal(name));
+            cost++;
+        }
 
-					ItemStack out = left.copy();
-					ItemEnchantments.Mutable mutable = new ItemEnchantments.Mutable(ItemEnchantments.EMPTY);
-					for (Map.Entry<Holder<Enchantment>, Integer> enchEntry : enchants.entrySet()) {
-						mutable.set(enchEntry.getKey(), enchEntry.getValue());
-					}
-					EnchantmentHelper.setEnchantments(out, mutable.toImmutable());
-					int cost = lvl > ench.value().getMaxLevel() ? limitBreakUpgradeCost : normalUpgradeCost;
-
-					if(name != null && !name.isEmpty() && (!out.has(DataComponents.CUSTOM_NAME) || !out.getHoverName().getString().equals(name))) {
-						out.set(DataComponents.CUSTOM_NAME, Component.literal(name));
-						cost++;
-					}
-
-					event.setOutput(out);
-					event.setCost(cost);
-				}
-			}
-
-			// Apply overleveled book to item
-			else if(combineWithBooks && right.is(Items.ENCHANTED_BOOK)) {
-				ItemEnchantments enchants = right.get(DataComponents.STORED_ENCHANTMENTS);
-				ItemEnchantments currentEnchants = left.get(DataComponents.ENCHANTMENTS);
-				boolean hasOverLevel = false;
-				boolean hasMatching = false;
-				for(Object2IntMap.Entry<Holder<Enchantment>> entry : enchants.entrySet()) {
-					Holder<Enchantment> enchantment = entry.getKey();
-					if(enchantment == null)
-						continue;
-
-					int level = entry.getIntValue();
-					if(level > enchantment.value().getMaxLevel()) {
-						hasOverLevel = true;
-						if(enchantment.value().canEnchant(left) || left.is(Items.ENCHANTED_BOOK)) {
-							hasMatching = true;
-							//remove incompatible enchantments
-							for(Iterator<Holder<Enchantment>> iterator = currentEnchants.keySet().iterator(); iterator.hasNext();) {
-								Holder<Enchantment> comparingEnchantment = iterator.next();
-								if(comparingEnchantment == enchantment)
-									continue;
-
-								if(!comparingEnchantment.value().exclusiveSet().contains(enchantment)) {
-									iterator.remove();
-								}
-							}
-							currentEnchants = ItemEnchantsUtil.addEnchantmentToList(currentEnchants, enchantment, level);
-						}
-					} else if(enchantment.value().canEnchant(left)) {
-						boolean compatible = true;
-						//don't apply incompatible enchantments
-						for(Holder<Enchantment> comparingEnchantment : currentEnchants.keySet()) {
-							if(comparingEnchantment == enchantment)
-								continue;
-
-							if(comparingEnchantment != null && !comparingEnchantment.value().exclusiveSet().contains(enchantment)) {
-								compatible = false;
-								break;
-							}
-						}
-						if(compatible) {
-							currentEnchants = ItemEnchantsUtil.addEnchantmentToList(currentEnchants, enchantment, level);
-						}
-					}
-				}
-
-				if(hasOverLevel) {
-					if(hasMatching) {
-						ItemStack out = left.copy();
-						out.set(DataComponents.ENCHANTMENTS, currentEnchants);
-						int cost = normalUpgradeCost;
-
-						if(name != null && !name.isEmpty() && (!out.has(DataComponents.CUSTOM_NAME) || !out.getHoverName().getString().equals(name))) {
-							out.set(DataComponents.CUSTOM_NAME, Component.literal(name));
-							cost++;
-						}
-
-						event.setOutput(out);
-						event.setCost(cost);
-					}
-				}
-			}
-		}
-	}
+        temp.set(enchantment, temp.getLevel(enchantment) + 1);
+        output.set(canCombineBooks ? DataComponents.STORED_ENCHANTMENTS : DataComponents.ENCHANTMENTS, temp.toImmutable());
+        event.setOutput(output);
+        event.setCost(cost);
+    }
 
 	@PlayEvent
 	public void onAnvilUse(ZAnvilRepair event) {
 		ItemStack output = event.getOutput();
 		ItemStack right = event.getRight();
 
-		if(curseGear && (right.is(ancient_tome) || event.getLeft().is(ancient_tome))) {
+		if (curseGear && (right.is(ancient_tome) || event.getLeft().is(ancient_tome))) {
 			event.getOutput().enchant(curses.get(event.getEntity().level().random.nextInt(curses.size())), 1);
 		}
 
@@ -381,20 +306,6 @@ public class AncientTomesModule extends ZetaModule {
 		return false;
 	}
 
-	private static final ResourceLocation OVERLEVEL_COLOR_HANDLER = Quark.asResource("overlevel_rune");
-
-	/*@PlayEvent
-	public void attachRuneCapability(ZAttachCapabilities.ItemStackCaps event) {
-		if(event.getObject().getItem() == Items.ENCHANTED_BOOK) {
-			event.addCapability(OVERLEVEL_COLOR_HANDLER, QuarkCapabilities.RUNE_COLOR, stack -> {
-				if(overleveledBooksGlowRainbow && isOverlevel(stack))
-					return RuneColor.RAINBOW;
-				else
-					return null;
-			});
-		}
-	}*/
-
 	public static Rarity shiftRarity(ItemStack itemStack, Rarity returnValue) {
 		return Quark.ZETA.modules.isEnabled(AncientTomesModule.class) && overleveledBooksGlowRainbow &&
 				itemStack.getItem() == Items.ENCHANTED_BOOK && isOverlevel(itemStack) ? Rarity.EPIC : returnValue;
@@ -402,45 +313,31 @@ public class AncientTomesModule extends ZetaModule {
 	}
 
 	private static List<String> generateDefaultEnchantmentList() {
-		ResourceKey<Enchantment>[] enchants = new ResourceKey[] {
-				Enchantments.FEATHER_FALLING,
-				Enchantments.THORNS,
-				Enchantments.SHARPNESS,
-				Enchantments.SMITE,
-				Enchantments.BANE_OF_ARTHROPODS,
-				Enchantments.KNOCKBACK,
-				Enchantments.FIRE_ASPECT,
-				Enchantments.LOOTING,
-				Enchantments.SWEEPING_EDGE,
-				Enchantments.EFFICIENCY,
-				Enchantments.UNBREAKING,
-				Enchantments.FORTUNE,
-				Enchantments.POWER,
-				Enchantments.PUNCH,
-				Enchantments.LUCK_OF_THE_SEA,
-				Enchantments.LURE,
-				Enchantments.LOYALTY,
-				Enchantments.RIPTIDE,
-				Enchantments.IMPALING,
-				Enchantments.PIERCING
-		};
-
-		List<String> strings = new ArrayList<>();
-		for(ResourceKey<Enchantment> e : enchants) {
-			ResourceLocation regname = e.location();
-			if(e != null && regname != null)
-				strings.add(regname.toString());
-		}
-
-		return strings;
-	}
-	
-	public static void initializeEnchantmentList(Iterable<String> enchantNames, List<Holder<Enchantment>> enchants) {
-		enchants.clear();
-		for(String s : enchantNames) {
-			ResourceKey<Enchantment> realsourceKey = ResourceKey.create(Registries.ENCHANTMENT, ResourceLocation.parse(s));
-			 //enchants.add(enchant);
-		}
+        return Stream.of(
+                Enchantments.FEATHER_FALLING,
+                Enchantments.THORNS,
+                Enchantments.SHARPNESS,
+                Enchantments.SMITE,
+                Enchantments.BANE_OF_ARTHROPODS,
+                Enchantments.KNOCKBACK,
+                Enchantments.FIRE_ASPECT,
+                Enchantments.LOOTING,
+                Enchantments.SWEEPING_EDGE,
+                Enchantments.EFFICIENCY,
+                Enchantments.UNBREAKING,
+                Enchantments.FORTUNE,
+                Enchantments.POWER,
+                Enchantments.PUNCH,
+                Enchantments.LUCK_OF_THE_SEA,
+                Enchantments.LURE,
+                Enchantments.LOYALTY,
+                Enchantments.RIPTIDE,
+                Enchantments.IMPALING,
+                Enchantments.PIERCING,
+                Enchantments.DENSITY,
+                Enchantments.BREACH,
+                Enchantments.WIND_BURST
+        ).map(resourceKey -> resourceKey.location().toString()).toList();
 	}
 
 	private final List<Holder<Enchantment>> curses = new ArrayList<>();
@@ -453,19 +350,12 @@ public class AncientTomesModule extends ZetaModule {
 	}
 
 	public static Holder<Enchantment> getTomeEnchantment(ItemStack stack) {
-		if(stack.getItem() != ancient_tome)
-			return null;
+        if (stack.getItem() != ancient_tome) return null;
+		ItemEnchantments enchantments = stack.get(QuarkDataComponents.TOME_ENCHANTMENTS);
 
-		ItemEnchantments enchantments = stack.get(DataComponents.ENCHANTMENTS);
-		List<Holder<Enchantment>> enchantList = enchantments.keySet().stream().toList();
-
-        for (Holder<Enchantment> enchantment : enchantList) {
-			if (enchantment != null) {
-				return enchantment;
-			}
-        }
-
-		return null;
+        if (enchantments == null) return null;
+        Optional<Holder<Enchantment>> result = enchantments.keySet().stream().findFirst();
+        return result.orElse(null);
 	}
 
 	private static boolean isAncientTomeOffer(MerchantOffer offer) {

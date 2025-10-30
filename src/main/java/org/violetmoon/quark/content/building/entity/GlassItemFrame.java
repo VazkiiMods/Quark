@@ -27,13 +27,10 @@ import net.minecraft.world.level.saveddata.maps.MapItemSavedData;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
-import net.neoforged.neoforge.capabilities.BlockCapability;
+import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.common.util.FakePlayerFactory;
 import net.neoforged.neoforge.entity.IEntityWithComplexSpawn;
-import net.neoforged.neoforge.items.IItemHandler;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-import org.violetmoon.quark.base.Quark;
 import org.violetmoon.quark.content.building.module.GlassItemFrameModule;
 
 import java.util.UUID;
@@ -41,9 +38,6 @@ import java.util.UUID;
 public class GlassItemFrame extends ItemFrame implements IEntityWithComplexSpawn {
 
 	public static final EntityDataAccessor<Boolean> IS_SHINY = SynchedEntityData.defineId(GlassItemFrame.class, EntityDataSerializers.BOOLEAN);
-
-	public static final BlockCapability<IItemHandler, @Nullable Direction> ITEM_HANDLER_BLOCK =
-			BlockCapability.createSided(Quark.asResource("glass_frame_capability"), IItemHandler.class);
 
 	private static final String TAG_SHINY = "isShiny";
 	private static final GameProfile DUMMY_PROFILE = new GameProfile(UUID.randomUUID(), "ItemFrame");
@@ -62,14 +56,14 @@ public class GlassItemFrame extends ItemFrame implements IEntityWithComplexSpawn
 		HANGING_BEHIND
 	}
 
-	public GlassItemFrame(EntityType<? extends GlassItemFrame> type, Level worldIn) {
-		super(type, worldIn);
+	public GlassItemFrame(EntityType<? extends GlassItemFrame> type, Level level) {
+		super(type, level);
 	}
 
-	public GlassItemFrame(Level worldIn, BlockPos blockPos, Direction face) {
-		super(GlassItemFrameModule.glassFrameEntity, worldIn);
-		pos = blockPos;
-		this.setDirection(face);
+	public GlassItemFrame(Level level, BlockPos pos, Direction direction) {
+		super(GlassItemFrameModule.glassFrameEntity, level);
+		this.pos = pos;
+		this.setDirection(direction);
 	}
 
 	@NotNull
@@ -80,16 +74,16 @@ public class GlassItemFrame extends ItemFrame implements IEntityWithComplexSpawn
 			BlockPos behind = getBehindPos();
 			BlockEntity tile = level().getBlockEntity(behind);
 
-			if(tile != null && level().getCapability(ITEM_HANDLER_BLOCK, tile.getBlockPos(), direction) != null) {
+			if (tile != null && level().getCapability(Capabilities.ItemHandler.BLOCK, tile.getBlockPos(), direction) != null) {
 				BlockState behindState = level().getBlockState(behind);
 				InteractionResult result = behindState.useWithoutItem(level(), player, new BlockHitResult(new Vec3(getX(), getY(), getZ()), direction, behind, true));
 				if (result.consumesAction()) return result;
 			}
 		}
 
-		var res = super.interact(player, hand);
+		InteractionResult result = super.interact(player, hand);
 		updateIsOnSign();
-		return res;
+		return result;
 	}
 
 	@Override
@@ -172,7 +166,6 @@ public class GlassItemFrame extends ItemFrame implements IEntityWithComplexSpawn
 	@Override
 	protected void defineSynchedData(SynchedEntityData.Builder builder) {
 		super.defineSynchedData(builder);
-
 		builder.define(IS_SHINY, false);
 	}
 
@@ -197,7 +190,7 @@ public class GlassItemFrame extends ItemFrame implements IEntityWithComplexSpawn
 		return onSignRotation;
 	}
 
-	@Nullable
+	@NotNull
 	@Override
 	public ItemEntity spawnAtLocation(@NotNull ItemStack stack, float offset) {
 		if(stack.getItem() == Items.ITEM_FRAME && !didHackery) {
@@ -210,12 +203,9 @@ public class GlassItemFrame extends ItemFrame implements IEntityWithComplexSpawn
 
 	@NotNull
 	@Override
-	public ItemStack getPickedResult(HitResult target) {
+	public ItemStack getPickedResult(@NotNull HitResult target) {
 		ItemStack held = getItem();
-		if(held.isEmpty())
-			return new ItemStack(getDroppedItem());
-		else
-			return held.copy();
+        return held.isEmpty() ? new ItemStack(getDroppedItem()) : held.copy();
 	}
 
 	private Item getDroppedItem() {
@@ -225,14 +215,12 @@ public class GlassItemFrame extends ItemFrame implements IEntityWithComplexSpawn
 	@Override
 	public void addAdditionalSaveData(@NotNull CompoundTag cmp) {
 		super.addAdditionalSaveData(cmp);
-
 		cmp.putBoolean(TAG_SHINY, entityData.get(IS_SHINY));
 	}
 
 	@Override
 	public void readAdditionalSaveData(@NotNull CompoundTag cmp) {
 		super.readAdditionalSaveData(cmp);
-
 		entityData.set(IS_SHINY, cmp.getBoolean(TAG_SHINY));
 	}
 

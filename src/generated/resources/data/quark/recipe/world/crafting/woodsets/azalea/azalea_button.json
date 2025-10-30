@@ -1,0 +1,19 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "zeta:flag",
+      "flag": "azalea_wood"
+    }
+  ],
+  "type": "minecraft:crafting_shapeless",
+  "category": "redstone",
+  "ingredients": [
+    {
+      "item": "quark:azalea_planks"
+    }
+  ],
+  "result": {
+    "count": 1,
+    "id": "quark:azalea_button"
+  }
+}

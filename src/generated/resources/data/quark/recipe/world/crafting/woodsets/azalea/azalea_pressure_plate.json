@@ -2,26 +2,21 @@
   "neoforge:conditions": [
     {
       "type": "zeta:flag",
-      "flag": "variant_bookshelves"
+      "flag": "azalea_wood"
     }
   ],
   "type": "minecraft:crafting_shaped",
   "category": "redstone",
   "key": {
-    "B": {
-      "tag": "c:bookshelves"
-    },
-    "S": {
-      "tag": "minecraft:wooden_slabs"
+    "#": {
+      "item": "quark:azalea_planks"
     }
   },
   "pattern": [
-    "SSS",
-    " B ",
-    " S "
+    "##"
   ],
   "result": {
     "count": 1,
-    "id": "minecraft:lectern"
+    "id": "quark:azalea_pressure_plate"
   }
 }

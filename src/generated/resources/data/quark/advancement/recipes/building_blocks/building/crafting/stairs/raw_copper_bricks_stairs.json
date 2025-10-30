@@ -7,11 +7,11 @@
   ],
   "parent": "minecraft:recipes/root",
   "criteria": {
-    "has_red_sandstone_bricks": {
+    "has_raw_copper_bricks": {
       "conditions": {
         "items": [
           {
-            "items": "quark:red_sandstone_bricks"
+            "items": "quark:raw_copper_bricks"
           }
         ]
       },
@@ -27,7 +27,7 @@
   "requirements": [
     [
       "has_the_recipe",
-      "has_red_sandstone_bricks"
+      "has_raw_copper_bricks"
     ]
   ],
   "rewards": {
