@@ -82,7 +82,6 @@
     "accessor.AccessorWolf"
   ],
   "client": [
-    "client.ChickenModelMixin",
     "client.AbstractCandleBlockMixin",
     "client.ArmorStandModelMixin",
     "client.BannerItemMixin",

@@ -32,15 +32,15 @@ import java.util.List;
 public class GrabChickensModule extends ZetaModule {
 
 	@Config
-	private static final boolean needsNoHelmet = true;
+	private static boolean needsNoHelmet = true;
 
 	@Config(description = "Set to 0 to disable")
-	private static final int slownessLevel = 1;
+	private static int slownessLevel = 1;
 
 	private static boolean staticEnabled;
 
 	@LoadEvent
-	public final void configChanged(ZConfigChanged event) {
+	public void configChanged(ZConfigChanged event) {
 		staticEnabled = isEnabled();
 	}
 
