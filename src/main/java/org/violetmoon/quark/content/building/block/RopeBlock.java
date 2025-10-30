@@ -258,6 +258,9 @@ public class RopeBlock extends ZetaBlock implements IZetaBlockItemProvider, Simp
 	}
 
 	private void moveBlock(Level world, BlockPos srcPos, BlockPos dstPos) {
+        if (world.isClientSide)
+            return;
+
 		BlockState state = world.getBlockState(srcPos);
         //zif (!state.getFluidState().is(Fluids.EMPTY)) return;
 
@@ -282,16 +285,18 @@ public class RopeBlock extends ZetaBlock implements IZetaBlockItemProvider, Simp
 		if(nextState.getProperties().contains(BlockStateProperties.WATERLOGGED))
 			nextState = nextState.setValue(BlockStateProperties.WATERLOGGED, world.getFluidState(dstPos).getType() == Fluids.WATER);
 
-		if(tile != null) {
-			BlockEntity target = BlockEntity.loadStatic(dstPos, state, tile.saveWithFullMetadata(world.registryAccess()), world.registryAccess());
+        world.setBlockAndUpdate(dstPos, nextState);
+
+        // You gotta write the block entity data AFTER you move the block.
+        if(tile != null) {
+			BlockEntity target = BlockEntity.loadStatic(dstPos, nextState, tile.saveWithFullMetadata(world.registryAccess()).copy(), world.registryAccess());
 			if(target != null) {
 				world.setBlockEntity(target);
-				target.setBlockState(state);
+                //world.setBlockAndUpdate(dstPos, state);
 				target.setChanged();
 			}
 		}
 
-        world.setBlockAndUpdate(dstPos, nextState);
         nextState.handleNeighborChanged(world, dstPos, nextState.getBlock(), srcPos, true);
 
         world.updateNeighborsAt(dstPos, state.getBlock());

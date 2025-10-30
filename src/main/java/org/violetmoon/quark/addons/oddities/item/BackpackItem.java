@@ -20,6 +20,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.*;
 import net.minecraft.world.item.component.ItemAttributeModifiers;
+import net.minecraft.world.item.component.Unbreakable;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.item.enchantment.ItemEnchantments;
@@ -56,7 +57,8 @@ public class BackpackItem extends ArmorItem implements IZetaItem, IZetaItemExten
 						.stacksTo(1)
 						.durability(0)
 						.rarity(Rarity.RARE)
-						.attributes(createAttributes()));
+                        .component(DataComponents.UNBREAKABLE, new Unbreakable(false))
+                        .attributes(createAttributes()));
 
 		this.module = module;
 
