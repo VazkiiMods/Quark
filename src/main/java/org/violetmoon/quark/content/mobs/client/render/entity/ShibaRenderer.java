@@ -8,6 +8,7 @@ import org.jetbrains.annotations.NotNull;
 
 import org.violetmoon.quark.base.Quark;
 import org.violetmoon.quark.base.client.handler.ModelHandler;
+import org.violetmoon.quark.content.mobs.client.layer.shiba.ShibaArmorLayer;
 import org.violetmoon.quark.content.mobs.client.layer.shiba.ShibaCollarLayer;
 import org.violetmoon.quark.content.mobs.client.layer.shiba.ShibaMouthItemLayer;
 import org.violetmoon.quark.content.mobs.client.model.ShibaModel;
@@ -28,6 +29,7 @@ public class ShibaRenderer extends MobRenderer<Shiba, ShibaModel> {
 		super(context, ModelHandler.model(ModelHandler.shiba), 0.5F);
 		addLayer(new ShibaCollarLayer(this));
 		addLayer(new ShibaMouthItemLayer(this, context.getItemInHandRenderer()));
+        addLayer(new ShibaArmorLayer(this, context.getModelSet()));
 	}
 
 	@NotNull

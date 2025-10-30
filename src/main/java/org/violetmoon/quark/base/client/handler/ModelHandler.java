@@ -52,7 +52,7 @@ public class ModelHandler {
 	public static ModelLayerLocation backpack;
 
     public static ModelLayerLocation foxhound_armor;
-    //public static ModelLayerLocation shiba_armor;
+    public static ModelLayerLocation shiba_armor;
 
 	private static boolean modelsInitted = false;
 
@@ -60,7 +60,7 @@ public class ModelHandler {
 		if(modelsInitted)
 			return;
 
-		shiba = addModel("shiba", ShibaModel::createBodyLayer, ShibaModel::new);
+		shiba = addModel("shiba", () -> ShibaModel.createBodyLayer(new CubeDeformation(0.0f)), ShibaModel::new);
 		foxhound = addModel("foxhound", () -> FoxhoundModel.createBodyLayer(new CubeDeformation(0.0f)), FoxhoundModel::new);
 		stoneling = addModel("stoneling", StonelingModel::createBodyLayer, StonelingModel::new);
 		crab = addModel("crab", CrabModel::createBodyLayer, CrabModel::new);
@@ -74,6 +74,7 @@ public class ModelHandler {
 		backpack = addArmorModel("backpack", BackpackModel::createBodyLayer);
 
         foxhound_armor = addArmorModel("foxhound_armor", () -> FoxhoundModel.createBodyLayer(new CubeDeformation(0.2f)));
+        shiba_armor = addArmorModel("shiba_armor", () -> ShibaModel.createBodyLayer(new CubeDeformation(0.2f)));
 
 		modelsInitted = true;
 	}
