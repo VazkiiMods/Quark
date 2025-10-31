@@ -10,7 +10,7 @@
   "group": "planks",
   "ingredients": [
     {
-      "item": "quark:azalea_planks"
+      "tag": "quark:azalea_logs"
     }
   ],
   "result": {

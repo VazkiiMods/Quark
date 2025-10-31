@@ -1891,15 +1891,22 @@ public class QuarkRecipeProvider extends RecipeProvider implements IConditionBui
 
         // world wood planks, wood (bark), doors, trapdoors, fences, gates, signs, boats, pressure plates, button
         for(WoodSetHandler.WoodSet set : DataUtil.QuarkWorldWoodSets){
-            ICondition cond = zCond(set.name + "_wood");
+            ICondition cond;
+            TagKey<Item> logTag;
             if (set == BlossomTreesModule.woodSet) {
                 cond = zCond("blossom_trees");
+                logTag = Quark.asTagKey(Registries.ITEM, "blossom_logs");
+            }
+            else
+            {
+                cond = zCond(set.name + "_wood");
+                logTag = Quark.asTagKey(Registries.ITEM, set.name + "_logs");
             }
 
             ShapelessRecipeBuilder.shapeless(RecipeCategory.BUILDING_BLOCKS, set.planks, 4)
-                    .requires(set.planks)
+                    .requires(logTag)
                     .group("planks")
-                    .unlockedBy("has_log", has(set.planks))
+                    .unlockedBy("has_log", has(logTag))
                     .save(recipeOutput.withConditions(cond), "quark:world/crafting/woodsets/" + set.name + "/" + set.name + "_planks");
             ShapedRecipeBuilder.shaped(RecipeCategory.BUILDING_BLOCKS, set.wood, 3)
                     .define('#', set.log)

@@ -10,7 +10,7 @@
   "group": "planks",
   "ingredients": [
     {
-      "item": "quark:ancient_planks"
+      "tag": "quark:ancient_logs"
     }
   ],
   "result": {
