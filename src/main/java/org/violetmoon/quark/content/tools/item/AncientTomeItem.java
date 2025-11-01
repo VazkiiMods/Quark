@@ -64,15 +64,14 @@ public class AncientTomeItem extends ZetaItem implements CreativeTabManager.Appe
 	public List<ItemStack> appendItemsToCreativeTab() {
 		List<ItemStack> items = new ArrayList<>();
 
-		if (getModule().zeta().side == ZetaSide.CLIENT) {
-            Minecraft.getInstance().getConnection().registryAccess().registry(Registries.ENCHANTMENT).get().asHolderIdMap().forEach(ench -> {
-				if (!AncientTomesModule.sanityCheck || ench.value().getMaxLevel() != 1) {
-					if (!AncientTomesModule.isInitialized() && AncientTomesModule.validEnchants.contains(ench)) {
-						items.add(getEnchantedItemStack(ench));
-					}
-				}
-			});
-        }
+        Minecraft.getInstance().getConnection().registryAccess().registry(Registries.ENCHANTMENT).get().asHolderIdMap().forEach(ench -> {
+            if (!AncientTomesModule.sanityCheck || ench.value().getMaxLevel() != 1) {
+                if (!AncientTomesModule.isInitialized() && AncientTomesModule.validEnchants.contains(ench)) {
+                    items.add(getEnchantedItemStack(ench));
+                }
+            }
+        });
+
         return items;
     }
 }

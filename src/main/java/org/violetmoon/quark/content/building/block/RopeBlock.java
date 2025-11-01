@@ -262,7 +262,7 @@ public class RopeBlock extends ZetaBlock implements IZetaBlockItemProvider, Simp
             return;
 
 		BlockState state = world.getBlockState(srcPos);
-        //zif (!state.getFluidState().is(Fluids.EMPTY)) return;
+        //if (!state.getFluidState().is(Fluids.EMPTY)) return;
 
 		Block block = state.getBlock();
 
