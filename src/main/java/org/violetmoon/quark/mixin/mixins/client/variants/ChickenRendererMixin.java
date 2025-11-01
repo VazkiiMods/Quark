@@ -20,7 +20,7 @@ public class ChickenRendererMixin {
 	private void overrideTexture(Chicken chicken, CallbackInfoReturnable<ResourceLocation> cir) {
 		ChickenRenderer render = (ChickenRenderer) ((Object) this);
 		ChickenModel<Chicken> model = render.getModel();
-		GrabChickensModule.Client.setRenderChickenFeetStatus(chicken, model); // Hey so whats the deal with the no leg rendering?
+		GrabChickensModule.Client.setRenderChickenFeetStatus(chicken, model);
 
 		ResourceLocation loc = VariantAnimalTexturesModule.Client.getChickenTexture(chicken);
 		if(loc != null)

@@ -42,6 +42,7 @@ import org.violetmoon.quark.content.building.module.VariantFurnacesModule;
 import org.violetmoon.quark.content.tools.item.AncientTomeItem;
 import org.violetmoon.quark.content.tools.module.AncientTomesModule;
 import org.violetmoon.quark.content.tools.module.PickarangModule;
+import org.violetmoon.quark.content.tools.recipe.SmithingRuneRecipe;
 import org.violetmoon.quark.content.tweaks.module.DiamondRepairModule;
 import org.violetmoon.quark.content.tweaks.recipe.ElytraDuplicationRecipe;
 import org.violetmoon.quark.content.tweaks.recipe.SlabToBlockRecipe;
@@ -85,6 +86,7 @@ public class QuarkJeiPlugin implements IModPlugin {
     public void registerVanillaCategoryExtensions(@NotNull IVanillaCategoryExtensionRegistration registration) {
         registration.getCraftingCategory().addExtension(ElytraDuplicationRecipe.class, new ElytraDuplicationExtension<>());
         registration.getCraftingCategory().addExtension(SlabToBlockRecipe.class, new SlabToBlockExtension<>());
+        registration.getSmithingCategory().addExtension(SmithingRuneRecipe.class, new RunicEtchingExtension());
     }
 
     private boolean matrix() {

@@ -41,7 +41,7 @@ public class BottledCloudItem extends ZetaItem {
 			if(!world.isEmptyBlock(pos))
 				pos = pos.relative(bresult.getDirection());
 
-			if(world.isEmptyBlock(pos) /*&& Quark.FLAN_INTEGRATION.canPlace(player, pos)*/) { // TODO: Wait for Neoforge Flan or remove
+			if(world.isEmptyBlock(pos) && world.isInWorldBounds(pos) /*&& Quark.FLAN_INTEGRATION.canPlace(player, pos)*/) { // TODO: Wait for Neoforge Flan or remove
 
 				if(!world.isClientSide) {
 					world.gameEvent(player, GameEvent.BLOCK_PLACE, pos);

@@ -56,7 +56,7 @@ public class UsesForCursesModule extends ZetaModule {
 	public static boolean shouldHideArmorStandModel(ItemStack stack) {
 		ClientPacketListener listener = Minecraft.getInstance().getConnection();
 		if (listener == null || !staticEnabled || !bindArmorStandsWithPlayerHeads || !stack.is(Items.PLAYER_HEAD)) return false;
-		return EnchantmentHelper.getTagEnchantmentLevel(listener.registryAccess().lookupOrThrow(Registries.ENCHANTMENT).getOrThrow(Enchantments.VANISHING_CURSE), stack) > 0;
+		return EnchantmentHelper.getTagEnchantmentLevel(listener.registryAccess().lookupOrThrow(Registries.ENCHANTMENT).getOrThrow(Enchantments.BINDING_CURSE), stack) > 0;
 	}
 
 	public static boolean shouldHidePumpkinOverlay(ResourceLocation location, Player player) {

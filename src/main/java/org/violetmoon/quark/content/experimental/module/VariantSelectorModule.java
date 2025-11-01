@@ -414,6 +414,7 @@ public class VariantSelectorModule extends ZetaModule {
 						}
 
 						RenderSystem.defaultBlendFunc();
+                        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1);
 
 						posX += width * 2;
 					} else {
@@ -426,7 +427,7 @@ public class VariantSelectorModule extends ZetaModule {
 								RenderSystem.setShaderColor(0.5F, 1.0F, 0.5F, 1.0F);
 							else
 								RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
-							guiGraphics.blit(WIDGETS_LOCATION, posX - 3, posY - 3, 24, 23, 22, 22, 256, 256);
+							//guiGraphics.blit(WIDGETS_LOCATION, posX - 3, posY - 3, 24, 23, 22, 22, 256, 256);
 						} else
 							posX += width;
 					}

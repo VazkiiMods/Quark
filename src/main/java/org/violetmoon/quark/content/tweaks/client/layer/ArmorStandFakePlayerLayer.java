@@ -14,6 +14,7 @@ import net.minecraft.client.renderer.blockentity.SkullBlockRenderer;
 import net.minecraft.client.renderer.entity.RenderLayerParent;
 import net.minecraft.client.renderer.entity.layers.RenderLayer;
 import net.minecraft.client.renderer.texture.OverlayTexture;
+import net.minecraft.client.resources.DefaultPlayerSkin;
 import net.minecraft.client.resources.PlayerSkin;
 import net.minecraft.core.Rotations;
 import net.minecraft.core.component.DataComponents;
@@ -42,56 +43,55 @@ public class ArmorStandFakePlayerLayer<M extends EntityModel<ArmorStand>> extend
 	}
 
 	@Override
-	public void render(@NotNull PoseStack pose, @NotNull MultiBufferSource buffer, int light, @NotNull ArmorStand armor, float p_117353_, float p_117354_, float p_117355_, float p_117356_, float p_117357_, float p_117358_) {
+	public void render(@NotNull PoseStack pose, @NotNull MultiBufferSource buffer, int light, @NotNull ArmorStand armor, float limbSwing, float limbSwingAmount, float partialTick, float ageInTicks, float netHeadYaw, float headPitch) {
 		if(!UsesForCursesModule.staticEnabled || !UsesForCursesModule.bindArmorStandsWithPlayerHeads) return;
 
 		ItemStack head = armor.getItemBySlot(EquipmentSlot.HEAD);
-		if(head.is(Items.PLAYER_HEAD) && EnchantmentHelper.has(head, EnchantmentEffectComponents.PREVENT_ARMOR_CHANGE) && head.has(DataComponents.PROFILE)) {
+		if(head.is(Items.PLAYER_HEAD) && EnchantmentHelper.has(head, EnchantmentEffectComponents.PREVENT_ARMOR_CHANGE)) {
 
-			GameProfile profile = head.get(DataComponents.PROFILE).gameProfile();
-			RenderType rendertype = SkullBlockRenderer.getRenderType(SkullBlock.Types.PLAYER, new ResolvableProfile(profile));
+            RenderType rendertype;
+            boolean slim = true;
+            if (head.has(DataComponents.PROFILE)) {
+                GameProfile profile = head.get(DataComponents.PROFILE).gameProfile();
+                rendertype = SkullBlockRenderer.getRenderType(SkullBlock.Types.PLAYER, new ResolvableProfile(profile));
+                PlayerSkin playerSkin = Minecraft.getInstance().getSkinManager().getInsecureSkin(profile);
+                slim = playerSkin.model().equals(PlayerSkin.Model.SLIM);
+            } else {
+                rendertype =  RenderType.entityTranslucent(DefaultPlayerSkin.getDefaultTexture());
+            }
+            pose.pushPose();
 
-			if(rendertype != null) {
-				boolean slim = false;
-				if(profile != null) {
-					PlayerSkin playerSkin = Minecraft.getInstance().getSkinManager().getInsecureSkin(profile);
-					if(playerSkin != null) {
-						slim = playerSkin.model().equals(PlayerSkin.Model.SLIM);
-					}
-				}
+            if (armor.isBaby()) {
+                float s = 1F;
+                pose.translate(0F, 0F, 0F);
+                pose.scale(s, s, s);
+            } else {
+                float s = 2F;
+                pose.translate(0F, -1.5F, 0F);
+                pose.scale(s, s, s);
+            }
 
-				pose.pushPose();
+            PlayerModel<?> model = slim ? playerModelSlim : playerModel;
 
-				if(armor.isBaby()) {
-					float s = 1F;
-					pose.translate(0F, 0F, 0F);
-					pose.scale(s, s, s);
-				} else {
-					float s = 2F;
-					pose.translate(0F, -1.5F, 0F);
-					pose.scale(s, s, s);
-				}
 
-				PlayerModel<?> model = slim ? playerModelSlim : playerModel;
+            model.head.visible = false;
+            model.hat.visible = false;
 
-				model.head.visible = false;
-				model.hat.visible = false;
+            rotateModel(model.leftArm, armor.getLeftArmPose());
+            rotateModel(model.rightArm, armor.getRightArmPose());
+            rotateModel(model.leftSleeve, armor.getLeftArmPose());
+            rotateModel(model.rightSleeve, armor.getRightArmPose());
 
-				rotateModel(model.leftArm, armor.getLeftArmPose());
-				rotateModel(model.rightArm, armor.getRightArmPose());
-				rotateModel(model.leftSleeve, armor.getLeftArmPose());
-				rotateModel(model.rightSleeve, armor.getRightArmPose());
+            rotateModel(model.leftLeg, armor.getLeftLegPose());
+            rotateModel(model.rightLeg, armor.getRightLegPose());
+            rotateModel(model.leftPants, armor.getLeftLegPose());
+            rotateModel(model.rightPants, armor.getRightLegPose());
 
-				rotateModel(model.leftLeg, armor.getLeftLegPose());
-				rotateModel(model.rightLeg, armor.getRightLegPose());
-				rotateModel(model.leftPants, armor.getLeftLegPose());
-				rotateModel(model.rightPants, armor.getRightLegPose());
+            model.renderToBuffer(pose, buffer.getBuffer(rendertype), light, OverlayTexture.NO_OVERLAY, -1);
 
-				model.renderToBuffer(pose, buffer.getBuffer(rendertype), light, OverlayTexture.NO_OVERLAY, -1);
+            pose.popPose();
 
-				pose.popPose();
-			}
-		}
+        }
 	}
 
 	private void rotateModel(ModelPart part, Rotations rot) {

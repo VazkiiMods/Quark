@@ -1,6 +1,7 @@
 package org.violetmoon.quark.content.tweaks.module;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.NonNullList;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundEvents;
@@ -14,6 +15,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.component.CustomData;
+import net.minecraft.world.item.component.ItemContainerContents;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -56,10 +58,12 @@ public class ShulkerPackingModule extends ZetaModule {
 
 					BlockEntity be = level.getBlockEntity(pos);
 					if(be instanceof Container container && container.getContainerSize() == shulkerBoxData.getContainerSize()) {
+                        NonNullList<ItemStack> items = NonNullList.create();
 						for(int i = 0; i < container.getContainerSize(); i++) {
 							ItemStack inSlot = container.getItem(i);
 							if(shulkerBoxData.canPlaceItemThroughFace(i, inSlot, null)) {
-								shulkerBoxData.setItem(i, inSlot);
+								//shulkerBoxData.setItem(i, inSlot);
+                                items.add(i, inSlot);
 								container.setItem(i, ItemStack.EMPTY);
 							}
 						}
@@ -83,7 +87,8 @@ public class ShulkerPackingModule extends ZetaModule {
 						}
 
 						newShulkerBox.set(DataComponents.BLOCK_ENTITY_DATA, CustomData.of(shulkerBoxData.saveWithFullMetadata(level.registryAccess())));
-						ItemHandlerHelper.giveItemToPlayer(player, newShulkerBox, player.getInventory().selected);
+                        newShulkerBox.set(DataComponents.CONTAINER, ItemContainerContents.fromItems(items));
+                        ItemHandlerHelper.giveItemToPlayer(player, newShulkerBox, player.getInventory().selected);
 					}
 				}
 			}

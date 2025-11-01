@@ -115,7 +115,7 @@ public class RopeBlock extends ZetaBlock implements IZetaBlockItemProvider, Simp
 
 	@Override
 	protected InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos, Player player, BlockHitResult result) {
-		if (pullUp(level, pos)) {
+		if (player.getMainHandItem().getItem() != asItem() && pullUp(level, pos)) {
 			if(!player.getAbilities().instabuild) {
 				if(!player.addItem(new ItemStack(this)))
 					player.drop(new ItemStack(this), false);
@@ -258,8 +258,11 @@ public class RopeBlock extends ZetaBlock implements IZetaBlockItemProvider, Simp
 	}
 
 	private void moveBlock(Level world, BlockPos srcPos, BlockPos dstPos) {
+        if (world.isClientSide)
+            return;
+
 		BlockState state = world.getBlockState(srcPos);
-        //zif (!state.getFluidState().is(Fluids.EMPTY)) return;
+        //if (!state.getFluidState().is(Fluids.EMPTY)) return;
 
 		Block block = state.getBlock();
 
@@ -282,16 +285,18 @@ public class RopeBlock extends ZetaBlock implements IZetaBlockItemProvider, Simp
 		if(nextState.getProperties().contains(BlockStateProperties.WATERLOGGED))
 			nextState = nextState.setValue(BlockStateProperties.WATERLOGGED, world.getFluidState(dstPos).getType() == Fluids.WATER);
 
-		if(tile != null) {
-			BlockEntity target = BlockEntity.loadStatic(dstPos, state, tile.saveWithFullMetadata(world.registryAccess()), world.registryAccess());
+        world.setBlockAndUpdate(dstPos, nextState);
+
+        // You gotta write the block entity data AFTER you move the block.
+        if(tile != null) {
+			BlockEntity target = BlockEntity.loadStatic(dstPos, nextState, tile.saveWithFullMetadata(world.registryAccess()).copy(), world.registryAccess());
 			if(target != null) {
 				world.setBlockEntity(target);
-				target.setBlockState(state);
+                //world.setBlockAndUpdate(dstPos, state);
 				target.setChanged();
 			}
 		}
 
-        world.setBlockAndUpdate(dstPos, nextState);
         nextState.handleNeighborChanged(world, dstPos, nextState.getBlock(), srcPos, true);
 
         world.updateNeighborsAt(dstPos, state.getBlock());

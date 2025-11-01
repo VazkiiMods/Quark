@@ -243,7 +243,7 @@ public class LockRotationModule extends ZetaModule {
 				if(renderLikeCrossHair) {
 					RenderSystem.blendFuncSeparate(GlStateManager.SourceFactor.ONE_MINUS_DST_COLOR, GlStateManager.DestFactor.ONE_MINUS_SRC_COLOR, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
 					RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1);
-				}else{
+				} else{
 					RenderSystem.defaultBlendFunc();
 					RenderSystem.setShaderColor(1, 1, 1, 0.5f);
 				}
@@ -257,6 +257,9 @@ public class LockRotationModule extends ZetaModule {
 					guiGraphics.blit(ClientUtil.GENERAL_ICONS, x + 16, y, clientProfile.half * 16, 79, 16, 16, 256, 256);
 
 				}
+
+                RenderSystem.defaultBlendFunc();
+                RenderSystem.setShaderColor(1, 1, 1, 1f);
 			}
 		}
 	}

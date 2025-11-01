@@ -84,13 +84,16 @@ public class CorundumBlock extends ZetaGlassBlock {
 
 	@Override
 	public void animateTick(@NotNull BlockState stateIn, @NotNull Level worldIn, @NotNull BlockPos pos, @NotNull RandomSource rand) {
+        float red = ((color >> 16) & 255)/255f;
+        float green = ((color >> 8) & 255) / 255f;
+        float blue = (color & 255) / 255f;
 		if(canGrow(worldIn, pos)) {
 			double x = (double) pos.getX() + rand.nextDouble();
 			double y = (double) pos.getY() + rand.nextDouble();
 			double z = (double) pos.getZ() + rand.nextDouble();
 
 			//Unsure if this is correct behavior.
-			worldIn.addParticle(new BlockParticleOption(ParticleTypes.BLOCK, stateIn), x, y, z, (color >> 16)/255f, (color >> 8) / 255f, color / 255f);
+			worldIn.addParticle(ColorParticleOption.create(ParticleTypes.ENTITY_EFFECT, red, green, blue), x, y, z, rand.nextFloat(), rand.nextFloat(), rand.nextFloat());
 		}
 
 		if(!waxed)
@@ -111,10 +114,10 @@ public class CorundumBlock extends ZetaGlassBlock {
 					double ol = ((ox * ox) + (oy * oy) + (oz * oz)) * -2;
 					if(ol == 0)
 						ol = 0.0001;
-					worldIn.addParticle(ParticleTypes.END_ROD, x, y, z, ox / ol, oy / ol, oz / ol);
+                    worldIn.addParticle(ParticleTypes.END_ROD, x, y, z, ox / ol, oy / ol, oz / ol);
 				}
 
-				worldIn.addParticle(new DustParticleOptions(new Vector3f((color >> 16)/255f, (color >> 8) / 255f, color / 255f), size), x, y, z, 0, 0, 0);
+				worldIn.addParticle(new DustParticleOptions(new Vector3f(red, green, blue), size), x, y, z, 0, 0, 0);
 			}
 	}
 

@@ -10,7 +10,7 @@
   "group": "planks",
   "ingredients": [
     {
-      "item": "quark:blossom_planks"
+      "tag": "quark:blossom_logs"
     }
   ],
   "result": {

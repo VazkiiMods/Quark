@@ -40,7 +40,7 @@ public class GrabChickensModule extends ZetaModule {
 	private static boolean staticEnabled;
 
 	@LoadEvent
-	public final void configChanged(ZConfigChanged event) {
+	public void configChanged(ZConfigChanged event) {
 		staticEnabled = isEnabled();
 	}
 
@@ -117,6 +117,7 @@ public class GrabChickensModule extends ZetaModule {
 			boolean should = entity.getVehicle() == null || entity.getVehicle().getType() != EntityType.PLAYER;
 			model.leftLeg.visible = should;
 			model.rightLeg.visible = should;
+
 		}
 	}
 }
