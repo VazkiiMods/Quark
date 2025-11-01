@@ -35,18 +35,18 @@ public final class SmithingRuneRecipe extends SmithingTrimRecipe { // Extends to
 	public static final Serializer SERIALIZER = new Serializer();
 
 	private final Ingredient template;
-	private final Ingredient addition;
+	public final Ingredient addition;
 	private final RuneColor runeColor;
 	private static Ingredient used;
 
-	private static ItemStack makeEnchantedDisplayItem(ItemStack input) {
+	public static ItemStack makeEnchantedDisplayItem(ItemStack input) {
 		ItemStack stack = input.copy();
 		stack.set(DataComponents.CUSTOM_NAME, Component.translatable("quark.jei.any_enchanted"));
 		stack.set(DataComponents.ENCHANTMENT_GLINT_OVERRIDE, true);
 		return stack;
 	}
 
-	private static Ingredient createBaseIngredient() {
+	public static Ingredient createBaseIngredient() {
 		if (used == null) {
 			Stream<ItemStack> displayItems;
 			if (Quark.ZETA.modules.isEnabled(ImprovedTooltipsModule.class) && ImprovedTooltipsModule.enchantingTooltips) {
@@ -65,6 +65,8 @@ public final class SmithingRuneRecipe extends SmithingTrimRecipe { // Extends to
 
 		return used;
 	}
+
+
 
 	private SmithingRuneRecipe(Ingredient template, Ingredient addition, RuneColor runeColor) {
 		super(template, createBaseIngredient(), addition);
