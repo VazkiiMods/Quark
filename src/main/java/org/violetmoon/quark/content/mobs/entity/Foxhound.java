@@ -35,6 +35,7 @@ import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.goal.*;
 import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal;
 import net.minecraft.world.entity.ai.goal.target.NonTameRandomTargetGoal;
+import net.minecraft.world.entity.ai.goal.target.OwnerHurtByTargetGoal;
 import net.minecraft.world.entity.ai.goal.target.OwnerHurtTargetGoal;
 import net.minecraft.world.entity.animal.Animal;
 import net.minecraft.world.entity.animal.Rabbit;
@@ -249,12 +250,13 @@ public class Foxhound extends Wolf implements Enemy {
 		this.goalSelector.addGoal(12, new BegGoal(this, 8.0F));
 		this.goalSelector.addGoal(13, new LookAtPlayerGoal(this, Player.class, 8.0F));
 		this.goalSelector.addGoal(14, new RandomLookAroundGoal(this));
-		this.targetSelector.addGoal(1, new HurtByTargetGoal(this));
-		this.targetSelector.addGoal(2, new OwnerHurtTargetGoal(this));
-		this.targetSelector.addGoal(3, new HurtByTargetGoal(this).setAlertOthers());
-		this.targetSelector.addGoal(4, new NonTameRandomTargetGoal<>(this, Animal.class, false,
+		this.targetSelector.addGoal(1, new OwnerHurtByTargetGoal(this));
+		this.targetSelector.addGoal(2, new HurtByTargetGoal(this));
+		this.targetSelector.addGoal(3, new OwnerHurtTargetGoal(this));
+		this.targetSelector.addGoal(4, new HurtByTargetGoal(this).setAlertOthers());
+		this.targetSelector.addGoal(5, new NonTameRandomTargetGoal<>(this, Animal.class, false,
 				target -> target instanceof Sheep || target instanceof Rabbit));
-		this.targetSelector.addGoal(4, new NonTameRandomTargetGoal<>(this, Player.class, false,
+		this.targetSelector.addGoal(6, new NonTameRandomTargetGoal<>(this, Player.class, false,
 				target -> !isTame()));
 //		this.targetSelector.addGoal(5, new NearestAttackableTargetGoal<>(this, AbstractSkeletonEntity.class, false));
 	}
@@ -295,7 +297,7 @@ public class Foxhound extends Wolf implements Enemy {
 		ItemStack itemstack = player.getItemInHand(hand);
 
 		if(itemstack.getItem() == Items.BONE && !isTame())
-			return InteractionResult.PASS;
+			return InteractionResult.PASS; //why is there here lol
 
 		Level level = level();
 		if(this.isTame()) {
