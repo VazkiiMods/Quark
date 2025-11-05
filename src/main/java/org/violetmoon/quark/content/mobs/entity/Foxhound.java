@@ -280,6 +280,10 @@ public class Foxhound extends Wolf implements Enemy {
 				((int) this.getAttributeValue(Attributes.ATTACK_DAMAGE)));
 
 		if(flag) {
+			if(entityIn instanceof ServerPlayer player && player.isBlocking()){
+				//player.blockUsingShield(this);
+				//TODO fix accesstransformer
+			}
 			entityIn.igniteForSeconds(5);
 		}
 		return flag;
