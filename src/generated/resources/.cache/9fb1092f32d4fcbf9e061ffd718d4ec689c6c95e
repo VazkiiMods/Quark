@@ -1,4 +1,4 @@
-// 1.21.1	2025-10-30T19:37:44.1420562	Recipes
+// 1.21.1	2025-11-12T12:00:31.9139283	Recipes
 bb24f1bac2cb3ef401eb56f32a5b7364bcee7552 data/quark/advancement/recipes/building_blocks/building/crafting/bamboo_mat.json
 31f4957990f1d18f202f816de898f77458b18140 data/quark/advancement/recipes/building_blocks/building/crafting/bamboo_mat_carpet.json
 8df9c4ad585c2226233ee6e8f7bc96f33806df86 data/quark/advancement/recipes/building_blocks/building/crafting/blackstone_bricks.json
@@ -1711,7 +1711,7 @@ dc174a0f22dd7ff795972d100fb4131c175cb738 data/quark/recipe/tools/crafting/seed_p
 f10844dd44f571df135ae2040b998ed64a1e7455 data/quark/recipe/tweaks/crafting/utility/bent/cookie.json
 64641e8d4b8abc19a363f0dd87ab032943981dfb data/quark/recipe/tweaks/crafting/utility/bent/paper.json
 702c3f80c75d112a9b8b48e904f459958bc5b892 data/quark/recipe/tweaks/crafting/utility/better_stone_tools/axe.json
-13b7e6344d3ea76951d92b975b41111a33d11581 data/quark/recipe/tweaks/crafting/utility/better_stone_tools/hoe.json
+7be751bd94a8a4c3195cf8bdbc296a99934269ae data/quark/recipe/tweaks/crafting/utility/better_stone_tools/hoe.json
 12a8b70d5e8ca4d9e90c705f2e59ba5c49f493d2 data/quark/recipe/tweaks/crafting/utility/better_stone_tools/pickaxe.json
 f6560a114e234994517aa2a494f51d0debf31490 data/quark/recipe/tweaks/crafting/utility/better_stone_tools/shovel.json
 c379fcccdd54972993f15574bd469641d8de36cd data/quark/recipe/tweaks/crafting/utility/better_stone_tools/sword.json

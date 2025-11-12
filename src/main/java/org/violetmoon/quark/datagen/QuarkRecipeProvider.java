@@ -1654,7 +1654,7 @@ public class QuarkRecipeProvider extends RecipeProvider implements IConditionBui
                 .define('S', Tags.Items.RODS_WOODEN)
                 .unlockedBy("test", PlayerTrigger.TriggerInstance.tick())
                 .save(recipeOutput.withConditions(zCond("better_stone_tools")), "quark:tweaks/crafting/utility/better_stone_tools/axe");
-        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, Items.STONE_AXE)
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, Items.STONE_HOE)
                 .pattern("##")
                 .pattern(" S")
                 .pattern(" S")
