@@ -1,13 +1,11 @@
 package org.violetmoon.quark.content.tools.module;
 
 import com.google.common.collect.Lists;
-import com.mojang.serialization.*;
-
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import it.unimi.dsi.fastutil.objects.Object2IntArrayMap;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
-
 import net.minecraft.core.Holder;
+import net.minecraft.core.HolderSet;
 import net.minecraft.core.Registry;
 import net.minecraft.core.component.DataComponentPredicate;
 import net.minecraft.core.component.DataComponents;
@@ -31,6 +29,7 @@ import net.minecraft.world.item.*;
 import net.minecraft.world.item.enchantment.*;
 import net.minecraft.world.item.trading.ItemCost;
 import net.minecraft.world.item.trading.MerchantOffer;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.storage.loot.BuiltInLootTables;
@@ -38,11 +37,8 @@ import net.minecraft.world.level.storage.loot.entries.LootItem;
 import net.minecraft.world.level.storage.loot.entries.LootPoolEntryContainer;
 import net.minecraft.world.level.storage.loot.functions.LootItemFunctionType;
 import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
-
-import net.neoforged.neoforge.event.AnvilUpdateEvent;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-
 import org.violetmoon.quark.base.Quark;
 import org.violetmoon.quark.base.components.QuarkDataComponents;
 import org.violetmoon.quark.content.tools.item.AncientTomeItem;
@@ -54,7 +50,6 @@ import org.violetmoon.zeta.config.Config;
 import org.violetmoon.zeta.event.bus.LoadEvent;
 import org.violetmoon.zeta.event.bus.PlayEvent;
 import org.violetmoon.zeta.event.load.ZAddReloadListener;
-import org.violetmoon.zeta.event.load.ZCommonSetup;
 import org.violetmoon.zeta.event.load.ZConfigChanged;
 import org.violetmoon.zeta.event.load.ZRegister;
 import org.violetmoon.zeta.event.play.ZAnvilRepair;
@@ -66,7 +61,9 @@ import org.violetmoon.zeta.module.ZetaLoadModule;
 import org.violetmoon.zeta.module.ZetaModule;
 import org.violetmoon.zeta.util.Hint;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 import java.util.stream.Stream;
 
 @ZetaLoadModule(category = "tools")
@@ -175,11 +172,6 @@ public class AncientTomesModule extends ZetaModule {
 		}
 	}
 
-	@LoadEvent
-	public void setup(ZCommonSetup event) {
-
-	}
-
 	@PlayEvent
 	public void onLootTableLoad(ZLootTableLoad event) {
 		ResourceLocation res = event.getName();
@@ -202,25 +194,22 @@ public class AncientTomesModule extends ZetaModule {
 
 	@PlayEvent
 	public void onDataLoad(ZAddReloadListener event) {
-		Registry<Enchantment> enchRegistry = event.getServerResources().fullRegistries().get().registryOrThrow(Registries.ENCHANTMENT);
+		Registry<Enchantment> enchRegistry = event.getRegistryAccess().registryOrThrow(Registries.ENCHANTMENT);
 		validEnchants.clear();
-		for(String s : enchantNames) {
-			ResourceKey<Enchantment> realsourceKey = ResourceKey.create(Registries.ENCHANTMENT, ResourceLocation.parse(s));
-			Optional<Holder.Reference<Enchantment>> optHeld = enchRegistry.getHolder(realsourceKey);
-			if (optHeld.isEmpty()) {
+
+		for (String enchantmentName : enchantNames) {
+			ResourceKey<Enchantment> resourceKey = ResourceKey.create(Registries.ENCHANTMENT, ResourceLocation.parse(enchantmentName));
+			Optional<Holder.Reference<Enchantment>> holder = enchRegistry.getHolder(resourceKey);
+			if (holder.isEmpty()) {
 				Quark.LOG.error("Unknown enchantment found for Tomes!");
 				continue;
 			}
-			validEnchants.add(optHeld.get());
+			validEnchants.add(holder.get());
 		}
 
-		if(sanityCheck)
-			validEnchants.removeIf((ench) -> ench.value().getMaxLevel() == 1);
-
-		for(Holder<Enchantment> e : enchRegistry.asHolderIdMap()) {
-			if (e.is(EnchantmentTags.CURSE))
-				curses.add(e);
-		}
+		if (sanityCheck) {
+            validEnchants.removeIf((ench) -> ench.value().getMaxLevel() == 1);
+        }
 	}
 
 	@PlayEvent
@@ -305,12 +294,19 @@ public class AncientTomesModule extends ZetaModule {
 		ItemStack output = event.getOutput();
 		ItemStack right = event.getRight();
 
-		if (curseGear && (right.is(ancient_tome) || event.getLeft().is(ancient_tome))) {
-			event.getOutput().enchant(curses.get(event.getEntity().level().random.nextInt(curses.size())), 1);
-		}
+        if (!(event.getEntity() instanceof ServerPlayer serverPlayer)) return;
 
-		if(isOverlevel(output) && (right.getItem() == Items.ENCHANTED_BOOK || right.getItem() == ancient_tome) && event.getEntity() instanceof ServerPlayer sp)
-			overlevelTrigger.trigger(sp);
+        if (curseGear && (right.is(ancient_tome) || event.getLeft().is(ancient_tome))) {
+            Level level = serverPlayer.level();
+            Optional<HolderSet.Named<Enchantment>> curses = level.registryAccess().registryOrThrow(Registries.ENCHANTMENT).getTag(EnchantmentTags.CURSE);
+            if (curses.isPresent()) {
+                Holder<Enchantment> curse = curses.get().get(level.random.nextInt(curses.get().size()));
+                event.getOutput().enchant(curse, 1);
+            }
+        }
+
+		if (isOverlevel(output) && (right.getItem() == Items.ENCHANTED_BOOK || right.getItem() == ancient_tome))
+            overlevelTrigger.trigger(serverPlayer);
 	}
 
 	@PlayEvent
@@ -388,15 +384,6 @@ public class AncientTomesModule extends ZetaModule {
                 Enchantments.BREACH,
                 Enchantments.WIND_BURST
         ).map(resourceKey -> resourceKey.location().toString()).toList();
-	}
-
-	private final List<Holder<Enchantment>> curses = new ArrayList<>();
-
-	public void setupCursesList() {
-		/*for(var e : BuiltInRegistries.ENCHANTMENT) {
-			if(e.isCurse())
-				curses.add(e);
-		}*/
 	}
 
 	public static Holder<Enchantment> getTomeEnchantment(ItemStack stack) {
