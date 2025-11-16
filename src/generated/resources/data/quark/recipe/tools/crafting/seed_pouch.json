@@ -9,13 +9,13 @@
   "category": "equipment",
   "key": {
     "H": {
-      "tag": "quark:seed_pouch_holdable"
+      "item": "minecraft:leather"
     },
     "S": {
       "item": "minecraft:string"
     },
     "X": {
-      "item": "quark:smithing_template_rune"
+      "tag": "quark:seed_pouch_holdable"
     }
   },
   "pattern": [

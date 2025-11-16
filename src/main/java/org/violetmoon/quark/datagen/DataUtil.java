@@ -114,6 +114,9 @@ public class DataUtil {
         else if(block == Blocks.WARPED_PLANKS){
             return ItemTags.WARPED_STEMS;
         }
+        else if(block == Blocks.BAMBOO_PLANKS){
+            return ItemTags.BAMBOO_BLOCKS;
+        }
 
         else if(block == AncientWoodModule.woodSet.planks){
             return TagKey.create(Registries.ITEM, Quark.asResource("ancient_logs"));
