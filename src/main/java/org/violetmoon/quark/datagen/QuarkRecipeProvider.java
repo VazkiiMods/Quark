@@ -1455,7 +1455,7 @@ public class QuarkRecipeProvider extends RecipeProvider implements IConditionBui
                 .define('P', Tags.Items.INGOTS_COPPER)
                 .unlockedBy("test", PlayerTrigger.TriggerInstance.tick())
                 .save(recipeOutput.withConditions(and(zCond("magnet"), zCond("magnet_pre_end"))), "quark:oddities/crafting/magnet_pre_end");
-        ShapedRecipeBuilder.shaped(RecipeCategory.REDSTONE, PipesModule.pipe)
+        ShapedRecipeBuilder.shaped(RecipeCategory.REDSTONE, PipesModule.pipe, 6)
                 .pattern("I")
                 .pattern("G")
                 .pattern("I")
