@@ -1,7 +1,6 @@
 package org.violetmoon.quark.content.tools.item;
 
 import net.minecraft.ChatFormatting;
-import net.minecraft.client.Minecraft;
 import net.minecraft.core.Holder;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
@@ -9,12 +8,12 @@ import net.minecraft.world.item.*;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.ItemEnchantments;
 import org.jetbrains.annotations.NotNull;
+import org.violetmoon.quark.base.QuarkClient;
 import org.violetmoon.quark.base.components.QuarkDataComponents;
 import org.violetmoon.quark.content.tools.module.AncientTomesModule;
 import org.violetmoon.zeta.item.ZetaItem;
 import org.violetmoon.zeta.module.ZetaModule;
 import org.violetmoon.zeta.registry.CreativeTabManager;
-import org.violetmoon.zeta.util.ZetaSide;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -64,7 +63,7 @@ public class AncientTomeItem extends ZetaItem implements CreativeTabManager.Appe
 	public List<ItemStack> appendItemsToCreativeTab() {
 		List<ItemStack> items = new ArrayList<>();
 
-        Minecraft.getInstance().getConnection().registryAccess().registry(Registries.ENCHANTMENT).get().asHolderIdMap().forEach(ench -> {
+		QuarkClient.ZETA_CLIENT.hackilyGetCurrentClientLevelRegistryAccess().registry(Registries.ENCHANTMENT).get().asHolderIdMap().forEach(ench -> {
             if (!AncientTomesModule.sanityCheck || ench.value().getMaxLevel() != 1) {
                 if (!AncientTomesModule.isInitialized() && AncientTomesModule.validEnchants.contains(ench)) {
                     items.add(getEnchantedItemStack(ench));
