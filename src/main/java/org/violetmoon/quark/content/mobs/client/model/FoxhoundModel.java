@@ -143,7 +143,7 @@ public class FoxhoundModel extends AgeableListModel<Foxhound> {
         else if (!this.fluff.visible && !hound.hasArmor())
             this.fluff.visible = true;
 
-		if(hound.isSleeping()) {
+		if(hound.isSleeping()) { // #5327 - isSleeping is always returning false
 			this.head.setPos(1.0F, 20.5F, -5.5f);
 			this.setAngle(head, 0.0F, 0.7853981633974483F, -0.04363323129985824F);
 
