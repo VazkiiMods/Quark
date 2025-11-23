@@ -436,23 +436,24 @@ public class AncientTomesModule extends ZetaModule {
 		}
 	}
 
-	public static boolean matchWildcardEnchantedBook(MerchantOffer offer, ItemStack comparing, ItemStack reference) {
+	public static boolean matchWildcardEnchantedBook(MerchantOffer offer, ItemStack playerOfferA, ItemStack playerOfferB) {
 		// Doesn't check if enabled, since this should apply to the trades that have already been generated regardless
-		if(isAncientTomeOffer(offer) && comparing.is(Items.ENCHANTED_BOOK) && reference.is(Items.ENCHANTED_BOOK)) {
-			ItemEnchantments referenceEnchants = reference.get(DataComponents.ENCHANTMENTS);
-			if(referenceEnchants.size() == 1) {
+		if (isAncientTomeOffer(offer) && playerOfferA.is(Items.ENCHANTED_BOOK) && playerOfferB.is(Items.ENCHANTED_BOOK)) {
+			ItemEnchantments referenceEnchants = playerOfferB.get(DataComponents.ENCHANTMENTS);
+			if (referenceEnchants != null && referenceEnchants.size() == 1) {
 				Holder<Enchantment> enchantment = referenceEnchants.keySet().iterator().next();
 				int level = referenceEnchants.getLevel(enchantment);
 
-				ItemEnchantments comparingEnchants = comparing.get(DataComponents.ENCHANTMENTS);
-				for(var entry : comparingEnchants.entrySet()) {
-					if(entry.getKey() == enchantment && entry.getValue() >= level) {
-						return true;
-					}
-				}
+				ItemEnchantments comparingEnchants = playerOfferA.get(DataComponents.ENCHANTMENTS);
+                if (comparingEnchants != null) {
+                    for (var entry : comparingEnchants.entrySet()) {
+                        if (entry.getKey() == enchantment && entry.getIntValue() >= level) {
+                            return true;
+                        }
+                    }
+                }
 			}
 		}
-
 		return false;
 	}
 

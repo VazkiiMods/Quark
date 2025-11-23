@@ -21,7 +21,7 @@ import java.util.EnumSet;
 public class SleepGoal extends Goal {
 
 	private final Foxhound foxhound;
-	private boolean isSleeping;
+	public boolean isSleeping;
 	private boolean wasSitting;
 
 	public SleepGoal(Foxhound foxhound) {

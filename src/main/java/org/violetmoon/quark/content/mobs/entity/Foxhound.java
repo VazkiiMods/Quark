@@ -16,6 +16,7 @@ import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
@@ -37,10 +38,7 @@ import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal;
 import net.minecraft.world.entity.ai.goal.target.NonTameRandomTargetGoal;
 import net.minecraft.world.entity.ai.goal.target.OwnerHurtByTargetGoal;
 import net.minecraft.world.entity.ai.goal.target.OwnerHurtTargetGoal;
-import net.minecraft.world.entity.animal.Animal;
-import net.minecraft.world.entity.animal.Rabbit;
-import net.minecraft.world.entity.animal.Sheep;
-import net.minecraft.world.entity.animal.Wolf;
+import net.minecraft.world.entity.animal.*;
 import net.minecraft.world.entity.monster.Enemy;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.DyeColor;
@@ -58,7 +56,6 @@ import net.minecraft.world.level.storage.loot.LootTable;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
-import org.violetmoon.quark.addons.oddities.block.TinyPotatoBlock;
 import org.violetmoon.quark.addons.oddities.module.TinyPotatoModule;
 import org.violetmoon.quark.base.Quark;
 import org.violetmoon.quark.base.components.QuarkDataComponents;
@@ -67,7 +64,6 @@ import org.violetmoon.quark.content.mobs.ai.FindPlaceToSleepGoal;
 import org.violetmoon.quark.content.mobs.ai.SleepGoal;
 import org.violetmoon.quark.content.mobs.module.FoxhoundModule;
 import org.violetmoon.quark.content.tweaks.ai.WantLoveGoal;
-import org.violetmoon.quark.mixin.mixins.accessor.AccessorWolf;
 
 import java.util.List;
 import java.util.Optional;
@@ -300,8 +296,32 @@ public class Foxhound extends Wolf implements Enemy {
 	public InteractionResult mobInteract(Player player, @NotNull InteractionHand hand) {
 		ItemStack itemstack = player.getItemInHand(hand);
 
+		//debugging code
+		if(itemstack.is(Items.DEBUG_STICK) && !player.level().isClientSide()){
+			if(isSleeping()){
+				// #5327 - isSleeping is always returning false.
+				//vanilla foxes have their own isSleeping method instead of using the LivingEntity method,
+				//but that uses entity data which is synced, ai goals (which we are using for sleep) are not.
+				player.sendSystemMessage(Component.literal("setWoke()"));
+				setWoke();
+			}
+			else{
+				SleepGoal sleep = getSleepGoal();
+				if(sleep == null){
+					player.sendSystemMessage(Component.literal("SleepGoal was null"));
+					return InteractionResult.sidedSuccess(player.level().isClientSide);
+				}
+				else{
+					sleep.setSleeping(true);
+					player.sendSystemMessage(Component.literal("setSleeping(true)") );
+					return InteractionResult.sidedSuccess(player.level().isClientSide);
+				}
+
+			}
+		}
+
 		if(itemstack.getItem() == Items.BONE && !isTame())
-			return InteractionResult.PASS; //why is there here lol
+			return InteractionResult.PASS; //prevent bone being passed to superclass
 
 		Level level = level();
 		if(this.isTame()) {
@@ -440,4 +460,10 @@ public class Foxhound extends Wolf implements Enemy {
 			sleep.setSleeping(false);
 		}
 	}
+
+//	@Override
+//	public boolean isSleeping(){
+//		return entityData.get(SLEEPING);
+//	}
+
 }

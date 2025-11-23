@@ -219,6 +219,7 @@ public class ReacharoundPlacingModule extends ZetaModule {
 					boolean vertical = (currentTarget.dir.getAxis() == Axis.Y);
 					ResourceLocation texture = (vertical ? OVERLAY_VERTICAL : OVERLAY_HORIZONTAL);
 
+                    RenderSystem.enableBlend();
 					RenderSystem.blendFuncSeparate(GlStateManager.SourceFactor.ONE_MINUS_DST_COLOR, GlStateManager.DestFactor.ONE_MINUS_SRC_COLOR, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
 
 					matrix.pushPose();
@@ -229,7 +230,6 @@ public class ReacharoundPlacingModule extends ZetaModule {
 					matrix.popPose();
 
 					RenderSystem.defaultBlendFunc();
-
 				}
 			}
 		}
