@@ -89,7 +89,7 @@ public class QuarkRecipeProvider extends RecipeProvider implements IConditionBui
                 .requires(Tags.Items.INGOTS_GOLD)
                 .unlockedBy("test", PlayerTrigger.TriggerInstance.tick())
                 .save(recipeOutput.withConditions(zCond("gold_metal_button")), "quark:automation/crafting/gold_button");
-        ShapedRecipeBuilder.shaped(RecipeCategory.REDSTONE, GravisandModule.gravisand)
+        ShapedRecipeBuilder.shaped(RecipeCategory.REDSTONE, GravisandModule.gravisand, 8)
                 .pattern("SSS")
                 .pattern("SES")
                 .pattern("SSS")
@@ -195,8 +195,12 @@ public class QuarkRecipeProvider extends RecipeProvider implements IConditionBui
                 }
             }
 
-            if (chestEntry.getKey() != Blocks.BAMBOO_PLANKS && chestEntry.getKey().getDescriptionId().contains("planks")) {
-                fourChestRecipe(chestEntry.getValue().asItem(), DataUtil.getLogTagFromPlank(chestEntry.getKey())).unlockedBy("test", PlayerTrigger.TriggerInstance.tick())
+            if (chestEntry.getKey().getDescriptionId().contains("planks")) {
+                if (chestEntry.getKey() == Blocks.BAMBOO_PLANKS)
+                    twoChestRecipe(chestEntry.getValue().asItem(), DataUtil.getLogTagFromPlank(chestEntry.getKey())).unlockedBy("test", PlayerTrigger.TriggerInstance.tick())
+                            .save(recipeOutput.withConditions(cond), dir);
+                else
+                    fourChestRecipe(chestEntry.getValue().asItem(), DataUtil.getLogTagFromPlank(chestEntry.getKey())).unlockedBy("test", PlayerTrigger.TriggerInstance.tick())
                         .save(recipeOutput.withConditions(cond), dir);
             }
         }
@@ -1504,7 +1508,7 @@ public class QuarkRecipeProvider extends RecipeProvider implements IConditionBui
                 .define('D', Tags.Items.GEMS_DIAMOND)
                 .unlockedBy("test", PlayerTrigger.TriggerInstance.tick())
                 .save(recipeOutput.withConditions(and(zCond("pickarang"), or(zCond("pickarang_never_uses_heart"), not(zCond("stonelings"))))), "quark:tools/crafting/pickarang_no_heart");
-        ShapedRecipeBuilder.shaped(RecipeCategory.TOOLS, ColorRunesModule.rune)
+        ShapedRecipeBuilder.shaped(RecipeCategory.TOOLS, ColorRunesModule.rune, 2)
                 .pattern("#S#")
                 .pattern("#C#")
                 .pattern("###")
@@ -1513,13 +1517,13 @@ public class QuarkRecipeProvider extends RecipeProvider implements IConditionBui
                 .define('C', ColorRunesModule.rune)
                 .unlockedBy("test", PlayerTrigger.TriggerInstance.tick())
                 .save(recipeOutput.withConditions(zCond("color_runes")), "quark:tools/crafting/rune_duplication");
-        ShapedRecipeBuilder.shaped(RecipeCategory.TOOLS, SeedPouchModule.seed_pouch, 1)
+        ShapedRecipeBuilder.shaped(RecipeCategory.TOOLS, SeedPouchModule.seed_pouch)
                 .pattern(" S ")
                 .pattern("HXH")
                 .pattern(" H ")
                 .define('S', Items.STRING) //there does not seem to be a convention string tag
-                .define('H', TagKey.create(Registries.ITEM, ResourceLocation.fromNamespaceAndPath("quark", "seed_pouch_holdable")))
-                .define('X', ColorRunesModule.rune)
+                .define('X', TagKey.create(Registries.ITEM, ResourceLocation.fromNamespaceAndPath("quark", "seed_pouch_holdable")))
+                .define('H', Items.LEATHER) //should be this a tag? it's not in 1.20.
                 .unlockedBy("test", PlayerTrigger.TriggerInstance.tick())
                 .save(recipeOutput.withConditions(zCond("seed_pouch")), "quark:tools/crafting/seed_pouch");
         ShapelessRecipeBuilder.shapeless(RecipeCategory.TOOLS, TorchArrowModule.torch_arrow)
@@ -2011,6 +2015,14 @@ public class QuarkRecipeProvider extends RecipeProvider implements IConditionBui
 
     public static ShapedRecipeBuilder fourChestRecipe(ItemLike output, TagKey<Item> log) {
         return ShapedRecipeBuilder.shaped(RecipeCategory.MISC, output, 4)
+                .pattern("###")
+                .pattern("# #")
+                .pattern("###")
+                .define('#', log);
+    }
+
+    public static ShapedRecipeBuilder twoChestRecipe(ItemLike output, TagKey<Item> log) {
+        return ShapedRecipeBuilder.shaped(RecipeCategory.MISC, output, 2)
                 .pattern("###")
                 .pattern("# #")
                 .pattern("###")

@@ -644,6 +644,7 @@ b206def9c765a7dea2a8f69fc22724e94b60bc2e data/quark/advancement/recipes/decorati
 b3b24d713cc45e410b1ce4512a33d11602aaef3b data/quark/advancement/recipes/misc/building/chests/acacia_chest.json
 280b8120bb67d2a984c5744e4938a308a0604de2 data/quark/advancement/recipes/misc/building/chests/acacia_chest_wood.json
 160da78805183ecde24450b865a4773b6274508a data/quark/advancement/recipes/misc/building/chests/bamboo_chest.json
+a463485cefe9a60055403e03eac699e4f674965f data/quark/advancement/recipes/misc/building/chests/bamboo_chest_wood.json
 9955cc817e17ee85b7c2d5c8f7ca02ddb4136fb4 data/quark/advancement/recipes/misc/building/chests/birch_chest.json
 87000a860750b70c9d0b803a6ed6dc9bfc3ef1ca data/quark/advancement/recipes/misc/building/chests/birch_chest_wood.json
 724c0caacb1837e8e9fb0c51af38d46ba53abe9b data/quark/advancement/recipes/misc/building/chests/cherry_chest.json
@@ -958,7 +959,7 @@ fc780978e271eb6f6e5552211626de7a99a4632e data/quark/recipe/automation/crafting/c
 a2db2aa3f0aa0bc46aba5b10eada37bf86489cd8 data/quark/recipe/automation/crafting/ender_watcher.json
 973b68ed10b60f84d9cb3ef6d889b901097534f6 data/quark/recipe/automation/crafting/feeding_trough.json
 eba291fdb466aaad835f48c88d00959d5cde8715 data/quark/recipe/automation/crafting/gold_button.json
-282a5a5ae06f8554cfe397a1158de9acf79c81b4 data/quark/recipe/automation/crafting/gravisand.json
+92167468bdcff694756e5def65fd72b56c267a04 data/quark/recipe/automation/crafting/gravisand.json
 425e57f6f9d44e52473c15b23ff3cbd22320d943 data/quark/recipe/automation/crafting/iron_button.json
 2c8b876c10b3c08bb486d26d1c10dee9f3a99753 data/quark/recipe/automation/crafting/iron_rod.json
 3709219af9023a3a948d8ad21282b4e05468d7ad data/quark/recipe/automation/crafting/iron_rod_pre_end.json
@@ -968,6 +969,7 @@ fd85191f1d526397fdf37ce66145f64637c8af49 data/quark/recipe/automation/crafting/o
 a751d97ebd1c60844326f71b4e022ee6abc0777a data/quark/recipe/building/chests/acacia_chest.json
 1507610a20234e0327a3dc3c6fb78eb432c60113 data/quark/recipe/building/chests/acacia_chest_wood.json
 ece4b1f66da5938a95546229dbbf316d1cc3ae74 data/quark/recipe/building/chests/bamboo_chest.json
+1a52ee499156e1c972c08d36bb3cd94f42f80ab2 data/quark/recipe/building/chests/bamboo_chest_wood.json
 01fe835c151b2557960a8e75b09db69c6c683d67 data/quark/recipe/building/chests/birch_chest.json
 69d78a9b0a6d80735c4b28726369024acfdc8d73 data/quark/recipe/building/chests/birch_chest_wood.json
 b13359c3a89bdc00306b5476b76de512555cfd6d data/quark/recipe/building/chests/cherry_chest.json
@@ -1702,8 +1704,8 @@ dc1857f469b6935c641e4fab79df4b66f14f3c8a data/quark/recipe/oddities/crafting/enc
 9a3f79f42ab95d8d5387c34d6954ce21aebaa1ae data/quark/recipe/tools/crafting/abacus.json
 2b3ea0b07c7040c2178b1657cf8b7a2c7bdf4f76 data/quark/recipe/tools/crafting/pickarang_heart.json
 4a74b455ce1118d3b897eb10b634fb047e35df87 data/quark/recipe/tools/crafting/pickarang_no_heart.json
-78653871e4a2286967ae2387786ae88cf2366f97 data/quark/recipe/tools/crafting/rune_duplication.json
-dc174a0f22dd7ff795972d100fb4131c175cb738 data/quark/recipe/tools/crafting/seed_pouch.json
+1a953570c25fb199ef5f56ee16454a2ddcb9b6a1 data/quark/recipe/tools/crafting/rune_duplication.json
+6488e25624df8fc58c89e116371b662f09303622 data/quark/recipe/tools/crafting/seed_pouch.json
 04fd8bf83460c9e6797d334aabbc57302c472830 data/quark/recipe/tools/crafting/torch_arrow.json
 5279378758bf9758a849760cbcee12ca588020bc data/quark/recipe/tools/crafting/trowel.json
 9a19ceb4923f4ec4d8f178cdf21feba6dc6b31d7 data/quark/recipe/tweaks/crafting/panes/dirty_glass_pane.json
