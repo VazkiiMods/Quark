@@ -93,6 +93,7 @@ public class MagnetBlockEntity extends BlockEntity {
                     double y = targetPos.getY() + getParticlePos(yOff, level.random, particleOffset);
                     double z = targetPos.getZ() + getParticlePos(zOff, level.random, particleOffset);
                     var p = dir == moveDir ? MagnetsModule.repulsorParticle : MagnetsModule.attractorParticle;
+
                     level.addParticle(p, x, y, z, xOff, yOff, zOff);
                 }
             }

@@ -54,43 +54,8 @@ public class MagnetParticle extends TextureSheetParticle {
 
     //same as render function just witn jitter
     @Override
-    public void render(VertexConsumer pBuffer, Camera pRenderInfo, float pPartialTicks) {
-        Vec3 vec3 = pRenderInfo.getPosition();
-        float x = (float) (Mth.lerp(pPartialTicks, this.xo, this.x) - vec3.x());
-        float y = (float) (Mth.lerp(pPartialTicks, this.yo, this.y) - vec3.y());
-        float z = (float) (Mth.lerp(pPartialTicks, this.zo, this.z) - vec3.z());
-        Quaternionf quaternionf;
-        if (this.roll == 0.0F) {
-            quaternionf = pRenderInfo.rotation();
-        } else {
-            quaternionf = new Quaternionf(pRenderInfo.rotation());
-            quaternionf.rotateZ(Mth.lerp(pPartialTicks, this.oRoll, this.roll));
-        }
-
-        Vector3f[] avector3f = new Vector3f[]{new Vector3f(-1.0F, -1.0F, 0.0F), new Vector3f(-1.0F, 1.0F, 0.0F), new Vector3f(1.0F, 1.0F, 0.0F), new Vector3f(1.0F, -1.0F, 0.0F)};
-        float size = this.getQuadSize(pPartialTicks);
-
-        for (int i = 0; i < 4; ++i) {
-            Vector3f vector3f = avector3f[i];
-            float xWob = Mth.lerp(pPartialTicks, this.xWobbleO, this.xWobble);
-            float yWob = Mth.lerp(pPartialTicks, this.yWobbleO, this.yWobble);
-            vector3f.add(xWob, yWob, 0);
-            //vector3f.add(3 * Mth.sin((this.age + pPartialTicks) / 14f), 3 * Mth.cos((this.age + pPartialTicks) / 14f), 0);
-            vector3f.rotate(quaternionf);
-            vector3f.mul(size);
-            vector3f.add(x, y, z);
-        }
-
-        float f6 = this.getU0();
-        float f7 = this.getU1();
-        float f4 = this.getV0();
-        float f5 = this.getV1();
-        float al = Mth.lerp(pPartialTicks, this.alphaO, this.alpha);
-        int j = this.getLightColor(pPartialTicks);
-        pBuffer.addVertex(avector3f[0].x(), avector3f[0].y(), avector3f[0].z()).setUv(f7, f5).setColor(this.rCol, this.gCol, this.bCol, al).setLight(j);
-        pBuffer.addVertex(avector3f[1].x(), avector3f[1].y(), avector3f[1].z()).setUv(f7, f4).setColor(this.rCol, this.gCol, this.bCol, al).setLight(j);
-        pBuffer.addVertex(avector3f[2].x(), avector3f[2].y(), avector3f[2].z()).setUv(f6, f4).setColor(this.rCol, this.gCol, this.bCol, al).setLight(j);
-        pBuffer.addVertex(avector3f[3].x(), avector3f[3].y(), avector3f[3].z()).setUv(f6, f5).setColor(this.rCol, this.gCol, this.bCol, al).setLight(j);
+    public void render(VertexConsumer buffer, Camera renderInfo, float partialTicks) {
+        super.render(buffer, renderInfo, partialTicks);
     }
 
     @Override
@@ -156,9 +121,9 @@ public class MagnetParticle extends TextureSheetParticle {
         }
 
         @Override
-        public Particle createParticle(SimpleParticleType pType, ClientLevel pLevel, double pX, double pY, double pZ, double pXSpeed, double pYSpeed, double pZSpeed) {
-            MagnetParticle particle = new MagnetParticle(pLevel, pX, pY, pZ, pXSpeed, pYSpeed, pZSpeed);
-            particle.pickSprite(this.sprite);
+        public Particle createParticle(SimpleParticleType particleType, ClientLevel clientLevel, double pX, double pY, double pZ, double pXSpeed, double pYSpeed, double pZSpeed) {
+            MagnetParticle particle = new MagnetParticle(clientLevel, pX, pY, pZ, pXSpeed, pYSpeed, pZSpeed);
+            particle.pickSprite(sprite);
             return particle;
         }
     }

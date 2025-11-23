@@ -278,6 +278,8 @@ public class RopeBlock extends ZetaBlock implements IZetaBlockItemProvider, Simp
 			tile.setRemoved();
 		}
 
+
+
 		FluidState fluidState = world.getFluidState(srcPos);
 		world.setBlockAndUpdate(srcPos, fluidState.createLegacyBlock());
 
