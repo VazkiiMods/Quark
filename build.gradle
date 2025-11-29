@@ -38,8 +38,8 @@ neoForge {
     version = deps.neoforge
     
     //our accesstransformer.cfg is in the default location (meta-inf/accesstransformer.cfg)
-    //so it doesn't need to be manually configured in mdg
-    validateAccessTransformers = false //TODO turn this back on  LOL!!
+    //so its path doesn't need to be manually configured in mdg
+    validateAccessTransformers = true
     
     mods {
         quark {
