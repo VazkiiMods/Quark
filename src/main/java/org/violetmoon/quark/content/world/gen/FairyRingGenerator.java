@@ -49,12 +49,12 @@ public class FairyRingGenerator extends Generator {
 			BlockPos pos = center;
 			BlockState state = worldIn.getBlockState(pos);
 
-			while(BlockUtils.isGlassBased(state, worldIn, corner) && pos.getY() > 30) {
+			while(!state.is(BlockTags.DIRT) && pos.getY() > 30) {
 				pos = pos.below();
 				state = worldIn.getBlockState(pos);
 			}
 
-			if(BlockUtils.isGlassBased(state, worldIn, corner))
+			if(state.is(BlockTags.DIRT))
 				spawnFairyRing(worldIn, generator, pos.below(), biome, rand);
 		}
 	}
@@ -65,12 +65,12 @@ public class FairyRingGenerator extends Generator {
 		Holder<PlacedFeature> holder = features.isEmpty() ? null : ((RandomPatchConfiguration) features.get(0).config()).feature();
 		BlockState flowerState = holder == null ? Blocks.OXEYE_DAISY.defaultBlockState() : null;
 
-		for(int i = -3; i <= 3; i++)
-			for(int j = -3; j <= 3; j++) {
-				float dist = (i * i) + (j * j);
+		for(int xOffset = -3; xOffset <= 3; xOffset++)
+			for(int zOffset = -3; zOffset <= 3; zOffset++) {
+				float dist = (xOffset * xOffset) + (zOffset * zOffset);
 				if(dist < 7 || dist > 10)
-					for(int k = 6; k > -3; k--) {
-						BlockPos fpos = pos.offset(i, k, j);
+					for(int yOffset = 6; yOffset > -3; yOffset--) {
+						BlockPos fpos = pos.offset(xOffset, yOffset, zOffset);
 						BlockState state = world.getBlockState(fpos);
 						if(state.is(BlockTags.SMALL_FLOWERS)) {
 							world.setBlock(fpos, Blocks.AIR.defaultBlockState(), 2);
@@ -78,11 +78,11 @@ public class FairyRingGenerator extends Generator {
 						}
 					}
 				else {
-					for(int k = 5; k > -4; k--) {
-						BlockPos fpos = pos.offset(i, k, j);
+					for(int yOffset = 5; yOffset > -4; yOffset--) {
+						BlockPos fpos = pos.offset(xOffset, yOffset, zOffset);
 						BlockPos fposUp = fpos.above();
 						BlockState state = world.getBlockState(fpos);
-						if(state.getBlock() instanceof TransparentBlock && world.isEmptyBlock(fposUp)) {
+						if(state.is(BlockTags.DIRT) && world.isEmptyBlock(fposUp)) {
 							if(flowerState == null) {
 								holder.value().place(world, generator, rand, fposUp);
 								flowerState = world.getBlockState(fposUp);
@@ -109,6 +109,7 @@ public class FairyRingGenerator extends Generator {
 			for(Direction face : Direction.values())
 				if(rand.nextBoolean())
 					world.setBlock(orePos.relative(face), ore, 2);
+
 		}
 	}
 }

@@ -63,8 +63,8 @@ public class SleepGoal extends Goal {
 		foxhound.clearSleepingPos();
 	}
 
-	public void setSleeping(boolean sitting) {
-		this.isSleeping = sitting;
+	public void setSleeping(boolean sleeping) {
+		this.isSleeping = sleeping;
 		foxhound.setPose(Pose.STANDING);
 	}
 }

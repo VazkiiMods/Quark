@@ -138,7 +138,12 @@ public class Foxhound extends Wolf implements Enemy {
 		if(isSleeping()) {
 			if(pose != Pose.SLEEPING)
 				setPose(Pose.SLEEPING);
-		} else if(pose == Pose.SLEEPING)
+		} else if (isOrderedToSit()) {
+            if (pose != Pose.SITTING) {
+                setPose(Pose.SITTING);
+                setInSittingPose(true);
+            }
+        } else if(pose == Pose.SLEEPING)
 			setPose(Pose.STANDING);
 
 
@@ -355,8 +360,13 @@ public class Foxhound extends Wolf implements Enemy {
 		}
 
 		InteractionResult res = super.mobInteract(player, hand);
-		if(res.consumesAction() && !level.isClientSide)
-			setWoke();
+		if(res.consumesAction()) {
+            setWoke();
+            if (isOrderedToSit()) {
+                setPose(Pose.SITTING);
+                setInSittingPose(true);
+            }
+        }
 
 		return res;
 	}
@@ -453,13 +463,14 @@ public class Foxhound extends Wolf implements Enemy {
 		return sleepGoal;
 	}
 
+    // 2025 nuclear family woke foxhound
 	private void setWoke() {
 		SleepGoal sleep = getSleepGoal();
 		if(sleep != null) {
-			setInSittingPose(false);
 			sleep.setSleeping(false);
-		}
-	}
+            setInSittingPose(false);
+        }
+    }
 
 //	@Override
 //	public boolean isSleeping(){
