@@ -13,10 +13,8 @@ plugins {
     id 'maven-publish'
     id 'pmd'
     id 'com.diffplug.spotless' version '6.22.0'
-    id 'net.neoforged.gradle.userdev' version '7.0.180'
+    id 'net.neoforged.moddev' version '2.0.120'
 }
-
-jarJar.enable()
 
 ext.configFile = file('build.properties')
 ext.depsFile = file('dependencies.properties')
@@ -36,49 +34,51 @@ if (System.getenv('BUILD_NUMBER') != null) {
     version += "." + System.getenv('BUILD_NUMBER')
 }
 
-minecraft.accessTransformers.file rootProject.file('src/main/resources/META-INF/accesstransformer.cfg')
-
-subsystems {
+neoForge {
+    version = deps.neoforge
+    
+    //our accesstransformer.cfg is in the default location (meta-inf/accesstransformer.cfg)
+    //so it doesn't need to be manually configured in mdg
+    validateAccessTransformers = false //TODO turn this back on  LOL!!
+    
+    mods {
+        quark {
+            sourceSet sourceSets.main
+        }
+    }
+    
+    runs {
+        configureEach {
+            systemProperties = [
+              "mixin.debug.export": "true",
+              "forge.logging.markers": "REGISTRIES", //TODO does this do anything anymore
+              "forge.logging.console.level": "debug"
+            ]
+        }
+        client {
+            client()
+            gameDirectory = project.file("run")
+        }
+        server {
+            server()
+            gameDirectory = project.file("runServer")
+            programArgument("--nogui")
+        }
+        data {
+            data()
+            gameDirectory = project.file('runs/data')
+            programArguments = [
+              '--mod', 'quark', // insert your own mod id
+              '--all',
+              '--output', file('src/generated/resources').getAbsolutePath(),
+              '--existing', file('src/main/resources').getAbsolutePath()
+            ]
+        }
+    }
+    
     parchment {
         minecraftVersion = "1.21.1"
         mappingsVersion = "2024.11.17"
-    }
-}
-
-runs {
-    // applies to all the run configs below
-    configureEach {
-        systemProperty "mixin.debug.export", "true"
-        // Recommended logging data for a userdev environment
-        // The markers can be added/remove as needed separated by commas.
-        // "SCAN": For mods scan.
-        // "REGISTRIES": For firing of registry events.
-        // "REGISTRYDUMP": For getting the contents of all registries.
-        systemProperty 'forge.logging.markers', 'REGISTRIES'
-
-        // Recommended logging level for the console
-        // You can set various levels here.
-        // Please read: https://stackoverflow.com/questions/2031163/when-to-use-the-different-log-levels
-        systemProperty 'forge.logging.console.level', 'debug'
-
-        modSource project.sourceSets.main
-    }
-
-    client {
-        workingDirectory project.file('run')
-    }
-
-    server {
-        workingDirectory project.file('runServer')
-        programArgument '--nogui'
-    }
-
-    data {
-        workingDirectory project.file('runs/data')
-        programArguments '--mod', 'quark', // insert your own mod id
-                '--all',
-                '--output', file('src/generated/resources').getAbsolutePath(),
-                '--existing', file('src/main/resources').getAbsolutePath()
     }
 }
 
@@ -113,8 +113,6 @@ repositories {
 }
 
 dependencies {
-    implementation "net.neoforged:neoforge:${deps.neoforge}"
-
     //annotationProcessor 'org.spongepowered:mixin:0.8.5:processor'
     //normal AP is broken!!
     // annotationProcessor 'net.fabricmc:sponge-mixin:0.12.5+mixin.0.8.5'
@@ -230,15 +228,16 @@ task sourcesJar(type: Jar) {
     from sourceSets.main.allJava
 }
 
-tasks.jarJar.configure {
-    archiveClassifier = "" // "Main" jar should be the one with jar-in-jar
-
-    exclude "**/*.bat"
-    exclude "**/*.psd"
-    exclude "**/*.exe"
-    exclude "**/unused"
-    exclude "**/genscripts"
-}
+//TODO: MDG
+//tasks.jarJar.configure {
+//    archiveClassifier = "" // "Main" jar should be the one with jar-in-jar
+//
+//    exclude "**/*.bat"
+//    exclude "**/*.psd"
+//    exclude "**/*.exe"
+//    exclude "**/unused"
+//    exclude "**/genscripts"
+//}
 
 artifacts {
     archives sourcesJar
@@ -289,7 +288,6 @@ publishing {
 // metadata includes mapped dependencies which are not reasonably consumable by
 // other mod developers.
 tasks.withType(GenerateModuleMetadata) {
-
     enabled = false
 }
 
