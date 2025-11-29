@@ -64,6 +64,7 @@ import org.violetmoon.quark.content.mobs.ai.FindPlaceToSleepGoal;
 import org.violetmoon.quark.content.mobs.ai.SleepGoal;
 import org.violetmoon.quark.content.mobs.module.FoxhoundModule;
 import org.violetmoon.quark.content.tweaks.ai.WantLoveGoal;
+import org.violetmoon.quark.mixin.mixins.accessor.AccessorLivingEntity;
 
 import java.util.List;
 import java.util.Optional;
@@ -282,8 +283,7 @@ public class Foxhound extends Wolf implements Enemy {
 
 		if(flag) {
 			if(entityIn instanceof ServerPlayer player && player.isBlocking()){
-				//player.blockUsingShield(this);
-				//TODO fix accesstransformer
+				((AccessorLivingEntity) player).quark$blockUsingShield(this);
 			}
 			entityIn.igniteForSeconds(5);
 		}
