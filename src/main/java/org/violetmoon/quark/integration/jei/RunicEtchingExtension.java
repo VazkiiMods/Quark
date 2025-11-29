@@ -34,14 +34,21 @@ public class RunicEtchingExtension implements ISmithingCategoryExtension<Smithin
 	public <T extends IIngredientAcceptor<T>> void setAddition(@NotNull SmithingRuneRecipe smithingRuneRecipe, T t) {
 		System.out.println("setAddition");
 		Ingredient ingredient = smithingRuneRecipe.addition;
-		for (ItemStack stack : ingredient.getItems()){
-			t.addItemStack(stack);
-		}
+        if (ingredient != null && !ingredient.isEmpty()) {
+            for (ItemStack stack : ingredient.getItems()) {
+                t.addItemStack(stack);
+            }
+        }
 	}
 
 	@Override
 	public <T extends IIngredientAcceptor<T>> void setOutput(@NotNull SmithingRuneRecipe smithingRuneRecipe, T t) {
 		System.out.println("setOutput");
-		SmithingRuneRecipe.makeEnchantedDisplayItem(smithingRuneRecipe.getIngredients().get(0).getItems()[0]);
+        Ingredient ingredient = SmithingRuneRecipe.createBaseIngredient();
+        for (ItemStack stack : ingredient.getItems()){
+            ItemStack displayStack = SmithingRuneRecipe.makeEnchantedDisplayItem(stack);
+            ColorRunesModule.withRune(displayStack, smithingRuneRecipe.runeColor);
+            t.addItemStack(displayStack);
+        }
 	}
 }

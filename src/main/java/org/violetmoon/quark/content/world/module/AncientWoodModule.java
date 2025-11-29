@@ -11,6 +11,7 @@ import net.minecraft.world.level.block.grower.TreeGrower;
 import net.minecraft.world.level.levelgen.feature.ConfiguredFeature;
 import net.minecraft.world.level.material.MapColor;
 import net.minecraft.world.level.storage.loot.BuiltInLootTables;
+import net.minecraft.world.level.storage.loot.LootPool;
 import net.minecraft.world.level.storage.loot.entries.LootItem;
 import net.minecraft.world.level.storage.loot.entries.LootPoolEntryContainer;
 import org.violetmoon.quark.base.Quark;
@@ -31,10 +32,12 @@ import org.violetmoon.zeta.event.bus.PlayEvent;
 import org.violetmoon.zeta.event.load.ZCommonSetup;
 import org.violetmoon.zeta.event.load.ZRegister;
 import org.violetmoon.zeta.event.play.loading.ZLootTableLoad;
+import org.violetmoon.zeta.mixin.mixins.AccessorLootPool;
 import org.violetmoon.zeta.module.ZetaLoadModule;
 import org.violetmoon.zeta.module.ZetaModule;
 import org.violetmoon.zeta.util.Hint;
 
+import java.util.ArrayList;
 import java.util.Optional;
 
 @ZetaLoadModule(category = "world")
@@ -104,6 +107,7 @@ public class AncientWoodModule extends ZetaModule {
 		event.getRegistry().register(MultiFoliageStraightTrunkPlacer.TYPE, "multi_foliage_straight_trunk_placer", Registries.TRUNK_PLACER_TYPE);
 		event.getRegistry().register(AncientTreeTopperDecorator.TYPE, "ancient_tree_topper_decorator", Registries.TREE_DECORATOR_TYPE);
 		//TODO: this can likely be replaced with Fnacy Foliage Placer by inserting the offset somewhere in the trunk placer
+        //Fnacy
 		event.getRegistry().register(OffsetFancyFoliagePlacer.TYPE, "offset_fancy_foliage_placer", Registries.FOLIAGE_PLACER_TYPE);
 
 	}
@@ -112,11 +116,18 @@ public class AncientWoodModule extends ZetaModule {
 	public void onLootTableLoad(ZLootTableLoad event) {
 		int weight = 0;
 
-		if(event.getName().equals(BuiltInLootTables.ANCIENT_CITY))
+		if(event.getName().equals(BuiltInLootTables.ANCIENT_CITY.location()))
 			weight = ancientCityLootWeight;
 
-		if(event.getName().equals(BuiltInLootTables.SNIFFER_DIGGING))
-			weight = sniffingLootWeight;
+		if(event.getName().equals(BuiltInLootTables.SNIFFER_DIGGING.location())) {
+            LootPool main = event.getTable().getPool("main");
+            if (main != null) {
+                ArrayList<LootPoolEntryContainer> entries = new ArrayList<>(((AccessorLootPool) main).zeta$getLootPoolEntries());
+                entries.add(LootItem.lootTableItem(ancient_sapling).build());
+                ((AccessorLootPool) main).zeta$setLootPoolEntries(entries);
+            }
+            //weight = sniffingLootWeight;
+        }
 
 		if(weight > 0) {
 			LootPoolEntryContainer entry = LootItem.lootTableItem(ancient_sapling)

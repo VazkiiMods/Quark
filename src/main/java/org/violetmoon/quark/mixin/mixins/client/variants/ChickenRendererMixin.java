@@ -2,6 +2,8 @@ package org.violetmoon.quark.mixin.mixins.client.variants;
 
 import net.minecraft.client.model.ChickenModel;
 import net.minecraft.client.renderer.entity.ChickenRenderer;
+import net.minecraft.client.renderer.entity.EntityRendererProvider;
+import net.minecraft.client.renderer.entity.MobRenderer;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.animal.Chicken;
 
@@ -14,9 +16,13 @@ import org.violetmoon.quark.content.client.module.VariantAnimalTexturesModule;
 import org.violetmoon.quark.content.tweaks.module.GrabChickensModule;
 
 @Mixin(ChickenRenderer.class)
-public class ChickenRendererMixin {
+public abstract class ChickenRendererMixin extends MobRenderer<Chicken, ChickenModel<Chicken>> {
 
-	@Inject(method = "getTextureLocation(Lnet/minecraft/world/entity/animal/Chicken;)Lnet/minecraft/resources/ResourceLocation;", at = @At("HEAD"), cancellable = true)
+    public ChickenRendererMixin(EntityRendererProvider.Context context, ChickenModel<Chicken> model, float shadowRadius) {
+        super(context, model, shadowRadius);
+    }
+
+    @Inject(method = "getTextureLocation(Lnet/minecraft/world/entity/animal/Chicken;)Lnet/minecraft/resources/ResourceLocation;", at = @At("HEAD"), cancellable = true)
 	private void overrideTexture(Chicken chicken, CallbackInfoReturnable<ResourceLocation> cir) {
 		ChickenRenderer render = (ChickenRenderer) ((Object) this);
 		ChickenModel<Chicken> model = render.getModel();

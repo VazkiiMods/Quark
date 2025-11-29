@@ -104,7 +104,15 @@ public class GrabChickensModule extends ZetaModule {
 		return (!needsNoHelmet || player.getItemBySlot(EquipmentSlot.HEAD).isEmpty()) && !player.isUnderWater();
 	}
 
-	public static class Client {
+    public static boolean isModuleEnabled() {
+        return staticEnabled;
+    }
+
+    public static float pushAmountForTesting() {
+        return 0.25f;
+    }
+
+    public static class Client {
 
 		public static boolean isClientPlayerClass(Class<?> playerClass){
 			return playerClass == RemotePlayer.class || playerClass == LocalPlayer.class;

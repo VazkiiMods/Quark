@@ -1,13 +1,15 @@
 package org.violetmoon.quark.addons.oddities.item;
 
+import net.minecraft.Util;
 import net.minecraft.core.Holder;
 import net.minecraft.core.Holder.Reference;
 import net.minecraft.core.HolderLookup.RegistryLookup;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.sounds.SoundEvents;
 import net.minecraft.util.Unit;
 import net.minecraft.world.Containers;
 import net.minecraft.world.MenuProvider;
@@ -21,6 +23,7 @@ import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.*;
 import net.minecraft.world.item.component.ItemAttributeModifiers;
 import net.minecraft.world.item.component.Unbreakable;
+import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.item.enchantment.ItemEnchantments;
@@ -39,35 +42,71 @@ import org.violetmoon.zeta.item.ext.IZetaItemExtensions;
 import org.violetmoon.zeta.module.ZetaModule;
 import org.violetmoon.zeta.registry.CreativeTabManager;
 
+import java.util.EnumMap;
+import java.util.List;
 import java.util.Optional;
 import java.util.function.BooleanSupplier;
 import java.util.function.Consumer;
+import java.util.function.Supplier;
 
 public class BackpackItem extends ArmorItem implements IZetaItem, IZetaItemExtensions, MenuProvider {
 
 	private static final ResourceLocation WORN_TEXTURE = Quark.asResource("textures/misc/backpack_worn.png");
 	private static final ResourceLocation WORN_OVERLAY_TEXTURE = Quark.asResource("textures/misc/backpack_worn_overlay.png");
+    public static final ArmorMaterial BACKPACK_MATERIAL = register(
+            Util.make(new EnumMap<>(ArmorItem.Type.class), points -> {
+                points.put(ArmorItem.Type.BOOTS, 0);
+                points.put(ArmorItem.Type.LEGGINGS, 0);
+                points.put(ArmorItem.Type.CHESTPLATE, 0);
+                points.put(ArmorItem.Type.HELMET, 0);
+                points.put(ArmorItem.Type.BODY, 0);
+            }),
+            15,
+            SoundEvents.ARMOR_EQUIP_LEATHER,
+            0.0F,
+            0.0F,
+            () -> Ingredient.of(Items.LEATHER),
+            List.of(
+                    new ArmorMaterial.Layer(Quark.asResource("backpack"), "", true),
+                    new ArmorMaterial.Layer(Quark.asResource("backpack"), "_overlay", false)
+            )
+    );
+
 
 	@Nullable
 	private final ZetaModule module;
 
 	public BackpackItem(@Nullable ZetaModule module) {
-		super(ArmorMaterials.LEATHER, Type.CHESTPLATE,
+		super(Holder.direct(BACKPACK_MATERIAL), Type.CHESTPLATE,
 				new Item.Properties()
 						.stacksTo(1)
 						.durability(0)
 						.rarity(Rarity.RARE)
                         .component(DataComponents.UNBREAKABLE, new Unbreakable(false))
+                        //.component(DataComponents.HIDE_TOOLTIP, Unit.INSTANCE)
                         .attributes(createAttributes()));
 
 		this.module = module;
 
 		if (module == null)return;
 
-		module.zeta().registry.registerItem(this.getItem(), "backpack");
+        module.zeta().registry.register(BACKPACK_MATERIAL, "backpack", Registries.ARMOR_MATERIAL);
+        module.zeta().registry.registerItem(this.getItem(), "backpack");
 
 		CreativeTabManager.addNextToItem(CreativeModeTabs.TOOLS_AND_UTILITIES, this.getItem(), Items.SADDLE, true);
 	}
+
+    private static ArmorMaterial register(
+            EnumMap<ArmorItem.Type, Integer> defense,
+            int enchantmentValue,
+            Holder<SoundEvent> equipSound,
+            float toughness,
+            float knockbackResistance,
+            Supplier<Ingredient> repairIngridient,
+            List<ArmorMaterial.Layer> layers
+    ) {
+        return new ArmorMaterial(defense, enchantmentValue, equipSound, repairIngridient, layers, toughness, knockbackResistance);
+    }
 
 	/*@Override
 	public int getDefaultTooltipHideFlagsZeta(@NotNull ItemStack stack) {

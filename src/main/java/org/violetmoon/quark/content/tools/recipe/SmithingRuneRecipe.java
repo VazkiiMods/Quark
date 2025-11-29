@@ -36,7 +36,7 @@ public final class SmithingRuneRecipe extends SmithingTrimRecipe { // Extends to
 
 	private final Ingredient template;
 	public final Ingredient addition;
-	private final RuneColor runeColor;
+	public final RuneColor runeColor;
 	private static Ingredient used;
 
 	public static ItemStack makeEnchantedDisplayItem(ItemStack input) {
@@ -82,26 +82,17 @@ public final class SmithingRuneRecipe extends SmithingTrimRecipe { // Extends to
 
 	@Override
 	public ItemStack assemble(SmithingRecipeInput input, HolderLookup.Provider provider) {
-		ItemStack baseItem = input.getItem(1);
+		ItemStack baseItem = input.base();
 		if (isBaseIngredient(baseItem)) {
 			if (ColorRunesModule.getStackColor(baseItem) == runeColor) {
-				/*
-				ItemStack errorItem = new ItemStack(Items.BARRIER);
-				errorItem.set(DataComponents.CUSTOM_NAME, Component.literal("Error"));
-				return errorItem;
-				 */
 				return ItemStack.EMPTY;
 			}
 
-			ItemStack newStack = baseItem.copy();
-			newStack.setCount(1);
-			return ColorRunesModule.withRune(newStack, runeColor);
+			ItemStack newStack = baseItem.copyWithCount(1);
+            ColorRunesModule.withRune(newStack, runeColor);
+			return newStack;
 		}
-		/*
-		ItemStack errorItem = new ItemStack(Items.BARRIER);
-		errorItem.set(DataComponents.CUSTOM_NAME, Component.literal("Error"));
-		return errorItem;
-		 */
+
 		return ItemStack.EMPTY;
 	}
 
@@ -131,7 +122,7 @@ public final class SmithingRuneRecipe extends SmithingTrimRecipe { // Extends to
 	@Nonnull
 	@Override
 	public RecipeSerializer<?> getSerializer() {
-		return RecipeSerializer.SMITHING_TRIM;
+		return SERIALIZER;
 	}
 
     public static class Serializer implements RecipeSerializer<SmithingRuneRecipe> {

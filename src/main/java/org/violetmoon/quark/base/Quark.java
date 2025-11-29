@@ -8,13 +8,10 @@ import net.minecraft.server.packs.PackLocationInfo;
 import net.minecraft.server.packs.PackSelectionConfig;
 import net.minecraft.server.packs.PackType;
 import net.minecraft.server.packs.PathPackResources;
-import net.minecraft.server.packs.metadata.MetadataSectionType;
-import net.minecraft.server.packs.metadata.pack.PackMetadataSection;
 import net.minecraft.server.packs.repository.Pack;
 import net.minecraft.server.packs.repository.PackSource;
 import net.minecraft.tags.TagKey;
 import net.neoforged.bus.api.IEventBus;
-import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.ModList;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.neoforge.event.AddPackFindersEvent;
@@ -25,17 +22,11 @@ import org.violetmoon.quark.base.proxy.ClientProxy;
 import org.violetmoon.quark.base.proxy.CommonProxy;
 import org.violetmoon.quark.integration.lootr.ILootrIntegration;
 import org.violetmoon.quark.integration.lootr.LootrIntegration;
-import org.violetmoon.quark.integration.terrablender.AbstractUndergroundBiomeHandler;
-import org.violetmoon.quark.integration.terrablender.TerrablenderUndergroundBiomeHandler;
-import org.violetmoon.quark.integration.terrablender.VanillaUndergroundBiomeHandler;
 import org.violetmoon.zeta.Zeta;
 import org.violetmoon.zeta.multiloader.Env;
 import org.violetmoon.zetaimplforge.ForgeZeta;
 
-import java.io.IOException;
-import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.Comparator;
 import java.util.Optional;
 
 @Mod(Quark.MOD_ID)
@@ -76,11 +67,7 @@ public class Quark {
 			() -> LootrIntegration::new,
 			() -> ILootrIntegration.Dummy::new);
 
-	public static final AbstractUndergroundBiomeHandler TERRABLENDER_INTEGRATION = ZETA.modIntegration("terrablender",
-			() -> TerrablenderUndergroundBiomeHandler::new,
-			() -> VanillaUndergroundBiomeHandler::new);
-
-	public static ResourceLocation asResource(String path) {
+    public static ResourceLocation asResource(String path) {
 		return ResourceLocation.fromNamespaceAndPath(MOD_ID, path);
 	}
 

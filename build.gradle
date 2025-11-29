@@ -125,7 +125,8 @@ dependencies {
     //implementation(jarJar("net.createmod.ponder:Ponder-NeoForge-${config.mc_version}:${deps.ponder}")) { transitive = false }
 
     implementation files ("localjars/Zeta-1.1-33.jar")
-    compileOnly "com.github.glitchfiend:TerraBlender-neoforge:${deps.terrablender}"
+    implementation (jarJar("com.terraformersmc:biolith-neoforge:${deps.biolith_version}"))
+
     // compile against the JEI API but do not include it at runtime
     compileOnly("mezz.jei:jei-${config.mc_version}-neoforge-api:${deps.jei_version}")
     // at runtime, use the full JEI jar for NeoForge
@@ -135,6 +136,7 @@ dependencies {
     // implementation fg.deobf("curse.maven:just-enough-resources-jer-240630:4689010")
 
     runtimeOnly "curse.maven:nofog-296468:5438578"
+
     // runtimeOnly fg.deobf("curse.maven:woodworks-543610:5292418")
     // runtimeOnly fg.deobf("curse.maven:blueprint-382216:5292242")
     //runtimeOnly "curse.maven:farmers-delight-398521:5962800"
