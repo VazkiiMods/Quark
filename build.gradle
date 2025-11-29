@@ -84,32 +84,92 @@ neoForge {
 
 repositories {
     mavenLocal()
+    
     maven {
-        // for Zeta and JEI
-        name "blamejared"
-        url "https://maven.blamejared.com"
+        name = "blamejared"
+        url = "https://maven.blamejared.com"
         content {
             includeGroup("org.violetmoon.zeta")
             includeGroup("mezz.jei")
         }
     }
+    
     maven {
-        name "TerraformersMC"
-        url "https://maven.terraformersmc.com"
-    }
-    maven {
-        name "cursemaven"
-        url "https://www.cursemaven.com"
+        name = "TerraformersMC"
+        url = "https://maven.terraformersmc.com"
         content {
-            includeGroup "curse.maven"
+            includeModule("com.terraformersmc", "biolith-neoforge")
         }
     }
-    maven { url = "https://maven.fabricmc.net/" }
-    maven { url = "https://maven.theillusivec4.top/" }
-    maven { url = "https://api.modrinth.com/maven" }
-    maven { url = "https://maven.minecraftforge.net" }
-    //maven { url = "https://maven.createmod.net" }
-    maven { url = "https://jitpack.io" }
+    
+    maven {
+        name = "FabricMC"
+        url = "https://maven.fabricmc.net/"
+        content {
+            includeModule("net.fabricmc", "sponge-mixin")
+        }
+    }
+    
+    maven {
+        name = "TheIllusiveC4"
+        url = "https://maven.theillusivec4.top/"
+        content {
+            includeGroup("top.theillusivec4.curios")
+        }
+    }
+    
+//    maven {
+//        name = "Lex Forge"
+//        url = "https://maven.minecraftforge.net"
+//    }
+    
+    maven {
+        name = "Create"
+        url = "https://maven.createmod.net"
+        content {
+            includeGroup("net.createmod.ponder")
+        }
+    }
+    
+    maven {
+        name = "cursemaven"
+        url = "https://www.cursemaven.com"
+        content {
+            includeGroup("curse.maven")
+        }
+    }
+    
+    maven {
+        name = "Modrinth"
+        url = "https://api.modrinth.com/maven"
+        content {
+            includeGroup("maven.modrinth")
+        }
+    }
+    
+    maven {
+        name = "Jitpack"
+        url = "https://jitpack.io"
+        content {
+            includeGroupByRegex( "com\\.github\\..*" )
+        }
+    }
+    
+    //K4Unl's mirror of other modding-related mavens, in case they are down.
+    //Should be checked last; should **not** be the primary source for any artifact.
+    maven {
+        name = "ModMaven"
+        url = "https://modmaven.dev/"
+        content {
+            includeGroup("org.violetmoon.zeta")
+            includeGroup("mezz.jei")
+//            includeModule("com.terraformersmc", "biolith-neoforge") //Not mirrored
+            includeModule("net.fabricmc", "sponge-mixin")
+            includeGroup("top.theillusivec4.curios")
+//            includeGroup("net.createmod.ponder") //Not mirrored
+        }
+    }
+    
     flatDir {
         dirs 'localJars'
     }
