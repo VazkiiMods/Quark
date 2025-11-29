@@ -114,7 +114,7 @@ public class ExclusionRecipe implements CraftingRecipe {
 	public static class Serializer implements RecipeSerializer<ExclusionRecipe> {
 		public static final MapCodec<ExclusionRecipe> CODEC = RecordCodecBuilder.mapCodec(
 				instance -> instance.group(
-								ResourceLocation.CODEC.listOf().fieldOf("excluded").forGetter((exclusionRecipe -> exclusionRecipe.excluded)),
+								ResourceLocation.CODEC.listOf().fieldOf("exclusions").forGetter((exclusionRecipe -> exclusionRecipe.excluded)),
 								Recipe.CODEC.fieldOf("parent").forGetter(exclusionRecipe -> exclusionRecipe.parent))
 						.apply(instance, ((excluded, parent) -> new ExclusionRecipe((CraftingRecipe) parent, excluded)))
 		);
