@@ -12,7 +12,6 @@ plugins {
     id 'idea'
     id 'maven-publish'
     id 'pmd'
-    id 'com.diffplug.spotless' version '6.22.0'
     id 'net.neoforged.moddev' version '2.0.120'
 }
 
@@ -119,6 +118,9 @@ neoForge {
 
 repositories {
     mavenLocal()
+    
+    //Mainly for pmd
+    mavenCentral()
     
     maven {
         name = "blamejared"
@@ -233,30 +235,18 @@ dependencies {
 //    bonusRuntimeOnly "curse.maven:farmers-delight-398521:5962800"
 }
 
-spotless {
-    enforceCheck = false // workaround around jenkins having wrong line endings in some files
-    java {
-        target project.fileTree(dir: 'src/main/java/org/violetmoon/quark', include: '**/*.java')
-        //indentWithTabs()
-        eclipse().configFile 'spotless/eclipseformat.xml'
-        removeUnusedImports()
-        importOrderFile 'spotless/eclipse.importorder'
-        replaceRegex 'Too much space after if', '(if|for|while|switch) +\\(', '$1('
-    }
-}
-
 pmd {
     toolVersion '6.42.0'
-    incrementalAnalysis.set(true)
-    ruleSets = new ArrayList()
+    incrementalAnalysis = true
+    threads = Runtime.getRuntime().availableProcessors()
+    ruleSets = []
     ruleSetFiles = files("spotless/pmd-ruleset.xml")
+    consoleOutput = true
 }
 
 tasks.register("checkSyntax") {
     group "verification"
-    // Replace the following line when Spotless is setup
-    //dependsOn spotlessJavaCheck, pmdMain
-    dependsOn pmdMain
+    dependsOn tasks.pmdMain
 }
 
 processResources {
