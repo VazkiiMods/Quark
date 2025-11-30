@@ -35,13 +35,13 @@ if (System.getenv('BUILD_NUMBER') != null) {
 }
 
 sourceSets {
-    main
+    main {
+        resources { srcDir 'src/generated/resources' }
+    }
     
     //Weird hack for the clientBonus and serverBonus run configurations; MDG only allows
     //the runtime classpath of one source-set to populate the runtime classpath of a runconfig AFAIK.
-    bonus {
-        runtimeClasspath += main.runtimeClasspath
-    }
+    bonus { runtimeClasspath += main.runtimeClasspath }
 }
 
 neoForge {
@@ -325,7 +325,6 @@ task sourcesJar(type: Jar) {
     from sourceSets.main.allJava
 }
 
-
 artifacts {
     archives jar
     archives pureJar
@@ -378,5 +377,3 @@ allprojects {
         }
     }
 }
-
-sourceSets.main.resources { srcDir 'src/generated/resources' }
