@@ -23,7 +23,7 @@ ext.deps = parseConfig(depsFile)
 
 version = "${config.version}-${config.build_number}"
 group = "org.violetmoon.${config.mod_id}" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
-archivesBaseName = config.mod_name
+base.archivesName = config.mod_name
 
 compileJava.options.compilerArgs << "-Xlint:all,-classfile,-processing,-deprecation"
 
@@ -49,11 +49,14 @@ neoForge {
     
     runs {
         configureEach {
-            systemProperties = [
+            //tag the new run configs just so we remember to click them instead of the old NeoGradle run configs
+            ideName = ideName.get() + " (MDG)"
+            
+            systemProperties.putAll ([
               "mixin.debug.export": "true",
-              "forge.logging.markers": "REGISTRIES", //TODO does this do anything anymore
-              "forge.logging.console.level": "debug"
-            ]
+              "forge.logging.markers": ["REGISTRIES"].join(","), //SCAN / REGISTRIES / REGISTRYDUMP
+              "forge.logging.console.level": org.slf4j.event.Level.DEBUG.toString(),
+            ])
         }
         client {
             client()
@@ -67,12 +70,12 @@ neoForge {
         data {
             data()
             gameDirectory = project.file('runs/data')
-            programArguments = [
-              '--mod', 'quark', // insert your own mod id
+            programArguments.addAll ([
+              '--mod', 'quark',
               '--all',
               '--output', file('src/generated/resources').getAbsolutePath(),
               '--existing', file('src/main/resources').getAbsolutePath()
-            ]
+            ])
         }
     }
     
@@ -103,25 +106,12 @@ repositories {
     }
     
     maven {
-        name = "FabricMC"
-        url = "https://maven.fabricmc.net/"
-        content {
-            includeModule("net.fabricmc", "sponge-mixin")
-        }
-    }
-    
-    maven {
         name = "TheIllusiveC4"
         url = "https://maven.theillusivec4.top/"
         content {
             includeGroup("top.theillusivec4.curios")
         }
     }
-    
-//    maven {
-//        name = "Lex Forge"
-//        url = "https://maven.minecraftforge.net"
-//    }
     
     maven {
         name = "Create"
@@ -176,35 +166,39 @@ repositories {
 }
 
 dependencies {
-    //annotationProcessor 'org.spongepowered:mixin:0.8.5:processor'
-    //normal AP is broken!!
-    // annotationProcessor 'net.fabricmc:sponge-mixin:0.12.5+mixin.0.8.5'
-
-    //runtimeOnly fg.deobf("dev.emi:emi-forge:${deps.emi}")
-    runtimeOnly "maven.modrinth:spark:${deps.spark}"
-
+    //Zeta
+    implementation("org.violetmoon.zeta:Zeta:${deps.zeta}")
+    
+    //Ponder
     //implementation(jarJar("net.createmod.ponder:Ponder-NeoForge-${config.mc_version}:${deps.ponder}")) { transitive = false }
-
-    implementation ("org.violetmoon.zeta:Zeta:${deps.zeta}")
-    implementation (jarJar("com.terraformersmc:biolith-neoforge:${deps.biolith_version}"))
-
-    // compile against the JEI API but do not include it at runtime
+    
+    //JEI
     compileOnly("mezz.jei:jei-${config.mc_version}-neoforge-api:${deps.jei_version}")
-    // at runtime, use the full JEI jar for NeoForge
     runtimeOnly("mezz.jei:jei-${config.mc_version}-neoforge:${deps.jei_version}")
-    // implementation fg.deobf("curse.maven:flan-forge-493246:${deps.flan}")
-    implementation "curse.maven:lootr-361276:${deps.lootr}"
-    // implementation fg.deobf("curse.maven:just-enough-resources-jer-240630:4689010")
-
-    runtimeOnly "curse.maven:nofog-296468:5438578"
-
-    // runtimeOnly fg.deobf("curse.maven:woodworks-543610:5292418")
-    // runtimeOnly fg.deobf("curse.maven:blueprint-382216:5292242")
-    //runtimeOnly "curse.maven:farmers-delight-398521:5962800"
-    //runtimeOnly "dev.emi:emi-neoforge:${deps.emi_version}"
-
+    
+    //Curios
     runtimeOnly "top.theillusivec4.curios:curios-neoforge:${deps.curios}"
     compileOnly "top.theillusivec4.curios:curios-neoforge:${deps.curios}:api"
+    
+    //Biolith
+    implementation (jarJar("com.terraformersmc:biolith-neoforge:${deps.biolith_version}"))
+    
+    //Flan
+    //implementation fg.deobf("curse.maven:flan-forge-493246:${deps.flan}")
+    
+    //Lootr
+    implementation "curse.maven:lootr-361276:${deps.lootr}"
+    
+    //JER
+    //implementation fg.deobf("curse.maven:just-enough-resources-jer-240630:4689010")
+    
+    //Extra dev-env toys
+    runtimeOnly "curse.maven:nofog-296468:5438578" //PLEASE WORK
+    runtimeOnly "maven.modrinth:spark:${deps.spark}"
+    //runtimeOnly "dev.emi:emi-neoforge:${deps.emi_version}"
+    //runtimeOnly fg.deobf("curse.maven:woodworks-543610:5292418")
+    //runtimeOnly fg.deobf("curse.maven:blueprint-382216:5292242")
+    //runtimeOnly "curse.maven:farmers-delight-398521:5962800"
 }
 
 spotless {
