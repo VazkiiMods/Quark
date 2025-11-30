@@ -59,7 +59,7 @@ neoForge {
     
     runs {
         configureEach {
-            //tag the new run configs just so we remember to click them, instead of the old NeoGradle run configs
+            //tag the new run configs just so we remember to click them instead of the old NeoGradle run configs
             ideName = ideName.get() + " (MDG)"
             
             systemProperties.putAll ([
@@ -173,7 +173,7 @@ repositories {
         name = "Jitpack"
         url = "https://jitpack.io"
         content {
-            includeGroupByRegex( "com\\.github\\..*" )
+            includeGroupByRegex("com\\.github\\..*")
         }
     }
     
@@ -252,7 +252,8 @@ pmd {
     ruleSetFiles = files("spotless/pmd-ruleset.xml")
 }
 
-task checkSyntax (group: "verification") {
+tasks.register("checkSyntax") {
+    group "verification"
     // Replace the following line when Spotless is setup
     //dependsOn spotlessJavaCheck, pmdMain
     dependsOn pmdMain
@@ -313,7 +314,7 @@ jar {
 }
 
 //Omit all jar-in-jar dependencies for slimmer maven publishing
-task pureJar(type: Jar) {
+tasks.register("pureJar", Jar) {
     dependsOn tasks.jar
     
     archiveClassifier = "pure"
@@ -321,7 +322,7 @@ task pureJar(type: Jar) {
     exclude "META-INF/jarjar/**"
 }
 
-task sourcesJar(type: Jar) {
+tasks.register("sourcesJar", Jar) {
     archiveClassifier = "sources"
     from sourceSets.main.allJava
 }
@@ -367,13 +368,13 @@ publishing {
 // Disables Gradle's custom module metadata from being published to maven. The
 // metadata includes mapped dependencies which are not reasonably consumable by
 // other mod developers.
-tasks.withType(GenerateModuleMetadata) {
+tasks.withType(GenerateModuleMetadata).configureEach {
     enabled = false
 }
 
 allprojects {
     gradle.projectsEvaluated {
-        tasks.withType(JavaCompile) {
+        tasks.withType(JavaCompile).configureEach {
             options.compilerArgs << "-Xmaxerrs" << "5000"
         }
     }
