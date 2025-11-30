@@ -295,8 +295,8 @@ artifacts {
     archives sourcesJar
 }
 
-publish.dependsOn(project.tasks.getByName("assemble"))
-publish.mustRunAfter(project.tasks.getByName("build"))
+publish.dependsOn(tasks.named("assemble"))
+publish.mustRunAfter(tasks.named("build"))
 
 publishing {
 
