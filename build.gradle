@@ -43,7 +43,6 @@ sourceSets {
         runtimeClasspath += main.runtimeClasspath
     }
 }
-tasks.named("processResources").configure {finalizedBy("processBonusResources")}
 
 neoForge {
     version = deps.neoforge
@@ -68,6 +67,11 @@ neoForge {
               "forge.logging.markers": ["REGISTRIES"].join(","), //SCAN / REGISTRIES / REGISTRYDUMP
               "forge.logging.console.level": org.slf4j.event.Level.DEBUG.toString(),
             ])
+            
+            jvmArguments.addAll(
+              "-XX:+IgnoreUnrecognizedVMOptions", //not all VMs support this next flag:
+              "-XX:+AllowEnhancedClassRedefinition",
+            )
         }
         
         client {
