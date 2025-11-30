@@ -311,12 +311,24 @@ jar {
     exclude "**/genscripts"
 }
 
+//Omit all jar-in-jar dependencies for slimmer maven publishing
+task pureJar(type: Jar) {
+    dependsOn tasks.jar
+    
+    archiveClassifier = "pure"
+    tasks.jar.outputs.files.forEach { j -> it.from(zipTree(j)) }
+    exclude "META-INF/jarjar/**"
+}
+
 task sourcesJar(type: Jar) {
     archiveClassifier = "sources"
     from sourceSets.main.allJava
 }
 
+
 artifacts {
+    archives jar
+    archives pureJar
     archives sourcesJar
 }
 
@@ -324,32 +336,23 @@ publish.dependsOn(tasks.named("assemble"))
 publish.mustRunAfter(tasks.named("build"))
 
 publishing {
-
     publications {
-
         mavenJava(MavenPublication) {
-
             groupId project.group
             artifactId project.archivesBaseName
             version project.version
             from components.java
 
-            // Allows the maven pom file to be modified.
+            // Never publish any dependencies to maven
             pom.withXml {
-
-                // Go through all the dependencies.
                 asNode().dependencies.dependency.each { dep ->
-
                     println 'Surpressing artifact ' + dep.artifactId.last().value().last() + ' from maven dependencies.'
                     assert dep.parent().remove(dep)
                 }
             }
-
-            artifact sourcesJar {
-                archiveClassifier = 'sources'
-            }
-
-            // jarJar.component(it)
+            
+            artifact pureJar //doesn't contain jar-in-jars
+            artifact sourcesJar
         }
     }
 
