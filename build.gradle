@@ -34,6 +34,17 @@ if (System.getenv('BUILD_NUMBER') != null) {
     version += "." + System.getenv('BUILD_NUMBER')
 }
 
+sourceSets {
+    main
+    
+    //Weird hack for the clientBonus and serverBonus run configurations; MDG only allows
+    //the runtime classpath of one source-set to populate the runtime classpath of a runconfig AFAIK.
+    bonus {
+        runtimeClasspath += main.runtimeClasspath
+    }
+}
+tasks.named("processResources").configure {finalizedBy("processBonusResources")}
+
 neoForge {
     version = deps.neoforge
     
@@ -43,13 +54,13 @@ neoForge {
     
     mods {
         quark {
-            sourceSet sourceSets.main
+            sourceSet(sourceSets.main)
         }
     }
     
     runs {
         configureEach {
-            //tag the new run configs just so we remember to click them instead of the old NeoGradle run configs
+            //tag the new run configs just so we remember to click them, instead of the old NeoGradle run configs
             ideName = ideName.get() + " (MDG)"
             
             systemProperties.putAll ([
@@ -58,15 +69,31 @@ neoForge {
               "forge.logging.console.level": org.slf4j.event.Level.DEBUG.toString(),
             ])
         }
+        
         client {
             client()
             gameDirectory = project.file("run")
         }
+        
+        clientBonus {
+            client()
+            gameDirectory = project.file("run")
+            sourceSet = sourceSets.bonus
+        }
+        
         server {
             server()
             gameDirectory = project.file("runServer")
             programArgument("--nogui")
         }
+        
+        serverBonus {
+            server()
+            gameDirectory = project.file("runServer")
+            programArgument("--nogui")
+            sourceSet = sourceSets.bonus
+        }
+        
         data {
             data()
             gameDirectory = project.file('runs/data')
@@ -193,12 +220,12 @@ dependencies {
     //implementation fg.deobf("curse.maven:just-enough-resources-jer-240630:4689010")
     
     //Extra dev-env toys
-    runtimeOnly "curse.maven:nofog-296468:5438578" //PLEASE WORK
-    runtimeOnly "maven.modrinth:spark:${deps.spark}"
-    //runtimeOnly "dev.emi:emi-neoforge:${deps.emi_version}"
-    //runtimeOnly fg.deobf("curse.maven:woodworks-543610:5292418")
-    //runtimeOnly fg.deobf("curse.maven:blueprint-382216:5292242")
-    //runtimeOnly "curse.maven:farmers-delight-398521:5962800"
+    bonusRuntimeOnly "curse.maven:nofog-296468:5438578" //PLEASE WORK
+    bonusRuntimeOnly "maven.modrinth:spark:${deps.spark}"
+//    bonusRuntimeOnly "dev.emi:emi-neoforge:${deps.emi_version}"
+//    bonusRuntimeOnly fg.deobf("curse.maven:woodworks-543610:5292418")
+//    bonusRuntimeOnly fg.deobf("curse.maven:blueprint-382216:5292242")
+//    bonusRuntimeOnly "curse.maven:farmers-delight-398521:5962800"
 }
 
 spotless {
