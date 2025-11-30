@@ -66,6 +66,7 @@ neoForge {
               "mixin.debug.export": "true",
               "forge.logging.markers": ["REGISTRIES"].join(","), //SCAN / REGISTRIES / REGISTRYDUMP
               "forge.logging.console.level": org.slf4j.event.Level.DEBUG.toString(),
+              "quark.auditMixins": "true",
             ])
             
             jvmArguments.addAll(

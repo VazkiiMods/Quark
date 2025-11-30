@@ -18,6 +18,7 @@ import net.neoforged.neoforge.event.AddPackFindersEvent;
 import net.neoforged.neoforgespi.locating.IModFile;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.spongepowered.asm.mixin.MixinEnvironment;
 import org.violetmoon.quark.base.proxy.ClientProxy;
 import org.violetmoon.quark.base.proxy.CommonProxy;
 import org.violetmoon.quark.integration.lootr.ILootrIntegration;
@@ -50,9 +51,8 @@ public class Quark {
 		proxy = Env.unsafeRunForDist(() -> ClientProxy::new, () -> CommonProxy::new);
 		proxy.start();
 
-		// Causes issues for now, will see about re-enabling later
-		//if (!ZETA.isProduction) // force all mixins to load in dev
-		//	MixinEnvironment.getCurrentEnvironment().audit();
+		if (Boolean.parseBoolean(System.getProperty("quark.auditMixins", "false"))) // force all mixins to load in dev
+			MixinEnvironment.getCurrentEnvironment().audit();
 
 		bus.addListener(Quark::addPackFinders);
 	}
