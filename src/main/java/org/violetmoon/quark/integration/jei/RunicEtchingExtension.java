@@ -8,21 +8,16 @@ import org.jetbrains.annotations.NotNull;
 import org.violetmoon.quark.content.tools.module.ColorRunesModule;
 import org.violetmoon.quark.content.tools.recipe.SmithingRuneRecipe;
 
-@SuppressWarnings("NonExtendableApiUsage")
 public class RunicEtchingExtension implements ISmithingCategoryExtension<SmithingRuneRecipe> {
     public RunicEtchingExtension() {}
 
-	//wip!
-
 	@Override
 	public <T extends IIngredientAcceptor<T>> void setTemplate(@NotNull SmithingRuneRecipe smithingRuneRecipe, T t) {
-		System.out.println("setTemplate");
 		t.addItemStack(ColorRunesModule.rune.getDefaultInstance());
 	}
 
 	@Override
 	public <T extends IIngredientAcceptor<T>> void setBase(@NotNull SmithingRuneRecipe smithingRuneRecipe, T t) {
-		System.out.println("setBase");
 		Ingredient ingredient = SmithingRuneRecipe.createBaseIngredient();
 		for (ItemStack stack : ingredient.getItems()){
 			t.addItemStack(stack);
@@ -32,7 +27,6 @@ public class RunicEtchingExtension implements ISmithingCategoryExtension<Smithin
 
 	@Override
 	public <T extends IIngredientAcceptor<T>> void setAddition(@NotNull SmithingRuneRecipe smithingRuneRecipe, T t) {
-		System.out.println("setAddition");
 		Ingredient ingredient = smithingRuneRecipe.addition;
         if (ingredient != null && !ingredient.isEmpty()) {
             for (ItemStack stack : ingredient.getItems()) {
@@ -43,7 +37,6 @@ public class RunicEtchingExtension implements ISmithingCategoryExtension<Smithin
 
 	@Override
 	public <T extends IIngredientAcceptor<T>> void setOutput(@NotNull SmithingRuneRecipe smithingRuneRecipe, T t) {
-		System.out.println("setOutput");
         Ingredient ingredient = SmithingRuneRecipe.createBaseIngredient();
         for (ItemStack stack : ingredient.getItems()){
             ItemStack displayStack = SmithingRuneRecipe.makeEnchantedDisplayItem(stack);

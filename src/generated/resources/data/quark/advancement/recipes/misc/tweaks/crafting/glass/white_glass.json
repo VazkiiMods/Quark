@@ -9,7 +9,7 @@
   "criteria": {
     "has_the_recipe": {
       "conditions": {
-        "recipe": "quark:tweaks/crafting/utility/glass/light_blue_glass"
+        "recipe": "quark:tweaks/crafting/glass/white_glass"
       },
       "trigger": "minecraft:recipe_unlocked"
     },
@@ -25,7 +25,7 @@
   ],
   "rewards": {
     "recipes": [
-      "quark:tweaks/crafting/utility/glass/light_blue_glass"
+      "quark:tweaks/crafting/glass/white_glass"
     ]
   }
 }

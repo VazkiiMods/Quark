@@ -1749,49 +1749,49 @@ public class QuarkRecipeProvider extends RecipeProvider implements IConditionBui
 
             //glass (new 1.21)
         shardGlassRecipe(Items.BLACK_STAINED_GLASS).unlockedBy("test", PlayerTrigger.TriggerInstance.tick())
-                .save(recipeOutput.withConditions(zCond("glass_shard")), "quark:tweaks/crafting/utility/glass/black_glass");
+                .save(recipeOutput.withConditions(zCond("glass_shard")), "quark:tweaks/crafting/glass/black_glass");
         shardGlassRecipe(Items.BLUE_STAINED_GLASS).unlockedBy("test", PlayerTrigger.TriggerInstance.tick())
-                .save(recipeOutput.withConditions(zCond("glass_shard")), "quark:tweaks/crafting/utility/glass/blue_glass");
+                .save(recipeOutput.withConditions(zCond("glass_shard")), "quark:tweaks/crafting/glass/blue_glass");
         shardGlassRecipe(Items.BROWN_STAINED_GLASS).unlockedBy("test", PlayerTrigger.TriggerInstance.tick())
-                .save(recipeOutput.withConditions(zCond("glass_shard")), "quark:tweaks/crafting/utility/glass/brown_glass");
+                .save(recipeOutput.withConditions(zCond("glass_shard")), "quark:tweaks/crafting/glass/brown_glass");
         ShapedRecipeBuilder.shaped(RecipeCategory.MISC, Items.GLASS)
                 .pattern("##")
                 .pattern("##")
                 .define('#', GlassShardModule.clearShard)
                 .unlockedBy("test", PlayerTrigger.TriggerInstance.tick())
-                .save(recipeOutput.withConditions(zCond("glass_shard")), "quark:tweaks/crafting/utility/glass/clear_glass");
+                .save(recipeOutput.withConditions(zCond("glass_shard")), "quark:tweaks/crafting/glass/clear_glass");
         shardGlassRecipe(Items.CYAN_STAINED_GLASS).unlockedBy("test", PlayerTrigger.TriggerInstance.tick())
-                .save(recipeOutput.withConditions(zCond("glass_shard")), "quark:tweaks/crafting/utility/glass/cyan_glass");
+                .save(recipeOutput.withConditions(zCond("glass_shard")), "quark:tweaks/crafting/glass/cyan_glass");
         ShapedRecipeBuilder.shaped(RecipeCategory.MISC, GlassShardModule.dirtyGlass)
                 .pattern("##")
                 .pattern("##")
                 .define('#', GlassShardModule.dirtyShard)
                 .unlockedBy("test", PlayerTrigger.TriggerInstance.tick())
-                .save(recipeOutput.withConditions(zCond("glass_shard")), "quark:tweaks/crafting/utility/glass/dirty_glass");
+                .save(recipeOutput.withConditions(zCond("glass_shard")), "quark:tweaks/crafting/glass/dirty_glass");
         shardGlassRecipe(Items.GRAY_STAINED_GLASS).unlockedBy("test", PlayerTrigger.TriggerInstance.tick())
-                .save(recipeOutput.withConditions(zCond("glass_shard")), "quark:tweaks/crafting/utility/glass/gray_glass");
+                .save(recipeOutput.withConditions(zCond("glass_shard")), "quark:tweaks/crafting/glass/gray_glass");
         shardGlassRecipe(Items.GREEN_STAINED_GLASS).unlockedBy("test", PlayerTrigger.TriggerInstance.tick())
-                .save(recipeOutput.withConditions(zCond("glass_shard")), "quark:tweaks/crafting/utility/glass/green_glass");
+                .save(recipeOutput.withConditions(zCond("glass_shard")), "quark:tweaks/crafting/glass/green_glass");
         shardGlassRecipe(Items.LIGHT_BLUE_STAINED_GLASS).unlockedBy("test", PlayerTrigger.TriggerInstance.tick())
-                .save(recipeOutput.withConditions(zCond("glass_shard")), "quark:tweaks/crafting/utility/glass/light_blue_glass");
+                .save(recipeOutput.withConditions(zCond("glass_shard")), "quark:tweaks/crafting/glass/light_blue_glass");
         shardGlassRecipe(Items.LIGHT_GRAY_STAINED_GLASS).unlockedBy("test", PlayerTrigger.TriggerInstance.tick())
-                .save(recipeOutput.withConditions(zCond("glass_shard")), "quark:tweaks/crafting/utility/glass/light_gray_glass");
+                .save(recipeOutput.withConditions(zCond("glass_shard")), "quark:tweaks/crafting/glass/light_gray_glass");
         shardGlassRecipe(Items.LIME_STAINED_GLASS).unlockedBy("test", PlayerTrigger.TriggerInstance.tick())
-                .save(recipeOutput.withConditions(zCond("glass_shard")), "quark:tweaks/crafting/utility/glass/lime_glass");
+                .save(recipeOutput.withConditions(zCond("glass_shard")), "quark:tweaks/crafting/glass/lime_glass");
         shardGlassRecipe(Items.MAGENTA_STAINED_GLASS).unlockedBy("test", PlayerTrigger.TriggerInstance.tick())
-                .save(recipeOutput.withConditions(zCond("glass_shard")), "quark:tweaks/crafting/utility/glass/magenta_glass");
+                .save(recipeOutput.withConditions(zCond("glass_shard")), "quark:tweaks/crafting/glass/magenta_glass");
         shardGlassRecipe(Items.ORANGE_STAINED_GLASS).unlockedBy("test", PlayerTrigger.TriggerInstance.tick())
-                .save(recipeOutput.withConditions(zCond("glass_shard")), "quark:tweaks/crafting/utility/glass/orange_glass");
+                .save(recipeOutput.withConditions(zCond("glass_shard")), "quark:tweaks/crafting/glass/orange_glass");
         shardGlassRecipe(Items.PINK_STAINED_GLASS).unlockedBy("test", PlayerTrigger.TriggerInstance.tick())
-                .save(recipeOutput.withConditions(zCond("glass_shard")), "quark:tweaks/crafting/utility/glass/pink_glass");
+                .save(recipeOutput.withConditions(zCond("glass_shard")), "quark:tweaks/crafting/glass/pink_glass");
         shardGlassRecipe(Items.PURPLE_STAINED_GLASS).unlockedBy("test", PlayerTrigger.TriggerInstance.tick())
-                .save(recipeOutput.withConditions(zCond("glass_shard")), "quark:tweaks/crafting/utility/glass/purple_glass");
+                .save(recipeOutput.withConditions(zCond("glass_shard")), "quark:tweaks/crafting/glass/purple_glass");
         shardGlassRecipe(Items.RED_STAINED_GLASS).unlockedBy("test", PlayerTrigger.TriggerInstance.tick())
-                .save(recipeOutput.withConditions(zCond("glass_shard")), "quark:tweaks/crafting/utility/glass/red_glass");
+                .save(recipeOutput.withConditions(zCond("glass_shard")), "quark:tweaks/crafting/glass/red_glass");
         shardGlassRecipe(Items.WHITE_STAINED_GLASS).unlockedBy("test", PlayerTrigger.TriggerInstance.tick())
-                .save(recipeOutput.withConditions(zCond("glass_shard")), "quark:tweaks/crafting/utility/glass/white_glass");
+                .save(recipeOutput.withConditions(zCond("glass_shard")), "quark:tweaks/crafting/glass/white_glass");
         shardGlassRecipe(Items.YELLOW_STAINED_GLASS).unlockedBy("test", PlayerTrigger.TriggerInstance.tick())
-                .save(recipeOutput.withConditions(zCond("glass_shard")), "quark:tweaks/crafting/utility/glass/yellow_glass");
+                .save(recipeOutput.withConditions(zCond("glass_shard")), "quark:tweaks/crafting/glass/yellow_glass");
 
 
         //CATEGORY: World
