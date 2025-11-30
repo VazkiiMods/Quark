@@ -41,7 +41,7 @@ Thumbs.db
 !/mixin/*.jar
 !/native/*.jar
 # This one is just to share the zeta files
-!/localjars/*.jar
+!/localjars/**
 
 ### OSX (adds a lot of garbage)###
 .DS_Store

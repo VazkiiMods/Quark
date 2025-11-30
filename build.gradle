@@ -110,6 +110,9 @@ repositories {
     maven { url = "https://maven.minecraftforge.net" }
     //maven { url = "https://maven.createmod.net" }
     maven { url = "https://jitpack.io" }
+    flatDir {
+        dirs 'localJars'
+    }
 }
 
 dependencies {
@@ -124,7 +127,7 @@ dependencies {
 
     //implementation(jarJar("net.createmod.ponder:Ponder-NeoForge-${config.mc_version}:${deps.ponder}")) { transitive = false }
 
-    implementation files ("localjars/Zeta-1.1-33.jar")
+    implementation ("org.violetmoon:Zeta:${deps.zeta}")
     implementation (jarJar("com.terraformersmc:biolith-neoforge:${deps.biolith_version}"))
 
     // compile against the JEI API but do not include it at runtime
