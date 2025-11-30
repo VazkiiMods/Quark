@@ -266,8 +266,6 @@ def parseConfig(File config) {
 }
 
 jar {
-    archiveClassifier = "pure" // Jar without jar-in-jar
-
      manifest {
         attributes([
             "Specification-Title": "${config.mod_id}",
@@ -292,17 +290,6 @@ task sourcesJar(type: Jar) {
     archiveClassifier = "sources"
     from sourceSets.main.allJava
 }
-
-//TODO: MDG
-//tasks.jarJar.configure {
-//    archiveClassifier = "" // "Main" jar should be the one with jar-in-jar
-//
-//    exclude "**/*.bat"
-//    exclude "**/*.psd"
-//    exclude "**/*.exe"
-//    exclude "**/unused"
-//    exclude "**/genscripts"
-//}
 
 artifacts {
     archives sourcesJar
