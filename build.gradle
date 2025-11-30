@@ -44,7 +44,7 @@ sourceSets {
 }
 
 neoForge {
-    version = deps.neoforge
+    version = deps.neoforge_version
     
     //our accesstransformer.cfg is in the default location (meta-inf/accesstransformer.cfg)
     //so its path doesn't need to be manually configured in mdg
@@ -136,6 +136,7 @@ repositories {
         url = "https://maven.terraformersmc.com"
         content {
             includeModule("com.terraformersmc", "biolith-neoforge")
+            includeModule("dev.emi", "emi-neoforge")
         }
     }
     
@@ -152,6 +153,7 @@ repositories {
         url = "https://maven.createmod.net"
         content {
             includeGroup("net.createmod.ponder")
+            includeGroup("dev.engine-room.flywheel")
         }
     }
     
@@ -201,38 +203,37 @@ repositories {
 
 dependencies {
     //Zeta
-    implementation("org.violetmoon.zeta:Zeta:${deps.zeta}")
+    implementation("org.violetmoon.zeta:Zeta:${deps.zeta_version}")
     
-    //Ponder
-    //implementation(jarJar("net.createmod.ponder:Ponder-NeoForge-${config.mc_version}:${deps.ponder}")) { transitive = false }
+    //Ponder - TODO, I think the plan is to jarJar this
+//    implementation("net.createmod.ponder:Ponder-NeoForge-${config.mc_version}:${deps.ponder_version}") { transitive = false }
+//    runtimeOnly("dev.engine-room.flywheel:flywheel-neoforge-${config.mc_version}:${deps.flywheel_version}")
     
     //JEI
     compileOnly("mezz.jei:jei-${config.mc_version}-neoforge-api:${deps.jei_version}")
     runtimeOnly("mezz.jei:jei-${config.mc_version}-neoforge:${deps.jei_version}")
     
     //Curios
-    runtimeOnly "top.theillusivec4.curios:curios-neoforge:${deps.curios}"
-    compileOnly "top.theillusivec4.curios:curios-neoforge:${deps.curios}:api"
+    runtimeOnly("top.theillusivec4.curios:curios-neoforge:${deps.curios_version}")
+    compileOnly("top.theillusivec4.curios:curios-neoforge:${deps.curios_version}:api")
     
     //Biolith
-    implementation (jarJar("com.terraformersmc:biolith-neoforge:${deps.biolith_version}"))
+    implementation(jarJar("com.terraformersmc:biolith-neoforge:${deps.biolith_version}"))
     
-    //Flan
-    //implementation fg.deobf("curse.maven:flan-forge-493246:${deps.flan}")
+    //Flan - TODO, integration disabled
+//    implementation("curse.maven:flan-forge-493246:${deps.flan_curse_file_id}")
     
     //Lootr
-    implementation "curse.maven:lootr-361276:${deps.lootr}"
+    implementation("curse.maven:lootr-361276:${deps.lootr_curse_file_id}")
     
-    //JER
-    //implementation fg.deobf("curse.maven:just-enough-resources-jer-240630:4689010")
-    
-    //Extra dev-env toys
-    bonusRuntimeOnly "curse.maven:nofog-296468:5438578" //PLEASE WORK
-    bonusRuntimeOnly "maven.modrinth:spark:${deps.spark}"
-//    bonusRuntimeOnly "dev.emi:emi-neoforge:${deps.emi_version}"
-//    bonusRuntimeOnly fg.deobf("curse.maven:woodworks-543610:5292418")
-//    bonusRuntimeOnly fg.deobf("curse.maven:blueprint-382216:5292242")
-//    bonusRuntimeOnly "curse.maven:farmers-delight-398521:5962800"
+    //Extra dev-env toys - only present in ClientBonus and ServerBonus run configs
+    bonusRuntimeOnly("curse.maven:just-enough-resources-jer-240630:${deps.just_enough_resources_curse_file_id}")
+    bonusRuntimeOnly("curse.maven:nofog-296468:${deps.nofog_curse_file_id}") //PLEASE WORK
+    bonusRuntimeOnly("maven.modrinth:spark:${deps.spark_modrinth_file_id}")
+    bonusRuntimeOnly("dev.emi:emi-neoforge:${deps.emi_version}")
+    bonusRuntimeOnly("maven.modrinth:blueprint:${deps.blueprint_modrinth_file_id}") //for Woodworks
+    bonusRuntimeOnly("maven.modrinth:woodworks:${deps.woodworks_modrinth_file_id}")
+    bonusRuntimeOnly("curse.maven:farmers-delight-398521:${deps.farmers_delight_curse_file_id}")
 }
 
 pmd {
@@ -257,8 +258,8 @@ processResources {
     }
     
     // Formats 1.0-13.58 to 1.0-13 (removes the build number)
-    String zetaVer = deps.zeta.substring(0, deps.zeta.lastIndexOf('.'))
-    String curiosVer = deps.curios;
+    String zetaVer = deps.zeta_version.substring(0, deps.zeta_version.lastIndexOf('.'))
+    String curiosVer = deps.curios_version;
 
     Map<String, ?> properties = Map.of(
             "zeta_ver", zetaVer,
