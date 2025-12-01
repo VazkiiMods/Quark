@@ -12,11 +12,8 @@ plugins {
     id 'idea'
     id 'maven-publish'
     id 'pmd'
-    id 'com.diffplug.spotless' version '6.22.0'
-    id 'net.neoforged.gradle.userdev' version '7.0.180'
+    id 'net.neoforged.moddev' version '2.0.120'
 }
-
-jarJar.enable()
 
 ext.configFile = file('build.properties')
 ext.depsFile = file('dependencies.properties')
@@ -25,7 +22,7 @@ ext.deps = parseConfig(depsFile)
 
 version = "${config.version}-${config.build_number}"
 group = "org.violetmoon.${config.mod_id}" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
-archivesBaseName = config.mod_name
+base.archivesName = config.mod_name
 
 compileJava.options.compilerArgs << "-Xlint:all,-classfile,-processing,-deprecation"
 
@@ -36,142 +33,221 @@ if (System.getenv('BUILD_NUMBER') != null) {
     version += "." + System.getenv('BUILD_NUMBER')
 }
 
-minecraft.accessTransformers.file rootProject.file('src/main/resources/META-INF/accesstransformer.cfg')
+sourceSets {
+    main {
+        resources { srcDir 'src/generated/resources' }
+    }
+    
+    //Weird hack for the clientBonus and serverBonus run configurations; MDG only allows
+    //the runtime classpath of one source-set to populate the runtime classpath of a runconfig AFAIK.
+    bonus { runtimeClasspath += main.runtimeClasspath }
+}
 
-subsystems {
+neoForge {
+    version = deps.neoforge_version
+    
+    //our accesstransformer.cfg is in the default location (meta-inf/accesstransformer.cfg)
+    //so its path doesn't need to be manually configured in mdg
+    validateAccessTransformers = true
+    
+    mods {
+        quark {
+            sourceSet(sourceSets.main)
+        }
+    }
+    
+    runs {
+        configureEach {
+            //tag the new run configs just so we remember to click them instead of the old NeoGradle run configs
+            ideName = ideName.get() + " (MDG)"
+            
+            systemProperties.putAll ([
+              "mixin.debug.export": "true",
+              "forge.logging.markers": ["REGISTRIES"].join(","), //SCAN / REGISTRIES / REGISTRYDUMP
+              "forge.logging.console.level": org.slf4j.event.Level.DEBUG.toString(),
+              "quark.auditMixins": "true",
+            ])
+            
+            jvmArguments.addAll(
+              "-XX:+IgnoreUnrecognizedVMOptions", //not all VMs support this next flag:
+              "-XX:+AllowEnhancedClassRedefinition",
+            )
+        }
+        
+        client {
+            client()
+            gameDirectory = project.file("run")
+        }
+        
+        clientBonus {
+            client()
+            gameDirectory = project.file("run")
+            sourceSet = sourceSets.bonus
+        }
+        
+        server {
+            server()
+            gameDirectory = project.file("runServer")
+            programArgument("--nogui")
+        }
+        
+        serverBonus {
+            server()
+            gameDirectory = project.file("runServer")
+            programArgument("--nogui")
+            sourceSet = sourceSets.bonus
+        }
+        
+        data {
+            data()
+            gameDirectory = project.file('runs/data')
+            programArguments.addAll ([
+              '--mod', 'quark',
+              '--all',
+              '--output', file('src/generated/resources').getAbsolutePath(),
+              '--existing', file('src/main/resources').getAbsolutePath()
+            ])
+        }
+    }
+    
     parchment {
         minecraftVersion = "1.21.1"
         mappingsVersion = "2024.11.17"
     }
 }
 
-runs {
-    // applies to all the run configs below
-    configureEach {
-        systemProperty "mixin.debug.export", "true"
-        // Recommended logging data for a userdev environment
-        // The markers can be added/remove as needed separated by commas.
-        // "SCAN": For mods scan.
-        // "REGISTRIES": For firing of registry events.
-        // "REGISTRYDUMP": For getting the contents of all registries.
-        systemProperty 'forge.logging.markers', 'REGISTRIES'
-
-        // Recommended logging level for the console
-        // You can set various levels here.
-        // Please read: https://stackoverflow.com/questions/2031163/when-to-use-the-different-log-levels
-        systemProperty 'forge.logging.console.level', 'debug'
-
-        modSource project.sourceSets.main
-    }
-
-    client {
-        workingDirectory project.file('run')
-    }
-
-    server {
-        workingDirectory project.file('runServer')
-        programArgument '--nogui'
-    }
-
-    data {
-        workingDirectory project.file('runs/data')
-        programArguments '--mod', 'quark', // insert your own mod id
-                '--all',
-                '--output', file('src/generated/resources').getAbsolutePath(),
-                '--existing', file('src/main/resources').getAbsolutePath()
-    }
-}
-
 repositories {
     mavenLocal()
+    
+    flatDir {
+        dirs 'localJars'
+    }
+    
+    //Mainly for pmd
+    mavenCentral()
+    
     maven {
-        // for Zeta and JEI
-        name "blamejared"
-        url "https://maven.blamejared.com"
+        name = "blamejared"
+        url = "https://maven.blamejared.com"
         content {
             includeGroup("org.violetmoon.zeta")
             includeGroup("mezz.jei")
         }
     }
+    
     maven {
-        name "TerraformersMC"
-        url "https://maven.terraformersmc.com"
-    }
-    maven {
-        name "cursemaven"
-        url "https://www.cursemaven.com"
+        name = "TerraformersMC"
+        url = "https://maven.terraformersmc.com"
         content {
-            includeGroup "curse.maven"
+            includeModule("com.terraformersmc", "biolith-neoforge")
+            includeModule("dev.emi", "emi-neoforge")
         }
     }
-    maven { url = "https://maven.fabricmc.net/" }
-    maven { url = "https://maven.theillusivec4.top/" }
-    maven { url = "https://api.modrinth.com/maven" }
-    maven { url = "https://maven.minecraftforge.net" }
-    //maven { url = "https://maven.createmod.net" }
-    maven { url = "https://jitpack.io" }
-    flatDir {
-        dirs 'localJars'
+    
+    maven {
+        name = "TheIllusiveC4"
+        url = "https://maven.theillusivec4.top/"
+        content {
+            includeGroup("top.theillusivec4.curios")
+        }
+    }
+    
+    maven {
+        name = "Create"
+        url = "https://maven.createmod.net"
+        content {
+            includeGroup("net.createmod.ponder")
+            includeGroup("dev.engine-room.flywheel")
+        }
+    }
+    
+    maven {
+        name = "cursemaven"
+        url = "https://www.cursemaven.com"
+        content {
+            includeGroup("curse.maven")
+        }
+    }
+    
+    maven {
+        name = "Modrinth"
+        url = "https://api.modrinth.com/maven"
+        content {
+            includeGroup("maven.modrinth")
+        }
+    }
+    
+    maven {
+        name = "Jitpack"
+        url = "https://jitpack.io"
+        content {
+            includeGroupByRegex("com\\.github\\..*")
+        }
+    }
+    
+    //K4Unl's mirror of other modding-related mavens, in case they are down.
+    //Should be checked last; should **not** be the primary source for any artifact.
+    maven {
+        name = "ModMaven"
+        url = "https://modmaven.dev/"
+        content {
+            includeGroup("org.violetmoon.zeta")
+            includeGroup("mezz.jei")
+//            includeModule("com.terraformersmc", "biolith-neoforge") //Not mirrored
+            includeModule("net.fabricmc", "sponge-mixin")
+            includeGroup("top.theillusivec4.curios")
+//            includeGroup("net.createmod.ponder") //Not mirrored
+        }
     }
 }
 
 dependencies {
-    implementation "net.neoforged:neoforge:${deps.neoforge}"
-
-    //annotationProcessor 'org.spongepowered:mixin:0.8.5:processor'
-    //normal AP is broken!!
-    // annotationProcessor 'net.fabricmc:sponge-mixin:0.12.5+mixin.0.8.5'
-
-    //runtimeOnly fg.deobf("dev.emi:emi-forge:${deps.emi}")
-    runtimeOnly "maven.modrinth:spark:${deps.spark}"
-
-    //implementation(jarJar("net.createmod.ponder:Ponder-NeoForge-${config.mc_version}:${deps.ponder}")) { transitive = false }
-
-    implementation ("org.violetmoon.zeta:Zeta:${deps.zeta}")
-    implementation (jarJar("com.terraformersmc:biolith-neoforge:${deps.biolith_version}"))
-
-    // compile against the JEI API but do not include it at runtime
+    //Zeta
+    implementation("org.violetmoon.zeta:Zeta:${deps.zeta_version}")
+    
+    //Ponder - TODO, I think the plan is to jarJar this
+//    implementation("net.createmod.ponder:Ponder-NeoForge-${config.mc_version}:${deps.ponder_version}") { transitive = false }
+//    runtimeOnly("dev.engine-room.flywheel:flywheel-neoforge-${config.mc_version}:${deps.flywheel_version}")
+    
+    //JEI
     compileOnly("mezz.jei:jei-${config.mc_version}-neoforge-api:${deps.jei_version}")
-    // at runtime, use the full JEI jar for NeoForge
     runtimeOnly("mezz.jei:jei-${config.mc_version}-neoforge:${deps.jei_version}")
-    implementation "curse.maven:flan-forge-493246:${deps.flan}"
-    implementation "curse.maven:lootr-361276:${deps.lootr}"
-    // implementation fg.deobf("curse.maven:just-enough-resources-jer-240630:4689010")
-
-    runtimeOnly "curse.maven:nofog-296468:5438578"
-
-    // runtimeOnly fg.deobf("curse.maven:woodworks-543610:5292418")
-    // runtimeOnly fg.deobf("curse.maven:blueprint-382216:5292242")
-    //runtimeOnly "curse.maven:farmers-delight-398521:5962800"
-    //runtimeOnly "dev.emi:emi-neoforge:${deps.emi_version}"
-
-    runtimeOnly "top.theillusivec4.curios:curios-neoforge:${deps.curios}"
-    compileOnly "top.theillusivec4.curios:curios-neoforge:${deps.curios}:api"
-}
-
-spotless {
-    enforceCheck = false // workaround around jenkins having wrong line endings in some files
-    java {
-        target project.fileTree(dir: 'src/main/java/org/violetmoon/quark', include: '**/*.java')
-        //indentWithTabs()
-        eclipse().configFile 'spotless/eclipseformat.xml'
-        removeUnusedImports()
-        importOrderFile 'spotless/eclipse.importorder'
-        replaceRegex 'Too much space after if', '(if|for|while|switch) +\\(', '$1('
-    }
+    
+    //Curios
+    runtimeOnly("top.theillusivec4.curios:curios-neoforge:${deps.curios_version}")
+    compileOnly("top.theillusivec4.curios:curios-neoforge:${deps.curios_version}:api")
+    
+    //Biolith
+    implementation(jarJar("com.terraformersmc:biolith-neoforge:${deps.biolith_version}"))
+    
+    //Flan - TODO, integration disabled
+    implementation("curse.maven:flan-forge-493246:${deps.flan_curse_file_id}")
+    
+    //Lootr
+    implementation("curse.maven:lootr-361276:${deps.lootr_curse_file_id}")
+    
+    //Extra dev-env toys - only present in ClientBonus and ServerBonus run configs
+    bonusRuntimeOnly("curse.maven:just-enough-resources-jer-240630:${deps.just_enough_resources_curse_file_id}")
+    bonusRuntimeOnly("curse.maven:nofog-296468:${deps.nofog_curse_file_id}") //PLEASE WORK
+    bonusRuntimeOnly("maven.modrinth:spark:${deps.spark_modrinth_file_id}")
+    bonusRuntimeOnly("dev.emi:emi-neoforge:${deps.emi_version}")
+    bonusRuntimeOnly("maven.modrinth:blueprint:${deps.blueprint_modrinth_file_id}") //for Woodworks
+    bonusRuntimeOnly("maven.modrinth:woodworks:${deps.woodworks_modrinth_file_id}")
+    bonusRuntimeOnly("curse.maven:farmers-delight-398521:${deps.farmers_delight_curse_file_id}")
 }
 
 pmd {
     toolVersion '6.42.0'
-    incrementalAnalysis.set(true)
-    ruleSets = new ArrayList()
+    incrementalAnalysis = true
+    threads = Runtime.getRuntime().availableProcessors()
+    ruleSets = []
     ruleSetFiles = files("spotless/pmd-ruleset.xml")
+    //consoleOutput = true //TODO: Extremely spammy because the damn thing hasnt been running for weeks
 }
 
-task checkSyntax (group: "verification") {
-    // Replace the following line when Spotless is setup
-    //dependsOn spotlessJavaCheck, pmdMain
-    dependsOn pmdMain
+tasks.register("checkSyntax") {
+    group "verification"
+    dependsOn tasks.pmdMain
 }
 
 processResources {
@@ -182,8 +258,8 @@ processResources {
     }
     
     // Formats 1.0-13.58 to 1.0-13 (removes the build number)
-    String zetaVer = deps.zeta.substring(0, deps.zeta.lastIndexOf('.'))
-    String curiosVer = deps.curios;
+    String zetaVer = deps.zeta_version.substring(0, deps.zeta_version.lastIndexOf('.'))
+    String curiosVer = deps.curios_version;
 
     Map<String, ?> properties = Map.of(
             "zeta_ver", zetaVer,
@@ -208,8 +284,6 @@ def parseConfig(File config) {
 }
 
 jar {
-    archiveClassifier = "pure" // Jar without jar-in-jar
-
      manifest {
         attributes([
             "Specification-Title": "${config.mod_id}",
@@ -230,55 +304,47 @@ jar {
     exclude "**/genscripts"
 }
 
-task sourcesJar(type: Jar) {
+//Omit all jar-in-jar dependencies for slimmer maven publishing
+tasks.register("pureJar", Jar) {
+    dependsOn tasks.jar
+    
+    archiveClassifier = "pure"
+    tasks.jar.outputs.files.forEach { j -> it.from(zipTree(j)) }
+    exclude "META-INF/jarjar/**"
+}
+
+tasks.register("sourcesJar", Jar) {
     archiveClassifier = "sources"
     from sourceSets.main.allJava
 }
 
-tasks.jarJar.configure {
-    archiveClassifier = "" // "Main" jar should be the one with jar-in-jar
-
-    exclude "**/*.bat"
-    exclude "**/*.psd"
-    exclude "**/*.exe"
-    exclude "**/unused"
-    exclude "**/genscripts"
-}
-
 artifacts {
+    archives jar
+    archives pureJar
     archives sourcesJar
 }
 
-publish.dependsOn(project.tasks.getByName("assemble"))
-publish.mustRunAfter(project.tasks.getByName("build"))
+publish.dependsOn(tasks.named("assemble"))
+publish.mustRunAfter(tasks.named("build"))
 
 publishing {
-
     publications {
-
         mavenJava(MavenPublication) {
-
             groupId project.group
             artifactId project.archivesBaseName
             version project.version
             from components.java
 
-            // Allows the maven pom file to be modified.
+            // Never publish any dependencies to maven
             pom.withXml {
-
-                // Go through all the dependencies.
                 asNode().dependencies.dependency.each { dep ->
-
                     println 'Surpressing artifact ' + dep.artifactId.last().value().last() + ' from maven dependencies.'
                     assert dep.parent().remove(dep)
                 }
             }
-
-            artifact sourcesJar {
-                archiveClassifier = 'sources'
-            }
-
-            // jarJar.component(it)
+            
+            artifact pureJar //doesn't contain jar-in-jars
+            artifact sourcesJar
         }
     }
 
@@ -293,21 +359,14 @@ publishing {
 // Disables Gradle's custom module metadata from being published to maven. The
 // metadata includes mapped dependencies which are not reasonably consumable by
 // other mod developers.
-tasks.withType(GenerateModuleMetadata) {
-
+tasks.withType(GenerateModuleMetadata).configureEach {
     enabled = false
 }
 
 allprojects {
-    repositories {
-        jcenter()
-    }
-
     gradle.projectsEvaluated {
-        tasks.withType(JavaCompile) {
+        tasks.withType(JavaCompile).configureEach {
             options.compilerArgs << "-Xmaxerrs" << "5000"
         }
     }
 }
-
-sourceSets.main.resources { srcDir 'src/generated/resources' }
