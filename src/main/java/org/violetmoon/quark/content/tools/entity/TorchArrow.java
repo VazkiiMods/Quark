@@ -6,6 +6,7 @@ import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.AbstractArrow;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -18,6 +19,7 @@ import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.violetmoon.quark.base.Quark;
 import org.violetmoon.quark.content.tools.module.TorchArrowModule;
 
 public class TorchArrow extends AbstractArrow {
@@ -74,7 +76,7 @@ public class TorchArrow extends AbstractArrow {
 		BlockState state = level().getBlockState(finalPos);
 
 		if ((state.isAir() || state.canBeReplaced()) && direction != Direction.DOWN) {
-			// if(this.getOwner() instanceof Player p && !Quark.FLAN_INTEGRATION.canPlace(p, finalPos)) return;
+			if (this.getOwner() instanceof Player p && !Quark.FLAN_INTEGRATION.canPlace(p, finalPos)) return;
 
 			BlockState setState = direction == Direction.UP
 					? Blocks.TORCH.defaultBlockState()

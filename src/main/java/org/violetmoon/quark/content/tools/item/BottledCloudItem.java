@@ -14,9 +14,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
-
 import org.jetbrains.annotations.NotNull;
-
 import org.violetmoon.quark.base.Quark;
 import org.violetmoon.quark.content.tools.module.BottledCloudModule;
 import org.violetmoon.zeta.item.ZetaItem;
@@ -41,8 +39,7 @@ public class BottledCloudItem extends ZetaItem {
 			if(!world.isEmptyBlock(pos))
 				pos = pos.relative(bresult.getDirection());
 
-			if(world.isEmptyBlock(pos) && world.isInWorldBounds(pos) /*&& Quark.FLAN_INTEGRATION.canPlace(player, pos)*/) { // TODO: Wait for Neoforge Flan or remove
-
+			if (world.isEmptyBlock(pos) && world.isInWorldBounds(pos) && Quark.FLAN_INTEGRATION.canPlace(player, pos)) {
 				if(!world.isClientSide) {
 					world.gameEvent(player, GameEvent.BLOCK_PLACE, pos);
 					world.setBlockAndUpdate(pos, BottledCloudModule.cloud.defaultBlockState());
@@ -64,5 +61,4 @@ public class BottledCloudItem extends ZetaItem {
 
 		return InteractionResultHolder.pass(stack);
 	}
-
 }

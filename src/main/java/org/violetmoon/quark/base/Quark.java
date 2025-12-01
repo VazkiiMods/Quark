@@ -20,6 +20,8 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.violetmoon.quark.base.proxy.ClientProxy;
 import org.violetmoon.quark.base.proxy.CommonProxy;
+import org.violetmoon.quark.integration.claim.FlanIntegration;
+import org.violetmoon.quark.integration.claim.IClaimIntegration;
 import org.violetmoon.quark.integration.lootr.ILootrIntegration;
 import org.violetmoon.quark.integration.lootr.LootrIntegration;
 import org.violetmoon.zeta.Zeta;
@@ -57,11 +59,9 @@ public class Quark {
 		bus.addListener(Quark::addPackFinders);
 	}
 
-	/*
 	public static final IClaimIntegration FLAN_INTEGRATION = ZETA.modIntegration("flan",
 			() -> FlanIntegration::new,
 			() -> IClaimIntegration.Dummy::new);
-	 */
 
 	public static final ILootrIntegration LOOTR_INTEGRATION = ZETA.modIntegration("lootr",
 			() -> LootrIntegration::new,

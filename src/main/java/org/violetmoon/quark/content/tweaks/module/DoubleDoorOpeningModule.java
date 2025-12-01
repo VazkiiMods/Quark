@@ -125,10 +125,7 @@ public class DoubleDoorOpeningModule extends ZetaModule {
 			Level world = event.getLevel();
 			BlockPos pos = event.getPos();
 
-			/* // TODO: TODO: Wait for Neoforge Flan or remove
-			if(!Quark.FLAN_INTEGRATION.canInteract(player, pos))
-				return;
-			 */
+			if (!Quark.FLAN_INTEGRATION.canInteract(player, pos)) return;
 
 			handling = true;
 			boolean opened = openBlock(world, player, pos);

@@ -134,7 +134,7 @@ dependencies {
     compileOnly("mezz.jei:jei-${config.mc_version}-neoforge-api:${deps.jei_version}")
     // at runtime, use the full JEI jar for NeoForge
     runtimeOnly("mezz.jei:jei-${config.mc_version}-neoforge:${deps.jei_version}")
-    // implementation fg.deobf("curse.maven:flan-forge-493246:${deps.flan}")
+    implementation "curse.maven:flan-forge-493246:${deps.flan}"
     implementation "curse.maven:lootr-361276:${deps.lootr}"
     // implementation fg.deobf("curse.maven:just-enough-resources-jer-240630:4689010")
 
