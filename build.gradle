@@ -185,15 +185,6 @@ repositories {
         }
     }
     
-    maven {
-        name = "Lex Forge"
-        url = "https://maven.minecraftforge.net"
-        content {
-            //TODO: This should be obtained off the Neoforge maven, but it seems to be having issues
-            includeModule("net.minecraftforge", "mergetool")
-        }
-    }
-    
     //K4Unl's mirror of other modding-related mavens, in case they are down.
     //Should be checked last; should **not** be the primary source for any artifact.
     maven {
