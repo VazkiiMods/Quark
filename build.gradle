@@ -221,7 +221,7 @@ dependencies {
     implementation(jarJar("com.terraformersmc:biolith-neoforge:${deps.biolith_version}"))
     
     //Flan - TODO, integration disabled
-//    implementation("curse.maven:flan-forge-493246:${deps.flan_curse_file_id}")
+    implementation("curse.maven:flan-forge-493246:${deps.flan_curse_file_id}")
     
     //Lootr
     implementation("curse.maven:lootr-361276:${deps.lootr_curse_file_id}")
@@ -242,7 +242,7 @@ pmd {
     threads = Runtime.getRuntime().availableProcessors()
     ruleSets = []
     ruleSetFiles = files("spotless/pmd-ruleset.xml")
-    consoleOutput = true
+    //consoleOutput = true //TODO: Extremely spammy because the damn thing hasnt been running for weeks
 }
 
 tasks.register("checkSyntax") {
