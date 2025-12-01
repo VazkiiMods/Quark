@@ -50,10 +50,10 @@ public class PistonBaseBlockMixin {
 		return map;
 	}
 
-	@Inject(method = "moveBlocks", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/Level;setBlock(Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/level/block/state/BlockState;I)Z", ordinal = 2, shift = At.Shift.AFTER))
+	@Inject(method = "moveBlocks", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/Level;setBlock(Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/level/block/state/BlockState;I)Z", ordinal = 1, shift = At.Shift.AFTER))
 	private void modifyBlockstate(Level worldIn, BlockPos posIn, Direction pistonFacing, boolean extending, CallbackInfoReturnable<Boolean> cir,
 			@Share("oldPos") LocalRef<BlockPos> oldPos, @Share("newState") LocalRef<BlockState> newState, @Share("storedMap") LocalRef<Map<BlockPos, BlockState>> storedMap) {
-		if(GameNerfsModule.stopPistonPhysicsExploits() && oldPos.get() != null) {
+		if(GameNerfsModule.stopPistonPhysicsExploits()) {
 			newState.set(worldIn.getBlockState(oldPos.get()));
 			storedMap.get().replace(oldPos.get(), newState.get());
 		}

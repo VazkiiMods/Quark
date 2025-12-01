@@ -79,13 +79,8 @@ public class ReacharoundPlacingModule extends ZetaModule {
 
 		if(target != null && event.getHand() == target.hand) {
 			ItemStack stack = event.getItemStack();
-			if(!player.mayUseItemAt(target.pos, target.dir, stack) || !player.level().mayInteract(player, target.pos))
-				return;
-
-			/* TODO: Fix/remove, dependency not available for 1.21.1
-			if(!Quark.FLAN_INTEGRATION.canPlace(player, target.pos))
-				return;
-			 */
+			if(!player.mayUseItemAt(target.pos, target.dir, stack) || !player.level().mayInteract(player, target.pos)) return;
+			if(!Quark.FLAN_INTEGRATION.canPlace(player, target.pos)) return;
 
 			int count = stack.getCount();
 			InteractionHand hand = event.getHand();

@@ -248,10 +248,10 @@ public class SimpleHarvestModule extends ZetaModule {
 			// end event stuff
 
 			if(action == ActionType.HARVEST) {
-				//if(entity instanceof Player p /*&& !Quark.FLAN_INTEGRATION.canBreak(p, pos)*/) return false; // TODO: Wait for Neoforge Flan or remove
-				return harvestAndReplant(level, pos, worldBlock, entity, hand);
+                if (entity instanceof Player p && !Quark.FLAN_INTEGRATION.canBreak(p, pos)) return false;
+                return harvestAndReplant(level, pos, worldBlock, entity, hand);
 			} else if(action == ActionType.CLICK && entity instanceof Player p) { //Only players can click!
-				// if(!Quark.FLAN_INTEGRATION.canInteract(p, pos)) return false;
+                if (!Quark.FLAN_INTEGRATION.canInteract(p, pos)) return false;
 
 				var hitResult = new BlockHitResult(Vec3.atCenterOf(pos), Direction.UP, pos, true);
 				if(hand == null) hand = InteractionHand.MAIN_HAND;

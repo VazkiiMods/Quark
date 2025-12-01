@@ -1,15 +1,24 @@
 {
   "neoforge:conditions": [
     {
-      "type": "zeta:flag",
-      "flag": "glass_shard"
+      "type": "neoforge:and",
+      "values": [
+        {
+          "type": "zeta:flag",
+          "flag": "variant_chests"
+        },
+        {
+          "type": "zeta:flag",
+          "flag": "wood_to_chest_recipes"
+        }
+      ]
     }
   ],
   "parent": "minecraft:recipes/root",
   "criteria": {
     "has_the_recipe": {
       "conditions": {
-        "recipe": "quark:tweaks/crafting/utility/glass/black_glass"
+        "recipe": "quark:building/chests/bamboo_chest_wood"
       },
       "trigger": "minecraft:recipe_unlocked"
     },
@@ -25,7 +34,7 @@
   ],
   "rewards": {
     "recipes": [
-      "quark:tweaks/crafting/utility/glass/black_glass"
+      "quark:building/chests/bamboo_chest_wood"
     ]
   }
 }
