@@ -1,6 +1,7 @@
 package org.violetmoon.quark.mixin.mixins.client.variants;
 
 import net.minecraft.client.model.ChickenModel;
+import net.minecraft.client.model.Model;
 import net.minecraft.client.renderer.entity.ChickenRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.MobRenderer;
@@ -24,9 +25,11 @@ public abstract class ChickenRendererMixin extends MobRenderer<Chicken, ChickenM
 
     @Inject(method = "getTextureLocation(Lnet/minecraft/world/entity/animal/Chicken;)Lnet/minecraft/resources/ResourceLocation;", at = @At("HEAD"), cancellable = true)
 	private void overrideTexture(Chicken chicken, CallbackInfoReturnable<ResourceLocation> cir) {
+		//Some mods override the chicken model in a strange way. Double-check we really have a vanilla chicken model. See #5322.
 		ChickenRenderer render = (ChickenRenderer) ((Object) this);
-		ChickenModel<Chicken> model = render.getModel();
-		GrabChickensModule.Client.setRenderChickenFeetStatus(chicken, model);
+		Model model = render.getModel();
+		if(model instanceof ChickenModel<?> vanillaChicken)
+			GrabChickensModule.Client.setRenderChickenFeetStatus(chicken, vanillaChicken);
 
 		ResourceLocation loc = VariantAnimalTexturesModule.Client.getChickenTexture(chicken);
 		if(loc != null)

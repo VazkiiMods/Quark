@@ -119,7 +119,7 @@ public class GrabChickensModule extends ZetaModule {
 		}
 
 		//not client-replacement module since it's just somewhere to stick this method
-		public static void setRenderChickenFeetStatus(Chicken entity, ChickenModel<Chicken> model) {
+		public static void setRenderChickenFeetStatus(Chicken entity, ChickenModel<?> model) {
 			if (!staticEnabled) return;
 
 			boolean should = entity.getVehicle() == null || entity.getVehicle().getType() != EntityType.PLAYER;

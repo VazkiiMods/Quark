@@ -1,1 +1,1 @@
-nothing yet!
+Fix incompatibility with Mixed Litter.
