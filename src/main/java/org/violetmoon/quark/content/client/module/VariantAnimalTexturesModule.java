@@ -77,7 +77,7 @@ public class VariantAnimalTexturesModule extends ZetaModule {
 	protected static final List<String> BEE_VARIANTS = List.of(
 			"acebee", "agenbee", "arobee", "beefluid", "beesexual",
 			"beequeer", "enbee", "gaybee", "interbee", "lesbeean",
-			"panbee", "polysexbee", "transbee", "helen", "mlbeem");
+			"panbee", "polysexbee", "transbee", "helen", "mlbeem", "polyamorbee", "salmacibee");
 
 	@Config(description = "The chance for an animal to have a special \"Shiny\" skin, like a shiny pokemon. This is 1 in X. Set to 0 to disable.")
 	public static int shinyAnimalChance = 2048;
@@ -262,7 +262,10 @@ public class VariantAnimalTexturesModule extends ZetaModule {
 					(type != EntityType.CHICKEN || !enableChicken) &&
 					(type != EntityType.RABBIT || !enableShinyRabbit) &&
 					(type != EntityType.LLAMA || !enableShinyLlama) &&
-					(type != EntityType.DOLPHIN || !enableShinyDolphin))
+                    (type != EntityType.DOLPHIN || !enableShinyDolphin) &&
+                    (type != EntityType.ALLAY || !enableAllay) &&
+                    (type != EntityType.FROG || !enableShinyFrog) &&
+                    (type != EntityType.ARMADILLO || !enableShinyArmadillo))
 				return false;
 
 			return isShiny(e.getUUID());

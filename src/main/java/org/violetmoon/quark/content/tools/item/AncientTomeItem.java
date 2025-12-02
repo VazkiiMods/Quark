@@ -8,6 +8,7 @@ import net.minecraft.world.item.*;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.ItemEnchantments;
 import org.jetbrains.annotations.NotNull;
+import org.violetmoon.quark.base.Quark;
 import org.violetmoon.quark.base.QuarkClient;
 import org.violetmoon.quark.base.components.QuarkDataComponents;
 import org.violetmoon.quark.content.tools.module.AncientTomesModule;
@@ -63,7 +64,7 @@ public class AncientTomeItem extends ZetaItem implements CreativeTabManager.Appe
 	public List<ItemStack> appendItemsToCreativeTab() {
 		List<ItemStack> items = new ArrayList<>();
 
-		QuarkClient.ZETA_CLIENT.hackilyGetCurrentClientLevelRegistryAccess().registry(Registries.ENCHANTMENT).get().asHolderIdMap().forEach(ench -> {
+        Quark.ZETA.hackilyGetCurrentLevelRegistryAccess().registry(Registries.ENCHANTMENT).get().asHolderIdMap().forEach(ench -> {
             if (!AncientTomesModule.sanityCheck || ench.value().getMaxLevel() != 1) {
                 if (!AncientTomesModule.isInitialized() && AncientTomesModule.validEnchants.contains(ench)) {
                     items.add(getEnchantedItemStack(ench));

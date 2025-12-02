@@ -88,7 +88,7 @@ public class ClientProxy extends CommonProxy {
 
 	@Override
 	public @Nullable RegistryAccess hackilyGetCurrentClientLevelRegistryAccess() {
-		return QuarkClient.ZETA_CLIENT.hackilyGetCurrentClientLevelRegistryAccess();
+		return Quark.ZETA.hackilyGetCurrentLevelRegistryAccess();
 	}
 
 }

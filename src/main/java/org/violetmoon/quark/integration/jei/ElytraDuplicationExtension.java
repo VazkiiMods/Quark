@@ -13,6 +13,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.CraftingRecipe;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.RecipeHolder;
+import org.violetmoon.quark.base.Quark;
 import org.violetmoon.quark.base.QuarkClient;
 import org.violetmoon.quark.content.tweaks.recipe.ElytraDuplicationRecipe;
 
@@ -31,7 +32,7 @@ public class ElytraDuplicationExtension<R extends CraftingRecipe> implements ICr
 			inputLists.add(expandedInput);
 		}
 		craftingGridHelper.createAndSetInputs(builder, VanillaTypes.ITEM_STACK, inputLists, 0, 0);
-		craftingGridHelper.createAndSetOutputs(builder, VanillaTypes.ITEM_STACK, Lists.newArrayList(recipeHolder.value().getResultItem(QuarkClient.ZETA_CLIENT.hackilyGetCurrentClientLevelRegistryAccess())));
+		craftingGridHelper.createAndSetOutputs(builder, VanillaTypes.ITEM_STACK, Lists.newArrayList(recipeHolder.value().getResultItem(Quark.ZETA.hackilyGetCurrentLevelRegistryAccess())));
 	}
 
 	@Override

@@ -16,7 +16,7 @@ public class VexesDieWithTheirMastersModule extends ZetaModule {
 		if(event.getEntity() instanceof Vex vex) {
 			Mob owner = vex.getOwner();
 			if(owner != null && owner.isDeadOrDying() && !vex.isDeadOrDying())
-				vex.hurt(vex.level().damageSources().mobAttack(owner), vex.getHealth());
+				vex.hurt(vex.level().damageSources().genericKill(), Float.MAX_VALUE); // Should stop any problems from happening. Probably
 		}
 	}
 }

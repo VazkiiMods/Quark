@@ -96,6 +96,6 @@ public class CommonProxy {
 	}
 
 	public @Nullable RegistryAccess hackilyGetCurrentClientLevelRegistryAccess() {
-		return null;
+		return Quark.ZETA.hackilyGetCurrentLevelRegistryAccess();
 	}
 }

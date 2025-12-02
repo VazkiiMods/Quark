@@ -108,7 +108,7 @@ public class GlimmeringWealdModule extends ZetaModule {
                 Climate.Parameter.span(-1.2f, 0.75f), //set like that to stay away from dripstone caves
 				Climate.Parameter.span(-0.28f, 0.08f), //erosion. a bit after deep dark biome
                 //decrease min depth to make it bigger. prob best place to do so at least
-				Climate.Parameter.span(1.03f, 1.1f), //depth. A bit lower depth to accommodate for erosion being a bit higher
+				Climate.Parameter.span(0.95f, 1.1f), //depth. A bit lower depth to accommodate for erosion being a bit higher
 				FULL_RANGE, //weirdness
 				0F);
 

@@ -172,7 +172,7 @@ public class EnchantedBookTooltips {
 			String left = tokens[0];
 			String right = tokens[1];
 
-			QuarkClient.ZETA_CLIENT.hackilyGetCurrentClientLevelRegistryAccess().registry(Registries.ENCHANTMENT).get().getOptional(ResourceLocation.parse(left))
+			Quark.ZETA.hackilyGetCurrentLevelRegistryAccess().registry(Registries.ENCHANTMENT).get().getOptional(ResourceLocation.parse(left))
 					.ifPresent(ench -> {
 						for(String itemId : right.split(",")) {
 							BuiltInRegistries.ITEM.getOptional(ResourceLocation.parse(itemId)).ifPresent(item -> additionalStacks.put(ench, new ItemStack(item)));
