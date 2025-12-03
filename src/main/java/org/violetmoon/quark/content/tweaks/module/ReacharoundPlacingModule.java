@@ -198,6 +198,9 @@ public class ReacharoundPlacingModule extends ZetaModule {
 				Minecraft mc = Minecraft.getInstance();
 				Player player = mc.player;
 
+				if(player != null && player.isSpectator())
+					return;
+
 				HitResult result = mc.hitResult;
 				if (result instanceof BlockHitResult bhr) {
 					BlockPos hitPos = bhr.getBlockPos();

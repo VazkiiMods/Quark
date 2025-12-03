@@ -161,6 +161,10 @@ public class HotbarChangerModule extends ZetaModule {
 			Player player = Minecraft.getInstance().player;
 
 			if(player != null) {
+				if(player.isSpectator() && hotbarChangeOpen){
+					hotbarChangeOpen = false; //close hotbar changer if it's open and the player is in spectator
+				}
+
 				Inventory inventory = player.getInventory();
 
 				if(currentHeldItem != -1 && inventory.selected != currentHeldItem) {
@@ -189,7 +193,7 @@ public class HotbarChangerModule extends ZetaModule {
 			boolean wasDown = keyDown;
 			keyDown = down;
 			if(mc.isWindowActive()) {
-				if(down && !wasDown)
+				if(down && !wasDown && !mc.player.isSpectator())
 					hotbarChangeOpen = !hotbarChangeOpen;
 				else if(hotbarChangeOpen)
 					for(int i = 0; i < 3; i++)
