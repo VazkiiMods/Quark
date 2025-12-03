@@ -1,38 +1,44 @@
 package org.violetmoon.quark.mixin.mixins.client;
 
-import net.minecraft.client.multiplayer.ClientLevel;
+import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
+import com.llamalad7.mixinextras.sugar.Local;
 import net.minecraft.client.renderer.LevelRenderer;
-import net.minecraft.core.BlockPos;
+import net.minecraft.client.resources.sounds.SimpleSoundInstance;
+import net.minecraft.client.resources.sounds.SoundInstance;
 import net.minecraft.core.Holder;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.JukeboxSong;
 
-import net.minecraft.world.level.block.entity.JukeboxBlockEntity;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-import org.violetmoon.quark.content.tools.item.AmbientDiscItem;
-import org.violetmoon.quark.content.tools.module.AmbientDiscsModule;
-
-import javax.annotation.Nullable;
+import org.violetmoon.quark.base.Quark;
 
 @Mixin(LevelRenderer.class)
 public class LevelRendererMixin {
 
-	@Shadow @Nullable private ClientLevel level;
+    @Unique
+    private TagKey<JukeboxSong> ambientSounds = TagKey.create(Registries.JUKEBOX_SONG, Quark.asResource("ambient"));
 
-	@Inject(
+	@ModifyExpressionValue(
 		method = "playJukeboxSong(Lnet/minecraft/core/Holder;Lnet/minecraft/core/BlockPos;)V",
 		remap = false,
-		at = @At(value = "JUMP", ordinal = 0),
-		cancellable = true
-	)
-	public void playStreamingMusic(Holder<JukeboxSong> song, BlockPos pos, CallbackInfo ci) {
-
-		if(level.getBlockEntity(pos) instanceof JukeboxBlockEntity jukebox && jukebox.getTheItem().getItem() instanceof AmbientDiscItem ambientDisc && AmbientDiscsModule.Client.playAmbientSound(ambientDisc, pos))
-			ci.cancel();
+            at = @At(value = "INVOKE", target = "Lnet/minecraft/client/resources/sounds/SimpleSoundInstance;forJukeboxSong(Lnet/minecraft/sounds/SoundEvent;Lnet/minecraft/world/phys/Vec3;)Lnet/minecraft/client/resources/sounds/SimpleSoundInstance;")
+    )
+	public SimpleSoundInstance playStreamingMusic(SimpleSoundInstance original, @Local(ordinal = 0) Holder<JukeboxSong> song) {
+        if (song.is(ambientSounds)) {
+            return new SimpleSoundInstance(song.value().soundEvent().value().getLocation(),
+                    SoundSource.RECORDS,
+                    4.0F,
+                    1.0F,
+                    SoundInstance.createUnseededRandom(),
+                    true,
+                    0,
+                    SoundInstance.Attenuation.LINEAR, original.getX(), original.getY(), original.getZ(), false);
+        } else return original;
 	}
-
 }
+
