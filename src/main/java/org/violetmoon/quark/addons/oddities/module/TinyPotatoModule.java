@@ -1,6 +1,7 @@
 package org.violetmoon.quark.addons.oddities.module;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderers;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.client.resources.model.ModelResourceLocation;
@@ -14,12 +15,16 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import org.violetmoon.quark.addons.oddities.block.TinyPotatoBlock;
 import org.violetmoon.quark.addons.oddities.block.be.TinyPotatoBlockEntity;
 import org.violetmoon.quark.addons.oddities.client.model.TinyPotatoModel;
+import org.violetmoon.quark.addons.oddities.client.render.be.TaterWithoutLevelRenderer;
 import org.violetmoon.quark.addons.oddities.client.render.be.TinyPotatoRenderer;
 import org.violetmoon.quark.base.Quark;
 import org.violetmoon.zeta.advancement.ManualTrigger;
+import org.violetmoon.zeta.client.SimpleWithoutLevelRenderer;
 import org.violetmoon.zeta.client.event.load.ZAddModels;
 import org.violetmoon.zeta.client.event.load.ZClientSetup;
 import org.violetmoon.zeta.client.event.load.ZModel;
+import org.violetmoon.zeta.client.event.load.ZRegisterClientExtension;
+import org.violetmoon.zeta.client.extensions.IZetaClientItemExtensions;
 import org.violetmoon.zeta.config.Config;
 import org.violetmoon.zeta.event.bus.LoadEvent;
 import org.violetmoon.zeta.event.load.ZRegister;
@@ -92,5 +97,16 @@ public class TinyPotatoModule extends ZetaModule {
 		public final void clientSetup(ZClientSetup event) {
 			BlockEntityRenderers.register(blockEntityType, TinyPotatoRenderer::new);
 		}
+
+        @LoadEvent
+        public void setItemExtensions(ZRegisterClientExtension event) {
+                event.registerItem(new IZetaClientItemExtensions() {
+                    @Override
+                    public BlockEntityWithoutLevelRenderer getBEWLR() {
+                        return new TaterWithoutLevelRenderer(blockEntityType, tiny_potato.defaultBlockState());
+                    }
+                }, tiny_potato.asItem());
+
+        }
 	}
 }

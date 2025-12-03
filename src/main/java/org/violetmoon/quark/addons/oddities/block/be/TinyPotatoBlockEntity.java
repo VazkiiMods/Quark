@@ -41,6 +41,7 @@ public class TinyPotatoBlockEntity extends SimpleInventoryBlockEntity implements
 	public Component name = Component.literal("");
 	private int soundCd = 0;
 	public boolean angry = false;
+    public boolean evilCodeIHate = false; // Guys this is not good code Im just tired please dont judge me - Siuol
 
 	private static final Map<String, String> GENDER = new HashMap<>();
 	private static final Map<String, SoundEvent> SOUNDS = new HashMap<>();

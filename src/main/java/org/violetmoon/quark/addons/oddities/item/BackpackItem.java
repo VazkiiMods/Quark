@@ -163,7 +163,7 @@ public class BackpackItem extends ArmorItem implements IZetaItem, IZetaItemExten
 
 		Reference<Enchantment> bindingCurse = enchantmentLookup.getOrThrow(Enchantments.BINDING_CURSE);
 
-        boolean canIgnoreEquip = BackpackModule.superOpMode || (entityIn instanceof Player player && player.isCreative());
+        boolean canIgnoreEquip = BackpackModule.superOpMode || (entityIn instanceof Player player && (player.isCreative() || player.isSpectator()));
 
 		ItemEnchantments.Mutable enchants = new ItemEnchantments.Mutable(stack.getOrDefault(DataComponents.ENCHANTMENTS, ItemEnchantments.EMPTY.withTooltip(false)));
 		boolean armorChangePrevented = EnchantmentHelper.has(stack, EnchantmentEffectComponents.PREVENT_ARMOR_CHANGE);
@@ -187,7 +187,7 @@ public class BackpackItem extends ArmorItem implements IZetaItem, IZetaItemExten
                 }
             } else if (!canIgnoreEquip) {
                 stack.set(DataComponents.CONTAINER, ItemContainerContents.EMPTY);
-            } else if (!BackpackModule.superOpMode && entityIn instanceof Player player && player.isCreative()) {
+            } else if (!BackpackModule.superOpMode && entityIn instanceof Player player && (player.isCreative() || player.isSpectator())) {
                 stack.set(DataComponents.LORE, ItemLore.EMPTY.withLineAdded(Component.translatable("item.quark.backpack.warning.line_1").withStyle(ChatFormatting.RED)).withLineAdded(Component.translatable("item.quark.backpack.warning.line_2")));
             }
         } else {
