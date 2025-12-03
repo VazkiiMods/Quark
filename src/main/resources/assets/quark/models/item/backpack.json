@@ -7,7 +7,7 @@
 	"overrides": [
 		{
 			"predicate": {
-				"has_items": 1
+				"quark:has_items": 1
 			},
 			"model": "quark:item/backpack_locked"
 		}

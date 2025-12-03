@@ -3,6 +3,7 @@ package org.violetmoon.quark.addons.oddities.module;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.color.item.ItemColor;
 import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.gui.screens.inventory.CreativeModeInventoryScreen;
 import net.minecraft.client.gui.screens.inventory.InventoryScreen;
 import net.minecraft.client.renderer.item.ItemProperties;
 import net.minecraft.core.Holder;
@@ -92,7 +93,7 @@ public class BackpackModule extends ZetaModule {
 
 	public static TagKey<Item> backpackBlockedTag;
 
-	public static MenuType<BackpackMenu> menyType;
+	public static MenuType<BackpackMenu> menuType;
 	private static ItemStack heldStack = null;
 
 	@LoadEvent
@@ -100,8 +101,8 @@ public class BackpackModule extends ZetaModule {
 		backpack = new BackpackItem(this);
 		ravager_hide = new ZetaItem("ravager_hide", this, new Item.Properties().rarity(Rarity.RARE)).setCondition(() -> enableRavagerHide).setCreativeTab(CreativeModeTabs.INGREDIENTS, Items.RABBIT_HIDE, false);
 
-		menyType = IMenuTypeExtension.create(BackpackMenu::fromNetwork);
-		Quark.ZETA.registry.register(menyType, "backpack", Registries.MENU);
+		menuType = IMenuTypeExtension.create(BackpackMenu::fromNetwork);
+		Quark.ZETA.registry.register(menuType, "backpack", Registries.MENU);
 
 		bonded_ravager_hide = new ZetaBlock("bonded_ravager_hide", this, Block.Properties.of()
 				.mapColor(DyeColor.BLACK)
@@ -113,7 +114,8 @@ public class BackpackModule extends ZetaModule {
 				.setCreativeTab(CreativeModeTabs.BUILDING_BLOCKS);
 
 		CauldronInteraction.WATER.map().put(backpack, CauldronInteraction.DYED_ITEM);
-	}
+        Quark.ZETA.dyeables.register(backpack, this);
+    }
 
 	@LoadEvent
 	public final void setup(ZCommonSetup event) {
@@ -198,7 +200,7 @@ public class BackpackModule extends ZetaModule {
 		@LoadEvent
 		public void clientSetup(ZClientSetup e) {
 			e.enqueueWork(() -> {
-				AccessorMenuScreens.invokeRegister(menyType, BackpackInventoryScreen::new);
+				AccessorMenuScreens.invokeRegister(menuType, BackpackInventoryScreen::new);
 
 				ItemProperties.register(backpack, Quark.asResource("has_items"),
 						(stack, world, entity, i) -> (!BackpackModule.superOpMode && BackpackItem.doesBackpackHaveItems(stack)) ? 1 : 0);
@@ -226,9 +228,8 @@ public class BackpackModule extends ZetaModule {
 
 		@PlayEvent
 		public void clientTick(ZClientTick.Start event) {
-
 			Minecraft mc = Minecraft.getInstance();
-            if (isInventoryGUI(mc.screen) && !backpackRequested && isEntityWearingBackpack(mc.player) && mc.player.portalProcess != null && !mc.player.portalProcess.isInsidePortalThisTick()) {
+            if (isInventoryGUI(mc.screen) && !backpackRequested && isEntityWearingBackpack(mc.player) && (mc.player.portalProcess == null || !mc.player.portalProcess.isInsidePortalThisTick())) {
                 requestBackpack();
                 mc.player.inventoryMenu.setCarried(mc.player.getItemBySlot(EquipmentSlot.CHEST));
                 backpackRequested = true;
@@ -242,7 +243,7 @@ public class BackpackModule extends ZetaModule {
 		}
 
 		private static boolean isInventoryGUI(Screen gui) {
-			return gui != null && gui.getClass() == InventoryScreen.class;
+			return gui != null && (gui.getClass() == InventoryScreen.class);
 		}
 	}
 }

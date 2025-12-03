@@ -15,10 +15,8 @@ import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.FormattedText;
 import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.network.chat.contents.TranslatableContents;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.EquipmentSlotGroup;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
@@ -35,15 +33,10 @@ import org.violetmoon.quark.base.client.handler.ClientUtil;
 import org.violetmoon.quark.catnip.animation.AnimationTickHolder;
 import org.violetmoon.quark.content.client.module.ImprovedTooltipsModule;
 import org.violetmoon.quark.content.client.resources.AttributeIconEntry;
-import org.violetmoon.quark.content.client.resources.AttributeIconEntry.CompareType;
 import org.violetmoon.zeta.client.event.play.ZGatherTooltipComponents;
-import org.violetmoon.zeta.event.bus.PlayEvent;
 import org.violetmoon.zeta.event.play.ZSkipAttributeTooltip;
 
 import java.util.*;
-import java.util.stream.Collectors;
-
-import static org.violetmoon.quark.content.client.module.ImprovedTooltipsModule.attributeTooltips;
 
 /**
  * @author WireSegal
