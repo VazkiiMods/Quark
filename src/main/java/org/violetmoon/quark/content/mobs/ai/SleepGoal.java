@@ -14,15 +14,16 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Pose;
 import net.minecraft.world.entity.ai.goal.Goal;
 
+import net.minecraft.world.entity.animal.Fox;
 import org.violetmoon.quark.content.mobs.entity.Foxhound;
 
 import java.util.EnumSet;
 
 public class SleepGoal extends Goal {
-
 	private final Foxhound foxhound;
 	public boolean isSleeping;
 	private boolean wasSitting;
+
 
 	public SleepGoal(Foxhound foxhound) {
 		this.foxhound = foxhound;
@@ -31,7 +32,7 @@ public class SleepGoal extends Goal {
 
 	@Override
 	public boolean canUse() {
-		if(!this.foxhound.isTame() || this.foxhound.isInWater() || !this.foxhound.onGround())
+		if(!this.foxhound.isTame() || this.foxhound.isInWater() || !this.foxhound.onGround() || !this.isSleeping)
 			return false;
 		else {
 			LivingEntity living = this.foxhound.getOwner();
@@ -64,7 +65,7 @@ public class SleepGoal extends Goal {
 	}
 
 	public void setSleeping(boolean sleeping) {
-		this.isSleeping = sleeping;
-		foxhound.setPose(Pose.STANDING);
+        if (sleeping) foxhound.setSleeping();
+        else foxhound.setStanding();
 	}
 }

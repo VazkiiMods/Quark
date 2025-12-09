@@ -79,6 +79,11 @@ public class Foxhound extends Wolf implements Enemy {
 	private static final EntityDataAccessor<Boolean> IS_BLUE = SynchedEntityData.defineId(Foxhound.class, EntityDataSerializers.BOOLEAN);
 	private static final EntityDataAccessor<Boolean> TATERING = SynchedEntityData.defineId(Foxhound.class, EntityDataSerializers.BOOLEAN);
 	private static final EntityDataAccessor<Integer> COLLAR_COLOR = SynchedEntityData.defineId(Foxhound.class, EntityDataSerializers.INT);
+    private static final EntityDataAccessor<Integer> FOXHOUND_STATE = SynchedEntityData.defineId(Foxhound.class, EntityDataSerializers.INT);
+
+    private static final int STANDING_STATE = 0;
+    private static final int SITTING_STATE = 1;
+    private static final int SLEEPING_STATE = 2;
 
 	private int timeUntilPotatoEmerges = 0;
 
@@ -100,6 +105,7 @@ public class Foxhound extends Wolf implements Enemy {
 		builder.define(TEMPTATION, false);
 		builder.define(IS_BLUE, false);
 		builder.define(TATERING, false);
+        builder.define(FOXHOUND_STATE, 0);
 	}
 
 	@Override
@@ -135,7 +141,7 @@ public class Foxhound extends Wolf implements Enemy {
 	public void tick() {
 		super.tick();
 
-		Pose pose = getPose();
+		/*Pose pose = getPose();
 		if(isSleeping()) {
 			if(pose != Pose.SLEEPING)
 				setPose(Pose.SLEEPING);
@@ -145,7 +151,7 @@ public class Foxhound extends Wolf implements Enemy {
                 setInSittingPose(true);
             }
         } else if(pose == Pose.SLEEPING)
-			setPose(Pose.STANDING);
+			setPose(Pose.STANDING);*/
 
 
 		Level level = level();
@@ -171,7 +177,7 @@ public class Foxhound extends Wolf implements Enemy {
 			if(sleepPos.isPresent()) {
 				BlockPos pos = sleepPos.get();
 				if(distanceToSqr(pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5) > 1)
-					stopSleeping();
+					setStanding();
 			}
 
 			AABB aabb = getBoundingBox();
@@ -345,7 +351,7 @@ public class Foxhound extends Wolf implements Enemy {
 						this.tame(player);
 						this.navigation.stop();
 						this.setTarget(null);
-						this.setOrderedToSit(true);
+						this.setSitting();
 						this.setHealth(20.0F);
 						level.broadcastEntityEvent(this, (byte) 7);
 					} else {
@@ -362,7 +368,7 @@ public class Foxhound extends Wolf implements Enemy {
 		InteractionResult res = super.mobInteract(player, hand);
 		if(res.consumesAction()) {
             setWoke();
-            if (isOrderedToSit()) {
+            if (isSitting()) {
                 setPose(Pose.SITTING);
                 setInSittingPose(true);
             }
@@ -399,6 +405,7 @@ public class Foxhound extends Wolf implements Enemy {
 		compound.putInt("OhLawdHeComin", timeUntilPotatoEmerges);
 		compound.putBoolean("IsSlep", isSleeping());
 		compound.putBoolean("IsBlue", isBlue());
+        compound.putInt("FoxhoundState", getFoxhoundState());
 	}
 
 	@Override
@@ -465,16 +472,40 @@ public class Foxhound extends Wolf implements Enemy {
 
     // 2025 nuclear family woke foxhound
 	private void setWoke() {
-		SleepGoal sleep = getSleepGoal();
-		if(sleep != null) {
-			sleep.setSleeping(false);
-            setInSittingPose(false);
-        }
+		setStanding();
     }
 
-//	@Override
-//	public boolean isSleeping(){
-//		return entityData.get(SLEEPING);
-//	}
+	@Override
+	public boolean isSleeping() {
+		return getFoxhoundState() == 2;
+	}
 
+    public boolean isSitting() {
+        return getFoxhoundState() == 1;
+    }
+
+    public boolean isStanding() {
+        return getFoxhoundState() == 0;
+    }
+
+    public int getFoxhoundState() {
+        return entityData.get(FOXHOUND_STATE);
+    }
+
+    public void setSleeping() {
+        entityData.set(FOXHOUND_STATE, 2);
+        setPose(Pose.SLEEPING);
+        sleepGoal.isSleeping = true;
+    }
+
+    public void setSitting() {
+        entityData.set(FOXHOUND_STATE, 1);
+        setOrderedToSit(true);
+        setPose(Pose.SITTING);
+    }
+
+    public void setStanding() {
+        entityData.set(FOXHOUND_STATE, 0);
+        setPose(Pose.STANDING);
+    }
 }

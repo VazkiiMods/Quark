@@ -113,7 +113,7 @@ public class TinyPotatoRenderer implements BlockEntityRenderer<TinyPotatoBlockEn
 				break;
 		}
 		poseStack.mulPose(com.mojang.math.Axis.YN.rotationDegrees(rotY));
-        if (potato.evilCodeIHate) poseStack.mulPose(com.mojang.math.Axis.YN.rotationDegrees(180));
+        if (potato.isActuallyAnItem) poseStack.mulPose(com.mojang.math.Axis.YN.rotationDegrees(180));
 
 		float jump = potato.jumpTicks;
 		if(jump > 0) {

@@ -30,7 +30,7 @@ public class TaterWithoutLevelRenderer extends BlockEntityWithoutLevelRenderer {
     @Override
     public void renderByItem(@NotNull ItemStack stack, @NotNull ItemDisplayContext itemDisplayContext, @NotNull PoseStack pose, @NotNull MultiBufferSource buffer, int x, int y) {
         be.name = Component.empty().append(stack.getDisplayName().plainCopy().getString().replace("[","").replace("]",""));
-        be.evilCodeIHate = true; // Lmfao
+        be.isActuallyAnItem = true; // Lmfao
         Minecraft.getInstance().getBlockEntityRenderDispatcher().renderItem(be, pose, buffer, x, y);
     }
 }
