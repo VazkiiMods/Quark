@@ -28,9 +28,11 @@ public class FoxhoundModel extends AgeableListModel<Foxhound> {
 	public final ModelPart leftEar;
 	public final ModelPart tail;
 	public final ModelPart fluff;
+    private final ModelPart root;
 
 	public FoxhoundModel(ModelPart root) {
 		super(false,5, 2.5f);
+        this.root = root;
 		head = root.getChild("head");
 		rightFrontLeg = root.getChild("rightFrontLeg");
 		leftFrontLeg = root.getChild("leftFrontLeg");

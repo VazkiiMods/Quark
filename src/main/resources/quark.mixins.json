@@ -37,6 +37,7 @@
     "LadderBlockMixin",
     "LanternBlockMixin",
     "LightningBoltMixin",
+    "LivingEntityMixin",
     "LoomMenuMixin",
     "MerchantMenuMixin",
     "MerchantOfferMixin",

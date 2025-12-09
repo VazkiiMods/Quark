@@ -12,6 +12,7 @@ package org.violetmoon.quark.content.mobs.ai;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.ai.goal.MoveToBlockGoal;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.FurnaceBlockEntity;
@@ -22,6 +23,10 @@ import org.jetbrains.annotations.NotNull;
 
 import org.violetmoon.quark.base.Quark;
 import org.violetmoon.quark.content.mobs.entity.Foxhound;
+
+import java.util.function.BiFunction;
+import java.util.function.Function;
+import java.util.function.Supplier;
 
 public class FindPlaceToSleepGoal extends MoveToBlockGoal {
 	private final Foxhound foxhound;
@@ -51,7 +56,6 @@ public class FindPlaceToSleepGoal extends MoveToBlockGoal {
 		super.start();
 		hadSlept = false;
 		this.foxhound.setOrderedToSit(false); // setSitting
-		this.foxhound.getSleepGoal().setSleeping(false);
 		this.foxhound.setInSittingPose(false);
 	}
 
@@ -60,7 +64,6 @@ public class FindPlaceToSleepGoal extends MoveToBlockGoal {
 		super.stop();
 		hadSlept = false;
 		this.foxhound.setOrderedToSit(false); // setSitting
-		this.foxhound.getSleepGoal().setSleeping(false);
 		this.foxhound.setInSittingPose(false);
 	}
 
@@ -70,39 +73,38 @@ public class FindPlaceToSleepGoal extends MoveToBlockGoal {
 
 		Vec3 motion = foxhound.getDeltaMovement();
 
-		if(!this.isReachedTarget() || motion.x > 0 || motion.z > 0) {
-			this.foxhound.setOrderedToSit(false); // setSitting
-			this.foxhound.getSleepGoal().setSleeping(false);
-			this.foxhound.setInSittingPose(false);
-		} else if(!this.foxhound.isOrderedToSit()) {
-			this.foxhound.setOrderedToSit(true); // setSitting
-			this.foxhound.getSleepGoal().setSleeping(true);
-			this.foxhound.setInSittingPose(true);
-			foxhound.startSleeping(blockPos.above());
-			hadSlept = true;
-		}
-	}
+        if (this.isReachedTarget() && !(motion.x > 0) && !(motion.z > 0) && !target.test(this.foxhound.level(), foxhound.getOnPos())) {
+            if(!this.foxhound.isOrderedToSit()) {
+                this.foxhound.setInSittingPose(true);
+                foxhound.setSleeping(true);
+                hadSlept = true;
+            }
+        } else {
+//this.foxhound.setSleeping(false);
+        }
+    }
 
 	@Override
 	protected boolean isValidTarget(@NotNull LevelReader world, @NotNull BlockPos pos) {
 		if(!world.isEmptyBlock(pos.above())) {
 			return false;
 		} else {
-			BlockState state = world.getBlockState(pos);
-			BlockEntity tileentity = world.getBlockEntity(pos);
-			int light = Quark.ZETA.blockExtensions.get(state).getLightEmissionZeta(state, world, pos);
-
-			return switch(target) {
-			case LIT_FURNACE -> tileentity instanceof FurnaceBlockEntity && light > 2;
-			case FURNACE -> tileentity instanceof FurnaceBlockEntity && light <= 2;
-			case GLOWING -> light > 2;
-			};
+			return target.test(world, pos);
 		}
 	}
 
 	public enum Target {
-		LIT_FURNACE,
-		FURNACE,
-		GLOWING
+		LIT_FURNACE(((level, pos) -> level.getBlockEntity(pos) instanceof FurnaceBlockEntity && level.getLightEmission(pos) > 2)),
+		FURNACE(((level, pos) -> level.getBlockEntity(pos) instanceof FurnaceBlockEntity && level.getLightEmission(pos) <= 2)),
+		GLOWING((level, pos) -> level.getLightEmission(pos) > 2);
+
+        private final BiFunction<LevelReader, BlockPos, Boolean> check;
+        Target(BiFunction<LevelReader, BlockPos, Boolean> check) {
+            this.check = check;
+        }
+
+        public boolean test(LevelReader level, BlockPos pos) {
+            return this.check.apply(level, pos);
+        }
 	}
 }

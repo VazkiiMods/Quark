@@ -61,13 +61,12 @@ import org.violetmoon.quark.base.Quark;
 import org.violetmoon.quark.base.components.QuarkDataComponents;
 import org.violetmoon.quark.base.handler.QuarkSounds;
 import org.violetmoon.quark.content.mobs.ai.FindPlaceToSleepGoal;
-import org.violetmoon.quark.content.mobs.ai.SleepGoal;
+import org.violetmoon.quark.content.mobs.ai.FoxhoundSleepGoal;
 import org.violetmoon.quark.content.mobs.module.FoxhoundModule;
 import org.violetmoon.quark.content.tweaks.ai.WantLoveGoal;
 import org.violetmoon.quark.mixin.mixins.accessor.AccessorLivingEntity;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 import static org.violetmoon.quark.content.mobs.ai.FindPlaceToSleepGoal.Target.*;
@@ -79,11 +78,6 @@ public class Foxhound extends Wolf implements Enemy {
 	private static final EntityDataAccessor<Boolean> IS_BLUE = SynchedEntityData.defineId(Foxhound.class, EntityDataSerializers.BOOLEAN);
 	private static final EntityDataAccessor<Boolean> TATERING = SynchedEntityData.defineId(Foxhound.class, EntityDataSerializers.BOOLEAN);
 	private static final EntityDataAccessor<Integer> COLLAR_COLOR = SynchedEntityData.defineId(Foxhound.class, EntityDataSerializers.INT);
-    private static final EntityDataAccessor<Integer> FOXHOUND_STATE = SynchedEntityData.defineId(Foxhound.class, EntityDataSerializers.INT);
-
-    private static final int STANDING_STATE = 0;
-    private static final int SITTING_STATE = 1;
-    private static final int SLEEPING_STATE = 2;
 
 	private int timeUntilPotatoEmerges = 0;
 
@@ -105,7 +99,6 @@ public class Foxhound extends Wolf implements Enemy {
 		builder.define(TEMPTATION, false);
 		builder.define(IS_BLUE, false);
 		builder.define(TATERING, false);
-        builder.define(FOXHOUND_STATE, 0);
 	}
 
 	@Override
@@ -141,19 +134,6 @@ public class Foxhound extends Wolf implements Enemy {
 	public void tick() {
 		super.tick();
 
-		/*Pose pose = getPose();
-		if(isSleeping()) {
-			if(pose != Pose.SLEEPING)
-				setPose(Pose.SLEEPING);
-		} else if (isOrderedToSit()) {
-            if (pose != Pose.SITTING) {
-                setPose(Pose.SITTING);
-                setInSittingPose(true);
-            }
-        } else if(pose == Pose.SLEEPING)
-			setPose(Pose.STANDING);*/
-
-
 		Level level = level();
 		if(!level.isClientSide && level.getDifficulty() == Difficulty.PEACEFUL && !isTame()) {
 			discard();
@@ -173,13 +153,6 @@ public class Foxhound extends Wolf implements Enemy {
 		}
 
 		if(isSleeping()) {
-			Optional<BlockPos> sleepPos = getSleepingPos();
-			if(sleepPos.isPresent()) {
-				BlockPos pos = sleepPos.get();
-				if(distanceToSqr(pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5) > 1)
-					setStanding();
-			}
-
 			AABB aabb = getBoundingBox();
 			if(aabb.getYsize() < 0.21)
 				setBoundingBox(new AABB(aabb.minX - 0.2, aabb.minY, aabb.minZ - 0.2, aabb.maxX + 0.2, aabb.maxY + 0.5, aabb.maxZ + 0.2));
@@ -239,13 +212,11 @@ public class Foxhound extends Wolf implements Enemy {
 		return FOXHOUND_LOOT_TABLE;
 	}
 
-	protected SleepGoal sleepGoal;
 
 	@Override
 	protected void registerGoals() {
-		this.sleepGoal = new SleepGoal(this);
 		this.goalSelector.addGoal(1, new FloatGoal(this));
-		this.goalSelector.addGoal(2, this.sleepGoal);
+        this.goalSelector.addGoal(2, new FoxhoundSleepGoal(this));
 		this.goalSelector.addGoal(3, new SitWhenOrderedToGoal(this));
 		this.goalSelector.addGoal(4, new LeapAtTargetGoal(this, 0.4F));
 		this.goalSelector.addGoal(5, new MeleeAttackGoal(this, 1.0D, true));
@@ -309,26 +280,18 @@ public class Foxhound extends Wolf implements Enemy {
 
 		//debugging code
 		if(itemstack.is(Items.DEBUG_STICK) && !player.level().isClientSide()){
-			if(isSleeping()){
-				// #5327 - isSleeping is always returning false.
-				//vanilla foxes have their own isSleeping method instead of using the LivingEntity method,
-				//but that uses entity data which is synced, ai goals (which we are using for sleep) are not.
-				player.sendSystemMessage(Component.literal("setWoke()"));
-				setWoke();
-			}
-			else{
-				SleepGoal sleep = getSleepGoal();
-				if(sleep == null){
-					player.sendSystemMessage(Component.literal("SleepGoal was null"));
-					return InteractionResult.sidedSuccess(player.level().isClientSide);
-				}
-				else{
-					sleep.setSleeping(true);
-					player.sendSystemMessage(Component.literal("setSleeping(true)") );
-					return InteractionResult.sidedSuccess(player.level().isClientSide);
-				}
-
-			}
+            if(isSleeping()){
+                // #5327 - isSleeping is always returning false.
+                //vanilla foxes have their own isSleeping method instead of using the LivingEntity method,
+                //but that uses entity data which is synced, ai goals (which we are using for sleep) are not.
+                player.sendSystemMessage(Component.literal("setWoke()"));
+                setWoke();
+            }
+            else{
+                player.sendSystemMessage(Component.literal("setSleeping(true)"));
+                setSleeping(true);
+                return InteractionResult.CONSUME;
+            }
 		}
 
 		if(itemstack.getItem() == Items.BONE && !isTame())
@@ -351,7 +314,7 @@ public class Foxhound extends Wolf implements Enemy {
 						this.tame(player);
 						this.navigation.stop();
 						this.setTarget(null);
-						this.setSitting();
+						this.setSitting(true);
 						this.setHealth(20.0F);
 						level.broadcastEntityEvent(this, (byte) 7);
 					} else {
@@ -405,7 +368,6 @@ public class Foxhound extends Wolf implements Enemy {
 		compound.putInt("OhLawdHeComin", timeUntilPotatoEmerges);
 		compound.putBoolean("IsSlep", isSleeping());
 		compound.putBoolean("IsBlue", isBlue());
-        compound.putInt("FoxhoundState", getFoxhoundState());
 	}
 
 	@Override
@@ -466,46 +428,40 @@ public class Foxhound extends Wolf implements Enemy {
 		return world.getDifficulty() != Difficulty.PEACEFUL && world.getBlockState(pos.below()).is(FoxhoundModule.foxhoundSpawnableTag);
 	}
 
-	public SleepGoal getSleepGoal() {
-		return sleepGoal;
-	}
-
     // 2025 nuclear family woke foxhound
 	private void setWoke() {
-		setStanding();
+		setStanding(true);
     }
 
 	@Override
 	public boolean isSleeping() {
-		return getFoxhoundState() == 2;
+		return getPose() == Pose.SLEEPING;
 	}
 
     public boolean isSitting() {
-        return getFoxhoundState() == 1;
+        return getPose() == Pose.SITTING;
     }
 
     public boolean isStanding() {
-        return getFoxhoundState() == 0;
+        return getPose() == Pose.STANDING;
     }
 
-    public int getFoxhoundState() {
-        return entityData.get(FOXHOUND_STATE);
-    }
-
-    public void setSleeping() {
-        entityData.set(FOXHOUND_STATE, 2);
+    public void setSleeping(boolean sleeping) {
         setPose(Pose.SLEEPING);
-        sleepGoal.isSleeping = true;
     }
 
-    public void setSitting() {
-        entityData.set(FOXHOUND_STATE, 1);
+    public void setSitting(boolean sitting) {
         setOrderedToSit(true);
         setPose(Pose.SITTING);
     }
 
-    public void setStanding() {
-        entityData.set(FOXHOUND_STATE, 0);
+    public void setStanding(boolean standing) {
         setPose(Pose.STANDING);
     }
+
+    //Notes:
+    // Poses are supposed to be MC's state machine for entities in a sense.
+    // But, poses can be a bit tricky to deal with? Is it really that hard?
+
+    // If a goal is being done, none of the goals of "higher" priority are done. Thus why mobs cant walk when they are sat down for instance.
 }

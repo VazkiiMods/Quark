@@ -10,10 +10,13 @@
  */
 package org.violetmoon.quark.content.mobs.client.render.entity;
 
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.math.Axis;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.MobRenderer;
 import net.minecraft.resources.ResourceLocation;
 
+import net.minecraft.world.entity.Pose;
 import org.jetbrains.annotations.NotNull;
 
 import org.violetmoon.quark.base.Quark;
@@ -60,4 +63,16 @@ public class FoxhoundRenderer extends MobRenderer<Foxhound, FoxhoundModel> {
 
 		return entity.isSleeping() ? FOXHOUND_SLEEPING : (entity.getRemainingPersistentAngerTime() > 0 ? FOXHOUND_HOSTILE : FOXHOUND_IDLE);
 	}
+
+    @Override
+    protected void setupRotations(Foxhound entity, PoseStack poseStack, float bob, float yBodyRot, float partialTick, float scale) {
+        super.setupRotations(entity, poseStack, bob, yBodyRot, partialTick, scale);
+        if (entity.getPose().equals(Pose.SLEEPING)) {
+            poseStack.mulPose(Axis.YP.rotationDegrees(entity.getYRot()));
+        }
+    }
+
+    protected float getFlipDegrees(@NotNull Foxhound foxhound) {
+        return 0F;
+    }
 }
