@@ -47,9 +47,9 @@ public class MoreBrickTypesModule extends ZetaModule {
 	public final void register(ZRegister event) {
 		add(event, "blue_nether", Blocks.NETHER_BRICKS, () -> enableBlueNetherBricks, Blocks.BASALT); //0
 
-		add(event, "sandstone", Blocks.SANDSTONE, () -> enableSandstoneBricks, Blocks.RED_SANDSTONE); //1
-		add(event, "red_sandstone", Blocks.RED_SANDSTONE, () -> enableSandstoneBricks, Blocks.SEA_LANTERN); //2
-		add(event, "soul_sandstone", Blocks.SANDSTONE, () -> enableSandstoneBricks && Quark.ZETA.modules.isEnabled(SoulSandstoneModule.class), Blocks.SEA_LANTERN); //3
+		add(event, "sandstone", Blocks.SANDSTONE, () -> enableSandstoneBricks, Blocks.RED_SANDSTONE, true); //1
+		add(event, "red_sandstone", Blocks.RED_SANDSTONE, () -> enableSandstoneBricks, Blocks.SEA_LANTERN, true); //2
+		add(event, "soul_sandstone", Blocks.SANDSTONE, () -> enableSandstoneBricks && Quark.ZETA.modules.isEnabled(SoulSandstoneModule.class), Blocks.SEA_LANTERN, true); //3
 
 		add(event, "cobblestone", Blocks.COBBLESTONE, () -> enableCobblestoneBricks, Blocks.MOSSY_COBBLESTONE); //4
 		add(event, "mossy_cobblestone", Blocks.MOSSY_COBBLESTONE, () -> enableCobblestoneBricks, Blocks.SMOOTH_STONE); //5

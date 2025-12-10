@@ -359,7 +359,7 @@ public class PathfindersQuillItem extends ZetaItem implements CreativeTabManager
 	}
 
 	@Override
-	public List<ItemStack> appendItemsToCreativeTab() {
+	public List<ItemStack> appendItemsToCreativeTab(RegistryAccess access) {
 		List<ItemStack> items = new ArrayList<>();
 		boolean generatedWeald = false;
 

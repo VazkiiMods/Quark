@@ -2,6 +2,8 @@ package org.violetmoon.quark.content.tools.item;
 
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.Holder;
+import net.minecraft.core.HolderLookup;
+import net.minecraft.core.RegistryAccess;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.*;
@@ -61,10 +63,10 @@ public class AncientTomeItem extends ZetaItem implements CreativeTabManager.Appe
 	}
 
 	@Override
-	public List<ItemStack> appendItemsToCreativeTab() {
+	public List<ItemStack> appendItemsToCreativeTab(RegistryAccess access) {
 		List<ItemStack> items = new ArrayList<>();
 
-        Quark.ZETA.hackilyGetCurrentLevelRegistryAccess().registry(Registries.ENCHANTMENT).get().asHolderIdMap().forEach(ench -> {
+        access.registry(Registries.ENCHANTMENT).get().asHolderIdMap().forEach(ench -> {
             if (!AncientTomesModule.sanityCheck || ench.value().getMaxLevel() != 1) {
                 if (!AncientTomesModule.isInitialized() && AncientTomesModule.validEnchants.contains(ench)) {
                     items.add(getEnchantedItemStack(ench));

@@ -285,7 +285,7 @@ public class SeedPouchItem extends ZetaItem implements IUsageTickerOverride, ITr
 	}
 
 	@Override
-	public List<ItemStack> appendItemsToCreativeTab() {
+	public List<ItemStack> appendItemsToCreativeTab(RegistryAccess access) {
 		if(!isEnabled())
 			return List.of();
 
@@ -293,7 +293,6 @@ public class SeedPouchItem extends ZetaItem implements IUsageTickerOverride, ITr
 		list.add(new ItemStack(this));
 
 		if(SeedPouchModule.showAllVariantsInCreative) {
-			RegistryAccess access = Quark.proxy.hackilyGetCurrentClientLevelRegistryAccess();
 			if(access != null) {
 				(SeedPouchModule.allowFertilizer ?
 					Stream.of(SeedPouchModule.seedPouchHoldableTag, SeedPouchModule.seedPouchFertilizersTag) :

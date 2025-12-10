@@ -73,7 +73,7 @@ public class FindPlaceToSleepGoal extends MoveToBlockGoal {
 
 		Vec3 motion = foxhound.getDeltaMovement();
 
-        if (this.isReachedTarget() && !(motion.x > 0) && !(motion.z > 0) && !target.test(this.foxhound.level(), foxhound.getOnPos())) {
+        if (this.isReachedTarget() && (motion.horizontalDistance() <= 0) && target.test(this.foxhound.level(), foxhound.getOnPos())) {
             if(!this.foxhound.isOrderedToSit()) {
                 this.foxhound.setInSittingPose(true);
                 foxhound.setSleeping(true);
@@ -86,11 +86,7 @@ public class FindPlaceToSleepGoal extends MoveToBlockGoal {
 
 	@Override
 	protected boolean isValidTarget(@NotNull LevelReader world, @NotNull BlockPos pos) {
-		if(!world.isEmptyBlock(pos.above())) {
-			return false;
-		} else {
-			return target.test(world, pos);
-		}
+		return target.test(world, pos);
 	}
 
 	public enum Target {
@@ -104,7 +100,7 @@ public class FindPlaceToSleepGoal extends MoveToBlockGoal {
         }
 
         public boolean test(LevelReader level, BlockPos pos) {
-            return this.check.apply(level, pos);
+            return level.isEmptyBlock(pos.above()) && this.check.apply(level, pos);
         }
 	}
 }

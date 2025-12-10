@@ -418,7 +418,7 @@ public class VariantSelectorModule extends ZetaModule {
 
 						posX += width * 2;
 					} else {
-						final ResourceLocation WIDGETS_LOCATION = ResourceLocation.withDefaultNamespace("textures/gui/widget.png"); //TODO this file no longer exists
+						final ResourceLocation WIDGETS_LOCATION = ResourceLocation.withDefaultNamespace("textures/gui/sprites/hud/hotbar_selection.png"); //TODO this file no longer exists
 
 						if (alignHudToHotbar) {
 							RenderSystem.enableBlend();
@@ -427,7 +427,7 @@ public class VariantSelectorModule extends ZetaModule {
 								RenderSystem.setShaderColor(0.5F, 1.0F, 0.5F, 1.0F);
 							else
 								RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
-							//guiGraphics.blit(WIDGETS_LOCATION, posX - 3, posY - 3, 24, 23, 22, 22, 256, 256);
+							guiGraphics.blit(WIDGETS_LOCATION, posX - 3, posY - 3, 1, 0, 22, 22, 24, 23);
 						} else
 							posX += width;
 					}

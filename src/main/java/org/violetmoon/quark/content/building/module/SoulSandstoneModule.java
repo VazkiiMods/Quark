@@ -27,7 +27,7 @@ public class SoulSandstoneModule extends ZetaModule {
 				.requiresCorrectToolForDrops()
 				.strength(0.8F);
 
-        CreativeTabManager.startChain(CreativeModeTabs.BUILDING_BLOCKS, true,false,Blocks.SEA_LANTERN);
+        CreativeTabManager.startChain(CreativeModeTabs.BUILDING_BLOCKS, false,true,Blocks.SEA_LANTERN);
         Block soulSandstone = new ZetaBlock("soul_sandstone", this, props).setCreativeTab(CreativeModeTabs.BUILDING_BLOCKS);
 		Block chiseledSoulSandstone = new ZetaBlock("chiseled_soul_sandstone", this, props).setCreativeTab(CreativeModeTabs.BUILDING_BLOCKS);
 		Block cutSoulSandstone = new ZetaBlock("cut_soul_sandstone", this, props).setCreativeTab(CreativeModeTabs.BUILDING_BLOCKS);

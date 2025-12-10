@@ -160,7 +160,12 @@ public class GameNerfsModule extends ZetaModule {
 	}
 
 	private boolean hasMending(ItemStack stack, Holder<Enchantment> mending) {
-		int mendingLevel = EnchantmentHelper.getTagEnchantmentLevel(mending, stack);
+		int mendingLevel = 0;
+        if (stack.has(DataComponents.STORED_ENCHANTMENTS)) {
+            mendingLevel = stack.get(DataComponents.STORED_ENCHANTMENTS).getLevel(mending);
+        } else if (stack.has(DataComponents.ENCHANTMENTS)) {
+            mendingLevel = stack.get(DataComponents.ENCHANTMENTS).getLevel(mending);
+        }
 		return mendingLevel > 0 && (!noNerfForMendingTwo || mendingLevel < 2);
 	}
 
@@ -178,7 +183,7 @@ public class GameNerfsModule extends ZetaModule {
 		boolean isMended = false;
 
 		if (hasMending(left, mending) || hasMending(right, mending)) {
-			if ((left.getItem() == right.getItem()) || (right.getItem() == Items.ENCHANTED_BOOK)) {
+			if ((left.getItem().equals(right.getItem())) || (right.getItem().equals(Items.ENCHANTED_BOOK))) {
 				isMended = true;
 			}
 		}
@@ -192,30 +197,27 @@ public class GameNerfsModule extends ZetaModule {
 			ItemEnchantments.Mutable toApply = new ItemEnchantments.Mutable(enchLeft);
 			ItemEnchantments enchRight = Optional.ofNullable(right.get(DataComponents.ENCHANTMENTS)).orElse(ItemEnchantments.EMPTY);
 
-			if (!enchRight.isEmpty()) {
-
-			}
-
-			toApply.set(mending, 0);
-			output.set(DataComponents.ENCHANTMENTS, toApply.toImmutable());
-
-			ItemEnchantments enchOutput = output.get(DataComponents.ENCHANTMENTS);
 			for(Holder<Enchantment> enchantment : enchRight.keySet()) {
 				if(enchantment.value().canEnchant(output)) {
 					int level = enchRight.getLevel(enchantment);
-					if(enchOutput.keySet().contains(enchantment)) {
-						int levelPresent = enchOutput.getLevel(enchantment);
+					if(toApply.keySet().contains(enchantment)) {
+						int levelPresent = toApply.getLevel(enchantment);
 						if(level > levelPresent)
-							enchOutput = ItemEnchantsUtil.addEnchantmentToList(enchOutput, enchantment, level);
+							toApply.set(enchantment, level);
 						else if(level == levelPresent && enchantment.value().getMaxLevel() > level)
-							enchOutput = ItemEnchantsUtil.addEnchantmentToList(enchOutput, enchantment, level + 1);
+							toApply.set(enchantment, level + 1);
 					} else {
-						enchOutput = ItemEnchantsUtil.addEnchantmentToList(enchOutput, enchantment, level);
+						toApply.set(enchantment, level);
 					}
 				}
 			}
 
-			output.set(DataComponents.REPAIR_COST, 0);
+            toApply.removeIf(enchantmentHolder -> enchantmentHolder.is(mending));
+
+            output.set(DataComponents.ENCHANTMENTS, toApply.toImmutable());
+
+
+            output.set(DataComponents.REPAIR_COST, 0);
 			if (output.isDamageableItem()) {
 				output.setDamageValue(0);
 			}

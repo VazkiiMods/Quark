@@ -160,6 +160,13 @@ repositories {
             includeGroup("dev.engine-room.flywheel")
         }
     }
+
+    maven {
+        url "https://maven.squiddev.cc"
+        content {
+            includeGroup("cc.tweaked")
+        }
+    }
     
     maven {
         name = "cursemaven"
@@ -225,15 +232,18 @@ dependencies {
     
     //Lootr
     implementation("curse.maven:lootr-361276:${deps.lootr_curse_file_id}")
-    
+
+    // Spark, which while kinda an extra in a sense, I feel is vital enough to development and testing where it should be in.
+    runtimeOnly("maven.modrinth:spark:${deps.spark_modrinth_file_id}")
+
     //Extra dev-env toys - only present in ClientBonus and ServerBonus run configs
     bonusRuntimeOnly("curse.maven:just-enough-resources-jer-240630:${deps.just_enough_resources_curse_file_id}")
     bonusRuntimeOnly("curse.maven:nofog-296468:${deps.nofog_curse_file_id}") //PLEASE WORK
-    bonusRuntimeOnly("maven.modrinth:spark:${deps.spark_modrinth_file_id}")
     bonusRuntimeOnly("dev.emi:emi-neoforge:${deps.emi_version}")
     bonusRuntimeOnly("maven.modrinth:blueprint:${deps.blueprint_modrinth_file_id}") //for Woodworks
     bonusRuntimeOnly("maven.modrinth:woodworks:${deps.woodworks_modrinth_file_id}")
     bonusRuntimeOnly("curse.maven:farmers-delight-398521:${deps.farmers_delight_curse_file_id}")
+    bonusRuntimeOnly("cc.tweaked:cc-tweaked-${config.mc_version}-forge:${deps.cct_version}") // Tests for a specific RegistryAccess issue basically.
 }
 
 pmd {

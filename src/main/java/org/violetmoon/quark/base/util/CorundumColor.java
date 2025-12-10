@@ -2,7 +2,7 @@ package org.violetmoon.quark.base.util;
 
 import net.minecraft.world.level.material.MapColor;
 
-public enum  CorundumColor {
+public enum CorundumColor {
 	RED("red", 0xff0000, MapColor.COLOR_RED),
 	ORANGE("orange", 0xff8000, MapColor.COLOR_ORANGE),
 	YELLOW("yellow", 0xffff00, MapColor.COLOR_YELLOW),

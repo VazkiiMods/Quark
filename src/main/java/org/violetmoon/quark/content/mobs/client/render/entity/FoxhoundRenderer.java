@@ -68,7 +68,7 @@ public class FoxhoundRenderer extends MobRenderer<Foxhound, FoxhoundModel> {
     protected void setupRotations(Foxhound entity, PoseStack poseStack, float bob, float yBodyRot, float partialTick, float scale) {
         super.setupRotations(entity, poseStack, bob, yBodyRot, partialTick, scale);
         if (entity.getPose().equals(Pose.SLEEPING)) {
-            poseStack.mulPose(Axis.YP.rotationDegrees(entity.getYRot()));
+            poseStack.mulPose(Axis.YP.rotationDegrees(90f + yBodyRot));
         }
     }
 
