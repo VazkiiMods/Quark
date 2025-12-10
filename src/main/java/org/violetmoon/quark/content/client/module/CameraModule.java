@@ -169,7 +169,10 @@ public class CameraModule extends ZetaModule {
 						if(!queueScreenshot && !screenshotting)
 							mc.getSoundManager().play(SimpleSoundInstance.forUI(QuarkSounds.ITEM_CAMERA_SHUTTER, 1.0F));
 
-						queueScreenshot = true;
+                        if (screenshotting && sneak) {
+                            screenshotting = false;
+                            queueScreenshot = false;
+                        } else queueScreenshot = true;
 					}
 
 					if(affected) {
@@ -286,7 +289,7 @@ public class CameraModule extends ZetaModule {
 			case 2 -> { // Postcard
 				String worldName = "N/A";
 				if(mc.getSingleplayerServer() != null)
-					worldName = mc.getSingleplayerServer().name();
+					worldName = mc.getSingleplayerServer().getWorldData().getLevelName();
 				else if(mc.getCurrentServer() != null)
 					worldName = mc.getCurrentServer().name;
 				overlayText = I18n.get("quark.camera.greetings", worldName);
