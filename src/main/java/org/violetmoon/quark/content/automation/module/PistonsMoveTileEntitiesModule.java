@@ -3,11 +3,14 @@ package org.violetmoon.quark.content.automation.module;
 import com.google.common.collect.Lists;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.HolderSet;
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.*;
@@ -19,20 +22,18 @@ import net.minecraft.world.level.block.state.properties.ChestType;
 import org.apache.commons.lang3.tuple.Pair;
 import org.jetbrains.annotations.Nullable;
 import org.violetmoon.quark.api.IPistonCallback;
-import org.violetmoon.quark.api.QuarkCapabilities;
 import org.violetmoon.quark.base.Quark;
 import org.violetmoon.quark.content.building.module.SturdyStoneModule;
 import org.violetmoon.zeta.api.IIndirectConnector;
 import org.violetmoon.zeta.config.Config;
 import org.violetmoon.zeta.event.bus.LoadEvent;
 import org.violetmoon.zeta.event.bus.PlayEvent;
-import org.violetmoon.zeta.event.load.ZConfigChanged;
-import org.violetmoon.zeta.event.load.ZGatherHints;
-import org.violetmoon.zeta.event.load.ZRegister;
+import org.violetmoon.zeta.event.load.*;
 import org.violetmoon.zeta.event.play.ZLevelTick;
 import org.violetmoon.zeta.module.ZetaLoadModule;
 import org.violetmoon.zeta.module.ZetaModule;
 import org.violetmoon.zeta.piston.ZetaPistonStructureResolver;
+import org.violetmoon.zeta.util.RegistryUtil;
 
 import java.util.*;
 import java.util.function.Consumer;
@@ -61,30 +62,23 @@ public class PistonsMoveTileEntitiesModule extends ZetaModule {
             "randomthings:blockbreaker",
             "minecraft:ender_chest",
             "minecraft:enchanting_table",
-            "minecraft:trapped_chest",
-            "quark:trapped_oak_chest",
-            "quark:trapped_spruce_chest",
-            "quark:trapped_birch_chest",
-            "quark:trapped_jungle_chest",
-            "quark:trapped_acacia_chest",
-            "quark:trapped_dark_oak_chest",
-            "quark:trapped_warped_chest",
-            "quark:trapped_crimson_chest",
-            "quark:trapped_nether_brick_chest",
-            "quark:trapped_purpur_chest",
-            "quark:trapped_prismarine_chest",
-            "quark:trapped_azalea_chest",
-            "quark:trapped_blossom_chest",
-            "quark:trapped_mangrove_chest",
-            "quark:trapped_ancient_chest",
-            "quark:trapped_cherry_chest",
-            "quark:trapped_bamboo_chest",
+            "#minecraft:ceiling_hanging_signs",
+            "#c:chests/trapped",
             "endergetic:bolloom_bud"
     );
+    @Config
+    public static List<String> namespaceMovementBlacklist = Lists.newArrayList();
+
+
+
 	@Config
 	public static List<String> delayedUpdateList = Lists.newArrayList("minecraft:dispenser", "minecraft:dropper");
 
-	@LoadEvent
+    private static List<Block> blocklistInternal = new ArrayList<>();
+    private static List<Block> delaylistInternal = new ArrayList<>();
+
+
+    @LoadEvent
 	public final void register(ZRegister event) {
 		IIndirectConnector.INDIRECT_STICKY_BLOCKS.add(Pair.of(ChestConnection.PREDICATE, ChestConnection.INSTANCE));
 	}
@@ -92,7 +86,16 @@ public class PistonsMoveTileEntitiesModule extends ZetaModule {
 	@LoadEvent
 	public final void configChanged(ZConfigChanged event) {
 		staticEnabled = isEnabled();
+
 	}
+
+    @PlayEvent
+    public void onServerReload(ZTagsUpdated event) {
+        //TagKey<Block> test = TagKey.create(Registries.BLOCK, ResourceLocation.fromNamespaceAndPath("minecraft", "ceiling_hanging_signs"));
+        //Optional<HolderSet.Named<Block>> testing = event.getRegistryAccess().registry(Registries.BLOCK).get().getTag(test);
+        blocklistInternal = RegistryUtil.massRegistryGet(PistonsMoveTileEntitiesModule.movementBlacklist, BuiltInRegistries.BLOCK);
+        delaylistInternal = RegistryUtil.massRegistryGet(PistonsMoveTileEntitiesModule.delayedUpdateList, BuiltInRegistries.BLOCK);
+    }
 
 	@PlayEvent
 	public void onWorldTick(ZLevelTick.End event) {
@@ -145,7 +148,7 @@ public class PistonsMoveTileEntitiesModule extends ZetaModule {
 			return true;
 
 		ResourceLocation res = BuiltInRegistries.BLOCK.getKey(state.getBlock());
-		return PistonsMoveTileEntitiesModule.movementBlacklist.contains(res.toString()) || PistonsMoveTileEntitiesModule.movementBlacklist.contains(res.getNamespace());
+		return blocklistInternal.contains(state.getBlock()) || PistonsMoveTileEntitiesModule.namespaceMovementBlacklist.contains(res.getNamespace()); //Why does it support killing from whole mods??
 	}
 
 	public static void detachTileEntities(Level world, PistonStructureResolver helper, Direction facing, boolean extending) {
@@ -213,7 +216,7 @@ public class PistonsMoveTileEntitiesModule extends ZetaModule {
 				world.setBlock(pos, state, 0);
 
 			if(entityTag != null && !world.isClientSide) {
-				if(delayedUpdateList.contains(Objects.toString(BuiltInRegistries.BLOCK.getKey(block))))
+				if(delaylistInternal.contains(block))
 					registerDelayedUpdate(world, pos, entityTag);
 				else {
 					BlockEntity entity = loadBlockEntitySafe(world, pos, entityTag);
