@@ -23,13 +23,15 @@ jobs:
         path: '**/reports/pmd/main.xml'
     - name: Stop Gradle
       run: |
+        RELEASE_MODE=${{ startsWith(github.ref, 'refs/tags/release-') && '1' || '0' }} \
         ./gradlew --stop
     - name: Calculate artifact names
       id: calculate_artifact_names
       run: |
         VERSION=$(awk -F '=' '/^version/ { print $2; }' build.properties)
         BUILD=$(awk -F '=' '/build_number/ { print $2; }' build.properties)
-        echo "forge=build/libs/Quark-${VERSION}-${BUILD}.jar" >> "$GITHUB_OUTPUT"
+        APPEND=${{ startsWith(github.ref, 'refs/tags/release-') && '' || '-SNAPSHOT' }} \
+        echo "forge=build/libs/Quark-${VERSION}-${BUILD}-${APPEND}.jar" >> "$GITHUB_OUTPUT"
     - name: Sign jars
       env:
         SIGNING_KEY: ${{ secrets.VIOLET_MOON_SIGNING_KEY }}
