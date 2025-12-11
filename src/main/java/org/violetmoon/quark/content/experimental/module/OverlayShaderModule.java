@@ -1,8 +1,14 @@
 package org.violetmoon.quark.content.experimental.module;
 
+import net.minecraft.core.registries.BuiltInRegistries;
+import org.violetmoon.quark.content.client.module.CameraModule;
 import org.violetmoon.zeta.config.Config;
+import org.violetmoon.zeta.event.bus.LoadEvent;
+import org.violetmoon.zeta.event.bus.PlayEvent;
+import org.violetmoon.zeta.event.load.ZConfigChanged;
 import org.violetmoon.zeta.module.ZetaLoadModule;
 import org.violetmoon.zeta.module.ZetaModule;
+import org.violetmoon.zeta.util.RegistryUtil;
 
 @ZetaLoadModule(category = "experimental", enabledByDefault = false)
 public class OverlayShaderModule extends ZetaModule {
@@ -14,4 +20,11 @@ public class OverlayShaderModule extends ZetaModule {
 	)
 	public String shader = "none";
 
+    @ZetaLoadModule(clientReplacement = true)
+    public static class Client extends OverlayShaderModule {
+        @LoadEvent
+        public final void configChanged(ZConfigChanged event) {
+            CameraModule.Client.queueRefresh();
+        }
+    }
 }

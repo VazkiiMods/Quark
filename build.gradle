@@ -29,8 +29,8 @@ compileJava.options.compilerArgs << "-Xlint:all,-classfile,-processing,-deprecat
 java.toolchain.languageVersion = JavaLanguageVersion.of(21)
 println('Java: ' + System.getProperty('java.version') + ' JVM: ' + System.getProperty('java.vm.version') + '(' + System.getProperty('java.vendor') + ') Arch: ' + System.getProperty('os.arch'))
 
-if (System.getenv('BUILD_NUMBER') != null) {
-    version += "." + System.getenv('BUILD_NUMBER')
+if (System.getenv().RELEASE_MODE == null) {
+    version += '-SNAPSHOT'
 }
 
 sourceSets {
@@ -210,7 +210,7 @@ repositories {
 
 dependencies {
     //Zeta
-    implementation("org.violetmoon.zeta:Zeta:${deps.zeta_version}")
+    implementation("org.violetmoon.zeta:Zeta:${deps.zeta_version}-SNAPSHOT")
     
     //Ponder - TODO, I think the plan is to jarJar this
 //    implementation("net.createmod.ponder:Ponder-NeoForge-${config.mc_version}:${deps.ponder_version}") { transitive = false }

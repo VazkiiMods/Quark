@@ -39,13 +39,14 @@ public class SoulBeadItem extends ZetaItem {
 			BlockPos blockpos = ((ServerLevel) worldIn).findNearestMapStructure(WraithModule.soulBeadTargetTag, playerIn.blockPosition(), 100, false);
 
 			if(blockpos != null) {
-				itemstack.shrink(1);
+				if (!playerIn.isCreative()) itemstack.shrink(1);
 				SoulBead entity = new SoulBead(WraithModule.soulBeadType, worldIn);
-				entity.setTarget(blockpos.getX(), blockpos.getZ());
 
 				Vec3 look = playerIn.getLookAngle();
 				entity.setPos(playerIn.getX() + look.x * 2, playerIn.getY() + 0.25, playerIn.getZ() + look.z * 2);
 				worldIn.addFreshEntity(entity);
+                
+                entity.setTarget(blockpos.getX(), blockpos.getZ());
 
 				worldIn.playSound(null, playerIn.getX(), playerIn.getY(), playerIn.getZ(), QuarkSounds.ITEM_SOUL_POWDER_SPAWN, SoundSource.PLAYERS, 1F, 1F);
 			}
