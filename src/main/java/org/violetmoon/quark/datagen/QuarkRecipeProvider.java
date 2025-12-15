@@ -120,7 +120,7 @@ public class QuarkRecipeProvider extends RecipeProvider implements IConditionBui
         ShapedRecipeBuilder.shaped(RecipeCategory.REDSTONE, NetherBrickFenceGateModule.netherBrickFenceGate)
                 .pattern("#W#")
                 .pattern("#W#")
-                .define('#', Tags.Items.BRICKS_NETHER) //TODO check if this is block or singular brick item
+                .define('#', Tags.Items.BRICKS_NETHER)
                 .define('W', Blocks.NETHER_BRICKS.asItem())
                 .unlockedBy("test", PlayerTrigger.TriggerInstance.tick())
                 .save(recipeOutput.withConditions(zCond("nether_brick_fence_gate")), "quark:automation/crafting/nether_brick_fence_gate");
@@ -331,7 +331,6 @@ public class QuarkRecipeProvider extends RecipeProvider implements IConditionBui
             colorShingles(ShinglesModule.blockMap.get(dyeColor).getBlock(), dyeColor, recipeOutput.withConditions(zCond("shingles")));
         }
         //slabs
-        //TODO the rest of the slabs
         slabBuilder(RecipeCategory.BUILDING_BLOCKS, Quark.ZETA.variantRegistry.slabs.get(IndustrialPaletteModule.blocks.get(0)), Ingredient.of(IndustrialPaletteModule.blocks.get(0)))
                 .unlockedBy(getHasName(IndustrialPaletteModule.blocks.get(0)), has(IndustrialPaletteModule.blocks.get(0)))
                 .save(recipeOutput.withConditions(zCond("iron_plates")), "quark:building/crafting/slabs/iron_plate_slab");
@@ -572,7 +571,6 @@ public class QuarkRecipeProvider extends RecipeProvider implements IConditionBui
         stairBuilder(Quark.ZETA.variantRegistry.stairs.get(MidoriModule.blocks.get(0)), Ingredient.of(MidoriModule.blocks.get(0)))
                 .unlockedBy(getHasName(MidoriModule.blocks.get(0)), has(MidoriModule.blocks.get(0)))
                 .save(recipeOutput.withConditions(zCond("midori")), "quark:world/crafting/stairs/midori_block_slab");
-        //TODO the rest of the stairs
 
         //stonevariants (vanilla subdir removed 1.21, it was inconsistently used)
         //morestonevariants vanilla expanded stones
@@ -718,7 +716,12 @@ public class QuarkRecipeProvider extends RecipeProvider implements IConditionBui
             } else if (slab.getDescriptionId().contains("blossom")) {
                 condition = and(zCond("vertical_slabs"), zCond("blossom_trees"));
             } else if (slab.getDescriptionId().contains("soul_sandstone")) {
-                condition = and(zCond("soul_sandstone"));
+                if(slab.getDescriptionId().contains("bricks")){
+                    condition = and(zCond("vertical_slabs"), zCond("soul_sandstone"), zCond("sandstone_bricks"));
+                }
+                else{
+                    condition = and(zCond("vertical_slabs"), zCond("soul_sandstone"));
+                }
             }
             //TODO probably more config-dependent vert slabs
 
