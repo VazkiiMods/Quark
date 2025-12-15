@@ -709,6 +709,7 @@ public class QuarkRecipeProvider extends RecipeProvider implements IConditionBui
         for (Block slab : VerticalSlabsModule.blocks.keySet()) {
             ICondition condition = zCond("vertical_slabs");
 
+            //we are doing it this way (disgusting) because there is no way to map required config flags to registry objects
             if (slab.getDescriptionId().contains("ancient")) {
                 condition = and(zCond("vertical_slabs"), zCond("ancient_wood"));
             } else if (slab.getDescriptionId().contains("azalea")) {
@@ -722,8 +723,40 @@ public class QuarkRecipeProvider extends RecipeProvider implements IConditionBui
                 else{
                     condition = and(zCond("vertical_slabs"), zCond("soul_sandstone"));
                 }
+            } else if (slab.getDescriptionId().contains("plate")){
+                condition = and(zCond("vertical_slabs"), zCond("iron_plates"));
+            } else if (slab.getDescriptionId().contains("thatch")){
+                condition = and(zCond("vertical_slabs"), zCond("thatch"));
+            } else if (slab.getDescriptionId().contains("duskbound")){
+                condition = and(zCond("vertical_slabs"), zCond("duskbound_blocks"));
+            } else if (slab.getDescriptionId().contains("shingle")){
+                condition = and(zCond("vertical_slabs"), zCond("shingles"));
+            } else if (slab.getDescriptionId().contains("blue_nether_brick")){
+                condition = and(zCond("vertical_slabs"), zCond("blue_nether_bricks"));
+            } else if (slab.getDescriptionId().contains("sandstone_brick")){
+                condition = and(zCond("vertical_slabs"), zCond("sandstone_bricks"));
+            } else if (slab.getDescriptionId().contains("cobblestone_brick")){
+                condition = and(zCond("vertical_slabs"), zCond("cobblestone_bricks"));
+            } else if (slab.getDescriptionId().contains("blackstone_brick")){
+                condition = and(zCond("vertical_slabs"), zCond("blackstone_bricks"));
+            } else if (slab.getDescriptionId().contains("dirt_brick")){
+                condition = and(zCond("vertical_slabs"), zCond("dirt_bricks"));
+            } else if (slab.getDescriptionId().contains("netherrack_brick")){
+                condition = and(zCond("vertical_slabs"), zCond("netherrack_brick"));
+            } else if (slab.getDescriptionId().contains("raw_") && slab.getDescriptionId().contains("_bricks")){
+                condition = and(zCond("vertical_slabs"), zCond("raw_metal_bricks"));
             }
+            
+
             //TODO probably more config-dependent vert slabs
+            /*
+            granite&more_stone_variants,
+diorite&more_stone_variants,
+andesite&more_stone_variants, calcite, dripstone, limestone&more_stone_variants, jasper&more_stone_variants, shale&more_stone_variants, myalite&more_stone_variants,
+midori
+limestone/jasper/shale/myalite and additionally permafrost have their own slabs without more_stone_variants too
+
+             */
 
             String slabName = BuiltInRegistries.BLOCK.getKey(slab).getPath().replace("_slab", "");
 
