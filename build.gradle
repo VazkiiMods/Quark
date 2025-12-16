@@ -43,6 +43,12 @@ sourceSets {
     bonus { runtimeClasspath += main.runtimeClasspath }
 }
 
+
+// Used in order to keep Zeta up to date.
+configurations.configureEach {
+    resolutionStrategy.cacheDynamicVersionsFor 1, 'hours'
+}
+
 neoForge {
     version = deps.neoforge_version
     

@@ -14,6 +14,11 @@ jobs:
         java-version: '21'
     - name: Validate wrapper and restore Gradle cache
       uses: gradle/actions/setup-gradle@v4
+      with:
+        gradle-home-cache-excludes: |
+          caches/build-cache-1
+          caches/keyrings
+          **/Zeta*.jar
     - name: Build with Gradle
       run: ./gradlew pmdMain build
     - name: PMD report
