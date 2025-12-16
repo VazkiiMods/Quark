@@ -145,7 +145,7 @@ public class QuarkRecipeProvider extends RecipeProvider implements IConditionBui
         for (Map.Entry<Block, Block> chestEntry : VariantChestsModule.regularChests.entrySet()) {
             ICondition cond = zCond("variant_chests");
 
-            String dir = "quark:building/chests/" + BuiltInRegistries.BLOCK.getKey(chestEntry.getValue()).getPath();
+            String dir = "quark:building/crafting/chests/" + BuiltInRegistries.BLOCK.getKey(chestEntry.getValue()).getPath();
             for (WoodSetHandler.WoodSet set : DataUtil.QuarkWorldWoodSets) { //check for world woods
                 if (chestEntry.getKey() == set.planks) {
                     dir = "quark:world/crafting/woodsets/" + set.name + "/" + set.name + "_chest";
@@ -257,7 +257,7 @@ public class QuarkRecipeProvider extends RecipeProvider implements IConditionBui
         for (DyeColor dyeColor : FramedGlassModule.blockMap.keySet()) {
             dyedFramedGlassRecipe(FramedGlassModule.blockMap.get(dyeColor).getBlock(), dyeColor)
                     .unlockedBy("test", PlayerTrigger.TriggerInstance.tick())
-                    .save(recipeOutput.withConditions(zCond("framed_glass")), "quark:building/glass/" + dyeColor.getName() + "_framed_glass");
+                    .save(recipeOutput.withConditions(zCond("framed_glass")), "quark:building/crafting/glass/" + dyeColor.getName() + "_framed_glass");
         }
         //hollowlogs
         for (Block sourceLog : HollowLogsModule.logMap.keySet()) {
@@ -285,7 +285,7 @@ public class QuarkRecipeProvider extends RecipeProvider implements IConditionBui
         for (DyeColor dyeColor : FramedGlassModule.paneMap.keySet()) {
             paneRecipe(FramedGlassModule.paneMap.get(dyeColor).getBlock(), FramedGlassModule.blockMap.get(dyeColor).getBlock())
                     .unlockedBy("test", PlayerTrigger.TriggerInstance.tick())
-                    .save(recipeOutput.withConditions(zCond("framed_glass")), "quark:building/panes/" + dyeColor.getName() + "_framed_glass_pane");
+                    .save(recipeOutput.withConditions(zCond("framed_glass")), "quark:building/crafting/panes/" + dyeColor.getName() + "_framed_glass_pane");
         }
         ShapedRecipeBuilder.shaped(RecipeCategory.BUILDING_BLOCKS, JapanesePaletteModule.paperWall, 6)
                 .pattern("###")
@@ -745,21 +745,68 @@ public class QuarkRecipeProvider extends RecipeProvider implements IConditionBui
                 condition = and(zCond("vertical_slabs"), zCond("netherrack_brick"));
             } else if (slab.getDescriptionId().contains("raw_") && slab.getDescriptionId().contains("_bricks")){
                 condition = and(zCond("vertical_slabs"), zCond("raw_metal_bricks"));
+            } else if (slab.getDescriptionId().contains("permafrost")){
+                condition = and(zCond("vertical_slabs"), zCond("permafrost"));
             }
-            
+            else if (slab.getDescriptionId().contains("polished_")){
+                //polished world stones
+                if(slab.getDescriptionId().contains("_limestone_")){
+                    condition = and(zCond("vertical_slabs"), zCond("limestone"));
+                }
+                else if(slab.getDescriptionId().contains("_jasper_")){
+                    condition = and(zCond("vertical_slabs"), zCond("jasper"));
+                }
+                else if(slab.getDescriptionId().contains("_shale_")){
+                    condition = and(zCond("vertical_slabs"), zCond("shale"));
+                }
+                else if(slab.getDescriptionId().contains("_myalite_")){
+                    condition = and(zCond("vertical_slabs"), zCond("myalite"));
+                }
 
-            //TODO probably more config-dependent vert slabs
-            /*
-            granite&more_stone_variants,
-diorite&more_stone_variants,
-andesite&more_stone_variants, calcite, dripstone, limestone&more_stone_variants, jasper&more_stone_variants, shale&more_stone_variants, myalite&more_stone_variants,
-midori
-limestone/jasper/shale/myalite and additionally permafrost have their own slabs without more_stone_variants too
+                //expanded vanilla stones
+                else if(slab.getDescriptionId().contains("_calcite_")){
+                    condition = and(zCond("vertical_slabs"), zCond("calcite"));
+                }
+                else if(slab.getDescriptionId().contains("_dripstone_")){
+                    condition = and(zCond("vertical_slabs"), zCond("dripstone"));
+                }
+            }
+            else if (slab.getDescriptionId().contains("_bricks")){
+                //polished world stones
+                if(slab.getDescriptionId().contains("limestone_")){
+                    condition = and(zCond("vertical_slabs"), zCond("stone_bricks"), zCond("limestone"));
+                }
+                else if(slab.getDescriptionId().contains("jasper_")){
+                    condition = and(zCond("vertical_slabs"), zCond("stone_bricks"), zCond("jasper"));
+                }
+                else if(slab.getDescriptionId().contains("shale_")){
+                    condition = and(zCond("vertical_slabs"), zCond("stone_bricks"), zCond("shale"));
+                }
+                else if(slab.getDescriptionId().contains("myalite_")){
+                    condition = and(zCond("vertical_slabs"), zCond("stone_bricks"), zCond("myalite"));
+                }
 
-             */
+                //expanded vanilla stones
+                else if(slab.getDescriptionId().contains("calcite_")){
+                    condition = and(zCond("vertical_slabs"), zCond("stone_bricks"), zCond("calcite"));
+                }
+                else if(slab.getDescriptionId().contains("dripstone_")){
+                    condition = and(zCond("vertical_slabs"), zCond("stone_bricks"), zCond("dripstone"));
+                }
+
+                //vanilla stones
+                else if(slab.getDescriptionId().contains("granite_")){
+                    condition = and(zCond("vertical_slabs"), zCond("stone_bricks"), zCond("granite"));
+                }
+                else if(slab.getDescriptionId().contains("diorite_")){
+                    condition = and(zCond("vertical_slabs"), zCond("stone_bricks"), zCond("diorite"));
+                }
+                else if(slab.getDescriptionId().contains("andesite_")){
+                    condition = and(zCond("vertical_slabs"), zCond("stone_bricks"), zCond("andesite"));
+                }
+            }
 
             String slabName = BuiltInRegistries.BLOCK.getKey(slab).getPath().replace("_slab", "");
-
             vertslabRecipe(RecipeCategory.BUILDING_BLOCKS, VerticalSlabsModule.blocks.get(slab), Ingredient.of(slab))
                     .unlockedBy("obtained_slab", InventoryChangeTrigger.TriggerInstance.hasItems(slab.asItem()))
                     .save(recipeOutput.withConditions(condition), "quark:building/crafting/vertslabs/" + slabName + "_vertical_slab");
