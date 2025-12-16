@@ -80,7 +80,7 @@ public class ToretoiseModule extends ZetaModule {
 
 		Quark.ZETA.registry.register(toretoiseType, "toretoise", Registries.ENTITY_TYPE);
 
-		Quark.ZETA.entitySpawn.registerSpawn(toretoiseType, MobCategory.MONSTER, SpawnPlacementTypes.ON_GROUND, Types.MOTION_BLOCKING_NO_LEAVES, Toretoise::spawnPredicate, spawnConfig);
+		Quark.ZETA.entitySpawn.registerSpawn(toretoiseType, MobCategory.CREATURE, SpawnPlacementTypes.ON_GROUND, Types.MOTION_BLOCKING_NO_LEAVES, Toretoise::spawnPredicate, spawnConfig);
 		Quark.ZETA.entitySpawn.addEgg(this, toretoiseType, 0x55413b, 0x383237, spawnConfig);
 
 		mineToretoiseTrigger = event.getAdvancementModifierRegistry().registerManualTrigger("mine_toretoise");

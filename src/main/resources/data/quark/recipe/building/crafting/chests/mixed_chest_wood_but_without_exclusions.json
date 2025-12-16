@@ -21,7 +21,7 @@
         {
           "type": "neoforge:not",
           "value": {
-            "type": "quark:flag",
+            "type": "zeta:flag",
             "flag": "variant_chests"
           }
         }

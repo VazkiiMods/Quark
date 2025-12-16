@@ -2,7 +2,7 @@
   "neoforge:conditions": [
     {
       "type": "zeta:flag",
-      "flag": ""
+      "flag": "diorite"
     }
   ],
   "type": "minecraft:crafting_shaped",

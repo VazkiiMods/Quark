@@ -329,6 +329,7 @@
 	"quark.subtitles.shiba_ambient": "Shiba pants",
 	"quark.subtitles.shiba_hurt": "Shiba hurts",
 	"quark.subtitles.shiba_dead": "Shiba dies",
+
 	"quark.subtitles.meep": "Stoneling runs away",
 	"quark.subtitles.give_stoneling": "Stoneling gives item",
 	"quark.subtitles.take_stoneling": "Stoneling takes item",
@@ -336,6 +337,7 @@
 	"quark.subtitles.hurt_stoneling": "Stoneling cries",
 	"quark.subtitles.kill_stoneling": "Stoneling breaks",
 	"quark.subtitles.purr": "Stoneling \"purrs\"",
+
 	"quark.subtitles.throw_pickarang": "Pickarang is flung",
 	"quark.subtitles.clank_pickarang": "Pickarang clanks",
 	"quark.subtitles.spark_pickarang": "Pickarang is reflected",
@@ -378,6 +380,7 @@
 	"quark.subtitles.pet.neko": "Player purrs",
 	"quark.subtitles.pet.slime": "Player squishes",
 	"quark.subtitles.pet.wire": "Player sighs",
+
 	"quark.subtitles.ambient.drips": "Water dripping",
 	"quark.subtitles.ambient.ocean": "Light ocean waves",
 	"quark.subtitles.ambient.rain": "Heavy rain",

@@ -5,7 +5,7 @@
       "values": [
         {
           "type": "zeta:flag",
-          "flag": "magnet"
+          "flag": "magnets"
         },
         {
           "type": "neoforge:not",

@@ -68,7 +68,7 @@ public class StonelingsModule extends ZetaModule {
 
 		makeStonelingTrigger = event.getAdvancementModifierRegistry().registerManualTrigger("make_stoneling");
 
-		Quark.ZETA.entitySpawn.registerSpawn(stonelingType, MobCategory.MONSTER, SpawnPlacementTypes.ON_GROUND, Types.MOTION_BLOCKING_NO_LEAVES, Stoneling::spawnPredicate, spawnConfig);
+		Quark.ZETA.entitySpawn.registerSpawn(stonelingType, MobCategory.CREATURE, SpawnPlacementTypes.ON_GROUND, Types.MOTION_BLOCKING_NO_LEAVES, Stoneling::spawnPredicate, spawnConfig);
 		//secondary placement is done in GW biome definition json.
 		Quark.ZETA.entitySpawn.addEgg(this, stonelingType, 0xA1A1A1, 0x505050, spawnConfig);
 	}

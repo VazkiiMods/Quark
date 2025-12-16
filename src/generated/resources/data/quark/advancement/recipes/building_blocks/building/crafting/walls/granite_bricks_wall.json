@@ -2,7 +2,7 @@
   "neoforge:conditions": [
     {
       "type": "zeta:flag",
-      "flag": ""
+      "flag": "granite"
     }
   ],
   "parent": "minecraft:recipes/root",

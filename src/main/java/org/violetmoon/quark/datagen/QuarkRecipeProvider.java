@@ -742,7 +742,7 @@ public class QuarkRecipeProvider extends RecipeProvider implements IConditionBui
             } else if (slab.getDescriptionId().contains("dirt_brick")){
                 condition = and(zCond("vertical_slabs"), zCond("dirt_bricks"));
             } else if (slab.getDescriptionId().contains("netherrack_brick")){
-                condition = and(zCond("vertical_slabs"), zCond("netherrack_brick"));
+                condition = and(zCond("vertical_slabs"), zCond("netherrack_bricks"));
             } else if (slab.getDescriptionId().contains("raw_") && slab.getDescriptionId().contains("_bricks")){
                 condition = and(zCond("vertical_slabs"), zCond("raw_metal_bricks"));
             } else if (slab.getDescriptionId().contains("permafrost")){
@@ -872,8 +872,12 @@ public class QuarkRecipeProvider extends RecipeProvider implements IConditionBui
                     condition = and(zCond("soul_sandstone"), zCond("sandstone_bricks"));
                 } else if (base.getDescriptionId().contains("tuff")) {
                     condition = zCond("tuff");
-                } else if (base.getDescriptionId().contains("tuff")) {
-                    condition = zCond("tuff");
+                } else if (base.getDescriptionId().contains("granite_bricks")) {
+                    condition = zCond("granite");
+                } else if (base.getDescriptionId().contains("andesite_bricks")) {
+                    condition = zCond("andesite");
+                } else if (base.getDescriptionId().contains("diorite_bricks")) {
+                    condition = zCond("diorite");
                 }
             }
 
@@ -1530,7 +1534,7 @@ public class QuarkRecipeProvider extends RecipeProvider implements IConditionBui
                 .define('R', Tags.Items.DUSTS_REDSTONE)
                 .define('F', Items.CHORUS_FRUIT)
                 .unlockedBy("test", PlayerTrigger.TriggerInstance.tick())
-                .save(recipeOutput.withConditions(and(zCond("magnet"), not(zCond("magnet_pre_end")))), "quark:oddities/crafting/magnet");
+                .save(recipeOutput.withConditions(and(zCond("magnets"), not(zCond("magnet_pre_end")))), "quark:oddities/crafting/magnet");
         ShapedRecipeBuilder.shaped(RecipeCategory.REDSTONE, MagnetsModule.magnet)
                 .pattern("CIC")
                 .pattern("BPR")
@@ -1541,7 +1545,7 @@ public class QuarkRecipeProvider extends RecipeProvider implements IConditionBui
                 .define('R', Tags.Items.DUSTS_REDSTONE)
                 .define('P', Tags.Items.INGOTS_COPPER)
                 .unlockedBy("test", PlayerTrigger.TriggerInstance.tick())
-                .save(recipeOutput.withConditions(and(zCond("magnet"), zCond("magnet_pre_end"))), "quark:oddities/crafting/magnet_pre_end");
+                .save(recipeOutput.withConditions(and(zCond("magnets"), zCond("magnet_pre_end"))), "quark:oddities/crafting/magnet_pre_end");
         ShapedRecipeBuilder.shaped(RecipeCategory.REDSTONE, PipesModule.pipe, 6)
                 .pattern("I")
                 .pattern("G")

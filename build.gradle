@@ -210,7 +210,9 @@ repositories {
 
 dependencies {
     //Zeta
-    implementation("org.violetmoon.zeta:Zeta:${deps.zeta_version}-SNAPSHOT")
+    implementation("org.violetmoon.zeta:Zeta:${deps.zeta_version}-SNAPSHOT") {
+        setChanging(true)
+    }
     
     //Ponder - TODO, I think the plan is to jarJar this
 //    implementation("net.createmod.ponder:Ponder-NeoForge-${config.mc_version}:${deps.ponder_version}") { transitive = false }

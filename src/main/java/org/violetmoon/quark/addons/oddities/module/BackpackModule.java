@@ -233,6 +233,9 @@ public class BackpackModule extends ZetaModule {
                 requestBackpack();
                 mc.player.inventoryMenu.setCarried(mc.player.getItemBySlot(EquipmentSlot.CHEST));
                 backpackRequested = true;
+            } else if (!isEntityWearingBackpack(mc.player) && backpackRequested) {
+                mc.player.inventoryMenu.setCarried(ItemStack.EMPTY);
+                backpackRequested = false;
             }
         }
 
