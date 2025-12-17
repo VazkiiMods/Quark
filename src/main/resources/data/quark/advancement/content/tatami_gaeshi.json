@@ -1,7 +1,7 @@
 {
   "parent": "minecraft:adventure/root",
   "criteria": {
-    "hit_player_with_bamboo_mat": {
+    "hit_with_bamboo_mat": {
       "trigger": "minecraft:player_hurt_entity",
       "conditions": {
         "player": {
@@ -10,13 +10,10 @@
               "items": "quark:bamboo_mat"
             }
           }
-        },
-        "entity": {
-          "type": "minecraft:player"
         }
       }
     },
-    "hit_player_with_bamboo_mat_carpet": {
+    "hit_with_bamboo_mat_carpet": {
       "trigger": "minecraft:player_hurt_entity",
       "conditions": {
         "player": {
@@ -25,9 +22,6 @@
               "items": "quark:bamboo_mat_carpet"
             }
           }
-        },
-        "entity": {
-          "type": "minecraft:player"
         }
       }
     }
@@ -49,8 +43,8 @@
   },
   "requirements": [
     [
-      "hit_player_with_bamboo_mat",
-      "hit_player_with_bamboo_mat_carpet"
+      "hit_with_bamboo_mat",
+      "hit_with_bamboo_mat_carpet"
     ]
   ],
   "neoforge:conditions": [

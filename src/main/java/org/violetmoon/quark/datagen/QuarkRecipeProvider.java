@@ -860,7 +860,7 @@ public class QuarkRecipeProvider extends RecipeProvider implements IConditionBui
                 } else if (base.getDescriptionId().contains("dripstone")) {
                     condition = zCond("dripstone");
                     if(base.getDescriptionId().contains("bricks")){
-                        condition = and(zCond("dripstone"), zCond("dripstone_bricks"));
+                        condition = and(zCond("dripstone"), zCond("stone_bricks"));
                     }
                 } else if (base.getDescriptionId().contains("mossy_cobblestone_bricks")) {
                     condition = zCond("cobblestone_bricks");
