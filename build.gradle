@@ -46,7 +46,7 @@ sourceSets {
 
 // Used in order to keep Zeta up to date.
 configurations.configureEach {
-    resolutionStrategy.cacheDynamicVersionsFor 1, 'hours'
+    resolutionStrategy.cacheChangingModulesFor 1, 'hours'
 }
 
 neoForge {
