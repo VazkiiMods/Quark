@@ -16,7 +16,6 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.DispenserMenu;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.GameRules;
 import net.minecraft.world.level.block.Block;
@@ -27,7 +26,6 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.client.event.RegisterMenuScreensEvent;
 import net.neoforged.neoforge.common.extensions.IMenuTypeExtension;
@@ -125,12 +123,7 @@ public class FeedingTroughModule extends ZetaModule {
 
     private static @Nullable Player modifyTempt(ServerLevel level, Animal animal, Predicate<ItemStack> temptations) {
         //early-exit conditions
-        if (!Quark.ZETA.modules.isEnabled(FeedingTroughModule.class) ||
-                !animal.canFallInLove() ||
-                animal.getAge() != 0
-        ) {
-            return null;
-        }
+        if (!Quark.ZETA.modules.isEnabled(FeedingTroughModule.class) || !animal.canFallInLove() || animal.getAge() != 0) return null;
 
         //do we already know about a nearby trough?
         var iterator = NEARBY_TROUGH_CACHE.entrySet().iterator();
@@ -284,7 +277,7 @@ public class FeedingTroughModule extends ZetaModule {
                     if (foodHolder != null) {
                         trough.updateFoodHolder(animal, temptations, foodHolder);
                         // if it has a food item
-                        if (!foodHolder.getMainHandItem().isEmpty()) {
+                        if (temptations.test(foodHolder.getMainHandItem()) && animal.isFood(foodHolder.getMainHandItem())) {
                             return new TroughPointer(pos, foodHolder, temptations);
                         }
                     }
@@ -309,7 +302,7 @@ public class FeedingTroughModule extends ZetaModule {
     }
 
     // TODO: Replace with Zeta event
-    @EventBusSubscriber(bus = EventBusSubscriber.Bus.MOD)
+    @EventBusSubscriber
     public static final class Client {
 
         @SubscribeEvent
