@@ -127,7 +127,7 @@ public class MagnetBlockEntity extends BlockEntity {
     }
 
     private boolean canPullEntity(Entity e) {
-        if (level.isClientSide) {
+        if (!level.isClientSide) {
             if (MagnetsModule.affectsArmor && e instanceof Player player) {
                 for (var armor : player.getArmorSlots()) {
                     if (MagnetSystem.isItemMagnetic(armor.getItem())) return true;
