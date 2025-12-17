@@ -23,7 +23,6 @@ import org.violetmoon.quark.content.world.block.HugeGlowShroomBlock;
 import org.violetmoon.quark.content.world.feature.GlowExtrasFeature;
 import org.violetmoon.quark.content.world.feature.GlowShroomsFeature;
 import org.violetmoon.zeta.advancement.modifier.AdventuringTimeModifier;
-import org.violetmoon.zeta.config.Config;
 import org.violetmoon.zeta.event.bus.LoadEvent;
 import org.violetmoon.zeta.event.load.ZCommonSetup;
 import org.violetmoon.zeta.event.load.ZRegister;
@@ -42,7 +41,7 @@ public class GlimmeringWealdModule extends ZetaModule {
 	public static ResourceKey<PlacedFeature> GLOW_SHROOMS_EXTRAS_FEATURE = Quark.asResourceKey(Registries.PLACED_FEATURE, "glow_shrooms_extras");
 
     public static GlowShroomsFeature glow_shrooms_feature;
-    public static GlowExtrasFeature glow_shrooms_extra_feature;
+    public static GlowExtrasFeature glow_shrooms_extras_feature;
 
     public static Holder<PlacedFeature> ore_lapis_extra;
     public static Holder<PlacedFeature> placed_glow_shrooms;
@@ -96,8 +95,8 @@ public class GlimmeringWealdModule extends ZetaModule {
         // Feature
         glow_shrooms_feature = new GlowShroomsFeature();
         event.getRegistry().register(glow_shrooms_feature, GLOW_SHROOMS_FEATURE.location(), Registries.FEATURE);
-        glow_shrooms_extra_feature = new GlowExtrasFeature();
-        event.getRegistry().register(glow_shrooms_extra_feature, GLOW_SHROOMS_EXTRAS_FEATURE.location(), Registries.FEATURE);
+        glow_shrooms_extras_feature = new GlowExtrasFeature();
+        event.getRegistry().register(glow_shrooms_extras_feature, GLOW_SHROOMS_EXTRAS_FEATURE.location(), Registries.FEATURE);
     }
 
     @LoadEvent
