@@ -100,7 +100,7 @@ public class GrabChickensModule extends ZetaModule {
 	private boolean canPlayerHostChicken(Player player) {
 		//check for known player classes as to avoid fake players (impls)
 		var playerClass = player.getClass();
-		if(player instanceof AbstractClientPlayer){
+		if(player.level().isClientSide()){
 			if(!Client.isClientPlayerClass(playerClass)) return false;
 		}else if (playerClass != ServerPlayer.class) return false;
 
