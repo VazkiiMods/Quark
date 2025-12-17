@@ -1,8 +1,17 @@
 {
   "neoforge:conditions": [
     {
-      "type": "zeta:flag",
-      "flag": "dripstone"
+      "type": "neoforge:and",
+      "values": [
+        {
+          "type": "zeta:flag",
+          "flag": "dripstone"
+        },
+        {
+          "type": "zeta:flag",
+          "flag": "dripstone_bricks"
+        }
+      ]
     }
   ],
   "type": "minecraft:crafting_shaped",

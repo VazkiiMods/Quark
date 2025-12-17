@@ -1,8 +1,17 @@
 {
   "neoforge:conditions": [
     {
-      "type": "zeta:flag",
-      "flag": "granite"
+      "type": "neoforge:and",
+      "values": [
+        {
+          "type": "zeta:flag",
+          "flag": "granite"
+        },
+        {
+          "type": "zeta:flag",
+          "flag": "stone_bricks"
+        }
+      ]
     }
   ],
   "parent": "minecraft:recipes/root",

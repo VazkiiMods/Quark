@@ -74,7 +74,8 @@
       "minecraft:disk_gravel"
     ],
     [
-      "quark:glow_shrooms"
+      "quark:glow_shrooms",
+      "quark:glow_shrooms_extras"
     ],
     [
       "minecraft:spring_water",
@@ -82,10 +83,10 @@
     ],
     [
       "minecraft:glow_lichen",
-      "minecraft:patch_grass_forest",
-      "minecraft:flower_default",
-      "minecraft:trees_birch_and_oak",
       "minecraft:forest_flowers",
+      "minecraft:trees_birch_and_oak",
+      "minecraft:flower_default",
+      "minecraft:patch_grass_forest",
       "minecraft:brown_mushroom_normal",
       "minecraft:red_mushroom_normal",
       "minecraft:patch_sugar_cane",

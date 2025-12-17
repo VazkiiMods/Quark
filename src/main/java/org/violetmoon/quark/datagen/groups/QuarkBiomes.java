@@ -35,12 +35,12 @@ public class QuarkBiomes {
 		mobSpawnSettingsBuilder.addSpawn(MobCategory.CREATURE, new SpawnerData(StonelingsModule.stonelingType, 200, 1, 4));
 		BiomeGenerationSettings.Builder biomeGenerationSettingsBuilder = new BiomeGenerationSettings.Builder(placedFeatures, worldCarvers);
 		AccessorOverworldBiomes.quark$globalOverworldGeneration(biomeGenerationSettingsBuilder);
-		BiomeDefaultFeatures.addDefaultOres(biomeGenerationSettingsBuilder, true);
+        BiomeDefaultFeatures.addForestFlowers(biomeGenerationSettingsBuilder);
+        BiomeDefaultFeatures.addDefaultOres(biomeGenerationSettingsBuilder, true);
 		BiomeDefaultFeatures.addDefaultSoftDisks(biomeGenerationSettingsBuilder);
-		BiomeDefaultFeatures.addForestGrass(biomeGenerationSettingsBuilder);
-		BiomeDefaultFeatures.addDefaultFlowers(biomeGenerationSettingsBuilder);
-		BiomeDefaultFeatures.addOtherBirchTrees(biomeGenerationSettingsBuilder);
-		BiomeDefaultFeatures.addForestFlowers(biomeGenerationSettingsBuilder);
+        BiomeDefaultFeatures.addOtherBirchTrees(biomeGenerationSettingsBuilder);
+        BiomeDefaultFeatures.addDefaultFlowers(biomeGenerationSettingsBuilder);
+        BiomeDefaultFeatures.addForestGrass(biomeGenerationSettingsBuilder);
 		BiomeDefaultFeatures.addDefaultMushrooms(biomeGenerationSettingsBuilder);
 		BiomeDefaultFeatures.addDefaultExtraVegetation(biomeGenerationSettingsBuilder);
 		biomeGenerationSettingsBuilder.addFeature(GenerationStep.Decoration.UNDERGROUND_DECORATION, GlimmeringWealdModule.GLOW_SHROOMS_FEATURE);
