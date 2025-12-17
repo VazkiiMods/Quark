@@ -1,9 +1,11 @@
 package org.violetmoon.quark.addons.oddities.entity;
 
+import net.minecraft.ChatFormatting;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
+import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.protocol.game.ClientboundAddEntityPacket;
@@ -164,6 +166,10 @@ public class TotemOfHoldingEntity extends Entity {
 
 		storedItems.clear();
 		equipedCurios.clear();
+		Player owner = getOwnerEntity();
+		if(owner != null && !level().isClientSide) {
+			owner.sendSystemMessage(Component.translatable("quark.misc.totem_darksouls").withStyle(ChatFormatting.BOLD));
+		}
 
 		discard();
 	}

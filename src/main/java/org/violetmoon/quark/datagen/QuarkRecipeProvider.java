@@ -848,18 +848,20 @@ public class QuarkRecipeProvider extends RecipeProvider implements IConditionBui
                     condition = zCond("blackstone_bricks");
                 } else if (base.getDescriptionId().contains("blue_nether_bricks")) {
                     condition = zCond("blue_nether_bricks");
-                } else if (base.getDescriptionId().contains("calcite_bricks")) {
-                    condition = zCond("more_stone_variants");
-                } else if (base.getDescriptionId().equals("block.minecraft.calcite")) {
-                    condition = zCond("calcite");
                 } else if (base.getDescriptionId().contains("cobblestone_bricks")) {
                     condition = zCond("cobblestone_bricks");
                 } else if (base.getDescriptionId().contains("dirt_bricks")) {
                     condition = zCond("dirt_bricks");
-                } else if (base.getDescriptionId().equals("block.minecraft.dripstone_block")) {
+                } else if (base.getDescriptionId().contains("calcite")) {
+                    condition = zCond("calcite");
+                    if(base.getDescriptionId().contains("bricks")){
+                        condition = and(zCond("calcite"), zCond("stone_bricks"));
+                    }
+                } else if (base.getDescriptionId().contains("dripstone")) {
                     condition = zCond("dripstone");
-                } else if (base.getDescriptionId().contains("dripstone_bricks")) {
-                    condition = zCond("dripstone");
+                    if(base.getDescriptionId().contains("bricks")){
+                        condition = and(zCond("dripstone"), zCond("dripstone_bricks"));
+                    }
                 } else if (base.getDescriptionId().contains("mossy_cobblestone_bricks")) {
                     condition = zCond("cobblestone_bricks");
                 } else if (base.getDescriptionId().contains("netherrack_bricks")) {
@@ -873,11 +875,11 @@ public class QuarkRecipeProvider extends RecipeProvider implements IConditionBui
                 } else if (base.getDescriptionId().contains("tuff")) {
                     condition = zCond("tuff");
                 } else if (base.getDescriptionId().contains("granite_bricks")) {
-                    condition = zCond("granite");
+                    condition = and(zCond("granite"), zCond("stone_bricks"));
                 } else if (base.getDescriptionId().contains("andesite_bricks")) {
-                    condition = zCond("andesite");
+                    condition = and(zCond("andesite"), zCond("stone_bricks"));
                 } else if (base.getDescriptionId().contains("diorite_bricks")) {
-                    condition = zCond("diorite");
+                    condition = and(zCond("diorite"), zCond("stone_bricks"));
                 }
             }
 
