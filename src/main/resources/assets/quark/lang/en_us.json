@@ -169,8 +169,8 @@
 	"quark.jei.influence": "Matrix Influencing",
 	"quark.jei.boost_influence": "Boosts odds of: ",
 	"quark.jei.dampen_influence": "Dampens odds of: ",
-	"quark.jei.hint_preamble": "[Quark]\n",
 
+    "quark.jei.hint.preamble": "[Quark]\n",
 	"quark.jei.hint.pickarang": "It's a Pickaxe Boomerang! Can be thrown and will mine anything it hits and bring you the drops back. It can also be enchanted for better performance.",
 	"quark.jei.hint.flamerang": "Works like a Pickarang, but any items it picks up become immune to fire and lava damage while they travel.",
 	"quark.jei.hint.abacus": "Use this on a block and it'll count the distance between the block you're looking at and the one you clicked, up to 48 blocks.",

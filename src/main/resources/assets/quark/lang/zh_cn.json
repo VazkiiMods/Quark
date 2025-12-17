@@ -158,7 +158,8 @@
 	"quark.jei.influence": "矩阵附魔影响",
 	"quark.jei.boost_influence": "提高几率：",
 	"quark.jei.dampen_influence": "降低几率：",
-	"quark.jei.hint_preamble": "[夸克]\n",
+
+	"quark.jei.hint.preamble": "[夸克]\n",
 	"quark.jei.hint.pickarang": "这是一把镐头回旋镖！可以被抛出并采掘它击中的东西，还能将掉落物带回来。它还能通过附魔获得更好的性能。",
 	"quark.jei.hint.flamerang": "用起来类似皮卡镖，但它拾取的任何物品在回程中都会免疫火焰伤害。",
 	"quark.jei.hint.abacus": "对一个方块使用，它会计算你看向的方块与前述方块之间的距离（三个坐标轴相加），最多48格。",

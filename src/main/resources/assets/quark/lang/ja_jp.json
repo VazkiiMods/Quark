@@ -178,8 +178,8 @@
 	"quark.jei.influence": "マトリックスへの影響",
 	"quark.jei.boost_influence": "確率上昇：",
 	"quark.jei.dampen_influence": "確率低下：",
-	"quark.jei.hint_preamble": "［Quark］\n",
 
+    "quark.jei.hint.preamble": "［Quark］\n",
 	"quark.jei.hint.pickarang": "ツルハシのブーメランです！投げることができ、命中したものを採掘し、ドロップを持ち帰ります。エンチャントして性能を上げることもできます。",
 	"quark.jei.hint.flamerang": "ピッケランと同じように機能しますが、拾ったアイテムは移動中、炎や溶岩によるダメージを受けなくなります。",
 	"quark.jei.hint.abacus": "ブロックに使用すると、今見ているブロックとクリックしたブロックの間の距離を最大48ブロックまで計測します。",

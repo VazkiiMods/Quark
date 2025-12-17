@@ -174,8 +174,8 @@
 	"quark.jei.influence": "lawa pi supa wawa",
 	"quark.jei.boost_influence": "li suli e ken pi wawa ni: ",
 	"quark.jei.dampen_influence": "li lili e ken pi wawa ni: ",
-	"quark.jei.hint_preamble": "[ante Quark]\n",
 
+    "quark.jei.hint.preamble": "[ante Quark]\n",
 	"quark.jei.hint.pickarang": "ni li ilo pakala pi tawa sike a! jan li pana e ona la, ona li luka e leko la, ona li pakala e leko li pana e pana leko tawa jan. kin la, jan li ken wawa e ona.",
 	"quark.jei.hint.flamerang": "ni li sama ilo alasa pakala. ona li jo e ijo la, seli en telo seli li pakala ala e ona.",
 	"quark.jei.hint.abacus": "jan li luka e ijo kepeken ni la, ona li pana e sona ni: leko luka li lon mute weka seme tawa leko pi lukin jan?",
