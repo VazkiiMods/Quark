@@ -1,30 +1,22 @@
 package org.violetmoon.quark.content.experimental.module;
 
-import com.mojang.serialization.Dynamic;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.Holder;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.nbt.NbtOps;
-import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.ai.gossip.GossipContainer;
-import net.minecraft.world.entity.ai.gossip.GossipType;
-import net.minecraft.world.entity.monster.ZombieVillager;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.enchantment.Enchantment;
-import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.item.enchantment.ItemEnchantments;
 import net.minecraft.world.level.Level;
 import org.violetmoon.quark.base.Quark;
-import org.violetmoon.quark.base.util.ItemEnchantsUtil;
 import org.violetmoon.zeta.config.Config;
 import org.violetmoon.zeta.event.bus.LoadEvent;
 import org.violetmoon.zeta.event.bus.PlayEvent;
@@ -33,17 +25,16 @@ import org.violetmoon.zeta.event.play.ZAnvilUpdate;
 import org.violetmoon.zeta.event.play.ZItemTooltip;
 import org.violetmoon.zeta.event.play.entity.ZEntityMobGriefing;
 import org.violetmoon.zeta.event.play.entity.living.ZLivingDrops;
-import org.violetmoon.zeta.event.play.entity.living.ZLivingTick;
 import org.violetmoon.zeta.module.ZetaLoadModule;
 import org.violetmoon.zeta.module.ZetaModule;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Optional;
 import java.util.function.Predicate;
 
 @ZetaLoadModule(category = "experimental", enabledByDefault = false)
 public class GameNerfsModule extends ZetaModule {
-
-	private static final String TAG_TRADES_ADJUSTED = "quark:zombie_trades_adjusted";
 
 	@Config(
 		description = "Makes Mending act like the Unmending mod\n"
@@ -56,9 +47,6 @@ public class GameNerfsModule extends ZetaModule {
 				"If you want Mending II, disable the sanity check on Ancient Tomes and add minecraft:mending to the tomes."
 	)
 	public static boolean noNerfForMendingTwo = false;
-
-	@Config(description = "Resets all villager discounts when zombified to prevent reducing prices to ridiculous levels")
-	public static boolean nerfVillagerDiscount = true;
 
 	@Config(description = "Makes Iron Golems not drop Iron Ingots")
 	public static boolean disableIronFarms = true;
@@ -238,28 +226,6 @@ public class GameNerfsModule extends ZetaModule {
 			if (Optional.ofNullable(event.getItemStack().get(DataComponents.REPAIR_COST)).orElse(0) > 0) {
 				event.getToolTip().add(itemgotmodified);
 			}
-		}
-	}
-
-	@PlayEvent
-	public void onTick(ZLivingTick event) {
-		if(nerfVillagerDiscount && event.getEntity().getType() == EntityType.ZOMBIE_VILLAGER && !event.getEntity().getPersistentData().contains(TAG_TRADES_ADJUSTED)) {
-			ZombieVillager zombie = (ZombieVillager) event.getEntity();
-
-			Tag gossipsNbt = zombie.gossips;
-
-			GossipContainer manager = new GossipContainer();
-			manager.update(new Dynamic<>(NbtOps.INSTANCE, gossipsNbt));
-
-			for(UUID uuid : manager.gossips.keySet()) {
-				GossipContainer.EntityGossips gossips = manager.gossips.get(uuid);
-				gossips.remove(GossipType.MAJOR_POSITIVE);
-				gossips.remove(GossipType.MINOR_POSITIVE);
-			}
-
-			zombie.gossips = manager.store(NbtOps.INSTANCE);
-
-			zombie.getPersistentData().putBoolean(TAG_TRADES_ADJUSTED, true);
 		}
 	}
 
