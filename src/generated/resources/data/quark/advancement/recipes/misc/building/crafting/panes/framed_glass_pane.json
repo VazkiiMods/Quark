@@ -1,24 +1,15 @@
 {
   "neoforge:conditions": [
     {
-      "type": "neoforge:and",
-      "values": [
-        {
-          "type": "zeta:flag",
-          "flag": "dripstone"
-        },
-        {
-          "type": "zeta:flag",
-          "flag": "stone_bricks"
-        }
-      ]
+      "type": "zeta:flag",
+      "flag": "framed_glass"
     }
   ],
   "parent": "minecraft:recipes/root",
   "criteria": {
     "has_the_recipe": {
       "conditions": {
-        "recipe": "quark:building/crafting/walls/dripstone_bricks_wall"
+        "recipe": "quark:building/crafting/panes/framed_glass_pane"
       },
       "trigger": "minecraft:recipe_unlocked"
     },
@@ -34,7 +25,7 @@
   ],
   "rewards": {
     "recipes": [
-      "quark:building/crafting/walls/dripstone_bricks_wall"
+      "quark:building/crafting/panes/framed_glass_pane"
     ]
   }
 }

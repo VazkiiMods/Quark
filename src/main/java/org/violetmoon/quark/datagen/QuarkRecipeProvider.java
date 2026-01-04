@@ -287,6 +287,9 @@ public class QuarkRecipeProvider extends RecipeProvider implements IConditionBui
                     .unlockedBy("test", PlayerTrigger.TriggerInstance.tick())
                     .save(recipeOutput.withConditions(zCond("framed_glass")), "quark:building/crafting/panes/" + dyeColor.getName() + "_framed_glass_pane");
         }
+        paneRecipe(FramedGlassModule.framed_glass_pane, FramedGlassModule.framed_glass)
+                .unlockedBy("test", PlayerTrigger.TriggerInstance.tick())
+                .save(recipeOutput.withConditions(zCond("framed_glass")), "quark:building/crafting/panes/framed_glass_pane");
         ShapedRecipeBuilder.shaped(RecipeCategory.BUILDING_BLOCKS, JapanesePaletteModule.paperWall, 6)
                 .pattern("###")
                 .pattern("PPP")

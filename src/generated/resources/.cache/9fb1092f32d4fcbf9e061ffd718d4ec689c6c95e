@@ -1,4 +1,4 @@
-// 1.21.1	2025-12-16T22:32:42.0041987	Recipes
+// 1.21.1	2026-01-04T13:04:42.8871087	Recipes
 bb24f1bac2cb3ef401eb56f32a5b7364bcee7552 data/quark/advancement/recipes/building_blocks/building/crafting/bamboo_mat.json
 31f4957990f1d18f202f816de898f77458b18140 data/quark/advancement/recipes/building_blocks/building/crafting/bamboo_mat_carpet.json
 8df9c4ad585c2226233ee6e8f7bc96f33806df86 data/quark/advancement/recipes/building_blocks/building/crafting/blackstone_bricks.json
@@ -529,7 +529,7 @@ c747c0735743f58e6c113aaa42a313b7c3566864 data/quark/advancement/recipes/building
 c76c6cc96a5dc85b692ad7aabd2b3de64f9433db data/quark/advancement/recipes/building_blocks/building/crafting/walls/diorite_bricks_wall.json
 b56076a2d4a379e9e83c32ec233482a2ac3beb2e data/quark/advancement/recipes/building_blocks/building/crafting/walls/dirt_bricks_wall.json
 f3794b60030bfdbf454ea0c85dbf8e18ef974b82 data/quark/advancement/recipes/building_blocks/building/crafting/walls/dripstone_block_wall.json
-7bb7cd439afddd2cd464f3b4999e91d07d6e8aa8 data/quark/advancement/recipes/building_blocks/building/crafting/walls/dripstone_bricks_wall.json
+366f44eda30e98a718287b806bcb08616d52bd14 data/quark/advancement/recipes/building_blocks/building/crafting/walls/dripstone_bricks_wall.json
 a4d506b24bb9bb6bd7848f8a81b16bca606b1770 data/quark/advancement/recipes/building_blocks/building/crafting/walls/granite_bricks_wall.json
 d76f27c36b98efc89c0cc83b606f851018508bc3 data/quark/advancement/recipes/building_blocks/building/crafting/walls/mossy_cobblestone_bricks_wall.json
 15c2c07b62b19ac9c4b4138849b72e629bfa10f5 data/quark/advancement/recipes/building_blocks/building/crafting/walls/netherrack_bricks_wall.json
@@ -773,6 +773,7 @@ c144d02d5b52e23364a9692fbff17f6d9bc60ae2 data/quark/advancement/recipes/misc/bui
 668108682ec5491053bed312eade64f67ba57ce9 data/quark/advancement/recipes/misc/building/crafting/panes/blue_framed_glass_pane.json
 3a9db840c177b224597c1f7f61e16aac700e785b data/quark/advancement/recipes/misc/building/crafting/panes/brown_framed_glass_pane.json
 d251d0203990fb736d0f1441d51cbf1fa82a65b8 data/quark/advancement/recipes/misc/building/crafting/panes/cyan_framed_glass_pane.json
+feef94310bbb1b068989f75006e1743229a13d88 data/quark/advancement/recipes/misc/building/crafting/panes/framed_glass_pane.json
 a009bc8d70866ceb130ef980844ae01c628012b5 data/quark/advancement/recipes/misc/building/crafting/panes/gray_framed_glass_pane.json
 e9aaddf8a75a43f12c21a4d41a2c85530e6f7ef1 data/quark/advancement/recipes/misc/building/crafting/panes/green_framed_glass_pane.json
 e7f61e5e6aee054e5cc05d1e4f8aec2dd7544b67 data/quark/advancement/recipes/misc/building/crafting/panes/light_blue_framed_glass_pane.json
@@ -1175,6 +1176,7 @@ c1dd0ab736be6e641837a04e1933cda83149a239 data/quark/recipe/building/crafting/mud
 aa380aedd651e14411e2a809d0255faea322dc9c data/quark/recipe/building/crafting/panes/blue_framed_glass_pane.json
 4af52ec3710f26c728a03d7bb190c0219a6f6995 data/quark/recipe/building/crafting/panes/brown_framed_glass_pane.json
 140e6cdf3b04ecb4068cf6b0385753788c891502 data/quark/recipe/building/crafting/panes/cyan_framed_glass_pane.json
+cd06f2365c0b24f2c714a1aab760d9b3f39ed72a data/quark/recipe/building/crafting/panes/framed_glass_pane.json
 e221ebd99350b6f7af7181458ffa13c8aba11ec8 data/quark/recipe/building/crafting/panes/gray_framed_glass_pane.json
 e71ce2fb556d15bc39507e42ee22f4f8110fe7ce data/quark/recipe/building/crafting/panes/green_framed_glass_pane.json
 d1c9035b994f41343405b9c7e8079fd7a065186f data/quark/recipe/building/crafting/panes/light_blue_framed_glass_pane.json
@@ -1677,7 +1679,7 @@ cea37cd833adc6e82d18cd21e5b740b72e05296d data/quark/recipe/building/crafting/wal
 86c14f6de5ebe24954ea5eb5179d5d7edecd5f82 data/quark/recipe/building/crafting/walls/diorite_bricks_wall.json
 401864acce98806f573d31d27293527c340e7680 data/quark/recipe/building/crafting/walls/dirt_bricks_wall.json
 f74544ca0a5fd10e0ecafbaa0d1540c9c80b94b2 data/quark/recipe/building/crafting/walls/dripstone_block_wall.json
-8c3bc669a53e9bb3892593dacbeb19683604cfd5 data/quark/recipe/building/crafting/walls/dripstone_bricks_wall.json
+d6e482631386feba5a00815dbe30ff76fae445af data/quark/recipe/building/crafting/walls/dripstone_bricks_wall.json
 ed268b5a47546cf8d20b7049ce75876a377b13a6 data/quark/recipe/building/crafting/walls/granite_bricks_wall.json
 4bc97885a67fd3151333e8fcd1cccb244f1a63a0 data/quark/recipe/building/crafting/walls/mossy_cobblestone_bricks_wall.json
 d60ff0d033e75c39e834760e2d8fcb18cff1eeaa data/quark/recipe/building/crafting/walls/netherrack_bricks_wall.json
