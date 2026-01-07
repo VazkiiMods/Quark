@@ -216,8 +216,10 @@ public class MagnetizedBlockBlockEntity extends BlockEntity {
 		level.playSound(null, worldPosition, soundType.getPlaceSound(), SoundSource.BLOCKS, (soundType.getVolume() + 1) * 0.05F, soundType.getPitch() * 0.8F);
 
 		BlockEntity newTile = getSubTile(worldPosition);
-		if(newTile != null)
-			level.setBlockEntity(newTile);
+		if(newTile != null) {
+            level.setBlockEntity(newTile);
+            level.updateNeighbourForOutputSignal(worldPosition, blockState.getBlock());
+        }
 
 		IMagnetMoveAction action = getMoveAction();
 		if(action != null)
@@ -262,7 +264,7 @@ public class MagnetizedBlockBlockEntity extends BlockEntity {
 		}
 
 		finalizeContents(blockstate);
-	}
+    }
 
 	public static void tick(Level level, BlockPos pos, BlockState state, MagnetizedBlockBlockEntity be) {
 		be.tick();
