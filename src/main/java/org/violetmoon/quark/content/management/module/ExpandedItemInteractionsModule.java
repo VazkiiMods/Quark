@@ -185,7 +185,7 @@ public class ExpandedItemInteractionsModule extends ZetaModule {
 	}
 
 	private static boolean armorOverride(ItemStack stack, ItemStack incoming, Slot slot, ClickAction action, Player player, boolean simulate) {
-		if(incoming.isEmpty()) {
+		if(incoming.isEmpty() && !player.isSpectator()) {
 			//disallow stacks with more than one since it would prevent from de stacking
 			if(stack.getCount() > 1)
 				return false;
