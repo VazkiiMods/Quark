@@ -42,9 +42,9 @@ public class CrateScreen extends AbstractContainerScreen<CrateMenu> implements I
 	protected void init() {
 		super.init();
 
-		int i = (width - imageWidth) / 2;
-		int j = (height - imageHeight) / 2;
-		extraAreas = Lists.newArrayList(new Rect2i(i + imageWidth, j, 23, 136));
+		int xOffset = (width - imageWidth) / 2;
+		int yOffset = (height - imageHeight) / 2;
+		extraAreas = Lists.newArrayList(new Rect2i(xOffset + imageWidth, yOffset, 23, 136));
 	}
 
 	public List<Rect2i> getExtraAreas() {
@@ -63,13 +63,13 @@ public class CrateScreen extends AbstractContainerScreen<CrateMenu> implements I
 	}
 
 	private float getPxPerScroll() {
-		return 95F / ((float) menu.getStackCount() / CrateMenu.numCols);
+		return 95F / ((float)(menu.getStackCount() / CrateMenu.numCols));
 	}
 
 	@Override
 	public boolean mouseScrolled(double mouseX, double mouseY, double scrollX, double scrollY) { // TODO: Fix later, likely incorrect
 		menu.scroll(scrollY < 0, true);
-		lastScroll = scrollOffs = Math.round(((float) menu.scroll / CrateMenu.numCols) * getPxPerScroll());
+		lastScroll = scrollOffs = Math.round((float)(menu.scroll / CrateMenu.numCols) * getPxPerScroll());
 		return true;
 	}
 
@@ -94,7 +94,7 @@ public class CrateScreen extends AbstractContainerScreen<CrateMenu> implements I
 	}
 
 	@Override
-	public boolean mouseDragged(double mouseX, double mouseY, int p_98537_, double p_98538_, double p_98539_) {
+	public boolean mouseDragged(double mouseX, double mouseY, int button, double dragX, double dragY) {
 		if(scrolling) {
 			int top = topPos + 18;
 
@@ -113,7 +113,7 @@ public class CrateScreen extends AbstractContainerScreen<CrateMenu> implements I
 				boolean up = diff > 0;
 
 				menu.scroll(up, true);
-				lastScroll = Math.round(((float) menu.scroll / CrateMenu.numCols) * pixelsNeeded);
+				lastScroll = Math.round((float)(menu.scroll / CrateMenu.numCols) * pixelsNeeded);
 				diff = (float) (scrollOffs - lastScroll);
 			}
 
@@ -121,7 +121,7 @@ public class CrateScreen extends AbstractContainerScreen<CrateMenu> implements I
 		}
 
 		else
-			return super.mouseDragged(mouseX, mouseY, p_98537_, p_98538_, p_98539_);
+			return super.mouseDragged(mouseX, mouseY, button, dragX, dragY);
 	}
 
 	@Override
@@ -153,7 +153,11 @@ public class CrateScreen extends AbstractContainerScreen<CrateMenu> implements I
 			int color = ClientUtil.getGuiTextColor("crate_count");
 			guiGraphics.drawString(font, s, i + this.imageWidth - font.width(s) - 8 - InventoryButtonHandler.getActiveButtons(ButtonTargetType.CONTAINER_INVENTORY).size() * 12, j + 6, color, false);
 		}
-	}
+
+        guiGraphics.drawString(font, "lastScroll: " + lastScroll, 4, 4, 0xFFFFFF);
+        guiGraphics.drawString(font, "scrollOffs: " + scrollOffs, 4, 16, 0xFFFFFF);
+        guiGraphics.drawString(font, "menu.scroll: " + menu.scroll, 4, 28, 0xFFFFFF);
+    }
 
 	@Override
 	protected void renderLabels(@NotNull GuiGraphics guiGraphics, int mouseX, int mouseY) {
