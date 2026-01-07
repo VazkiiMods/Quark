@@ -24,8 +24,8 @@ import java.util.List;
 public class CrateScreen extends AbstractContainerScreen<CrateMenu> implements IQuarkButtonAllowed {
 	private static final ResourceLocation TEXTURE = Quark.asResource("textures/gui/crate.png");
 
-	private int lastScroll;
-	private int scrollOffs;
+	private float lastScroll;
+	private float scrollOffs;
 	private boolean scrolling;
 
 	private List<Rect2i> extraAreas;
@@ -59,11 +59,11 @@ public class CrateScreen extends AbstractContainerScreen<CrateMenu> implements I
 	}
 
 	private boolean canScroll() {
-		return (menu.getStackCount() / CrateMenu.numCols) > 0;
+		return (fullyOccupiedRows()) > 0;
 	}
 
 	private float getPxPerScroll() {
-		return 95F / ((float)(menu.getStackCount() / CrateMenu.numCols));
+		return 95F / fullyOccupiedRows();
 	}
 
 	@Override
@@ -74,14 +74,14 @@ public class CrateScreen extends AbstractContainerScreen<CrateMenu> implements I
 	}
 
 	@Override
-	public boolean mouseClicked(double p_98531_, double p_98532_, int p_98533_) {
-		if(p_98533_ == 0 && insideScrollbar(p_98531_, p_98532_)) {
+	public boolean mouseClicked(double mouseX, double mouseY, int button) {
+		if(button == 0 && insideScrollbar(mouseX, mouseY)) {
 			scrolling = canScroll();
 
 			return true;
 		}
 
-		return super.mouseClicked(p_98531_, p_98532_, p_98533_);
+		return super.mouseClicked(mouseX, mouseY, button);
 	}
 
 	protected boolean insideScrollbar(double mouseX, double mouseY) {
@@ -104,17 +104,17 @@ public class CrateScreen extends AbstractContainerScreen<CrateMenu> implements I
 			else if(relative > 95)
 				relative = 95;
 
-			scrollOffs = (int) relative;
+			scrollOffs = (float) relative;
 
-			float diff = (float) (scrollOffs - lastScroll);
+			float diff = (scrollOffs - lastScroll);
 			float pixelsNeeded = getPxPerScroll();
 
 			while(Math.abs(diff) >= pixelsNeeded) {
-				boolean up = diff > 0;
+                boolean up = diff > 0;
 
 				menu.scroll(up, true);
-				lastScroll = Math.round((float)(menu.scroll / CrateMenu.numCols) * pixelsNeeded);
-				diff = (float) (scrollOffs - lastScroll);
+				lastScroll = (float)(menu.scroll / CrateMenu.numCols) * pixelsNeeded;
+				diff = scrollOffs - lastScroll;
 			}
 
 			return true;
@@ -141,11 +141,11 @@ public class CrateScreen extends AbstractContainerScreen<CrateMenu> implements I
 		int j = (height - imageHeight) / 2;
 		guiGraphics.blit(TEXTURE, i, j, 0, 0, imageWidth + 20, imageHeight);
 
-		int maxScroll = (menu.getStackCount() / CrateMenu.numCols) * CrateMenu.numCols;
+		int maxScroll = fullyOccupiedRows() * CrateMenu.numCols;
 
 		int u = 232 + (maxScroll == 0 ? 12 : 0);
-		int by = j + 18 + scrollOffs;
-		guiGraphics.blit(TEXTURE, i + imageWidth, by, u, 0, 12, 15);
+		float by = j + 18 + scrollOffs;
+		guiGraphics.blit(TEXTURE, i + imageWidth, (int) by, u, 0, 12, 15);
 
 		if(!Quark.ZETA.modules.get(ChestSearchingModule.class).searchBarShown()) {
 			String s = menu.getTotal() + "/" + CrateModule.maxItems;
@@ -154,9 +154,12 @@ public class CrateScreen extends AbstractContainerScreen<CrateMenu> implements I
 			guiGraphics.drawString(font, s, i + this.imageWidth - font.width(s) - 8 - InventoryButtonHandler.getActiveButtons(ButtonTargetType.CONTAINER_INVENTORY).size() * 12, j + 6, color, false);
 		}
 
+        /*
         guiGraphics.drawString(font, "lastScroll: " + lastScroll, 4, 4, 0xFFFFFF);
         guiGraphics.drawString(font, "scrollOffs: " + scrollOffs, 4, 16, 0xFFFFFF);
         guiGraphics.drawString(font, "menu.scroll: " + menu.scroll, 4, 28, 0xFFFFFF);
+        guiGraphics.drawString(font, "maxScroll: " + maxScroll, 4, 40, 0xFFFFFF);
+        guiGraphics.drawString(font, "fullyOccupiedRows(): " + fullyOccupiedRows(), 4, 52, 0xFFFFFF);*/
     }
 
 	@Override
@@ -166,4 +169,8 @@ public class CrateScreen extends AbstractContainerScreen<CrateMenu> implements I
 		guiGraphics.drawString(this.font, this.title, this.titleLabelX, this.titleLabelY, color, false);
 		guiGraphics.drawString(this.font, this.playerInventoryTitle, this.inventoryLabelX, this.inventoryLabelY, color, false);
 	}
+
+    int fullyOccupiedRows() {
+        return (menu.getStackCount() - 1)/CrateMenu.numCols;
+    }
 }
