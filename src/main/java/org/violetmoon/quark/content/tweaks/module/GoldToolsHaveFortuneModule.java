@@ -101,10 +101,10 @@ public class GoldToolsHaveFortuneModule extends ZetaModule {
 		if (!staticEnabled || !(stack.getItem() instanceof TieredItem tiered && tiered.getTier() == Tiers.GOLD)) return false;
 
 		Tool tool = stack.get(DataComponents.TOOL);
-		if (tool == null) return false;
+		if (tool == null || state.is(TIERS[harvestLevel].getIncorrectBlocksForDrops())) return false;
 
 		for (Tool.Rule rule : tool.rules()) {
-			if (rule.correctForDrops().isPresent() && !state.is(TIERS[harvestLevel].getIncorrectBlocksForDrops())) return true;
+			if (rule.correctForDrops().isPresent() && state.is(rule.blocks()) && rule.correctForDrops().get()) return true;
 		}
 		return false;
 	}
