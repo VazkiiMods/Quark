@@ -49,9 +49,11 @@ import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.biome.Biomes;
+import net.minecraft.world.level.block.LeavesBlock;
 import net.minecraft.world.level.block.entity.AbstractFurnaceBlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.pathfinder.PathType;
+import net.minecraft.world.level.pathfinder.WalkNodeEvaluator;
 import net.minecraft.world.level.storage.loot.LootTable;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
@@ -60,8 +62,7 @@ import org.violetmoon.quark.addons.oddities.module.TinyPotatoModule;
 import org.violetmoon.quark.base.Quark;
 import org.violetmoon.quark.base.components.QuarkDataComponents;
 import org.violetmoon.quark.base.handler.QuarkSounds;
-import org.violetmoon.quark.content.mobs.ai.FindPlaceToSleepGoal;
-import org.violetmoon.quark.content.mobs.ai.FoxhoundSleepGoal;
+import org.violetmoon.quark.content.mobs.ai.FoxhoundPlaceToRestGoal;
 import org.violetmoon.quark.content.mobs.module.FoxhoundModule;
 import org.violetmoon.quark.content.tweaks.ai.WantLoveGoal;
 import org.violetmoon.quark.mixin.mixins.accessor.AccessorLivingEntity;
@@ -69,24 +70,27 @@ import org.violetmoon.quark.mixin.mixins.accessor.AccessorLivingEntity;
 import java.util.List;
 import java.util.UUID;
 
-import static org.violetmoon.quark.content.mobs.ai.FindPlaceToSleepGoal.Target.*;
+import static org.violetmoon.quark.content.mobs.ai.FoxhoundPlaceToRestGoal.Target.*;
 
 public class Foxhound extends Wolf implements Enemy {
 
-	public static final ResourceKey<LootTable> FOXHOUND_LOOT_TABLE = Quark.asResourceKey(Registries.LOOT_TABLE, "entities/foxhound");
+
+    public static final ResourceKey<LootTable> FOXHOUND_LOOT_TABLE = Quark.asResourceKey(Registries.LOOT_TABLE, "entities/foxhound");
 	private static final EntityDataAccessor<Boolean> TEMPTATION = SynchedEntityData.defineId(Foxhound.class, EntityDataSerializers.BOOLEAN);
 	private static final EntityDataAccessor<Boolean> IS_BLUE = SynchedEntityData.defineId(Foxhound.class, EntityDataSerializers.BOOLEAN);
 	private static final EntityDataAccessor<Boolean> TATERING = SynchedEntityData.defineId(Foxhound.class, EntityDataSerializers.BOOLEAN);
 	private static final EntityDataAccessor<Integer> COLLAR_COLOR = SynchedEntityData.defineId(Foxhound.class, EntityDataSerializers.INT);
+    private static final EntityDataAccessor<Boolean> IS_RESTING = SynchedEntityData.defineId(Foxhound.class, EntityDataSerializers.BOOLEAN);
 
 	private int timeUntilPotatoEmerges = 0;
+    private int ticksUntilICanSleep = 0;
 
-	public Foxhound(EntityType<? extends Foxhound> type, Level worldIn) {
+    public Foxhound(EntityType<? extends Foxhound> type, Level worldIn) {
 		super(type, worldIn);
 		this.setPathfindingMalus(PathType.WATER, -1.0F);
 		this.setPathfindingMalus(PathType.LAVA, 1.0F);
-		this.setPathfindingMalus(PathType.DANGER_FIRE, 1.0F);
-		this.setPathfindingMalus(PathType.DAMAGE_FIRE, 1.0F); //TODO is there a reason this is here twice?
+		this.setPathfindingMalus(PathType.DANGER_FIRE, 4.0F);
+		this.setPathfindingMalus(PathType.DAMAGE_FIRE, 4.0F); // IT DOESNT SAY DAMAGE TWICE ITS DANGER AND THEN DAMAGE
 	}
 
 	@Override
@@ -99,6 +103,7 @@ public class Foxhound extends Wolf implements Enemy {
 		builder.define(TEMPTATION, false);
 		builder.define(IS_BLUE, false);
 		builder.define(TATERING, false);
+        builder.define(IS_RESTING, false);
 	}
 
 	@Override
@@ -140,6 +145,10 @@ public class Foxhound extends Wolf implements Enemy {
 			return;
 		}
 
+        if (ticksUntilICanSleep > 0) {
+            ticksUntilICanSleep--;
+        }
+
 		if(!level.isClientSide && timeUntilPotatoEmerges > 0) {
 			if(--timeUntilPotatoEmerges == 0) {
 				setTatering(false);
@@ -152,11 +161,12 @@ public class Foxhound extends Wolf implements Enemy {
 				setTatering(true);
 		}
 
-		if(isSleeping()) {
+		/*if(isResting()) {
 			AABB aabb = getBoundingBox();
 			if(aabb.getYsize() < 0.21)
 				setBoundingBox(new AABB(aabb.minX - 0.2, aabb.minY, aabb.minZ - 0.2, aabb.maxX + 0.2, aabb.maxY + 0.5, aabb.maxZ + 0.2));
 		}
+		 */
 
 		if(WantLoveGoal.needsPets(this)) {
 			Entity owner = getOwner();
@@ -167,7 +177,7 @@ public class Foxhound extends Wolf implements Enemy {
 		Vec3 pos = position();
 		if(level.isClientSide && (!this.isBaby() ^ random.nextBoolean())) {
 			SimpleParticleType particle = ParticleTypes.FLAME;
-			if(isSleeping())
+			if(isResting())
 				particle = ParticleTypes.SMOKE;
 			else if(isBlue())
 				particle = ParticleTypes.SOUL_FIRE_FLAME;
@@ -216,15 +226,15 @@ public class Foxhound extends Wolf implements Enemy {
 	@Override
 	protected void registerGoals() {
 		this.goalSelector.addGoal(1, new FloatGoal(this));
-        this.goalSelector.addGoal(2, new FoxhoundSleepGoal(this));
-		this.goalSelector.addGoal(3, new SitWhenOrderedToGoal(this));
-		this.goalSelector.addGoal(4, new LeapAtTargetGoal(this, 0.4F));
-		this.goalSelector.addGoal(5, new MeleeAttackGoal(this, 1.0D, true));
-		this.goalSelector.addGoal(6, new FollowOwnerGoal(this, 1.0D, 10.0F, 2.0F));
-		this.goalSelector.addGoal(7, new BreedGoal(this, 1.0D));
-		this.goalSelector.addGoal(8, new FindPlaceToSleepGoal(this, 0.8D, LIT_FURNACE));
-		this.goalSelector.addGoal(9, new FindPlaceToSleepGoal(this, 0.8D, FURNACE));
-		this.goalSelector.addGoal(10, new FindPlaceToSleepGoal(this, 0.8D, GLOWING));
+        //this.goalSelector.addGoal(2, new FoxhoundSleepGoal(this));
+		this.goalSelector.addGoal(2, new SitWhenOrderedToGoal(this));
+		this.goalSelector.addGoal(3, new LeapAtTargetGoal(this, 0.4F));
+		this.goalSelector.addGoal(4, new MeleeAttackGoal(this, 1.0D, true));
+		this.goalSelector.addGoal(9, new FollowOwnerGoal(this, 1.0D, 10.0F, 2.0F));
+		this.goalSelector.addGoal(5, new BreedGoal(this, 1.0D));
+		this.goalSelector.addGoal(6, new FoxhoundPlaceToRestGoal(this, 0.8D, LIT_FURNACE));
+		this.goalSelector.addGoal(7, new FoxhoundPlaceToRestGoal(this, 0.8D, FURNACE));
+		this.goalSelector.addGoal(8, new FoxhoundPlaceToRestGoal(this, 0.8D, GLOWING));
 		this.goalSelector.addGoal(11, new WaterAvoidingRandomStrollGoal(this, 1.0D));
 		this.goalSelector.addGoal(12, new BegGoal(this, 8.0F));
 		this.goalSelector.addGoal(13, new LookAtPlayerGoal(this, Player.class, 8.0F));
@@ -269,8 +279,11 @@ public class Foxhound extends Wolf implements Enemy {
 
 	@Override
 	public boolean hurt(@NotNull DamageSource source, float amount) {
-		setWoke();
-		return super.hurt(source, amount);
+		if (super.hurt(source, amount)) {
+            setResting(false);
+            return true;
+        }
+        return false;
 	}
 
 	@NotNull
@@ -280,16 +293,16 @@ public class Foxhound extends Wolf implements Enemy {
 
 		//debugging code
 		if(itemstack.is(Items.DEBUG_STICK) && !player.level().isClientSide()){
-            if(isSleeping()){
+            if(isResting()){
                 // #5327 - isSleeping is always returning false.
                 //vanilla foxes have their own isSleeping method instead of using the LivingEntity method,
                 //but that uses entity data which is synced, ai goals (which we are using for sleep) are not.
-                player.sendSystemMessage(Component.literal("setWoke()"));
-                setWoke();
+                player.sendSystemMessage(Component.literal("setResting(false)"));
+                setResting(false);
             }
             else{
                 player.sendSystemMessage(Component.literal("setSleeping(true)"));
-                setSleeping(true);
+                setResting(true);
                 return InteractionResult.CONSUME;
             }
 		}
@@ -314,7 +327,7 @@ public class Foxhound extends Wolf implements Enemy {
 						this.tame(player);
 						this.navigation.stop();
 						this.setTarget(null);
-						this.setSitting(true);
+						this.setInSittingPose(true);
 						this.setHealth(20.0F);
 						level.broadcastEntityEvent(this, (byte) 7);
 					} else {
@@ -330,9 +343,8 @@ public class Foxhound extends Wolf implements Enemy {
 
 		InteractionResult res = super.mobInteract(player, hand);
 		if(res.consumesAction()) {
-            setWoke();
-            if (isSitting()) {
-                setPose(Pose.SITTING);
+            setResting(false);
+            if (isOrderedToSit()) {
                 setInSittingPose(true);
             }
         }
@@ -366,8 +378,9 @@ public class Foxhound extends Wolf implements Enemy {
 		super.addAdditionalSaveData(compound);
 
 		compound.putInt("OhLawdHeComin", timeUntilPotatoEmerges);
-		compound.putBoolean("IsSlep", isSleeping());
+		compound.putBoolean("IsSlep", isResting());
 		compound.putBoolean("IsBlue", isBlue());
+        compound.putInt("ticksUntilICanSleep", ticksUntilICanSleep);
 	}
 
 	@Override
@@ -375,13 +388,14 @@ public class Foxhound extends Wolf implements Enemy {
 		super.readAdditionalSaveData(compound);
 
 		timeUntilPotatoEmerges = compound.getInt("OhLawdHeComin");
-		setInSittingPose(compound.getBoolean("IsSlep"));
+		setResting(compound.getBoolean("IsSlep"));
 		setBlue(compound.getBoolean("IsBlue"));
+        ticksUntilICanSleep = compound.getInt("ticksUntilICanSleep");
 	}
 
 	@Override
 	protected SoundEvent getAmbientSound() {
-		if(isSleeping()) {
+		if(isResting()) {
 			return null;
 		}
 		if(this.isAngry()) {
@@ -428,35 +442,68 @@ public class Foxhound extends Wolf implements Enemy {
 		return world.getDifficulty() != Difficulty.PEACEFUL && world.getBlockState(pos.below()).is(FoxhoundModule.foxhoundSpawnableTag);
 	}
 
-    // 2025 nuclear family woke foxhound
-	private void setWoke() {
-		setStanding(true);
-    }
-
 	@Override
 	public boolean isSleeping() {
-		return getPose() == Pose.SLEEPING;
+		return isResting();
 	}
-
-    public boolean isSitting() {
-        return getPose() == Pose.SITTING;
-    }
 
     public boolean isStanding() {
         return getPose() == Pose.STANDING;
     }
 
-    public void setSleeping(boolean sleeping) {
-        setPose(Pose.SLEEPING);
-    }
-
-    public void setSitting(boolean sitting) {
-        setOrderedToSit(true);
-        setPose(Pose.SITTING);
-    }
-
     public void setStanding(boolean standing) {
         setPose(Pose.STANDING);
+    }
+
+    @Override
+    public void startSleeping(BlockPos pos) {
+        super.startSleeping(pos);
+        setResting(true);
+    }
+
+    @Override
+    public void stopSleeping() {
+        super.stopSleeping();
+        setResting(false);
+    }
+
+    public boolean canTeleportTo(@NotNull BlockPos teleportPos) {
+        if (!super.canTeleportTo(teleportPos)) {
+            PathType pathtype = WalkNodeEvaluator.getPathTypeStatic(this, teleportPos);
+            if (pathtype != PathType.DAMAGE_FIRE && pathtype != PathType.DANGER_FIRE) {
+                return false;
+            } else {
+                if (!this.canFlyToOwner() && this.level().getBlockState(teleportPos.below()).getBlock() instanceof LeavesBlock) {
+                    return false;
+                } else {
+                    BlockPos blockDistance = teleportPos.subtract(this.blockPosition());
+                    return this.level().noCollision(this, this.getBoundingBox().move(blockDistance));
+                }
+            }
+        } else return super.canTeleportTo(teleportPos);
+    }
+
+    @Override
+    public void tryToTeleportToOwner() {
+        if (!isStanding()) {
+            setStanding(true);
+        }
+        super.tryToTeleportToOwner();
+    }
+    
+    public boolean isResting() {
+        return entityData.get(IS_RESTING);
+    }
+
+    public void setResting(boolean resting) {
+        entityData.set(IS_RESTING, resting);
+        if (!resting) {
+            ticksUntilICanSleep = 100;
+        }
+    }
+
+    public boolean canRest() {
+        return ticksUntilICanSleep <= 0;
     }
 
     //Notes:

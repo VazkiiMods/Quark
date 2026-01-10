@@ -145,7 +145,7 @@ public class FoxhoundModel extends AgeableListModel<Foxhound> {
         else if (!this.fluff.visible && !hound.hasArmor())
             this.fluff.visible = true;
 
-		if(hound.isSleeping()) { // #5327 - isSleeping is always returning false
+		if(hound.isResting()) { // #5327 - isSleeping is always returning false
 			this.head.setPos(1.0F, 20.5F, -5.5f);
 			this.setAngle(head, 0.0F, 0.7853981633974483F, -0.04363323129985824F);
 
@@ -195,7 +195,7 @@ public class FoxhoundModel extends AgeableListModel<Foxhound> {
 
 	@Override
 	public void setupAnim(Foxhound entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
-		if(!entity.isSleeping()) {
+		if(!entity.isResting()) {
 			head.yRot += netHeadYaw * 0.017453292F;
 			head.xRot += headPitch * 0.017453292F;
 		} else

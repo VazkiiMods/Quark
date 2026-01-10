@@ -75,7 +75,7 @@ public class ForgottenModule extends ZetaModule {
 		ZResult result = event.getResult() ? ZResult.ALLOW : ZResult.DENY;
 		ServerLevelAccessor world = event.getLevel();
 
-		if(entity.getType() == EntityType.SKELETON && entity instanceof Mob mob && result != ZResult.DENY && entity.getY() < maxHeightForSpawn && world.getRandom().nextDouble() < forgottenSpawnRate) {
+		if(entity.getType() == EntityType.SKELETON && entity instanceof Mob mob && result != ZResult.DENY && entity.getY() < maxHeightForSpawn && world.getRandom().nextDouble() <  forgottenSpawnRate) {
 			if(result == ZResult.ALLOW || (mob.checkSpawnRules(world, event.getSpawnType()) && mob.checkSpawnObstruction(world))) {
 				Forgotten forgotten = new Forgotten(forgottenType, entity.level());
 				Vec3 epos = entity.position();

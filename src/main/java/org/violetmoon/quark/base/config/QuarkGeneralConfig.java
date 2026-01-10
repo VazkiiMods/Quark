@@ -19,6 +19,7 @@ public class QuarkGeneralConfig {
 	 * 
 	 * - Vazkii, from the past.
 	 */
+    // What the fuck
 	private static final List<String> STATIC_ALLOWED_SCREENS = Lists.newArrayList(
 			"appeng.client.gui.implementations.SkyChestScreen",
 			"com.progwml6.ironchest.client.screen.IronChestScreen",
