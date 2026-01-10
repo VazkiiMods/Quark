@@ -25,6 +25,8 @@ import net.minecraft.world.item.alchemy.Potion;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.levelgen.Heightmap.Types;
 import net.minecraft.world.level.material.Fluids;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.neoforge.event.brewing.PotionBrewEvent;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import org.violetmoon.quark.base.Quark;
 import org.violetmoon.quark.base.handler.QuarkSounds;
@@ -47,6 +49,7 @@ import org.violetmoon.zeta.item.ZetaItem;
 import org.violetmoon.zeta.item.ZetaMobBucketItem;
 import org.violetmoon.zeta.module.ZetaLoadModule;
 import org.violetmoon.zeta.module.ZetaModule;
+import org.violetmoon.zeta.potion.ZetaPotion;
 import org.violetmoon.zeta.registry.CreativeTabManager;
 import org.violetmoon.zeta.util.Hint;
 import org.violetmoon.zeta.util.ZetaEffect;
@@ -94,9 +97,9 @@ public class CrabsModule extends ZetaModule {
 	public static final DeferredRegister<Potion> POTIONS = DeferredRegister.create(Registries.POTION, Quark.MOD_ID);
 	public static final Holder<MobEffect> RESILIENCE = EFFECTS.register("resilience", () -> new ZetaEffect(MobEffectCategory.BENEFICIAL, 0x5b1a04)
 					.addAttributeModifier(Attributes.KNOCKBACK_RESISTANCE, Quark.asResource("resilience_knockback_resistance"), 0.5, AttributeModifier.Operation.ADD_VALUE));
-	public static final Holder<Potion> RESILIENCE_NORMAL = POTIONS.register("resilience", () -> new Potion("quark.resilience", new MobEffectInstance(RESILIENCE, 3600)));
-	public static final Holder<Potion> RESILIENCE_LONG = POTIONS.register("long_resilience", () -> new Potion("quark.resilience", new MobEffectInstance(RESILIENCE, 9600)));
-	public static final Holder<Potion> RESILIENCE_STRONG = POTIONS.register("strong_resilience", () -> new Potion("quark.resilience", new MobEffectInstance(RESILIENCE, 1800, 1)));
+	public static Holder<Potion> RESILIENCE_NORMAL;
+	public static Holder<Potion> RESILIENCE_LONG;
+	public static Holder<Potion> RESILIENCE_STRONG;
 
 	@LoadEvent
 	public final void register(ZRegister event) {
@@ -119,7 +122,7 @@ public class CrabsModule extends ZetaModule {
 		crab_shell = new ZetaItem("crab_shell", this, new Item.Properties())
 				.setCondition(() -> enableBrewing).setCreativeTab(CreativeModeTabs.INGREDIENTS, Items.RABBIT_FOOT, false);
 
-		crabType = EntityType.Builder.<Crab>of(Crab::new, MobCategory.CREATURE)
+		crabType = EntityType.Builder.of(Crab::new, MobCategory.CREATURE)
 				.sized(0.9F, 0.5F)
 				.clientTrackingRange(8)
 				.build("crab");
@@ -133,7 +136,11 @@ public class CrabsModule extends ZetaModule {
 				.setCondition(() -> resilienceRequiredForAllEffects));
 		event.getAdvancementModifierRegistry().addModifier(new TwoByTwoModifier(this, ImmutableSet.of(crabType)));
 		event.getAdvancementModifierRegistry().addModifier(new BalancedDietModifier(this, ImmutableSet.of(crab_leg, cookedCrabLeg)));
-	}
+        RESILIENCE_NORMAL = POTIONS.register("resilience", () -> new ZetaPotion(this, "quark.resilience", new MobEffectInstance(RESILIENCE, 3600)).setCondition(() -> enableBrewing));
+        RESILIENCE_LONG = POTIONS.register("long_resilience", () -> new ZetaPotion(this, "quark.resilience", new MobEffectInstance(RESILIENCE, 9600)).setCondition(() -> enableBrewing));
+        RESILIENCE_STRONG = POTIONS.register("strong_resilience", () -> new ZetaPotion(this, "quark.resilience", new MobEffectInstance(RESILIENCE, 1800, 1)).setCondition(() -> enableBrewing));
+
+    }
 	
 	@PlayEvent
 	public void onTradesLoaded(ZVillagerTrades event) {

@@ -40,7 +40,7 @@ public class QuarkConfigHomeScreen extends ZetaConfigHomeScreen {
 		addRenderableWidget(new SocialButton(iter.next(), height - 55, Component.translatable("quark.gui.config.social.discord"), 0x7289da, 1, "https://discord.gg/vm"));
 		addRenderableWidget(new SocialButton(iter.next(), height - 55, Component.translatable("quark.gui.config.social.patreon"), 0xf96854, 2, "https://patreon.com/vazkii"));
 		addRenderableWidget(new SocialButton(iter.next(), height - 55, Component.translatable("quark.gui.config.social.forum"), 0xb650d8, 3, "https://forum.violetmoon.org"));
-		addRenderableWidget(new SocialButton(iter.next(), height - 55, Component.translatable("quark.gui.config.social.twitter"), 0x1da1f2, 4, "https://twitter.com/VazkiiMods"));
+		addRenderableWidget(new SocialButton(iter.next(), height - 55, Component.translatable("quark.gui.config.social.bluesky"), 0x1da1f2, 4, "https://bsky.app/profile/violetmoon.org"));
 	}
 
 	//annoyingly it's not passed to renderBackground
