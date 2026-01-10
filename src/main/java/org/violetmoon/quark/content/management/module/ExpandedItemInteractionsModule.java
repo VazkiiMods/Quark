@@ -64,6 +64,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import static net.minecraft.world.entity.EquipmentSlot.Type.HUMANOID_ARMOR;
+
 @ZetaLoadModule(category = "management")
 public class ExpandedItemInteractionsModule extends ZetaModule {
 
@@ -196,7 +198,8 @@ public class ExpandedItemInteractionsModule extends ZetaModule {
 			} else if(stack.getItem() instanceof ElytraItem)
 				equipSlot = EquipmentSlot.CHEST;
 
-			if(equipSlot != null) {
+            //Todo: Possibly do animal armor?
+			if(equipSlot != null && equipSlot.getType() == HUMANOID_ARMOR) {
 				ItemStack currArmor = player.getItemBySlot(equipSlot);
 
                 if (slot.mayPickup(player)) {
