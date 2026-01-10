@@ -11,16 +11,22 @@ import net.minecraft.server.packs.PathPackResources;
 import net.minecraft.server.packs.repository.Pack;
 import net.minecraft.server.packs.repository.PackSource;
 import net.minecraft.tags.TagKey;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.item.alchemy.Potions;
 import net.neoforged.bus.api.IEventBus;
+import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.ModList;
+import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.neoforge.event.AddPackFindersEvent;
+import net.neoforged.neoforge.event.brewing.RegisterBrewingRecipesEvent;
 import net.neoforged.neoforgespi.locating.IModFile;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.spongepowered.asm.mixin.MixinEnvironment;
 import org.violetmoon.quark.base.proxy.ClientProxy;
 import org.violetmoon.quark.base.proxy.CommonProxy;
+import org.violetmoon.quark.content.mobs.module.CrabsModule;
 import org.violetmoon.quark.integration.claim.FlanIntegration;
 import org.violetmoon.quark.integration.claim.IClaimIntegration;
 import org.violetmoon.quark.integration.lootr.ILootrIntegration;
@@ -31,6 +37,9 @@ import org.violetmoon.zetaimplforge.ForgeZeta;
 
 import java.nio.file.Path;
 import java.util.Optional;
+
+import static org.violetmoon.quark.content.mobs.module.CrabsModule.EFFECTS;
+import static org.violetmoon.quark.content.mobs.module.CrabsModule.POTIONS;
 
 @Mod(Quark.MOD_ID)
 public class Quark {
@@ -47,7 +56,8 @@ public class Quark {
 
 	public Quark(IEventBus bus) {
 		instance = this;
-
+		EFFECTS.register(bus);
+		POTIONS.register(bus);
 		ZETA.start();
 
 		proxy = Env.unsafeRunForDist(() -> ClientProxy::new, () -> CommonProxy::new);
@@ -95,6 +105,18 @@ public class Quark {
 			event.addRepositorySource(packConsumer -> {
 				packConsumer.accept(pack);
 			});
+		}
+	}
+
+	@EventBusSubscriber(modid = Quark.MOD_ID)
+	private static class RegisterBrewing {
+
+		@SubscribeEvent
+		private static void brewingRecipesEvent(RegisterBrewingRecipesEvent event) {
+			event.getBuilder().addMix(Potions.WATER, CrabsModule.crab_shell, Potions.MUNDANE);
+			event.getBuilder().addMix(Potions.AWKWARD, CrabsModule.crab_shell, CrabsModule.RESILIENCE_NORMAL);
+			event.getBuilder().addMix(CrabsModule.RESILIENCE_NORMAL, Items.REDSTONE, CrabsModule.RESILIENCE_LONG);
+			event.getBuilder().addMix(CrabsModule.RESILIENCE_NORMAL, Items.GLOWSTONE_DUST, CrabsModule.RESILIENCE_STRONG);
 		}
 	}
 }

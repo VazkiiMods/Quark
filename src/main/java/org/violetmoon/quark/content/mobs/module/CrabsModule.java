@@ -8,6 +8,7 @@ import net.minecraft.tags.BiomeTags;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectCategory;
+import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobCategory;
 import net.minecraft.world.entity.SpawnPlacementTypes;
@@ -20,9 +21,11 @@ import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.item.CreativeModeTabs;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.item.alchemy.Potion;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.levelgen.Heightmap.Types;
 import net.minecraft.world.level.material.Fluids;
+import net.neoforged.neoforge.registries.DeferredRegister;
 import org.violetmoon.quark.base.Quark;
 import org.violetmoon.quark.base.handler.QuarkSounds;
 import org.violetmoon.quark.content.mobs.client.render.entity.CrabRenderer;
@@ -85,6 +88,16 @@ public class CrabsModule extends ZetaModule {
 	@Hint(key = "crab_info")
 	public static Item crab_bucket;
 
+
+	// MobEffects and Potions need a static holder - DeferredRegistry is MANDATORY for Neoforge
+	public static final DeferredRegister<MobEffect> EFFECTS = DeferredRegister.create(Registries.MOB_EFFECT, Quark.MOD_ID);
+	public static final DeferredRegister<Potion> POTIONS = DeferredRegister.create(Registries.POTION, Quark.MOD_ID);
+	public static final Holder<MobEffect> RESILIENCE = EFFECTS.register("resilience", () -> new ZetaEffect(MobEffectCategory.BENEFICIAL, 0x5b1a04)
+					.addAttributeModifier(Attributes.KNOCKBACK_RESISTANCE, Quark.asResource("resilience_knockback_resistance"), 0.5, AttributeModifier.Operation.ADD_VALUE));
+	public static final Holder<Potion> RESILIENCE_NORMAL = POTIONS.register("resilience", () -> new Potion("quark.resilience", new MobEffectInstance(RESILIENCE, 3600)));
+	public static final Holder<Potion> RESILIENCE_LONG = POTIONS.register("long_resilience", () -> new Potion("quark.resilience", new MobEffectInstance(RESILIENCE, 9600)));
+	public static final Holder<Potion> RESILIENCE_STRONG = POTIONS.register("strong_resilience", () -> new Potion("quark.resilience", new MobEffectInstance(RESILIENCE, 1800, 1)));
+
 	@LoadEvent
 	public final void register(ZRegister event) {
         CreativeTabManager.startChain(CreativeModeTabs.FOOD_AND_DRINKS, false, false, Items.PUFFERFISH);
@@ -105,12 +118,6 @@ public class CrabsModule extends ZetaModule {
 
 		crab_shell = new ZetaItem("crab_shell", this, new Item.Properties())
 				.setCondition(() -> enableBrewing).setCreativeTab(CreativeModeTabs.INGREDIENTS, Items.RABBIT_FOOT, false);
-
-
-		resilience = new ZetaEffect(Quark.ZETA, "resilience", MobEffectCategory.BENEFICIAL, 0x5b1a04);
-		resilience.addAttributeModifier(Attributes.KNOCKBACK_RESISTANCE, Quark.asResource("resilience_knockback_resistance"), 0.5, AttributeModifier.Operation.ADD_VALUE);
-
-		event.getBrewingRegistry().addPotionMix("crab_brewing", crab_shell, resilience);
 
 		crabType = EntityType.Builder.<Crab>of(Crab::new, MobCategory.CREATURE)
 				.sized(0.9F, 0.5F)
