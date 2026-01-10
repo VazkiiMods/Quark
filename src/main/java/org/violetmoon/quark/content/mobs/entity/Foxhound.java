@@ -140,10 +140,6 @@ public class Foxhound extends Wolf implements Enemy {
 		super.tick();
 
 		Level level = level();
-		if(!level.isClientSide && level.getDifficulty() == Difficulty.PEACEFUL && !isTame()) {
-			discard();
-			return;
-		}
 
         if (ticksUntilICanSleep > 0) {
             ticksUntilICanSleep--;
@@ -230,12 +226,12 @@ public class Foxhound extends Wolf implements Enemy {
 		this.goalSelector.addGoal(2, new SitWhenOrderedToGoal(this));
 		this.goalSelector.addGoal(3, new LeapAtTargetGoal(this, 0.4F));
 		this.goalSelector.addGoal(4, new MeleeAttackGoal(this, 1.0D, true));
-		this.goalSelector.addGoal(9, new FollowOwnerGoal(this, 1.0D, 10.0F, 2.0F));
 		this.goalSelector.addGoal(5, new BreedGoal(this, 1.0D));
 		this.goalSelector.addGoal(6, new FoxhoundPlaceToRestGoal(this, 0.8D, LIT_FURNACE));
 		this.goalSelector.addGoal(7, new FoxhoundPlaceToRestGoal(this, 0.8D, FURNACE));
 		this.goalSelector.addGoal(8, new FoxhoundPlaceToRestGoal(this, 0.8D, GLOWING));
-		this.goalSelector.addGoal(11, new WaterAvoidingRandomStrollGoal(this, 1.0D));
+        this.goalSelector.addGoal(9, new FollowOwnerGoal(this, 1.0D, 10.0F, 2.0F));
+        this.goalSelector.addGoal(11, new WaterAvoidingRandomStrollGoal(this, 1.0D));
 		this.goalSelector.addGoal(12, new BegGoal(this, 8.0F));
 		this.goalSelector.addGoal(13, new LookAtPlayerGoal(this, Player.class, 8.0F));
 		this.goalSelector.addGoal(14, new RandomLookAroundGoal(this));
@@ -246,7 +242,7 @@ public class Foxhound extends Wolf implements Enemy {
 		this.targetSelector.addGoal(5, new NonTameRandomTargetGoal<>(this, Animal.class, false,
 				target -> target instanceof Sheep || target instanceof Rabbit));
 		this.targetSelector.addGoal(6, new NonTameRandomTargetGoal<>(this, Player.class, false,
-				target -> !isTame()));
+				target -> !isTame() && target.level().getDifficulty() != Difficulty.PEACEFUL));
 //		this.targetSelector.addGoal(5, new NearestAttackableTargetGoal<>(this, AbstractSkeletonEntity.class, false));
 	}
 
@@ -259,6 +255,10 @@ public class Foxhound extends Wolf implements Enemy {
 
 	@Override
 	public boolean doHurtTarget(Entity entityIn) {
+        if (level().getDifficulty() == Difficulty.PEACEFUL && (entityIn instanceof Player)) {
+            return false;
+        }
+
 		if(entityIn.getType().fireImmune()) {
 			if(entityIn instanceof Player)
 				return false;

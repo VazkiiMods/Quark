@@ -34,6 +34,10 @@ public class TotemOfHoldingCuriosCompat {
         Optional<ICuriosItemHandler> curiosApi = CuriosApi.getCuriosInventory(player);
         curiosApi.ifPresent(iCuriosItemHandler -> iCuriosItemHandler.getCurios().forEach((a, b) ->
                 IntStream.range(0, b.getStacks().getSlots()).mapToObj(i ->
-                b.getStacks().getPreviousStackInSlot(i)).forEach(totem::addCurios)));
+                b.getStacks().getPreviousStackInSlot(i)).forEach(stack -> {
+                    if (!stack.isEmpty()) {
+                        totem.addCurios(stack);
+                    }
+                })));
     }
 }

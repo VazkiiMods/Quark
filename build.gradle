@@ -138,6 +138,7 @@ repositories {
         content {
             includeGroup("org.violetmoon.zeta")
             includeGroup("mezz.jei")
+            includeGroup("blusunrize.immersiveengineering")
         }
     }
     
@@ -252,6 +253,7 @@ dependencies {
     bonusRuntimeOnly("maven.modrinth:woodworks:${deps.woodworks_modrinth_file_id}")
     bonusRuntimeOnly("curse.maven:farmers-delight-398521:${deps.farmers_delight_curse_file_id}")
     bonusRuntimeOnly("cc.tweaked:cc-tweaked-${config.mc_version}-forge:${deps.cct_version}") // Tests for a specific RegistryAccess issue basically.
+    bonusRuntimeOnly("blusunrize.immersiveengineering:ImmersiveEngineering:${deps.ie_version}")
 }
 
 pmd {
