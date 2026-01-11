@@ -21,7 +21,6 @@ import org.violetmoon.quark.base.Quark;
 import org.violetmoon.quark.content.tweaks.module.EmotesModule;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.net.URISyntaxException;
 import java.nio.file.Path;
@@ -47,15 +46,10 @@ public class CustomEmoteIconResourcePack extends AbstractPackResources {
 
 	@Nullable
 	@Override
-	public IoSupplier<InputStream> getRootResource(String @NotNull... file) {
-		return null;
-	}
+	public IoSupplier<InputStream> getRootResource(String @NotNull... elements) {
+		String name = String.join("/", elements);
 
-	//Todo: Dawg this shit is probably broken as hell - Siuol
-	@Nullable
-	@Override
-	public IoSupplier<InputStream> getResource(@NotNull PackType packType, ResourceLocation name) {
-		if(name.getPath().equals("pack.mcmeta")) {
+		if(name.equals("pack.mcmeta")) {
 			try {
 				return IoSupplier.create(Path.of(Quark.class.getResource("/proxypack.mcmeta").toURI()));
 			} catch (URISyntaxException e) {
@@ -63,7 +57,7 @@ public class CustomEmoteIconResourcePack extends AbstractPackResources {
 			}
 		}
 
-		if(name.getPath().equals("pack.png")) {
+		if(name.equals("pack.png")) {
 			try {
 				return IoSupplier.create(Path.of(Quark.class.getResource("/proxypack.png").toURI()));
 			} catch (URISyntaxException e) {
@@ -71,13 +65,15 @@ public class CustomEmoteIconResourcePack extends AbstractPackResources {
 			}
 		}
 
+		return null;
+	}
+
+	@Nullable
+	@Override
+	public IoSupplier<InputStream> getResource(@NotNull PackType packType, ResourceLocation name) {
 		File file = getFile(name.getPath());
 		if(!file.exists())
-			try {
-				throw new FileNotFoundException(name.getPath());
-			} catch (FileNotFoundException e) {
-				throw new RuntimeException(e);
-			}
+			return null;
 
 		return IoSupplier.create(file.toPath());
 	}

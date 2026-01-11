@@ -15,6 +15,11 @@ import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.packs.PackLocationInfo;
+import net.minecraft.server.packs.PackResources;
+import net.minecraft.server.packs.PackSelectionConfig;
+import net.minecraft.server.packs.PackType;
+import net.minecraft.server.packs.repository.Pack;
 import net.minecraft.world.entity.player.Player;
 import net.neoforged.neoforge.client.gui.VanillaGuiLayers;
 import net.neoforged.neoforge.network.PacketDistributor;
@@ -48,6 +53,7 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 import java.util.TreeMap;
 
@@ -116,18 +122,25 @@ public class EmotesModule extends ZetaModule {
 			if(!emotesDir.exists())
 				emotesDir.mkdirs();
 
-			//todo: Fixme or something idk - Siuolplex
-			/*
-			mc.getResourcePackRepository().addPackFinder(new RepositorySource() {
-				@Override
-				public void loadPacks(@NotNull Consumer<Pack> packConsumer, @NotNull Pack.PackConstructor packInfoFactory) {
-					Client.resourcePack = new CustomEmoteIconResourcePack();
-			
-					String name = "quark:emote_resources";
-					Pack t = Pack.create(name, true, () -> Client.resourcePack, packInfoFactory, Pack.Position.TOP, tx->tx);
-					packConsumer.accept(t);
-				}
-			});*/
+			mc.getResourcePackRepository().addPackFinder(packConsumer -> {
+				Client.resourcePack = new CustomEmoteIconResourcePack();
+
+				Pack.ResourcesSupplier resourcesSupplier = new Pack.ResourcesSupplier() {
+					@Override
+					public PackResources openPrimary(PackLocationInfo packLocationInfo) {
+						return Client.resourcePack;
+					}
+
+					@Override
+					public PackResources openFull(PackLocationInfo packLocationInfo, Pack.Metadata metadata) {
+						return openPrimary(packLocationInfo);
+					}
+				};
+
+				PackLocationInfo pli = Client.resourcePack.location();
+				Pack t = Pack.readMetaAndCreate(pli, resourcesSupplier, PackType.CLIENT_RESOURCES, new PackSelectionConfig(true, Pack.Position.TOP, true));
+				packConsumer.accept(Objects.requireNonNull(t, "Couldn't create emotes pack"));
+			});
 		}
 
 		@LoadEvent
