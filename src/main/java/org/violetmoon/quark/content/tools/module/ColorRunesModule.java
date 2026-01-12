@@ -102,6 +102,7 @@ public class ColorRunesModule extends ZetaModule {
 	@Nullable
 	public static RuneColor getAppliedStackColor(ItemStack target) {
 		if(target == null) return null;
+        if(target.getItem() == Items.ENCHANTED_BOOK) return AncientTomesModule.shiftRuneColor(target);
 		return RuneColor.byName(target.get(QuarkDataComponents.RUNE_COLOR));
 	}
 
@@ -213,7 +214,8 @@ public class ColorRunesModule extends ZetaModule {
         }
 		else {
 			//there is NOT a trim on this item, or there is a trim but showInTooltip is true
-			if (color != null) {
+            //Also this item is not an overleveled enchanted book
+			if (color != null && stack.getItem() != Items.ENCHANTED_BOOK) {
 				if (!components.contains(AccessorArmorTrim.getUPGRADE_TITLE())) {
 					components.add(AccessorArmorTrim.getUPGRADE_TITLE());
 				}
