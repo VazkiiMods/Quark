@@ -1,4 +1,4 @@
-// 1.21.1	2025-10-28T12:56:43.5241246	Loot Tables
+// 1.21.1	2026-01-12T19:54:30.1847931	Loot Tables
 321167e5d1e420c3799ebd55550623276a62d02f data/quark/loot_table/blocks/acacia_bookshelf.json
 78cf85302095b576b7eda6e9c83fd9141e777c3b data/quark/loot_table/blocks/acacia_chest.json
 2d740f286cb6b31376a3bb00878726966b38c064 data/quark/loot_table/blocks/acacia_hedge.json
@@ -700,6 +700,7 @@ b6a63c3e45cc09865734a65d7c31aeb21a1324d3 data/quark/loot_table/blocks/violet_cor
 5a38600d7775ee35c436a63c21578260b5f7963a data/quark/loot_table/blocks/warped_ladder.json
 8381734d9c9728585655357d08c47ed62d7c7db0 data/quark/loot_table/blocks/warped_post.json
 9667aad93a41f656c48048718892587f2932598e data/quark/loot_table/blocks/warped_vertical_slab.json
+ae6cdf59ad34f7b7cf94dd33c29e264c32bdf315 data/quark/loot_table/blocks/water_pink_petals.json
 f59849da29bb0e20f3920db9f7f6459dab434789 data/quark/loot_table/blocks/waxed_black_corundum.json
 2ac38d84d0f60c54678a3caac2cdfd1737daa7c8 data/quark/loot_table/blocks/waxed_blue_corundum.json
 dee4095e39235ce98fa6e6a1ff14ffa6bda9f61f data/quark/loot_table/blocks/waxed_cut_copper_vertical_slab.json
