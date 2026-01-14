@@ -62,7 +62,7 @@ public class AutomaticRecipeUnlockModule extends ZetaModule {
 		Level level = player.level();
 		List<RecipeHolder<?>> recipes = new ArrayList<>(server.getRecipeManager().getRecipes());
 
-		recipes.removeIf((recipe) -> recipe == null || ignoredRecipes.contains(Objects.toString(recipe.id())) || recipe.value().getResultItem(level.registryAccess()).isEmpty());
+		recipes.removeIf((recipe) -> recipe == null ||  ignoredRecipes.contains(Objects.toString(recipe.id())) || recipe.value().getResultItem(level.registryAccess()) == null || recipe.value().getResultItem(level.registryAccess()).isEmpty());
 
 		int idx = 0;
 		int maxShift = 1000;
