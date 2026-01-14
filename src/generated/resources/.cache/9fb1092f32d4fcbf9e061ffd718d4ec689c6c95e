@@ -1,4 +1,4 @@
-// 1.21.1	2026-01-04T13:04:42.8871087	Recipes
+// 1.21.1	2026-01-14T09:46:15.6103153	Recipes
 bb24f1bac2cb3ef401eb56f32a5b7364bcee7552 data/quark/advancement/recipes/building_blocks/building/crafting/bamboo_mat.json
 31f4957990f1d18f202f816de898f77458b18140 data/quark/advancement/recipes/building_blocks/building/crafting/bamboo_mat_carpet.json
 8df9c4ad585c2226233ee6e8f7bc96f33806df86 data/quark/advancement/recipes/building_blocks/building/crafting/blackstone_bricks.json
@@ -1076,7 +1076,7 @@ d3fe18de87c8faead8f334d60226c9cd1ee01e27 data/quark/recipe/building/crafting/fur
 ad990080e4736659a33cb8e0609bb9cb06e5f969 data/quark/recipe/building/crafting/furnaces/blackstone_minecart.json
 824e0d32762e5214db81792f6efe63a98f362c33 data/quark/recipe/building/crafting/furnaces/blackstone_smoker.json
 25d9a6445bd665c0ce3676d03bd72adfc1a333b9 data/quark/recipe/building/crafting/furnaces/deepslate_blast_furnace.json
-fed1f2540cce52116f63fdb3fe8a232cce80eded data/quark/recipe/building/crafting/furnaces/deepslate_furnace.json
+7ff06de7486a3ae54a006f04d81e9ae092c3cd4c data/quark/recipe/building/crafting/furnaces/deepslate_furnace.json
 8ccd94b1679dd4dc0d5a2cff739a730e77377fa0 data/quark/recipe/building/crafting/furnaces/deepslate_minecarft_tweaked.json
 dca41f566cdfabad70884af6563720a1f7c216f5 data/quark/recipe/building/crafting/furnaces/deepslate_minecart.json
 8394de9572b2e21a2f61afd7051dfe82a5418e6b data/quark/recipe/building/crafting/furnaces/deepslate_smoker.json

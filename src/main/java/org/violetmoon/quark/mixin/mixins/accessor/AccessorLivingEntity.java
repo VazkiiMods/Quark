@@ -14,7 +14,4 @@ public interface AccessorLivingEntity {
 
 	@Accessor("lastHurtByPlayerTime")
 	int quark$lastHurtByPlayerTime();
-	
-	@Invoker("blockUsingShield")
-	void quark$blockUsingShield(LivingEntity attacker);
 }

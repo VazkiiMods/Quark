@@ -259,22 +259,19 @@ public class Foxhound extends Wolf implements Enemy {
             return false;
         }
 
-		if(entityIn.getType().fireImmune()) {
-			if(entityIn instanceof Player)
+		if(!entityIn.fireImmune()) { //unless the entity overrides fireImmune, this will only check the entitytype
+			if(entityIn instanceof LivingEntity le && (le.hasEffect(MobEffects.FIRE_RESISTANCE) ||
+					(le.getAttribute(Attributes.BURNING_TIME) != null) && le.getAttributeValue(Attributes.BURNING_TIME) <= 0)){
 				return false;
+			}
+			if(entityIn instanceof ServerPlayer player && player.isDamageSourceBlocked(level().damageSources().mobAttack(this))){
+				return super.doHurtTarget(entityIn); //hurt without igniting, causes shield to block
+			}
+			entityIn.igniteForSeconds(5);
 			return super.doHurtTarget(entityIn);
 		}
 
-		boolean flag = entityIn.hurt(level().damageSources().onFire(),
-				((int) this.getAttributeValue(Attributes.ATTACK_DAMAGE)));
-
-		if(flag) {
-			if(entityIn instanceof ServerPlayer player && player.isBlocking()){
-				((AccessorLivingEntity) player).quark$blockUsingShield(this);
-			}
-			entityIn.igniteForSeconds(5);
-		}
-		return flag;
+		return false;
 	}
 
 	@Override
