@@ -109,32 +109,30 @@ public class DefaultMoveActions {
 							if(world.isEmptyBlock(groundPos))
 								groundPos = groundPos.below();
 							Block seedType = blockItem.getBlock();
-							if(seedType instanceof SpecialPlantable) {
-								BlockState groundBlock = world.getBlockState(groundPos);
-								if(groundBlock.getBlock().canSustainPlant(groundBlock, world, groundPos,Direction.UP, state).isTrue()) {
-									BlockPos seedPos = groundPos.above();
-									if(state.canSurvive(world, seedPos)) {
-										BlockState seedState = seedType.defaultBlockState();
-										world.playSound(null, seedPos, ((AccessorBlockBehavior)seedType).invokeGetSoundType(seedState).getPlaceSound(), SoundSource.BLOCKS, 1.0F, 1.0F);
+							if(blockItem instanceof SpecialPlantable || seedType instanceof BushBlock) {
+                                BlockPos seedPos = groundPos.above();
+                                if(state.canSurvive(world, seedPos)) {
+                                    BlockState seedState = seedType.defaultBlockState();
+                                    world.playSound(null, seedPos, ((AccessorBlockBehavior)seedType).invokeGetSoundType(seedState).getPlaceSound(), SoundSource.BLOCKS, 1.0F, 1.0F);
 
-										boolean canPlace = true;
-										if(seedState.getBlock() instanceof DoublePlantBlock) {
-											canPlace = false;
-											
-											BlockPos abovePos = seedPos.above();
-											if(world.isEmptyBlock(abovePos)) {
-												world.setBlockAndUpdate(abovePos, seedState.setValue(DoublePlantBlock.HALF, DoubleBlockHalf.UPPER));
-												canPlace = true;
-											}
-										}
+                                    boolean canPlace = true;
+                                    if(seedState.getBlock() instanceof DoublePlantBlock) {
+                                        canPlace = false;
 
-										if(canPlace) {
-											world.setBlockAndUpdate(seedPos, seedState);
-											shouldDrop = false;	
-										}
+                                        BlockPos abovePos = seedPos.above();
+                                        if(world.isEmptyBlock(abovePos)) {
+                                            world.setBlockAndUpdate(abovePos, seedState.setValue(DoublePlantBlock.HALF, DoubleBlockHalf.UPPER));
+                                            canPlace = true;
+                                        }
+                                    }
 
-									}
-								}
+                                    if(canPlace) {
+                                        world.setBlockAndUpdate(seedPos, seedState);
+                                        shouldDrop = false;
+                                    }
+
+                                }
+
 							}
 						}
 

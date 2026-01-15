@@ -71,8 +71,4 @@ public class FoxhoundRenderer extends MobRenderer<Foxhound, FoxhoundModel> {
             poseStack.mulPose(Axis.YP.rotationDegrees(90f + yBodyRot));
         }
     }
-
-    protected float getFlipDegrees(@NotNull Foxhound foxhound) {
-        return 0F;
-    }
 }
