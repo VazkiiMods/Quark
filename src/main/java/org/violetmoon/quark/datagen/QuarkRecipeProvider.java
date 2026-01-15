@@ -244,7 +244,7 @@ public class QuarkRecipeProvider extends RecipeProvider implements IConditionBui
         compressUncompress(Items.SUGAR_CANE, CompressedBlocksModule.sugarCane, recipeOutput, null, "sugar_cane_block");
         //furnaces
         variantFurnace(Blocks.BLACKSTONE, VariantFurnacesModule.blackstoneFurnace, recipeOutput, "blackstone");
-        variantFurnace(Blocks.DEEPSLATE, VariantFurnacesModule.deepslateFurnace, recipeOutput, "deepslate");
+        variantFurnace(Blocks.COBBLED_DEEPSLATE, VariantFurnacesModule.deepslateFurnace, recipeOutput, "deepslate");
         //glass
         ShapedRecipeBuilder.shaped(RecipeCategory.MISC, FramedGlassModule.framed_glass, 8)
                 .pattern("IGI")
