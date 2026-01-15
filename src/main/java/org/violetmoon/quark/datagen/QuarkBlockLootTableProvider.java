@@ -9,9 +9,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.Enchantments;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.DoorBlock;
-import net.minecraft.world.level.block.SlabBlock;
+import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.storage.loot.IntRange;
 import net.minecraft.world.level.storage.loot.LootPool;
 import net.minecraft.world.level.storage.loot.LootTable;
@@ -22,6 +20,7 @@ import net.minecraft.world.level.storage.loot.functions.ApplyBonusCount;
 import net.minecraft.world.level.storage.loot.functions.LimitCount;
 import net.minecraft.world.level.storage.loot.functions.SetItemCountFunction;
 import net.minecraft.world.level.storage.loot.predicates.BonusLevelTableCondition;
+import net.minecraft.world.level.storage.loot.predicates.LootItemBlockStatePropertyCondition;
 import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
 import net.minecraft.world.level.storage.loot.predicates.MatchTool;
 import net.minecraft.world.level.storage.loot.providers.number.ConstantValue;
@@ -33,11 +32,13 @@ import org.violetmoon.quark.content.automation.module.*;
 import org.violetmoon.quark.content.building.module.*;
 import org.violetmoon.quark.content.tools.module.BottledCloudModule;
 import org.violetmoon.quark.content.tweaks.module.GlassShardModule;
+import org.violetmoon.quark.content.tweaks.module.PetalsOnWaterModule;
 import org.violetmoon.quark.content.world.module.*;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.IntStream;
 
 public class QuarkBlockLootTableProvider extends BlockLootSubProvider {
 
@@ -145,6 +146,7 @@ public class QuarkBlockLootTableProvider extends BlockLootSubProvider {
         //Tweaks
         this.add(GlassShardModule.dirtyGlass, dropDirtyShards(GlassShardModule.dirtyGlass));
         dropWhenSilkTouch(GlassShardModule.dirtyGlassPane);
+        this.add(PetalsOnWaterModule.water_pink_petals, createWaterPetalsDrops(PetalsOnWaterModule.water_pink_petals));
 
         //World
         for(Block block : AncientWoodModule.woodSet.allBlocks())
@@ -271,6 +273,7 @@ public class QuarkBlockLootTableProvider extends BlockLootSubProvider {
         //Tweaks
         ret.add(GlassShardModule.dirtyGlass);
         ret.add(GlassShardModule.dirtyGlassPane);
+        ret.add(PetalsOnWaterModule.water_pink_petals);
 
         //World
         ret.addAll(AncientWoodModule.woodSet.allBlocks());
@@ -363,6 +366,10 @@ public class QuarkBlockLootTableProvider extends BlockLootSubProvider {
 
     protected LootTable.Builder createShearsDrops(Block block) {
         return createShearsDispatchTable(block, LootItem.lootTableItem(block.asItem()));
+    }
+
+    protected LootTable.Builder createWaterPetalsDrops(Block petalBlock) {
+        return LootTable.lootTable().withPool(LootPool.lootPool().setRolls(ConstantValue.exactly(1.0F)).add(this.applyExplosionDecay(petalBlock, LootItem.lootTableItem(Items.PINK_PETALS).apply(IntStream.rangeClosed(1, 4).boxed().toList(), (p_272348_) -> SetItemCountFunction.setCount(ConstantValue.exactly((float)p_272348_)).when(LootItemBlockStatePropertyCondition.hasBlockStateProperties(petalBlock).setProperties(net.minecraft.advancements.critereon.StatePropertiesPredicate.Builder.properties().hasProperty(PinkPetalsBlock.AMOUNT, p_272348_)))))));
     }
 
     protected LootTable.Builder createLeavesDropWithBonusLikeHowOakLeavesDropApples(Block p_249535_, Block p_251505_, Item bonus) {
