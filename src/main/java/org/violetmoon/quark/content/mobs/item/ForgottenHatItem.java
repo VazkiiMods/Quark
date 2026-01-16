@@ -28,7 +28,7 @@ public class ForgottenHatItem extends ZetaArmorItem implements IZetaItem {
 		super(ArmorMaterials.LEATHER, Type.HELMET,
 				new Item.Properties()
 						.stacksTo(1)
-						.durability(0)
+						.durability(55)
 						.rarity(Rarity.RARE)
 						.attributes(createAttributes()));
 
@@ -36,6 +36,11 @@ public class ForgottenHatItem extends ZetaArmorItem implements IZetaItem {
 		this.module = module;
 		CreativeTabManager.addNextToItem(CreativeModeTabs.TOOLS_AND_UTILITIES, this, Items.SADDLE, true);
 	}
+	
+    @Override
+    public void setDamage(ItemStack stack, int damage){
+        super.setDamage(stack, 0);
+    }
 
 	@Override
 	public ZetaModule getModule() {
