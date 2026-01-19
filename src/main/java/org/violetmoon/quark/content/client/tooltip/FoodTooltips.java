@@ -18,6 +18,8 @@ import net.minecraft.world.effect.MobEffectCategory;
 import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.inventory.tooltip.TooltipComponent;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.item.OminousBottleItem;
 import org.jetbrains.annotations.NotNull;
 import org.violetmoon.quark.content.client.module.ImprovedTooltipsModule;
 import org.violetmoon.zeta.client.event.play.ZGatherTooltipComponents;
@@ -44,7 +46,9 @@ public class FoodTooltips {
 
 	public static void makeTooltip(ZGatherTooltipComponents event, boolean showFood, boolean showSaturation) {
 		ItemStack stack = event.getItemStack();
-		if(stack.has(DataComponents.FOOD)) {
+		if(stack.has(DataComponents.FOOD) && !(stack.getItem() instanceof OminousBottleItem)) {
+			//#5394
+			//ominous bottles override FinishUsingItem in a way that doesn't use its food component, so prevent them from using food tooltips
 			FoodProperties food = stack.get(DataComponents.FOOD);
 			if(food != null) {
 				int pips = food.nutrition();
