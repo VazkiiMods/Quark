@@ -86,7 +86,7 @@ public class FeedingTroughModule extends ZetaModule {
     @Config
     public static double range = 10;
 
-    @Config(description = "Chance that an animal decides to look for a through. Closer it is to 1 the more performance it will take. Decreasing will make animals take longer to find one")
+    @Config(description = "Chance that an animal decides to look for a trough. Closer it is to 1 the more performance it will take. Decreasing will make animals take longer to find one")
     public static double lookChance = 0.015;
 
     //TODO: not sure this works properly. it only cancels the first orb
