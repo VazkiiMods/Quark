@@ -1,4 +1,4 @@
-// 1.21.1	2026-01-14T09:46:15.6103153	Recipes
+// 1.21.1	2026-01-20T18:03:52.828536	Recipes
 bb24f1bac2cb3ef401eb56f32a5b7364bcee7552 data/quark/advancement/recipes/building_blocks/building/crafting/bamboo_mat.json
 31f4957990f1d18f202f816de898f77458b18140 data/quark/advancement/recipes/building_blocks/building/crafting/bamboo_mat_carpet.json
 8df9c4ad585c2226233ee6e8f7bc96f33806df86 data/quark/advancement/recipes/building_blocks/building/crafting/blackstone_bricks.json
@@ -1065,7 +1065,7 @@ efb9450143cb26d002601d1b24e8b5fecdd35d10 data/quark/recipe/building/crafting/com
 2c55cdefb6518d896b1e3260daae932be6ce9094 data/quark/recipe/building/crafting/compressed/sugar_cane_block.json
 3e320e8e66ec1bd1afd41d7b932be756d3afdfb1 data/quark/recipe/building/crafting/compressed/sugar_cane_blockuncompress.json
 b930539d190df73a35c089002bfe0056efb0eb44 data/quark/recipe/building/crafting/compressed/vanilla_nether_wart_block_4x4.json
-f0f28785f06294bd98362a6a36be1e5a66715700 data/quark/recipe/building/crafting/cut_soul_sandstone.json
+b5976190927fce97846499a60198874dcfb317df data/quark/recipe/building/crafting/cut_soul_sandstone.json
 6e0bd346ff17e5aee97d0c87b1d85205d336a301 data/quark/recipe/building/crafting/dirt_bricks.json
 39e5f49c395f95fd75772e0dbd51dd59e6c0e6b6 data/quark/recipe/building/crafting/duskbound_block.json
 96ed210de15d09fd549081a1f991e168fb9c3bd7 data/quark/recipe/building/crafting/duskbound_block_without_myalite.json
@@ -1161,12 +1161,12 @@ bb018e475da7cb813776a2e9bea8b7c95fe967c3 data/quark/recipe/building/crafting/lam
 78e630e9f9050b2bfdb827697df0088c3f6b72d3 data/quark/recipe/building/crafting/leafcarpet/birch_leaf_carpet.json
 388144bd47f3aede9e83d4d6890b152fd91e9331 data/quark/recipe/building/crafting/leafcarpet/cherry_leaf_carpet.json
 4cec2ccd8fcfac8524615644100135e8f515e1c8 data/quark/recipe/building/crafting/leafcarpet/dark_oak_leaf_carpet.json
-547133136ff3fa2d7320b68032a0cb7e3e81496b data/quark/recipe/building/crafting/leafcarpet/flowering_azalea_leaf_carpet.json
+edaf67135947ea097f3583d8bdd65cd47b814a12 data/quark/recipe/building/crafting/leafcarpet/flowering_azalea_leaf_carpet.json
 f610fbb6e50fb314c8370a15f478c817328c295c data/quark/recipe/building/crafting/leafcarpet/jungle_leaf_carpet.json
 cbf4160a95866f7c5aeda32ebf387c4cd173d33e data/quark/recipe/building/crafting/leafcarpet/mangrove_leaf_carpet.json
 ad70a52d47426fc0ba7ea984a8beade68202e61a data/quark/recipe/building/crafting/leafcarpet/oak_leaf_carpet.json
 84188682c45ecfbd6f15356466a01b292934e570 data/quark/recipe/building/crafting/leafcarpet/spruce_leaf_carpet.json
-a3de025a93f3bcf376db58fa8030294ad094ba35 data/quark/recipe/building/crafting/midori_block.json
+bdf3615b9d227f6a24cdf0b7825013446b23ffca data/quark/recipe/building/crafting/midori_block.json
 d175dbbc27b568eec8c7b36ea469c006113f7c11 data/quark/recipe/building/crafting/midori_pillar.json
 84cc0c8a4fe35b1847d445f62867866ac0e53947 data/quark/recipe/building/crafting/mossy_cobblestone_bricks.json
 09a7161c5310c866217f5fba2363a0e0e44e90aa data/quark/recipe/building/crafting/mud_brick_lattice.json

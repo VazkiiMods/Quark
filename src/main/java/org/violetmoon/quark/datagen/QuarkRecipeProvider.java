@@ -1031,7 +1031,7 @@ public class QuarkRecipeProvider extends RecipeProvider implements IConditionBui
                 .define('#', Blocks.AZALEA_LEAVES)
                 .unlockedBy("test", PlayerTrigger.TriggerInstance.tick())
                 .save(recipeOutput.withConditions(zCond("leaf_carpet")), "quark:building/crafting/leafcarpet/azalea_leaf_carpet");
-        ShapedRecipeBuilder.shaped(RecipeCategory.BUILDING_BLOCKS, LeafCarpetModule.carpets.get(8), 3)
+        ShapedRecipeBuilder.shaped(RecipeCategory.BUILDING_BLOCKS, LeafCarpetModule.carpets.get(9), 3)
                 .pattern("##")
                 .define('#', Blocks.FLOWERING_AZALEA_LEAVES)
                 .unlockedBy("test", PlayerTrigger.TriggerInstance.tick())
@@ -1372,7 +1372,7 @@ public class QuarkRecipeProvider extends RecipeProvider implements IConditionBui
                 .define('#', SoulSandstoneModule.blocks.get(0))
                 .unlockedBy("test", PlayerTrigger.TriggerInstance.tick())
                 .save(recipeOutput.withConditions(zCond("soul_sandstone")), "quark:building/crafting/chiseled_soul_sandstone");
-        ShapedRecipeBuilder.shaped(RecipeCategory.BUILDING_BLOCKS, SoulSandstoneModule.blocks.get(3))
+        ShapedRecipeBuilder.shaped(RecipeCategory.BUILDING_BLOCKS, SoulSandstoneModule.blocks.get(2))
                 .pattern("##")
                 .pattern("##")
                 .define('#', SoulSandstoneModule.blocks.get(0))
@@ -1437,7 +1437,7 @@ public class QuarkRecipeProvider extends RecipeProvider implements IConditionBui
                 .unlockedBy("test", PlayerTrigger.TriggerInstance.tick())
                 .save(recipeOutput.withConditions(zCond("raw_metal_bricks")), "quark:building/crafting/raw_copper_bricks_revert");
 
-        ShapedRecipeBuilder.shaped(RecipeCategory.BUILDING_BLOCKS, MidoriModule.blocks.get(0))
+        ShapedRecipeBuilder.shaped(RecipeCategory.BUILDING_BLOCKS, MidoriModule.blocks.get(0), 4)
                 .pattern("##")
                 .pattern("##")
                 .define('#', MidoriModule.moss_paste)
