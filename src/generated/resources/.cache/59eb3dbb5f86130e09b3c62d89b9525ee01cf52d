@@ -1,4 +1,4 @@
-// 1.21.1	2026-01-12T19:54:30.1847931	Loot Tables
+// 1.21.1	2026-01-24T23:18:58.7727369	Loot Tables
 321167e5d1e420c3799ebd55550623276a62d02f data/quark/loot_table/blocks/acacia_bookshelf.json
 78cf85302095b576b7eda6e9c83fd9141e777c3b data/quark/loot_table/blocks/acacia_chest.json
 2d740f286cb6b31376a3bb00878726966b38c064 data/quark/loot_table/blocks/acacia_hedge.json
@@ -387,6 +387,7 @@ ad532fa31780fe35f0f3d9f511f31f47c412dc36 data/quark/loot_table/blocks/mangrove_h
 ef90f3acb31304dedf58b8b753f8a2155ae4d9c4 data/quark/loot_table/blocks/mangrove_leaf_carpet.json
 8818a1aec466c9c15af0101d0dcd462eea753c86 data/quark/loot_table/blocks/mangrove_post.json
 73ab5b6b93fb3702e44dd46c545a8478f7ec2213 data/quark/loot_table/blocks/mangrove_vertical_slab.json
+107b40b90407cc50b890e3a5e0f0d797a7772fad data/quark/loot_table/blocks/matrix_enchanter.json
 becb98a905ef757c61ad8b6431424d3ea1843171 data/quark/loot_table/blocks/midori_block.json
 67d6bb61750b36d24c87e4d110e47d1b7b298f8a data/quark/loot_table/blocks/midori_block_slab.json
 e1949b71851bea803745b81521c58266f1392c3e data/quark/loot_table/blocks/midori_block_stairs.json

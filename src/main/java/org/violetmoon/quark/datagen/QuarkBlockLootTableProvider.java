@@ -212,6 +212,7 @@ public class QuarkBlockLootTableProvider extends BlockLootSubProvider {
         dropSelf(CrateModule.crate);
         dropSelf(MagnetsModule.magnet);
         dropSelf(BackpackModule.bonded_ravager_hide);
+        dropOther(MatrixEnchantingModule.matrixEnchanter, Items.ENCHANTING_TABLE);
     }
 
     @Override
@@ -318,6 +319,7 @@ public class QuarkBlockLootTableProvider extends BlockLootSubProvider {
         ret.add(CrateModule.crate);
         ret.add(MagnetsModule.magnet);
         ret.add(BackpackModule.bonded_ravager_hide);
+        ret.add(MatrixEnchantingModule.matrixEnchanter);
         //Experimental
         return ret;
     }
