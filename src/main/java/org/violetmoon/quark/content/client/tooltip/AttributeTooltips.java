@@ -93,8 +93,10 @@ public class AttributeTooltips {
 
 		if (!Screen.hasShiftDown() && stack.has(DataComponents.ATTRIBUTE_MODIFIERS) && !stack.get(DataComponents.ATTRIBUTE_MODIFIERS).modifiers().isEmpty()) {
 			if (Minecraft.getInstance().player == null) return;
-			List<Either<FormattedText, TooltipComponent>> tooltipRaw = event.getTooltipElements();
-			tooltipRaw.add(1, Either.right(new AttributeComponent(stack)));
+            if (!event.getTooltipElements().isEmpty()) {
+                List<Either<FormattedText, TooltipComponent>> tooltipRaw = event.getTooltipElements();
+                tooltipRaw.add(1, Either.right(new AttributeComponent(stack)));
+            }
 		}
 	}
 
@@ -222,7 +224,7 @@ public class AttributeTooltips {
 				RenderSystem.setShader(GameRenderer::getPositionTexShader);
 				RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
 
-				Minecraft mc = Minecraft.getInstance();
+				Minecraft mc = net.minecraft.client.Minecraft.getInstance();
 				Player player = mc.player; // Player will always be available, if it isnt then uhhhh
 				ItemAttributeModifiers modifiers = stack.get(DataComponents.ATTRIBUTE_MODIFIERS); // The attributes of the item.
 

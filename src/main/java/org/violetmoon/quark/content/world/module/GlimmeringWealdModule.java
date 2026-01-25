@@ -24,6 +24,7 @@ import org.violetmoon.quark.content.world.feature.GlowExtrasFeature;
 import org.violetmoon.quark.content.world.feature.GlowShroomsFeature;
 import org.violetmoon.zeta.advancement.modifier.AdventuringTimeModifier;
 import org.violetmoon.zeta.event.bus.LoadEvent;
+import org.violetmoon.zeta.event.load.ZAddReloadListener;
 import org.violetmoon.zeta.event.load.ZCommonSetup;
 import org.violetmoon.zeta.event.load.ZRegister;
 import org.violetmoon.zeta.module.ZetaLoadModule;
@@ -111,10 +112,14 @@ public class GlimmeringWealdModule extends ZetaModule {
 				FULL_RANGE, //weirdness
 				0F);
 
-        BiomePlacement.addOverworld(BIOME_KEY, climatePoint);
+        if (isEnabled()) {
+            BiomePlacement.addOverworld(BIOME_KEY, climatePoint);
+        }
 
         Quark.ZETA.advancementModifierRegistry.addModifier(new AdventuringTimeModifier(this, ImmutableSet.of(BIOME_KEY)));
     }
+
+
 
     @LoadEvent
     public void setup(ZCommonSetup e) {
