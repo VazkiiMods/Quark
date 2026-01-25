@@ -1412,7 +1412,7 @@ public class QuarkRecipeProvider extends RecipeProvider implements IConditionBui
                 .define('I', Blocks.RAW_IRON_BLOCK)
                 .unlockedBy("test", PlayerTrigger.TriggerInstance.tick())
                 .save(recipeOutput.withConditions(zCond("raw_metal_bricks")), "quark:building/crafting/raw_iron_bricks");
-        ShapelessRecipeBuilder.shapeless(RecipeCategory.BUILDING_BLOCKS, Items.RAW_IRON, 1)
+        ShapelessRecipeBuilder.shapeless(RecipeCategory.BUILDING_BLOCKS, Items.RAW_IRON, 9)
                 .requires(RawMetalBricksModule.blocks.get(0))
                 .unlockedBy("test", PlayerTrigger.TriggerInstance.tick())
                 .save(recipeOutput.withConditions(zCond("raw_metal_bricks")), "quark:building/crafting/raw_iron_bricks_revert");
@@ -1422,7 +1422,7 @@ public class QuarkRecipeProvider extends RecipeProvider implements IConditionBui
                 .define('I', Blocks.RAW_GOLD_BLOCK)
                 .unlockedBy("test", PlayerTrigger.TriggerInstance.tick())
                 .save(recipeOutput.withConditions(zCond("raw_metal_bricks")), "quark:building/crafting/raw_gold_bricks");
-        ShapelessRecipeBuilder.shapeless(RecipeCategory.BUILDING_BLOCKS, Items.RAW_GOLD, 1)
+        ShapelessRecipeBuilder.shapeless(RecipeCategory.BUILDING_BLOCKS, Items.RAW_GOLD, 9)
                 .requires(RawMetalBricksModule.blocks.get(1))
                 .unlockedBy("test", PlayerTrigger.TriggerInstance.tick())
                 .save(recipeOutput.withConditions(zCond("raw_metal_bricks")), "quark:building/crafting/raw_gold_bricks_revert");
@@ -1432,7 +1432,7 @@ public class QuarkRecipeProvider extends RecipeProvider implements IConditionBui
                 .define('I', Blocks.RAW_COPPER_BLOCK)
                 .unlockedBy("test", PlayerTrigger.TriggerInstance.tick())
                 .save(recipeOutput.withConditions(zCond("raw_metal_bricks")), "quark:building/crafting/raw_copper_bricks");
-        ShapelessRecipeBuilder.shapeless(RecipeCategory.BUILDING_BLOCKS, Items.RAW_GOLD, 1)
+        ShapelessRecipeBuilder.shapeless(RecipeCategory.BUILDING_BLOCKS, Items.RAW_COPPER, 9)
                 .requires(RawMetalBricksModule.blocks.get(2))
                 .unlockedBy("test", PlayerTrigger.TriggerInstance.tick())
                 .save(recipeOutput.withConditions(zCond("raw_metal_bricks")), "quark:building/crafting/raw_copper_bricks_revert");

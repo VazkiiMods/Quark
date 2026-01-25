@@ -1,4 +1,4 @@
-// 1.21.1	2026-01-20T18:03:52.828536	Recipes
+// 1.21.1	2026-01-25T15:10:34.806676	Recipes
 bb24f1bac2cb3ef401eb56f32a5b7364bcee7552 data/quark/advancement/recipes/building_blocks/building/crafting/bamboo_mat.json
 31f4957990f1d18f202f816de898f77458b18140 data/quark/advancement/recipes/building_blocks/building/crafting/bamboo_mat_carpet.json
 8df9c4ad585c2226233ee6e8f7bc96f33806df86 data/quark/advancement/recipes/building_blocks/building/crafting/blackstone_bricks.json
@@ -1217,11 +1217,11 @@ e22050261e9c097fa7c69d4cdb88a05d8f09c8f2 data/quark/recipe/building/crafting/pos
 aa0d4eeecd5b4e72d2d29234a02e3deb0b6d5f9c data/quark/recipe/building/crafting/posts/stripped_warped_post.json
 a75cf51c57f16ac5ed9d0455171ac57d45a3f23c data/quark/recipe/building/crafting/posts/warped_post.json
 40b3cee2189ea3ea5c2316a1f9d8c37e68883309 data/quark/recipe/building/crafting/raw_copper_bricks.json
-af59da6f1fec2b62c0783520ca27f16831434402 data/quark/recipe/building/crafting/raw_copper_bricks_revert.json
+d029e4fe9cac0b223509037588d1ab674aef6558 data/quark/recipe/building/crafting/raw_copper_bricks_revert.json
 d57eb737f08650d2f068e656a0619debf378ff9b data/quark/recipe/building/crafting/raw_gold_bricks.json
-e43ec95d449686636590c71311285f841343e131 data/quark/recipe/building/crafting/raw_gold_bricks_revert.json
+e0378dd9869095ae2c3fe09909badc0b2490fc9d data/quark/recipe/building/crafting/raw_gold_bricks_revert.json
 ea4f124a85ed920bc8447f85940463d7dc119cb3 data/quark/recipe/building/crafting/raw_iron_bricks.json
-4e597a83c0043522333e9cb28fced79722abc9ec data/quark/recipe/building/crafting/raw_iron_bricks_revert.json
+454be5c4ac8924186c3d98ed371f80eae2711162 data/quark/recipe/building/crafting/raw_iron_bricks_revert.json
 0ed7b7cf5e8c3613af7cf58cd3789230882c1bd8 data/quark/recipe/building/crafting/red_sandstone_bricks.json
 f9c7326e512a29889ac4fc3c3b55b3afbfb80a11 data/quark/recipe/building/crafting/rope.json
 3459e31467736e32f7d01fcb253afa7c5d678b18 data/quark/recipe/building/crafting/rusty_iron_plate.json
