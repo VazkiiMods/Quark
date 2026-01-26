@@ -91,7 +91,7 @@ public class AttributeTooltips {
 	public static void makeTooltip(ZGatherTooltipComponents event) {
 		ItemStack stack = event.getItemStack();
 
-		if (!Screen.hasShiftDown() && stack.has(DataComponents.ATTRIBUTE_MODIFIERS) && !stack.get(DataComponents.ATTRIBUTE_MODIFIERS).modifiers().isEmpty()) {
+		if (!Screen.hasShiftDown() && stack.getAttributeModifiers() != null && !stack.getAttributeModifiers().modifiers().isEmpty()) {
 			if (Minecraft.getInstance().player == null) return;
             if (!event.getTooltipElements().isEmpty()) {
                 List<Either<FormattedText, TooltipComponent>> tooltipRaw = event.getTooltipElements();
@@ -140,7 +140,7 @@ public class AttributeTooltips {
 	 * @return A simplified set of attribute modifiers. Don't wanna return the actual stack (It would probably cause some issues if it actually combined em)
 	 */
 	public static ItemAttributeModifiers simplifyStackAttributes(ItemStack stack) {
-		ItemAttributeModifiers modifiers = stack.get(DataComponents.ATTRIBUTE_MODIFIERS);
+		ItemAttributeModifiers modifiers = stack.getAttributeModifiers();
 		List<ItemAttributeModifiers.Entry> simplifiedList = new ArrayList<>();
 
 		for (ItemAttributeModifiers.Entry entry : modifiers.modifiers()) {
@@ -226,7 +226,7 @@ public class AttributeTooltips {
 
 				Minecraft mc = net.minecraft.client.Minecraft.getInstance();
 				Player player = mc.player; // Player will always be available, if it isnt then uhhhh
-				ItemAttributeModifiers modifiers = stack.get(DataComponents.ATTRIBUTE_MODIFIERS); // The attributes of the item.
+				ItemAttributeModifiers modifiers = stack.getAttributeModifiers(); // The attributes of the item.
 
 				// Sorting has some errors, huh.
 				/*modifiers.modifiers().sort((entry, entry2) -> {
@@ -258,7 +258,7 @@ public class AttributeTooltips {
 
 					if (!comparedItem.isEmpty() && !comparedItem.equals(stack) &&
 							comparedItem.has(DataComponents.ATTRIBUTE_MODIFIERS) &&
-							!comparedItem.get(DataComponents.ATTRIBUTE_MODIFIERS).modifiers().isEmpty()) {
+							!comparedItem.getAttributeModifiers().modifiers().isEmpty()) {
 						ItemAttributeModifiers differenceInModifiers = compareAttributesOfStacks(comparedItem, stack);
 
 						for (ItemAttributeModifiers.Entry entry : simplifyStackAttributes(stack).modifiers()) {
@@ -299,7 +299,7 @@ public class AttributeTooltips {
 		@Override
 		public int getHeight() {
 			int y = 0;
-			ItemAttributeModifiers modifiers = stack.get(DataComponents.ATTRIBUTE_MODIFIERS);
+			ItemAttributeModifiers modifiers = stack.getAttributeModifiers();
 			if (modifiers.showInTooltip()) {
 				List<EquipmentSlotGroup> groups = new ArrayList<>();
 				for (ItemAttributeModifiers.Entry entry : modifiers.modifiers()) {
@@ -313,7 +313,7 @@ public class AttributeTooltips {
 		@Override
 		public int getWidth(@NotNull Font font) {
 			int width = 8;
-			ItemAttributeModifiers modifiers = stack.get(DataComponents.ATTRIBUTE_MODIFIERS);
+			ItemAttributeModifiers modifiers = stack.getAttributeModifiers();
 			Minecraft mc = Minecraft.getInstance();
 
 			if (modifiers.showInTooltip()) {

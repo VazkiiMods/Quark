@@ -180,6 +180,10 @@ public class BackpackItem extends ArmorItem implements IZetaItem, IZetaItemExten
                     changedEnchants = true;
                 }
             } else if (!canIgnoreEquip) {
+                BackpackContainer container = new BackpackContainer(stack);
+                for (ItemStack item : container.getItems()) {
+                    Containers.dropItemStack(worldIn, entityIn.getX(), entityIn.getY(), entityIn.getZ(), item);
+                }
                 stack.set(DataComponents.CONTAINER, ItemContainerContents.EMPTY);
             } else if (!BackpackModule.superOpMode && entityIn instanceof Player player && (player.isCreative() || player.isSpectator())) {
                 stack.set(DataComponents.LORE, ItemLore.EMPTY.withLineAdded(Component.translatable("item.quark.backpack.warning.line_1").withStyle(ChatFormatting.RED)).withLineAdded(Component.translatable("item.quark.backpack.warning.line_2")));

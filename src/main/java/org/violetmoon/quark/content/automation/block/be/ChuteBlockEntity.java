@@ -81,8 +81,9 @@ public class ChuteBlockEntity extends ZetaBlockEntity implements Container {
             BlockPos below = worldPosition.below();
             BlockState state = level.getBlockState(below);
             if (state.is(PipesModule.pipesTag) && state.hasProperty(PipeBlock.UP)) {
-                ((PipeBlockEntity)level.getBlockEntity(below)).passIn(stack, Direction.UP);
-                ((PipeBlockEntity)level.getBlockEntity(below)).sync();
+                PipeBlockEntity pipe = ((PipeBlockEntity)level.getBlockEntity(below));
+                pipe.passIn(stack, Direction.UP);
+                pipe.sync(); // Sync needed as client doesnt know that this interaction happens I think.
             } else {
                 ItemEntity entity = new ItemEntity(level, worldPosition.getX() + 0.5,
                         worldPosition.getY() - 0.5, worldPosition.getZ() + 0.5, stack.copy());

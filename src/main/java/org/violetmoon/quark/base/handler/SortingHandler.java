@@ -149,7 +149,7 @@ public final class SortingHandler {
 		}
 
 		// Set the sorted slots to what they are supposed to be.
-		for (int slot = iStart; slot < iEnd; slot++) {
+		for (int slot = iStart; (slot < iEnd) && (stacks.size() > slot - iStart - skipped); slot++) {
 			// Check if it's a locked slot, in which case we skip it.
 			if(isLocked(slot, lockedSlots)) {
 				container.setItem(slot, containerCopy.get(slot));
