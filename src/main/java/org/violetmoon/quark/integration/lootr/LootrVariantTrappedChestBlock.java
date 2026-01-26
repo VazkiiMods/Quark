@@ -26,8 +26,6 @@ import noobanidus.mods.lootr.common.api.LootrAPI;
 import noobanidus.mods.lootr.common.api.data.ILootrInfoProvider;
 import noobanidus.mods.lootr.common.api.data.blockentity.ILootrBlockEntity;
 import noobanidus.mods.lootr.common.block.entity.LootrChestBlockEntity;
-import noobanidus.mods.lootr.common.block.entity.LootrTrappedChestBlockEntity;
-import noobanidus.mods.lootr.neoforge.config.ConfigManager;
 import org.jetbrains.annotations.Nullable;
 import org.violetmoon.quark.content.building.block.VariantTrappedChestBlock;
 import org.violetmoon.zeta.module.ZetaModule;

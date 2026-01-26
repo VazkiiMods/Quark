@@ -7,9 +7,7 @@ import net.minecraft.data.PackOutput;
 import net.neoforged.neoforge.common.data.DatapackBuiltinEntriesProvider;
 import org.violetmoon.quark.base.Quark;
 import org.violetmoon.quark.datagen.groups.QuarkBiomes;
-import org.violetmoon.quark.datagen.groups.QuarkConfiguredFeatures;
 import org.violetmoon.quark.datagen.groups.QuarkMusicDiscs;
-import org.violetmoon.quark.datagen.groups.QuarkPlacedFeatures;
 
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;

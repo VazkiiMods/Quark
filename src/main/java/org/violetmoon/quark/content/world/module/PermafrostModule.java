@@ -6,7 +6,6 @@ import org.violetmoon.quark.base.util.QuarkWorldGenWeights;
 import org.violetmoon.quark.content.world.undergroundstyle.PermafrostStyle;
 import org.violetmoon.quark.content.world.undergroundstyle.base.UndergroundStyleConfig;
 import org.violetmoon.quark.content.world.undergroundstyle.base.UndergroundStyleGenerator;
-import org.violetmoon.zeta.block.IZetaBlock;
 import org.violetmoon.zeta.block.OldMaterials;
 import org.violetmoon.zeta.block.ZetaBlock;
 import org.violetmoon.zeta.config.Config;

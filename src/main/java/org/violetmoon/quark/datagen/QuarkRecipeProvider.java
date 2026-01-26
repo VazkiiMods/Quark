@@ -37,7 +37,6 @@ import org.violetmoon.zeta.config.FlagCondition;
 import org.violetmoon.zeta.util.MiscUtil;
 import org.violetmoon.zeta.util.VanillaWoods;
 
-import javax.xml.crypto.Data;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;

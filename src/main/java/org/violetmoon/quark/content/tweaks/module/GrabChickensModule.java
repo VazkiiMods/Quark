@@ -1,8 +1,6 @@
 package org.violetmoon.quark.content.tweaks.module;
 
 import net.minecraft.client.model.ChickenModel;
-import net.minecraft.client.multiplayer.ClientLevel;
-import net.minecraft.client.player.AbstractClientPlayer;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.player.RemotePlayer;
 import net.minecraft.network.protocol.game.ClientboundSetPassengersPacket;

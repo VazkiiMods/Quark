@@ -14,8 +14,6 @@ import net.minecraft.world.item.crafting.CraftingRecipe;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import org.violetmoon.quark.base.Quark;
-import org.violetmoon.quark.base.QuarkClient;
-import org.violetmoon.quark.content.tweaks.recipe.ElytraDuplicationRecipe;
 
 import java.util.ArrayList;
 import java.util.List;

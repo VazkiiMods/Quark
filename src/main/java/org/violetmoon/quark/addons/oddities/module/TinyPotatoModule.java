@@ -19,7 +19,6 @@ import org.violetmoon.quark.addons.oddities.client.render.be.TaterWithoutLevelRe
 import org.violetmoon.quark.addons.oddities.client.render.be.TinyPotatoRenderer;
 import org.violetmoon.quark.base.Quark;
 import org.violetmoon.zeta.advancement.ManualTrigger;
-import org.violetmoon.zeta.client.SimpleWithoutLevelRenderer;
 import org.violetmoon.zeta.client.event.load.ZAddModels;
 import org.violetmoon.zeta.client.event.load.ZClientSetup;
 import org.violetmoon.zeta.client.event.load.ZModel;

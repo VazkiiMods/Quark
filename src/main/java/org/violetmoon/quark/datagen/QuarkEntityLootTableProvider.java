@@ -11,10 +11,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.flag.FeatureFlags;
 import net.minecraft.world.item.Items;
-import net.minecraft.world.item.enchantment.Enchantment;
-import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.biome.Biome;
-import net.minecraft.world.level.biome.Biomes;
 import net.minecraft.world.level.storage.loot.LootContext;
 import net.minecraft.world.level.storage.loot.LootPool;
 import net.minecraft.world.level.storage.loot.LootTable;
@@ -26,15 +23,12 @@ import net.minecraft.world.level.storage.loot.predicates.*;
 import net.minecraft.world.level.storage.loot.providers.number.ConstantValue;
 import net.minecraft.world.level.storage.loot.providers.number.UniformGenerator;
 import org.jetbrains.annotations.NotNull;
-import org.violetmoon.quark.base.Quark;
 import org.violetmoon.quark.content.mobs.entity.Stoneling;
 import org.violetmoon.quark.content.mobs.module.*;
 import org.violetmoon.quark.content.tools.module.PathfinderMapsModule;
 import org.violetmoon.quark.content.world.module.GlimmeringWealdModule;
-import org.violetmoon.zeta.config.FlagLootCondition;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Stream;
 
 public class QuarkEntityLootTableProvider extends EntityLootSubProvider {

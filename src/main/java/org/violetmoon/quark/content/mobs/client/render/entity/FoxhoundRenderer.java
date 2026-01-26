@@ -16,7 +16,6 @@ import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.MobRenderer;
 import net.minecraft.resources.ResourceLocation;
 
-import net.minecraft.world.entity.Pose;
 import org.jetbrains.annotations.NotNull;
 
 import org.violetmoon.quark.base.Quark;

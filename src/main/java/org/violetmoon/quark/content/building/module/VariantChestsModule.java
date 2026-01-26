@@ -34,7 +34,6 @@ import org.violetmoon.quark.content.building.block.VariantTrappedChestBlock;
 import org.violetmoon.quark.content.building.block.be.VariantChestBlockEntity;
 import org.violetmoon.quark.content.building.block.be.VariantTrappedChestBlockEntity;
 import org.violetmoon.quark.content.building.client.render.be.VariantChestRenderer;
-import org.violetmoon.quark.content.building.recipe.MixedExclusionRecipe;
 import org.violetmoon.quark.mixin.mixins.accessor.AccessorAbstractChestedHorse;
 import org.violetmoon.zeta.client.SimpleWithoutLevelRenderer;
 import org.violetmoon.zeta.client.event.load.ZClientSetup;

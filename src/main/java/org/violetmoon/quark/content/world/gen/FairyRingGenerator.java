@@ -4,7 +4,6 @@ import java.util.List;
 
 import org.violetmoon.quark.content.world.module.FairyRingsModule;
 import org.violetmoon.zeta.config.type.DimensionConfig;
-import org.violetmoon.zeta.util.BlockUtils;
 import org.violetmoon.zeta.world.generator.Generator;
 
 import net.minecraft.core.BlockPos;
@@ -17,7 +16,6 @@ import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.WorldGenLevel;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.TransparentBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.chunk.ChunkGenerator;
 import net.minecraft.world.level.levelgen.feature.ConfiguredFeature;
