@@ -109,7 +109,7 @@ public class GoldToolsHaveFortuneModule extends ZetaModule {
 		return false;
 	}
 
-	public static int getActualEnchantmentLevel(Holder<Enchantment> holder, ItemStack stack, int original) {
+	public static int modifyFortuneLooting(Holder<Enchantment> holder, ItemStack stack, int original) {
 		if (!staticEnabled) return original;
 
 		if (BUILTIN_ENCHANTMENTS.containsKey(stack.getItem())) {
@@ -123,13 +123,26 @@ public class GoldToolsHaveFortuneModule extends ZetaModule {
 		return original;
 	}
 
+	public static ItemEnchantments modifyComponentEnchantLevel(ItemStack stack, HolderLookup.RegistryLookup<Enchantment> registryLookup, ItemEnchantments enchantments) {
+		if (!staticEnabled || !BUILTIN_ENCHANTMENTS.containsKey(stack.getItem())) return enchantments;
+
+		Object2IntMap<ResourceKey<Enchantment>> builtInEnchantments = BUILTIN_ENCHANTMENTS.get(stack.getItem());
+		ItemEnchantments.Mutable newEnchantments = new ItemEnchantments.Mutable(enchantments);
+
+		for (ResourceKey<Enchantment> enchantmentKey : builtInEnchantments.keySet()) {
+			Holder<Enchantment> holder = registryLookup.getOrThrow(enchantmentKey);
+			newEnchantments.set(holder, Math.max(newEnchantments.getLevel(holder), builtInEnchantments.getOrDefault(enchantmentKey, 0)));
+		}
+		return newEnchantments.toImmutable();
+	}
+
 	public static ItemStack createTooltipStack(ItemStack stack, DataComponentType<?> componentType, HolderLookup.Provider provider) {
 		if (!staticEnabled || !displayBakedEnchantmentsInTooltip || componentType != DataComponents.ENCHANTMENTS) return stack;
 
 		if (BUILTIN_ENCHANTMENTS.containsKey(stack.getItem())) {
 			ItemStack copy = stack.copy();
-			Object2IntMap<ResourceKey<Enchantment>> builtInEnchantments = BUILTIN_ENCHANTMENTS.get(stack.getItem());
 			ItemEnchantments itemEnchantments = Optional.ofNullable(copy.get(DataComponents.ENCHANTMENTS)).orElse(ItemEnchantments.EMPTY);
+			Object2IntMap<ResourceKey<Enchantment>> builtInEnchantments = BUILTIN_ENCHANTMENTS.get(stack.getItem());
 			ItemEnchantments.Mutable newEnchantments = new ItemEnchantments.Mutable(itemEnchantments);
 
 			for (ResourceKey<Enchantment> enchantmentKey : builtInEnchantments.keySet()) {
