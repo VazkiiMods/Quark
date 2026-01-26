@@ -82,6 +82,7 @@ public class ChuteBlockEntity extends ZetaBlockEntity implements Container {
             BlockState state = level.getBlockState(below);
             if (state.is(PipesModule.pipesTag) && state.hasProperty(PipeBlock.UP)) {
                 ((PipeBlockEntity)level.getBlockEntity(below)).passIn(stack, Direction.UP);
+                ((PipeBlockEntity)level.getBlockEntity(below)).sync();
             } else {
                 ItemEntity entity = new ItemEntity(level, worldPosition.getX() + 0.5,
                         worldPosition.getY() - 0.5, worldPosition.getZ() + 0.5, stack.copy());

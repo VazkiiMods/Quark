@@ -2,6 +2,7 @@ package org.violetmoon.quark.content.building.entity;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.world.entity.Entity;
@@ -54,7 +55,9 @@ public class Stool extends Entity {
 
 				if(piston != null) {
 					Direction dir = piston.getMovementDirection();
-					move(MoverType.PISTON, new Vec3((float) dir.getStepX() * 0.33, (float) dir.getStepY() * 0.33, (float) dir.getStepZ() * 0.33));
+                    float p = piston.getProgress(1/2f);
+					move(MoverType.PISTON, new Vec3((float) dir.getStepX() * p, (float) dir.getStepY() * p, (float) dir.getStepZ() * p));
+                    level().addParticle(ParticleTypes.CRIT, (float) dir.getStepX() * p, (float) dir.getStepY() * p, (float) dir.getStepZ() * p, 0, 0, 0);
 
 					didOffset = true;
 				}
