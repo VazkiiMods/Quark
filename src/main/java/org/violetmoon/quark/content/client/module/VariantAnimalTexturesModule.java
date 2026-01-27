@@ -17,8 +17,6 @@ import net.minecraft.world.entity.animal.horse.Llama;
 import net.minecraft.world.entity.monster.Slime;
 import net.minecraft.world.level.Level;
 
-import net.neoforged.fml.loading.FMLLoader;
-import org.checkerframework.checker.units.qual.A;
 import org.jetbrains.annotations.Nullable;
 
 import org.violetmoon.quark.base.Quark;

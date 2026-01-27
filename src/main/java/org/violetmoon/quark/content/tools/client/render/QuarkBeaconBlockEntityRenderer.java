@@ -11,8 +11,6 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.FastColor;
 import net.minecraft.util.Mth;
 import net.minecraft.world.level.block.entity.BeaconBlockEntity;
-import org.joml.Matrix3f;
-import org.joml.Matrix4f;
 import org.violetmoon.quark.content.tools.module.BeaconRedirectionModule;
 import org.violetmoon.quark.content.tools.module.BeaconRedirectionModule.ExtendedBeamSegment;
 

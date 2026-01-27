@@ -1,17 +1,8 @@
 package org.violetmoon.quark.mixin.mixins;
 
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.world.item.trading.MerchantOffer;
 import net.minecraft.world.item.trading.MerchantOffers;
 
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-
-import org.violetmoon.quark.content.experimental.hax.PseudoAccessorMerchantOffer;
-
-import java.util.Collection;
 
 @Mixin(MerchantOffers.class)
 public class MerchantOffersMixin {

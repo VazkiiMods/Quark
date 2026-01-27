@@ -21,7 +21,6 @@ import org.violetmoon.quark.base.util.QuarkWorldGenWeights;
 import org.violetmoon.quark.content.world.block.MyaliteCrystalBlock;
 import org.violetmoon.quark.content.world.gen.SpiralSpireGenerator;
 import org.violetmoon.zeta.advancement.ManualTrigger;
-import org.violetmoon.zeta.block.IZetaBlock;
 import org.violetmoon.zeta.block.OldMaterials;
 import org.violetmoon.zeta.block.ZetaBlock;
 import org.violetmoon.zeta.config.Config;

@@ -1,7 +1,6 @@
 package org.violetmoon.quark.mixin.mixins;
 
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.world.level.Level;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.violetmoon.quark.addons.oddities.capability.MagnetTracker;

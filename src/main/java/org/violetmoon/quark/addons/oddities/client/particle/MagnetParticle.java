@@ -9,8 +9,6 @@ import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.phys.Vec3;
-import org.joml.Quaternionf;
-import org.joml.Vector3f;
 import org.violetmoon.quark.addons.oddities.block.MagnetBlock;
 
 import java.util.List;

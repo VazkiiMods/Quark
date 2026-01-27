@@ -8,7 +8,6 @@ import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.ModList;
 import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent;
 import net.neoforged.neoforge.network.registration.PayloadRegistrar;
-import org.violetmoon.quark.base.Quark;
 
 import java.util.Collections;
 import java.util.HashSet;

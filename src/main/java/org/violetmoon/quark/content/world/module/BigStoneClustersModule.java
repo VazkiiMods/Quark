@@ -20,7 +20,6 @@ import org.violetmoon.zeta.config.Config;
 import org.violetmoon.zeta.config.type.CompoundBiomeConfig;
 import org.violetmoon.zeta.config.type.DimensionConfig;
 import org.violetmoon.zeta.event.bus.LoadEvent;
-import org.violetmoon.zeta.event.bus.PlayEvent;
 import org.violetmoon.zeta.event.load.ZCommonSetup;
 import org.violetmoon.zeta.event.load.ZConfigChanged;
 import org.violetmoon.zeta.event.load.ZGatherHints;

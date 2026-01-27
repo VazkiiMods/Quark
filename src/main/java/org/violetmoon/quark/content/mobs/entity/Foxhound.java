@@ -65,7 +65,6 @@ import org.violetmoon.quark.base.handler.QuarkSounds;
 import org.violetmoon.quark.content.mobs.ai.FoxhoundPlaceToRestGoal;
 import org.violetmoon.quark.content.mobs.module.FoxhoundModule;
 import org.violetmoon.quark.content.tweaks.ai.WantLoveGoal;
-import org.violetmoon.quark.mixin.mixins.accessor.AccessorLivingEntity;
 
 import java.util.List;
 import java.util.UUID;
