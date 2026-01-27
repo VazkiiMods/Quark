@@ -28,12 +28,15 @@ import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.level.gameevent.GameEvent.Context;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
+import net.neoforged.neoforge.network.connection.ConnectionType;
 import org.jetbrains.annotations.NotNull;
 import org.joml.Vector3f;
 import org.violetmoon.quark.addons.oddities.block.pipe.BasePipeBlock;
 import org.violetmoon.quark.addons.oddities.module.PipesModule;
 import org.violetmoon.quark.base.Quark;
 import org.violetmoon.quark.base.handler.QuarkSounds;
+import org.violetmoon.quark.content.automation.block.be.ChuteBlockEntity;
+import org.violetmoon.quark.content.automation.module.ChuteModule;
 import org.violetmoon.zeta.util.MiscUtil;
 import org.violetmoon.zeta.util.SimpleInventoryBlockEntity;
 
@@ -151,10 +154,10 @@ public class PipeBlockEntity extends SimpleInventoryBlockEntity {
 			iterating = false;
 
 			if(!queuedItems.isEmpty()) {
-				sync();
 				pipeItems.addAll(queuedItems);
 				queuedItems.clear();
-			}
+                sync();
+            }
 		}
 
 
@@ -228,8 +231,9 @@ public class PipeBlockEntity extends SimpleInventoryBlockEntity {
 	}
 
 	private void bounceBack(PipeItem item, ItemStack stack) {
-		if(!level.isClientSide)
-			passIn(stack == null ? item.stack : stack, item.outgoingFace, item.incomingFace, item.rngSeed, item.timeInWorld);
+		if(!level.isClientSide) {
+            passIn(stack == null ? item.stack : stack, item.outgoingFace, item.incomingFace, item.rngSeed, item.timeInWorld);
+        }
 	}
 
 	public void dropItem(ItemStack stack) {
@@ -323,6 +327,9 @@ public class PipeBlockEntity extends SimpleInventoryBlockEntity {
 
 		ListTag pipeItemList = new ListTag();
 		for(PipeItem item : pipeItems) {
+            if (level.getBlockState(this.getBlockPos().above()).is(ChuteModule.chute)) {
+                Quark.LOG.warn("Yeah Lmfao");
+            }
 			CompoundTag listCmp = new CompoundTag();
 			item.writeToNBT(listCmp, provider);
 			pipeItemList.add(listCmp);

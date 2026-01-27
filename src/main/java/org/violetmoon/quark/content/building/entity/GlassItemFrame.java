@@ -74,7 +74,7 @@ public class GlassItemFrame extends ItemFrame implements IEntityWithComplexSpawn
 			BlockPos behind = getBehindPos();
 			BlockEntity tile = level().getBlockEntity(behind);
 
-			if (tile != null && level().getCapability(Capabilities.ItemHandler.BLOCK, tile.getBlockPos(), direction) != null) {
+			if (tile != null) {
 				BlockState behindState = level().getBlockState(behind);
 				InteractionResult result = behindState.useWithoutItem(level(), player, new BlockHitResult(new Vec3(getX(), getY(), getZ()), direction, behind, true));
 				if (result.consumesAction()) return result;
