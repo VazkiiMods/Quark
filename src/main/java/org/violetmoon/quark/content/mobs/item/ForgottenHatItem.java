@@ -28,8 +28,9 @@ public class ForgottenHatItem extends ZetaArmorItem implements IZetaItem {
 		super(ArmorMaterials.LEATHER, Type.HELMET,
 				new Item.Properties()
 						.stacksTo(1)
-						.durability(0)
+						.durability(55)
 						.rarity(Rarity.RARE)
+                        .component(DataComponents.UNBREAKABLE, new Unbreakable(false))
 						.attributes(createAttributes()));
 
 		Quark.ZETA.registry.registerItem(this, "forgotten_hat");
