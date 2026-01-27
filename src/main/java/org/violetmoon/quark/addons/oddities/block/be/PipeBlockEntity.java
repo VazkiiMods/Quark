@@ -7,6 +7,7 @@ import net.minecraft.core.HolderLookup;
 import net.minecraft.core.particles.DustParticleOptions;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
+import net.minecraft.nbt.Tag;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
@@ -32,6 +33,7 @@ import org.jetbrains.annotations.NotNull;
 import org.joml.Vector3f;
 import org.violetmoon.quark.addons.oddities.block.pipe.BasePipeBlock;
 import org.violetmoon.quark.addons.oddities.module.PipesModule;
+import org.violetmoon.quark.base.Quark;
 import org.violetmoon.quark.base.handler.QuarkSounds;
 import org.violetmoon.quark.content.automation.block.be.ChuteBlockEntity;
 import org.violetmoon.quark.content.automation.module.ChuteModule;
@@ -325,9 +327,6 @@ public class PipeBlockEntity extends SimpleInventoryBlockEntity {
 
 		ListTag pipeItemList = new ListTag();
 		for(PipeItem item : pipeItems) {
-            if (level.getBlockState(this.getBlockPos().above()).is(ChuteModule.chute)) {
-                Quark.LOG.warn("Yeah Lmfao");
-            }
 			CompoundTag listCmp = new CompoundTag();
 			item.writeToNBT(listCmp, provider);
 			pipeItemList.add(listCmp);

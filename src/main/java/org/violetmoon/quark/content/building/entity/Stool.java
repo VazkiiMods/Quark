@@ -4,10 +4,14 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.protocol.game.ClientboundMoveEntityPacket;
 import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MoverType;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.piston.PistonMovingBlockEntity;
@@ -15,6 +19,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import org.violetmoon.quark.content.building.block.StoolBlock;
+import org.violetmoon.quark.mixin.mixins.accessor.AccessorPistonMovingBlockEntity;
 
 import java.util.List;
 
@@ -24,18 +29,18 @@ public class Stool extends Entity {
 		super(entityTypeIn, worldIn);
 	}
 
-	@Override
+    @Override
 	public void tick() {
 		super.tick();
 
-		List<Entity> passengers = getPassengers();
+        List<Entity> passengers = getPassengers();
 		boolean dead = passengers.isEmpty();
 
 		BlockPos pos = blockPosition();
 		BlockState state = level().getBlockState(pos);
 
 		if(!dead) {
-			if(!(state.getBlock() instanceof StoolBlock)) {
+            if(!(state.getBlock() instanceof StoolBlock)) {
 				PistonMovingBlockEntity piston = null;
 				boolean didOffset = false;
 
@@ -54,10 +59,14 @@ public class Stool extends Entity {
 					}
 
 				if(piston != null) {
+                    boolean lmfao = noPhysics;
+                    noPhysics = false;
 					Direction dir = piston.getMovementDirection();
-                    float p = piston.getProgress(1/2f);
-					move(MoverType.PISTON, new Vec3((float) dir.getStepX() * p, (float) dir.getStepY() * p, (float) dir.getStepZ() * p));
-                    level().addParticle(ParticleTypes.CRIT, (float) dir.getStepX() * p, (float) dir.getStepY() * p, (float) dir.getStepZ() * p, 0, 0, 0);
+                    // Somehow, the progress being at 0.98f stops it from desyncing as easily? What.
+                    AccessorPistonMovingBlockEntity.getMoveEntityByPiston(dir, this, piston.getProgress(0.98f), dir);
+                    //float p = piston.getProgress(0);
+					//move(MoverType.PISTON, new Vec3((float) dir.getStepX() * p, (float) dir.getStepY() * p, (float) dir.getStepZ() * p));
+                    noPhysics = lmfao;
 
 					didOffset = true;
 				}

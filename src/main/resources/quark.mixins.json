@@ -77,6 +77,7 @@
     "accessor.AccessorMerchantMenu",
     "accessor.AccessorMerchantOffer",
     "accessor.AccessorOverworldBiomes",
+    "accessor.AccessorPistonMovingBlockEntity",
     "accessor.AccessorServerGamePacketListener",
     "accessor.AccessorSinglePoolElement",
     "accessor.AccessorTemptingSensor",
