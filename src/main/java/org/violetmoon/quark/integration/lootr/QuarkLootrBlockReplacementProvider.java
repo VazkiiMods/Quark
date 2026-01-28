@@ -8,7 +8,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.HashMap;
 import java.util.Map;
 
-public class QuarkLootrBlockRepacementProvider implements ILootrBlockReplacementProvider {
+public class QuarkLootrBlockReplacementProvider implements ILootrBlockReplacementProvider {
     private static Map<Block, Block> quarkLootrReplacementMappings = new HashMap<>();
 
     @Override

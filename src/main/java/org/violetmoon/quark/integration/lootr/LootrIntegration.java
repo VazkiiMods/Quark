@@ -1,13 +1,10 @@
 package org.violetmoon.quark.integration.lootr;
 
 import net.minecraft.core.registries.Registries;
-import net.minecraft.tags.TagKey;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.entity.ChestBlockEntity;
-import net.minecraft.world.level.block.state.BlockState;
 import noobanidus.mods.lootr.common.api.replacement.BlockReplacementMap;
-import noobanidus.mods.lootr.common.api.replacement.ILootrBlockReplacementProvider;
 import org.jetbrains.annotations.Nullable;
 import org.violetmoon.quark.base.Quark;
 import org.violetmoon.quark.base.util.BlockPropertyUtil;
@@ -44,13 +41,13 @@ public class LootrIntegration implements ILootrIntegration {
 				BlockPropertyUtil.copyPropertySafe(base)).setCondition(condition);
 		lootrRegularChests.add(lootrRegularChest);
 
-        QuarkLootrBlockRepacementProvider.addMapping(quarkRegularChest, lootrRegularChest);
+        QuarkLootrBlockReplacementProvider.addMapping(quarkRegularChest, lootrRegularChest);
 
 		Block lootrTrappedChest = new LootrVariantTrappedChestBlock(name, module, () -> trappedChestTEType,
 				BlockPropertyUtil.copyPropertySafe(base)).setCondition(condition);
         lootrTrappedChests.add(lootrTrappedChest);
 
-        QuarkLootrBlockRepacementProvider.addMapping(quarkTrappedChest, lootrTrappedChest);
+        QuarkLootrBlockReplacementProvider.addMapping(quarkTrappedChest, lootrTrappedChest);
     }
 
 	@Override
