@@ -180,7 +180,15 @@ public class VariantChestsModule extends ZetaModule {
 				if(block != Blocks.AIR) {
 					manualChestMappings.put(ResourceLocation.parse(left), block);
 					if(regularChests.containsValue(block)) {
-						var trapped = trappedChests.get(regularChests.entrySet());
+                        Block theKey = null;
+                        for (Map.Entry<Block, Block> entry : regularChests.entrySet()) {
+                            Block key = entry.getKey();
+                            Block value = entry.getValue();
+                            if (value.equals(block)) {
+                                theKey = key;
+                            }
+                        }
+                        var trapped = trappedChests.get(theKey);
 						manualTrappedChestMappings.put(ResourceLocation.parse(left), trapped);
 					}
 				}
@@ -210,6 +218,7 @@ public class VariantChestsModule extends ZetaModule {
 					return block.withPropertiesOf(current);
 				}
 			}
+
 
 			Optional<Block> manualMapping = structureHolder.unwrapKey().map(ResourceKey::location).map(manualMappings::get);
 			if(manualMapping.isPresent())
@@ -268,7 +277,7 @@ public class VariantChestsModule extends ZetaModule {
 		if(target instanceof ItemEntity item && item.getItem().getItem() == Items.CHEST) {
 			ItemStack local = WAIT_TO_REPLACE_CHEST.get();
 			if(local != null && !local.isEmpty())
-				((ItemEntity) target).setItem(local);
+				item.setItem(local);
 			WAIT_TO_REPLACE_CHEST.remove();
 		}
 	}

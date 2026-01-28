@@ -32,9 +32,6 @@ public interface ILootrIntegration {
 		return null;
 	}
 
-	default void populate(Map<Block, Block> map) {
-		// NO-OP
-	}
 
 	default void postRegister() {
 		// NO-OP

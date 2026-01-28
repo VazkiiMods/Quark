@@ -138,6 +138,7 @@ repositories {
         content {
             includeGroup("org.violetmoon.zeta")
             includeGroup("mezz.jei")
+            includeGroup("noobanidus.mods.lootr")
             includeGroup("blusunrize.immersiveengineering")
         }
     }
@@ -240,7 +241,7 @@ dependencies {
     implementation("curse.maven:flan-forge-493246:${deps.flan_curse_file_id}")
     
     //Lootr
-    implementation("curse.maven:lootr-361276:${deps.lootr_curse_file_id}")
+    implementation("noobanidus.mods.lootr:lootr-neoforge:${deps.lootr_version}")
 
     // Spark, which while kinda an extra in a sense, I feel is vital enough to development and testing where it should be in.
     runtimeOnly("maven.modrinth:spark:${deps.spark_modrinth_file_id}")
