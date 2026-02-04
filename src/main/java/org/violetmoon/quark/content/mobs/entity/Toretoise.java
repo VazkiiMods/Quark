@@ -3,6 +3,7 @@ package org.violetmoon.quark.content.mobs.entity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
@@ -30,6 +31,7 @@ import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.ServerLevelAccessor;
+import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.RodBlock;
@@ -44,6 +46,7 @@ import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraft.world.phys.AABB;
 import net.neoforged.neoforge.common.ItemAbilities;
+import net.neoforged.neoforge.common.Tags;
 import org.jetbrains.annotations.NotNull;
 import org.violetmoon.quark.base.Quark;
 import org.violetmoon.quark.base.handler.QuarkSounds;
@@ -56,6 +59,8 @@ import java.util.List;
 public class Toretoise extends Animal {
 
 	private static final TagKey<Block> BREAKS_TORETOISE_ORE = BlockTags.create(Quark.asResource("breaks_toretoise_ore"));
+
+	public static final TagKey<Biome> PREVENTS_SPAWNING_TAG = Quark.asTagKey(Registries.BIOME, "prevents_toretoise_spawns"); //for other mods to use
 
 	public static final int ORE_TYPES = 5;
 	public static final int ANGERY_TIME = 20;
@@ -342,7 +347,7 @@ public class Toretoise extends Animal {
 	}
 
 	public static boolean spawnPredicate(EntityType<? extends Toretoise> type, ServerLevelAccessor world, MobSpawnType reason, BlockPos pos, RandomSource rand) {
-		return world.getDifficulty() != Difficulty.PEACEFUL && pos.getY() <= ToretoiseModule.maxYLevel && MiscUtil.validSpawnLight(world, pos, rand) && MiscUtil.validSpawnLocation(type, world, reason, pos);
+		return !world.getBiome(pos).is(PREVENTS_SPAWNING_TAG) && world.getDifficulty() != Difficulty.PEACEFUL && pos.getY() <= ToretoiseModule.maxYLevel && MiscUtil.validSpawnLight(world, pos, rand) && MiscUtil.validSpawnLocation(type, world, reason, pos);
 	}
 
 	@Override

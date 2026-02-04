@@ -38,6 +38,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.*;
+import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
@@ -72,6 +73,7 @@ import static org.violetmoon.quark.content.world.module.NewStoneTypesModule.*;
 public class Stoneling extends PathfinderMob {
 
 	public static final ResourceKey<LootTable> CARRY_LOOT_TABLE = Quark.asResourceKey(Registries.LOOT_TABLE, "misc/stoneling_carry");
+	public static final TagKey<Biome> PREVENTS_SPAWNING_TAG = Quark.asTagKey(Registries.BIOME, "prevents_stoneling_spawns"); //for other mods to use
 
 	private static final EntityDataAccessor<ItemStack> CARRYING_ITEM = SynchedEntityData.defineId(Stoneling.class, EntityDataSerializers.ITEM_STACK);
 	private static final EntityDataAccessor<Byte> VARIANT = SynchedEntityData.defineId(Stoneling.class, EntityDataSerializers.BYTE);
@@ -417,9 +419,9 @@ public class Stoneling extends PathfinderMob {
 	}
 
 	public static boolean spawnPredicate(EntityType<? extends Stoneling> type, ServerLevelAccessor world, MobSpawnType reason, BlockPos pos, RandomSource rand) {
-		return pos.getY() <= StonelingsModule.maxYLevel
-				&& (MiscUtil.validSpawnLight(world, pos, rand) || world.getBiome(pos).is(GlimmeringWealdModule.BIOME_NAME))
-				&& MiscUtil.validSpawnLocation(type, world, reason, pos);
+		return !world.getBiome(pos).is(PREVENTS_SPAWNING_TAG) && (pos.getY() <= StonelingsModule.maxYLevel
+                && (MiscUtil.validSpawnLight(world, pos, rand) || world.getBiome(pos).is(GlimmeringWealdModule.BIOME_NAME))
+                && MiscUtil.validSpawnLocation(type, world, reason, pos));
 	}
 
 	@Override
