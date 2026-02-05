@@ -65,7 +65,7 @@ public class CorundumBlock extends ZetaGlassBlock {
 	}
 
 	@Override
-	public void tick(@NotNull BlockState state, @NotNull ServerLevel worldIn, @NotNull BlockPos pos, @NotNull RandomSource random) {
+	protected void randomTick(@NotNull BlockState state, @NotNull ServerLevel worldIn, @NotNull BlockPos pos, @NotNull RandomSource random) {
 		if(canGrow(worldIn, pos) && random.nextInt(CorundumModule.caveCrystalGrowthChance) == 0) {
 			BlockState down = worldIn.getBlockState(pos.below());
 			BlockPos up = pos.above();
