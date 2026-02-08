@@ -14,6 +14,7 @@ import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
 
 import org.jetbrains.annotations.NotNull;
 
+import org.violetmoon.quark.content.tools.item.AncientTomeItem;
 import org.violetmoon.quark.content.tools.module.AncientTomesModule;
 
 import java.util.List;
@@ -43,6 +44,6 @@ public class EnchantTome extends LootItemConditionalFunction {
 	@NotNull
 	public ItemStack run(@NotNull ItemStack stack, LootContext context) {
 		Holder<Enchantment> enchantment = validEnchants.get(context.getRandom().nextInt(validEnchants.size()));
-		return EnchantedBookItem.createForEnchantment(new EnchantmentInstance(enchantment, enchantment.value().getMaxLevel()));
+        return AncientTomeItem.getEnchantedItemStack(enchantment);
 	}
 }
