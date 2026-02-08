@@ -19,6 +19,7 @@ import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
 
 import org.jetbrains.annotations.NotNull;
 
+import org.violetmoon.quark.content.tools.item.AncientTomeItem;
 import org.violetmoon.quark.content.tools.module.AncientTomesModule;
 
 import java.util.List;
