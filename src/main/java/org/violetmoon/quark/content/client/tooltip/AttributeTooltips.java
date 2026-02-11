@@ -332,7 +332,12 @@ public class AttributeTooltips {
 
 					for (ItemAttributeModifiers.Entry entry : modifiers.modifiers()) {
 						if (entry.slot() != slotGroup) continue;
-						double baseVal = mc.player.getAttributeBaseValue(entry.attribute());
+						double baseVal;
+                        try {
+                            baseVal = mc.player.getAttributeBaseValue(entry.attribute());
+                        } catch (Exception exception) { // The game expects a base value, but its not guaranteed! So to avoid an exception we catch it here.
+                            baseVal = 0;
+                        }
 						groupX += mc.font.width(format(entry, baseVal)) + 20;
 					}
 					x = Math.max(x, groupX);
