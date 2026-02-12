@@ -41,6 +41,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.violetmoon.quark.base.Quark;
 import org.violetmoon.quark.base.components.QuarkDataComponents;
+import org.violetmoon.quark.content.tools.base.RuneColor;
 import org.violetmoon.quark.content.tools.item.AncientTomeItem;
 import org.violetmoon.quark.content.tools.loot.EnchantTome;
 import org.violetmoon.quark.content.world.module.MonsterBoxModule;
@@ -96,7 +97,9 @@ public class AncientTomesModule extends ZetaModule {
 	@Config
 	public static int normalUpgradeCost = 10;
 	@Config
-	public static int limitBreakUpgradeCost = 30;
+	public static int limitBreakUpgradeExtraCost = 20;
+    @Config
+    public static int maxLimitBreakLevels = 1;
 
 	public static LootItemFunctionType<EnchantTome> tomeEnchantType;
 
@@ -218,8 +221,9 @@ public class AncientTomesModule extends ZetaModule {
 		ItemStack right = event.getRight();
 		String name = event.getName();
         boolean isLeftBook = left.is(Items.ENCHANTED_BOOK);
+        boolean isLeftTome = left.is(ancient_tome);
         boolean isRightBook = right.is(Items.ENCHANTED_BOOK);
-        boolean isTome = right.is(ancient_tome);
+        boolean isRightTome = right.is(ancient_tome);
         boolean cannotCombineWithBook = !combineWithBooks && left.is(Items.ENCHANTED_BOOK);
 
         ItemStack output = left.copy();
@@ -229,7 +233,7 @@ public class AncientTomesModule extends ZetaModule {
         ItemEnchantments rightEnch;
         ItemEnchantments.Mutable outputEnch = new ItemEnchantments.Mutable(ItemEnchantments.EMPTY);
 
-        if ((isLeftBook || !left.is(right.getItem())) && (!isRightBook && !isTome)) {
+        if ((isLeftBook || !left.is(right.getItem())) && (!isRightBook && !isRightTome)) {
             return;
         }
 
@@ -265,13 +269,14 @@ public class AncientTomesModule extends ZetaModule {
             }
         }
 
-        if (isTome) {
+        if (isRightTome) {
             if (cannotCombineWithBook) return;
             Holder<Enchantment> tomeEnch = getTomeEnchantment(right);
-            if (leftEnchExists && outputEnch.getLevel(tomeEnch) > 0 && outputEnch.getLevel(tomeEnch) < tomeEnch.value().getMaxLevel() + 1) {
+            if (leftEnchExists && outputEnch.getLevel(tomeEnch) > 0 && outputEnch.getLevel(tomeEnch) < tomeEnch.value().getMaxLevel() + maxLimitBreakLevels) {
                 int newLevel = outputEnch.getLevel(tomeEnch) + 1;
+                int breakLevels = newLevel - tomeEnch.value().getMaxLevel();
                 outputEnch.upgrade(tomeEnch, newLevel);
-                cost = newLevel > tomeEnch.value().getMaxLevel() ? limitBreakUpgradeCost : normalUpgradeCost;
+                cost = newLevel > tomeEnch.value().getMaxLevel() ? normalUpgradeCost + breakLevels * limitBreakUpgradeExtraCost : normalUpgradeCost;
             } else return;
         } else if (!leftHasOverlevel && !rightHasOverlevel) {
             return;
@@ -287,6 +292,7 @@ public class AncientTomesModule extends ZetaModule {
         output.set((isLeftBook) ? DataComponents.STORED_ENCHANTMENTS : DataComponents.ENCHANTMENTS, outputEnch.toImmutable());
         event.setOutput(output);
         event.setCost(cost);
+
     }
 
 	@PlayEvent
@@ -336,8 +342,8 @@ public class AncientTomesModule extends ZetaModule {
 	}
 
 	private static boolean isOverlevel(ItemStack stack) {
-		if (stack.has(DataComponents.ENCHANTMENTS)) {
-			ItemEnchantments enchantments = stack.get(DataComponents.ENCHANTMENTS);
+		if (stack.has(DataComponents.STORED_ENCHANTMENTS)) {
+			ItemEnchantments enchantments = stack.get(DataComponents.STORED_ENCHANTMENTS);
 			for (Holder<Enchantment> enchant : enchantments.keySet()) {
 				if (enchant == null)
 					continue;
@@ -355,8 +361,13 @@ public class AncientTomesModule extends ZetaModule {
 	public static Rarity shiftRarity(ItemStack itemStack, Rarity returnValue) {
 		return Quark.ZETA.modules.isEnabled(AncientTomesModule.class) && overleveledBooksGlowRainbow &&
 				itemStack.getItem() == Items.ENCHANTED_BOOK && isOverlevel(itemStack) ? Rarity.EPIC : returnValue;
-
 	}
+
+    public static RuneColor shiftRuneColor(ItemStack itemStack) {
+        if(itemStack.getItem() == Items.ENCHANTED_BOOK && overleveledBooksGlowRainbow && isOverlevel(itemStack))
+            return RuneColor.RAINBOW;
+        return null;
+    }
 
 	private static List<String> generateDefaultEnchantmentList() {
         return Stream.of(

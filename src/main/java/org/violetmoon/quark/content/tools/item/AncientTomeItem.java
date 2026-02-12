@@ -44,7 +44,7 @@ public class AncientTomeItem extends ZetaItem implements CreativeTabManager.Appe
 	}
 
 	public static Component getFullTooltipText(Holder<Enchantment> ench) {
-		return Component.translatable("quark.misc.ancient_tome_tooltip", Component.translatable(ench.value().description().getString()), Component.translatable("enchantment.level." + (ench.value().getMaxLevel() + 1))).withStyle(ChatFormatting.GRAY);
+		return Component.translatable("quark.misc.ancient_tome_tooltip", Component.translatable(ench.value().description().getString()), Component.translatable("enchantment.level." + (ench.value().getMaxLevel() + AncientTomesModule.maxLimitBreakLevels))).withStyle(ChatFormatting.GRAY);
 	}
 
 	@Override
