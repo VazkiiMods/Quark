@@ -21,13 +21,13 @@ public class CherryGroveWaterPetalsModule extends ZetaModule {
     public static boolean staticEnabled;
 
     @Config(description = "The chance for a Cherry Grove chunk to attempt to spawn petals on top of water (1 is 100%, 0 is 0%)")
-    public static double chancePerChunk = 0.25;
+    public static double chancePerChunk = 0.5;
 
     @Config(description = "Should a chunk have water petals, how many would the generator try to place")
     public static int triesPerChunk = 1;
 
     @Config(description = "The 'size' of groups of petals")
-    public static int size = 2;
+    public static int size = 3;
 
     @Config(description = "Groups of petals will be +/- this size, set to 0 to disable variation")
     public static int sizeVariation = 1;
