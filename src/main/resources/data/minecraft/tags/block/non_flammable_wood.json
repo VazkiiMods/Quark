@@ -1,13 +1,15 @@
 {
-  "replace": false,
-  "values": [
-    "quark:warped_chest",
-	"quark:crimson_chest",
-	"quark:warped_ladder",
-	"quark:crimson_ladder",
-	"quark:warped_post",
-	"quark:crimson_post",
-	"quark:warped_bookshelf",
-	"quark:crimson_bookshelf"
-  ]
+	"replace": false,
+	"values": [
+		"quark:vertical_warped_planks",
+		"quark:vertical_crimson_planks",
+		"quark:warped_chest",
+		"quark:crimson_chest",
+		"quark:warped_ladder",
+		"quark:crimson_ladder",
+		"quark:warped_post",
+		"quark:crimson_post",
+		"quark:warped_bookshelf",
+		"quark:crimson_bookshelf"
+	]
 }

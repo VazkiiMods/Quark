@@ -111,7 +111,7 @@ public class BlossomTreesModule extends ZetaModule {
 				ComposterBlock.COMPOSTABLES.put(tree.leaves.asItem(), 0.3F);
 				ComposterBlock.COMPOSTABLES.put(tree.sapling.asItem(), 0.3F);
 
-				this.zeta().fuel.addFuel(tree.sapling, 100);
+				Quark.ZETA.fuel.addFuel(tree.sapling, 100);
 			}
 		});
 	}

@@ -22,6 +22,7 @@ import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.world.inventory.tooltip.TooltipComponent;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeType;
+import org.violetmoon.zeta.event.play.ZFurnaceFuelBurnTime;
 
 public class FuelTooltips {
 
@@ -31,6 +32,11 @@ public class FuelTooltips {
 			Screen screen = Minecraft.getInstance().screen;
 			if(screen != null && screen instanceof AbstractFurnaceScreen<?>) {
 				int count = Quark.ZETA.itemExtensions.get(stack).getBurnTimeZeta(stack, RecipeType.SMELTING);
+				if(count == 0){
+					//TODO make this not private
+					//count = Quark.ZETA.fuel.fuelValues.get(stack.getItem());
+				}
+
 				if(count > 0) {
 					Font font = Minecraft.getInstance().font;
 

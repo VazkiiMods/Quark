@@ -107,7 +107,7 @@ public class AttributeTooltips {
 	private static int renderAttribute(GuiGraphics guiGraphics, ItemAttributeModifiers.Entry entry, int x, int y, Minecraft mc, @Nullable ItemAttributeModifiers.Entry differenceInAttribute) {
 		AttributeIconEntry iconEntry = getIconForAttribute(entry.attribute());
 
-		if (iconEntry != null) {
+		if (iconEntry != null && entry.modifier().amount() != 0) {
 			guiGraphics.blit(iconEntry.texture(), x, y, 0, 0, 9, 9, 9, 9);
 			double baseVal = mc.player.getAttributeBaseValue(entry.attribute());
 
