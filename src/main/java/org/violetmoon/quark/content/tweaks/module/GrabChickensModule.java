@@ -37,6 +37,11 @@ public class GrabChickensModule extends ZetaModule {
 	@Config(description = "Set to 0 to disable")
 	private static int slownessLevel = 1;
 
+	@Config(description = "Negative numbers moves the chicken down, positive up")
+	@Config.Max(1)
+	@Config.Min(-1)
+	private static double chickenOffset = 0.0;
+
 	private static boolean staticEnabled;
 
 	@LoadEvent
@@ -110,7 +115,7 @@ public class GrabChickensModule extends ZetaModule {
     }
 
     public static float pushAmountForTesting() {
-        return 0.25f;
+        return (float) (0.25f - chickenOffset);
     }
 
     public static class Client {
