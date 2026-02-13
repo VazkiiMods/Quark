@@ -33,7 +33,6 @@ public class FuelTooltips {
 			if(screen != null && screen instanceof AbstractFurnaceScreen<?>) {
 				int count = Quark.ZETA.itemExtensions.get(stack).getBurnTimeZeta(stack, RecipeType.SMELTING);
 				if(count == 0){
-					//TODO make this not private
 					count = Quark.ZETA.fuel.fuelValues.getOrDefault(stack.getItem(), 0);
 				}
 

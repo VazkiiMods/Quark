@@ -107,13 +107,13 @@ public class AttributeTooltips {
 	private static int renderAttribute(GuiGraphics guiGraphics, ItemAttributeModifiers.Entry entry, int x, int y, Minecraft mc, @Nullable ItemAttributeModifiers.Entry differenceInAttribute) {
 		AttributeIconEntry iconEntry = getIconForAttribute(entry.attribute());
 
-		if (iconEntry != null && entry.modifier().amount() != 0) {
-			guiGraphics.blit(iconEntry.texture(), x, y, 0, 0, 9, 9, 9, 9);
+		if (iconEntry != null) {
 			double baseVal = mc.player.getAttributeBaseValue(entry.attribute());
 
 			// Comparison code.
 			if (ImprovedTooltipsModule.showUpgradeStatus && differenceInAttribute != null) {
-				MutableComponent valueStr = format(entry, baseVal).withStyle((differenceInAttribute.modifier().amount() > 0) ? ChatFormatting.GREEN : (differenceInAttribute.modifier().amount() < 0) ? ChatFormatting.RED : ChatFormatting.WHITE);
+                guiGraphics.blit(iconEntry.texture(), x, y, 0, 0, 9, 9, 9, 9);
+                MutableComponent valueStr = format(entry, baseVal).withStyle((differenceInAttribute.modifier().amount() > 0) ? ChatFormatting.GREEN : (differenceInAttribute.modifier().amount() < 0) ? ChatFormatting.RED : ChatFormatting.WHITE);
 				guiGraphics.drawString(mc.font, valueStr, x + 12, y + 1, -1);
 				if(differenceInAttribute.modifier().amount() != 0) {
 					int xp = x - 2;
@@ -125,9 +125,12 @@ public class AttributeTooltips {
 				}
 				x += mc.font.width(valueStr) + 20;
 			} else {
-				MutableComponent valueStr = format(entry, baseVal);
-				guiGraphics.drawString(mc.font, valueStr, x + 12, y + 1, -1);
-				x += mc.font.width(valueStr) + 20;
+                if (baseVal != 0 || baseVal != entry.modifier().amount()) {
+                    guiGraphics.blit(iconEntry.texture(), x, y, 0, 0, 9, 9, 9, 9);
+                    MutableComponent valueStr = format(entry, baseVal);
+                    guiGraphics.drawString(mc.font, valueStr, x + 12, y + 1, -1);
+                    x += mc.font.width(valueStr) + 20;
+                }
 			}
 		}
 
