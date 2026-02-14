@@ -29,10 +29,9 @@ public class CherryGroveWaterPetalsGenerator extends Generator {
     public static Map<Direction, BlockState> edgeStates = new HashMap<>();
 
     static {
-        edgeStates.put(Direction.NORTH, makeEdgeState(Direction.WEST));
-        edgeStates.put(Direction.EAST, makeEdgeState(Direction.NORTH));
-        edgeStates.put(Direction.SOUTH, makeEdgeState(Direction.EAST));
-        edgeStates.put(Direction.WEST, makeEdgeState(Direction.SOUTH));
+        for(Direction d : CARDINAL_DIRECTIONS){
+            edgeStates.put(d, makeEdgeState(d));
+        }
     }
 
     public CherryGroveWaterPetalsGenerator(DimensionConfig dimConfig) {
@@ -62,17 +61,8 @@ public class CherryGroveWaterPetalsGenerator extends Generator {
 
 
     public void place(WorldGenRegion worldIn, BlockPos corner, RandomSource rand){
-        int thisSize = 0;
-        if(CherryGroveWaterPetalsModule.sizeVariation > 0){
-            int[] sizes = {CherryGroveWaterPetalsModule.size - CherryGroveWaterPetalsModule.sizeVariation, CherryGroveWaterPetalsModule.size, CherryGroveWaterPetalsModule.size +  CherryGroveWaterPetalsModule.sizeVariation};
-            thisSize = sizes[rand.nextIntBetweenInclusive(0, 2)];
-        }
-        else{
-            thisSize = CherryGroveWaterPetalsModule.size;
-        }
-
         if(CherryGroveWaterPetalsModule.useCarpet && Quark.ZETA.modules.isEnabled(LeafCarpetModule.class)){
-            List<BlockPos> square = getCorePositions(thisSize, corner);
+            List<BlockPos> square = getCorePositions(corner, rand);
             for(BlockPos pos : square){
                 if(worldIn.getBlockState(pos).is(Blocks.AIR) && worldIn.getBlockState(pos.below()).is(Blocks.WATER)){
                     worldIn.setBlock(pos, LeafCarpetModule.carpets.get(7).defaultBlockState(), 0);
@@ -80,7 +70,7 @@ public class CherryGroveWaterPetalsGenerator extends Generator {
             }
         }
         else if (!CherryGroveWaterPetalsModule.useCarpet && Quark.ZETA.modules.isEnabled(PetalsOnWaterModule.class)){
-            List<BlockPos> square = getCorePositions(thisSize, corner);
+            List<BlockPos> square = getCorePositions(corner, rand);
             for(BlockPos pos : square){
                 if(worldIn.getBlockState(pos).is(Blocks.AIR) && worldIn.getBlockState(pos.below()).is(Blocks.WATER)){
                     worldIn.setBlock(pos, makePetalState(4, CARDINAL_DIRECTIONS[rand.nextIntBetweenInclusive(0, 3)]), 0);
@@ -90,7 +80,13 @@ public class CherryGroveWaterPetalsGenerator extends Generator {
             for(Direction d : borders.keySet()){
                 for(BlockPos pos : borders.get(d)){
                     if(worldIn.getBlockState(pos.below()).is(Blocks.WATER)){
-                        worldIn.setBlock(pos, edgeStates.get(d), 0);
+                        if(rand.nextFloat() < CherryGroveWaterPetalsModule.edgeVariation){
+                            worldIn.setBlock(pos, makeRandomPetalState(2, d, rand), 0);
+                        }
+                        else{
+                            worldIn.setBlock(pos, edgeStates.get(d), 0);
+                        }
+
                     }
                 }
             }
@@ -102,12 +98,23 @@ public class CherryGroveWaterPetalsGenerator extends Generator {
         }
     }
 
-    public static List<BlockPos> getCorePositions(int size, BlockPos corner){ //for both carpet and waterpetals
+    public static List<BlockPos> getCorePositions(BlockPos corner, RandomSource rand){ //for both carpet and waterpetals
         List<BlockPos> ret = new ArrayList<>();
         ret.add(corner);
+        int xSize;
+        int ySize;
+        if(CherryGroveWaterPetalsModule.sizeVariation > 0) {
+            int[] sizes = {CherryGroveWaterPetalsModule.size - CherryGroveWaterPetalsModule.sizeVariation, CherryGroveWaterPetalsModule.size, CherryGroveWaterPetalsModule.size + CherryGroveWaterPetalsModule.sizeVariation};
+            xSize = sizes[rand.nextIntBetweenInclusive(0, 2)];
+            ySize = sizes[rand.nextIntBetweenInclusive(0, 2)];
+        }
+        else{
+            xSize = CherryGroveWaterPetalsModule.size;
+            ySize = CherryGroveWaterPetalsModule.size;
+        }
 
-        for(int l = 0; l < size; l++){
-            for (int w = 0; w < size; w++) {
+        for(int l = 0; l < xSize; l++){
+            for (int w = 0; w < ySize; w++) {
                 ret.add(new BlockPos(corner.getX() + l, corner.getY(), corner.getZ() + w));
             }
         }
@@ -147,6 +154,14 @@ public class CherryGroveWaterPetalsGenerator extends Generator {
         return PetalsOnWaterModule.water_pink_petals.defaultBlockState().setValue(PinkPetalsBlock.FACING, direction).setValue(PinkPetalsBlock.AMOUNT, amount);
     }
 
+    public static BlockState makeRandomPetalState(int amount, Direction direction, RandomSource randomSource){
+        if(randomSource.nextBoolean()){
+            return makePetalState(amount - 1, direction.getCounterClockWise());
+        }else{
+            return makePetalState(amount + 1, direction.getCounterClockWise());
+        }
+    }
+
     public static BlockState makeEdgeState(Direction d){
         /*
         switch(d){
@@ -162,6 +177,6 @@ public class CherryGroveWaterPetalsGenerator extends Generator {
          */
 
 
-        return makePetalState(2, d);
+        return makePetalState(2, d.getCounterClockWise());
     }
 }

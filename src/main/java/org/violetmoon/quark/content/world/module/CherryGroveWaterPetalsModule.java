@@ -1,8 +1,6 @@
 package org.violetmoon.quark.content.world.module;
 
-import net.minecraft.tags.BiomeTags;
 import net.minecraft.world.level.levelgen.GenerationStep;
-import net.neoforged.neoforge.common.Tags;
 import org.violetmoon.quark.base.util.QuarkWorldGenWeights;
 import org.violetmoon.quark.content.world.gen.CherryGroveWaterPetalsGenerator;
 import org.violetmoon.zeta.config.Config;
@@ -29,8 +27,11 @@ public class CherryGroveWaterPetalsModule extends ZetaModule {
     @Config(description = "The 'size' of groups of petals")
     public static int size = 3;
 
-    @Config(description = "Groups of petals will be +/- this size, set to 0 to disable variation")
+    @Config(description = "Groups of petals may be +/- this size on each axis, set to 0 to disable variation")
     public static int sizeVariation = 1;
+
+    @Config(description = "Edges of groups will have this chance to be 'jagged', that is, gain or lose a petal. Only applies when useCarpet is false")
+    public static float edgeVariation = 0.25F;
 
     @Config(description = "If true, Cherry Leaf Carpet from Leaf Carpet Module (from Building category) will be used instead of Pink Petals, assuming it is enabled; if false, requires Petals On Water Module (from Tweaks category) to be enabled")
     public static boolean useCarpet = false;
