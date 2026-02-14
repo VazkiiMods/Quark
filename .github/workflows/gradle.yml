@@ -37,7 +37,7 @@ jobs:
         SNAPSHOT_SUFFIX=${{ !startsWith(github.ref, 'refs/tags/release-') && '-SNAPSHOT' || '' }}
         VERSION=$(awk -F '=' '/^version/ { print $2; }' build.properties)
         BUILD=$(awk -F '=' '/build_number/ { print $2; }' build.properties)
-        echo "forge=build/libs/Quark-${VERSION}-${BUILD}${SNAPSHOT_SUFFIX}.jar" >> "$GITHUB_OUTPUT"
+        echo "neoforge=build/libs/Quark-${VERSION}-${BUILD}${SNAPSHOT_SUFFIX}.jar" >> "$GITHUB_OUTPUT"
     - name: Sign jars
       env:
         SIGNING_KEY: ${{ secrets.VIOLET_MOON_SIGNING_KEY }}
@@ -45,20 +45,20 @@ jobs:
       run: |
         echo "${SIGNING_KEY}" | gpg --import -
         gpg --local-user "Violet Moon Signing Key" --armor \
-          --detach-sign ${{ steps.calculate_artifact_names.outputs.forge }}
-    - name: Archive Forge Artifacts
+          --detach-sign ${{ steps.calculate_artifact_names.outputs.neoforge }}
+    - name: Archive Neoforge Artifacts
       uses: actions/upload-artifact@v4
       with:
-        name: Forge
+        name: Neoforge
         path: |
-          ${{ steps.calculate_artifact_names.outputs.forge }}
-          ${{ steps.calculate_artifact_names.outputs.forge }}.asc
+          ${{ steps.calculate_artifact_names.outputs.neoforge }}
+          ${{ steps.calculate_artifact_names.outputs.neoforge }}.asc
     - name: Upload Releases
       if: startsWith(github.ref, 'refs/tags/release-')
       env:
         GH_TOKEN: ${{ github.token }}
         GIT_REF: ${{ github.ref }}
-        FORGE_JAR: ${{ steps.calculate_artifact_names.outputs.forge }}
+        NEOFORGE_JAR: ${{ steps.calculate_artifact_names.outputs.neoforge }}
         CURSEFORGE_TOKEN: ${{ secrets.VAZKII_CURSEFORGE_TOKEN }}
         MODRINTH_TOKEN: ${{ secrets.VAZKII_MODRINTH_TOKEN }}
       run: |
