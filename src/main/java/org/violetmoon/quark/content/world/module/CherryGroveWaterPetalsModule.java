@@ -31,7 +31,7 @@ public class CherryGroveWaterPetalsModule extends ZetaModule {
     public static int sizeVariation = 1;
 
     @Config(description = "Edges of groups will have this chance to be 'jagged', that is, gain or lose a petal. Only applies when useCarpet is false")
-    public static float edgeVariation = 0.25F;
+    public static double edgeVariation = 0.25D;
 
     @Config(description = "If true, Cherry Leaf Carpet from Leaf Carpet Module (from Building category) will be used instead of Pink Petals, assuming it is enabled; if false, requires Petals On Water Module (from Tweaks category) to be enabled")
     public static boolean useCarpet = false;
