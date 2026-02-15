@@ -24,9 +24,9 @@
 	"quark.gui.enchanting.merge": "Натисніть, щоб покращити",
 	"quark.gui.enchanting.pending": "Має незавершені зачарування",
 
-	"quark.gui.keygroup.misc": "Quark: Різне",
-	"quark.gui.keygroup.inv": "Quark: Інвентар",
-	"quark.gui.keygroup.emote": "Quark: Емоції",
+	"quark.gui.keygroup.misc": "Quark — Різне",
+	"quark.gui.keygroup.inv": "Quark — Інвентар",
+	"quark.gui.keygroup.emote": "Quark — Емоції",
 
 	"quark.gui.config.social.website": "Сайт Quark",
 	"quark.gui.config.social.discord": "Discord сервер Quark/Violet Moon",
