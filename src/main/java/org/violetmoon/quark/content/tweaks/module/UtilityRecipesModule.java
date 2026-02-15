@@ -51,7 +51,7 @@ public class UtilityRecipesModule extends ZetaModule {
 	@Config(description = "Does Dragon Breath return a bottle when used as a reagent or material?")
 	public static boolean effectiveDragonBreath = true;
 
-	@Config(description = "Can torches can be used as fuel in furnaces?")
+	@Config(description = "Can torches be used as fuel in furnaces?")
 	public static boolean torchesBurn = true;
 
 	@Config(description = "Can bones be smelted down to bone meal?", flag = "bone_meal_utility")

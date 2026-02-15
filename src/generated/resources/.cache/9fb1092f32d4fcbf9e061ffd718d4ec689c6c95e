@@ -1,4 +1,4 @@
-// 1.21.1	2026-01-25T15:10:34.806676	Recipes
+// 1.21.1	2026-02-15T09:10:01.4136919	Recipes
 bb24f1bac2cb3ef401eb56f32a5b7364bcee7552 data/quark/advancement/recipes/building_blocks/building/crafting/bamboo_mat.json
 31f4957990f1d18f202f816de898f77458b18140 data/quark/advancement/recipes/building_blocks/building/crafting/bamboo_mat_carpet.json
 8df9c4ad585c2226233ee6e8f7bc96f33806df86 data/quark/advancement/recipes/building_blocks/building/crafting/blackstone_bricks.json
@@ -1763,7 +1763,7 @@ e05c2930f167e5615a251183a28a7c73b0d2291e data/quark/recipe/tweaks/crafting/utili
 34347a1b8d8e890e66cece06b45562c0dd7f8dcd data/quark/recipe/tweaks/crafting/utility/misc/easy_sticks_bamboo.json
 a34b35e0ec679f994038ee0526aee9009456d444 data/quark/recipe/tweaks/crafting/utility/misc/furnace_minecart.json
 c6774d224e53342516d7c424c0d4ac6ccd7a966d data/quark/recipe/tweaks/crafting/utility/misc/hopper_minecart.json
-9407ac8259431649ed6d9ff3db1ed1402b265bae data/quark/recipe/tweaks/crafting/utility/misc/repeater.json
+6a38163861829fe8d2eb2318e64e3c741f8f3fc4 data/quark/recipe/tweaks/crafting/utility/misc/repeater.json
 de4b2aba687ae41e7038c517bae598c677119e0d data/quark/recipe/tweaks/crafting/utility/misc/tnt_minecart.json
 40e3a6aa472d901f0e9a39ac68ef9b6ad794f84f data/quark/recipe/world/crafting/black_corundum_pane.json
 ea5e615b326e9ccf28fa2b5438cf46aadde69d64 data/quark/recipe/world/crafting/black_waxed_corundum.json

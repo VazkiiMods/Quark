@@ -1818,7 +1818,7 @@ public class QuarkRecipeProvider extends RecipeProvider implements IConditionBui
                 .define('X', Items.HOPPER)
                 .unlockedBy("test", PlayerTrigger.TriggerInstance.tick())
                 .save(recipeOutput.withConditions(zCond("minecart_upgrade")), "quark:tweaks/crafting/utility/misc/hopper_minecart");
-        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, Items.HOPPER_MINECART)
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, Items.REPEATER)
                 .pattern("X X")
                 .pattern("#X#")
                 .pattern("III")
