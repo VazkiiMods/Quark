@@ -32,7 +32,7 @@
 	"quark.gui.config.social.discord": "Discord сервер Quark/Violet Moon",
 	"quark.gui.config.social.patreon": "Підтримати Vazkii",
 	"quark.gui.config.social.forum": "Reddit /r/QuarkMod",
-	"quark.gui.config.social.twitter": "Twitter @VazkiiMods",
+	"quark.gui.config.social.bluesky": "@violetmoon.org на Bluesky",
 	"quark.gui.config.subheader1": "Quark все ще існує завдяки підтримці %s%s%s та інших.",
 	"quark.gui.config.subheader2": "Підтримайте на Patreon, щоб отримати круті внутрішньоігрові винагороди!",
 
@@ -454,7 +454,7 @@
 	"quark.misc.variant_tooltip_hold_shift": "(Shift для варіантів)",
 	"quark.misc.variant_tooltip_header": "Варіанти:",
 	"quark.misc.disable_slot": "Натисніть, аби вимкнути слот",
-        "quark.misc.totem_darksouls": "Коли ви помрете вдруге, ваш попередній тотем тримання розбивається",
+        "quark.misc.totem_darksouls": "Ви відчуваєте жах, коли попередній тотем тримання розбивається",
 
 	"quark.misc.you_came_to_the_wrong_neighborhood.0": "Слово з шести літер просто для того, щоб я тримався далі",
 	"quark.misc.you_came_to_the_wrong_neighborhood.1": "Це складно, і я кодую у своєму настрої, і я",
@@ -1561,7 +1561,8 @@
 	"advancements.quark.crab_in_a_bucket.title": "Спійманий",
 	"advancements.quark.crab_in_a_bucket.description": "Спіймайте краба у відро",
 	"advancements.quark.tatami_gaeshi.title": "ТАТАМІ ҐАЕСІ!",
-	"advancements.quark.tatami_gaeshi.description": "Ударте іншого гравця бамбуковим килимком",
+	"advancements.quark.tatami_gaeshi.description": "Ударте будь-кого бамбуковим килимком",
 
-	"quark.pack.emote_icon_pack": "Пакет значків емоцій Quark"
+	"quark.pack.emote_icon_pack": "Пакет значків емоцій Quark",
+	"fml.menu.mods.info.description.quark": "Дрібниці, що потроху покращують Minecraft."
 }
