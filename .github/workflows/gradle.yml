@@ -24,7 +24,7 @@ jobs:
 
       - name: Build with Gradle
         run: |
-          RELEASE_MODE="false" \ 
+          RELEASE_MODE=${{false}} \
           ./gradlew build
       #    - name: Build with Gradle
       #      run: ./gradlew pmdMain build
