@@ -16,15 +16,16 @@ public class TotemOfHoldingCuriosCompat {
     public static ItemStack equipCurios(Player player, List<ItemStack> equipedCurios, ItemStack stack) {
         Optional<ICuriosItemHandler> curiosApi = CuriosApi.getCuriosInventory(player);
         if (curiosApi.isPresent()) {
-            for (int i = 0; i < equipedCurios.size(); i++) {
-                ItemStack curiosItem = equipedCurios.get(i);
+            for (ItemStack curiosItem : equipedCurios) {
                 if (stack.is(curiosItem.getItem())) {
                     IItemHandlerModifiable curiosSlot = curiosApi.get().getEquippedCurios();
-                    if (!curiosSlot.getStackInSlot(i).isEmpty()) continue;
+                    for (int j = 0; j < curiosApi.get().getSlots(); j++) {
+                        if (!curiosSlot.getStackInSlot(j).isEmpty()) continue;
 
-                    if (curiosSlot.isItemValid(i, stack)) {
-                        curiosSlot.insertItem(i, stack, false);
-                        return null;
+                        if (curiosSlot.isItemValid(j, stack)) {
+                            curiosSlot.insertItem(j, stack, false);
+                            return null;
+                        }
                     }
                 }
             }
@@ -34,10 +35,10 @@ public class TotemOfHoldingCuriosCompat {
 
     public static void saveCurios(Player player, TotemOfHoldingEntity totem) {
         Optional<ICuriosItemHandler> curiosApi = CuriosApi.getCuriosInventory(player);
-        curiosApi.ifPresent(iCuriosItemHandler -> iCuriosItemHandler.getCurios().forEach((a, b) ->
-                IntStream.range(0, b.getStacks().getSlots()).mapToObj(i ->
-                        //saving the empty slots helps not needing an extra loop when equiping them back
-                        // ↑ for commit 1151846d68a2a75d552a2b2f35023877c663dd2f
-                        b.getStacks().getPreviousStackInSlot(i)).forEach(totem::addCurios)));
+        curiosApi.ifPresent(iCuriosItemHandler -> iCuriosItemHandler.getCurios().forEach((a, b) -> IntStream.range(0, b.getStacks().getSlots()).mapToObj(i -> b.getStacks().getPreviousStackInSlot(i)).forEach(stack -> {
+            if (!stack.isEmpty()) {
+                totem.addCurios(stack);
+            }
+        })));
     }
 }
