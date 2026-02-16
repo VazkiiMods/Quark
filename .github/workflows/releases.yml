@@ -1,6 +1,6 @@
-name: Java CI
-
-on: [push, pull_request]
+name: Release Version
+on:
+  workflow_dispatch:
 
 jobs:
   build:
@@ -14,25 +14,13 @@ jobs:
           distribution: 'temurin'
           java-version: '21'
 
-      - name: Validate wrapper and restore Gradle cache
+      - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v4
-        with:
-          gradle-home-cache-excludes: |
-            caches/build-cache-1
-            caches/keyrings
-            **/Zeta*.jar
 
       - name: Build with Gradle
         run: |
-          RELEASE_MODE="false" \ 
+          RELEASE_MODE=${{true}} \
           ./gradlew build
-      #    - name: Build with Gradle
-      #      run: ./gradlew pmdMain build
-      #    - name: PMD report
-      #      uses: jwgmeligmeyling/pmd-github-action@v1
-      #      if: failure()
-      #      with:
-      #        path: '**/reports/pmd/main.xml'
 
       - name: Stop Gradle
         run: |
@@ -44,6 +32,7 @@ jobs:
           VERSION=$(awk -F '=' '/^version/ { print $2; }' build.properties)
           BUILD=$(awk -F '=' '/build_number/ { print $2; }' build.properties)
           echo "mod_version=${VERSION}-${BUILD}" >> "$GITHUB_OUTPUT"
+          echo "mc_version=$(awk -F ' = ' '/^mc_version/ { print $2; }' build.properties)" >> "$GITHUB_OUTPUT"
           echo "neoforge=build/libs/Quark-${VERSION}-${BUILD}-SNAPSHOT.jar" >> "$GITHUB_OUTPUT"
 
       - name: Sign jars
@@ -53,12 +42,23 @@ jobs:
         run: |
           echo "${SIGNING_KEY}" | gpg --import -
           gpg --local-user "Violet Moon Signing Key" --armor \
-            --detach-sign ${{ steps.calculate_artifact_names.outputs.neoforge }}
+          --detach-sign ${{ steps.calculate_artifact_names.outputs.neoforge }}
 
       - name: Archive Neoforge Artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: Quark-Neoforge-${{ steps.calculate_artifact_names.outputs.version }}-SNAPSHOT
+          name: Quark-Neoforge-${{ steps.calculate_artifact_names.outputs.version }}-RELEASE
           path: |
             ${{ steps.calculate_artifact_names.outputs.neoforge }}
             ${{ steps.calculate_artifact_names.outputs.neoforge }}.asc
+
+      - name: Upload Releases
+        env:
+          GH_TOKEN: ${{ github.token }}
+          NEOFORGE_JAR: ${{ steps.calculate_artifact_names.outputs.neoforge }}
+          VERSION: ${{ steps.calculate_artifact_names.outputs.mod_version }}
+          MINECRAFT_VERSION: ${{ steps.calculate_artifact_names.outputs.mc_version }}
+          CURSEFORGE_TOKEN: ${{ secrets.VAZKII_CURSEFORGE_TOKEN }}
+          MODRINTH_TOKEN: ${{ secrets.VAZKII_MODRINTH_TOKEN }}
+        run: |
+          scripts/upload_releases.sh

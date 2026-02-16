@@ -2,11 +2,7 @@
 set -euo pipefail
 
 # Remove 'refs/tags/' from front
-TAGNAME="${GIT_REF/#refs\/tags\/}"
-
-# Remove 'release-' from front
-VERSION="${TAGNAME/#release-}"
-MC_VERSION=$(echo "${VERSION}" | cut -d '-' -f 1)
+TAGNAME="release-${VERSION}+${MINECRAFT_VERSION}"
 
 function release_github() {
 	echo >&2 'Creating GitHub Release'
@@ -15,7 +11,7 @@ function release_github() {
 	   --method POST \
 	   -H "Accept: application/vnd.github+json" \
 	   -H "X-GitHub-Api-Version: 2022-11-28" \
-	   /repos/VazkiiMods/Quark/releases \
+	   /repos/VazkiiMods/Zeta/releases \
 	   -f tag_name="${TAGNAME}")"
 	GH_RELEASE_PAGE=$(echo "$GH_RELEASE_RESPONSE" | jq -r .html_url)
 
@@ -23,6 +19,7 @@ function release_github() {
 	gh release upload "${TAGNAME}" "${NEOFORGE_JAR}#Neoforge Jar"
 	gh release upload "${TAGNAME}" "${NEOFORGE_JAR}.asc#Neoforge Signature"
 }
+
 
 function release_modrinth() {
 	echo >&2 'Uploading Neoforge Jar to Modrinth'
@@ -48,7 +45,7 @@ EOF
 
 	MODRINTH_NEOFORGE_SPEC=$(echo "${MODRINTH_NEOFORGE_SPEC}" | \
 							  jq --arg name "${VERSION}" \
-								 --arg mcver "${MC_VERSION}" \
+								 --arg mcver "${MINECRAFT_VERSION}" \
 								 --arg changelog "${GH_RELEASE_PAGE}" \
 								 '.name=$ARGS.named.name | .version_number=$ARGS.named.name | .game_versions=[$ARGS.named.mcver] | .changelog=$ARGS.named.changelog')
 	curl 'https://api.modrinth.com/v2/version' \
@@ -74,7 +71,7 @@ function release_curseforge() {
 	CURSEFORGE_GAME_VERSION=$(curl https://minecraft.curseforge.com/api/game/versions \
 								   -H 'Accept: application/json' \
 								   -H "X-Api-Token: ${CURSEFORGE_TOKEN}" | \
-								  jq --arg mcver "${MC_VERSION}" \
+								  jq --arg mcver "${MINECRAFT_VERSION}" \
 									 'map(select(.name == $ARGS.named.mcver and .gameVersionTypeID != 1 and .gameVersionTypeID != 615)) | first | .id')
 
 	echo >&2 'Uploading Neoforge Jar to CurseForge'
@@ -105,6 +102,6 @@ $CURSEFORGE_GAME_VERSION]"
 	# TODO: Upload the asc as an 'Additional file'
 }
 
-release_github
-release_modrinth
-release_curseforge
+#release_github
+#release_modrinth
+#release_curseforge
