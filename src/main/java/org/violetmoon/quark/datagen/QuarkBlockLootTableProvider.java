@@ -45,6 +45,7 @@ public class QuarkBlockLootTableProvider extends BlockLootSubProvider {
     private static final float[] LEAVES_STICK_CHANCES = new float[]{0.02F, 0.022222223F, 0.025F, 0.033333335F, 0.1F};
     private static final float[] LEAVES_BONUS_CHANCES = new float[]{0.005F, 0.0055555557F, 0.00625F, 0.008333334F, 0.025F};
     private static final float[] NORMAL_LEAVES_SAPLING_CHANCES = {0.05F, 0.0625F, 0.083333336F, 0.1F};
+    private static final float[] TRUMPET_LEAVES_SAPLING_CHANCES = {0.0046875F, 0.00520833337F, 0.005859375F, 0.00781250025F, 0.01875F};
     protected static final LootItemCondition.Builder HAS_SHEARS = MatchTool.toolMatches(ItemPredicate.Builder.item().of(Tags.Items.TOOLS_SHEAR));
 
     protected QuarkBlockLootTableProvider(HolderLookup.Provider holderLookupProvider) {
@@ -186,7 +187,7 @@ public class QuarkBlockLootTableProvider extends BlockLootSubProvider {
         for(Block block : BlossomTreesModule.woodSet.allBlocks())
             dropSelfWithRespectToAlternates(block);
         for(BlossomTreesModule.BlossomTree tree : BlossomTreesModule.blossomTrees){
-            add(tree.leaves, createLeavesDrops(tree.leaves, tree.sapling));
+            add(tree.leaves, createLeavesDrops(tree.leaves, tree.sapling, TRUMPET_LEAVES_SAPLING_CHANCES));
             dropSelf(tree.sapling);
         }
 
@@ -337,9 +338,9 @@ public class QuarkBlockLootTableProvider extends BlockLootSubProvider {
 
     //vanillacopies
     @Override
-    protected LootTable.Builder createLeavesDrops(Block leafBlock, Block saplingBlock, float... unused) { //don't use last arg
+    protected LootTable.Builder createLeavesDrops(Block leafBlock, Block saplingBlock, float... saplingChances) {
         HolderLookup.RegistryLookup<Enchantment> registrylookup = this.registries.lookupOrThrow(Registries.ENCHANTMENT);
-        return this.createSilkTouchOrShearsDispatchTable(leafBlock, ((LootPoolSingletonContainer.Builder<?>)this.applyExplosionCondition(leafBlock, LootItem.lootTableItem(saplingBlock))).when(BonusLevelTableCondition.bonusLevelFlatChance(registrylookup.getOrThrow(Enchantments.FORTUNE), NORMAL_LEAVES_SAPLING_CHANCES))).withPool(LootPool.lootPool().setRolls(ConstantValue.exactly(1.0F)).when(this.checkNotShearsOrSilk()).add(((LootPoolSingletonContainer.Builder)this.applyExplosionDecay(leafBlock, LootItem.lootTableItem(Items.STICK).apply(SetItemCountFunction.setCount(UniformGenerator.between(1.0F, 2.0F))))).when(BonusLevelTableCondition.bonusLevelFlatChance(registrylookup.getOrThrow(Enchantments.FORTUNE), LEAVES_STICK_CHANCES))));
+        return this.createSilkTouchOrShearsDispatchTable(leafBlock, ((LootPoolSingletonContainer.Builder<?>)this.applyExplosionCondition(leafBlock, LootItem.lootTableItem(saplingBlock))).when(BonusLevelTableCondition.bonusLevelFlatChance(registrylookup.getOrThrow(Enchantments.FORTUNE), saplingChances))).withPool(LootPool.lootPool().setRolls(ConstantValue.exactly(1.0F)).when(this.checkNotShearsOrSilk()).add(((LootPoolSingletonContainer.Builder)this.applyExplosionDecay(leafBlock, LootItem.lootTableItem(Items.STICK).apply(SetItemCountFunction.setCount(UniformGenerator.between(1.0F, 2.0F))))).when(BonusLevelTableCondition.bonusLevelFlatChance(registrylookup.getOrThrow(Enchantments.FORTUNE), LEAVES_STICK_CHANCES))));
     }
 
     //shears only, no silk touch
@@ -352,13 +353,6 @@ public class QuarkBlockLootTableProvider extends BlockLootSubProvider {
 
     protected LootTable.Builder dropDirtyShards(Block block){ //TODO test output
         System.out.println("GENERATING DIRTY SHARDS");
-        //TODO implement config condition
-        // "conditions": [
-        //                {
-        //                  "condition": "quark:flag",
-        //                  "flag": "glass_shard"
-        //                }
-        //              ]
         HolderLookup.RegistryLookup<Enchantment> registrylookup = this.registries.lookupOrThrow(Registries.ENCHANTMENT);
         return createSilkTouchDispatchTable(block, this.applyExplosionDecay(block, LootItem.lootTableItem(GlassShardModule.dirtyShard)
                 .apply(SetItemCountFunction.setCount(UniformGenerator.between(2.0F, 4.0F)))
@@ -376,7 +370,7 @@ public class QuarkBlockLootTableProvider extends BlockLootSubProvider {
 
     protected LootTable.Builder createLeavesDropWithBonusLikeHowOakLeavesDropApples(Block p_249535_, Block p_251505_, Item bonus) {
         HolderLookup.RegistryLookup<Enchantment> registrylookup = this.registries.lookupOrThrow(Registries.ENCHANTMENT);
-        return this.createLeavesDrops(p_249535_, p_251505_).withPool(LootPool.lootPool().setRolls(ConstantValue.exactly(1.0F)).when(this.checkNotShearsOrSilk()).add(((LootPoolSingletonContainer.Builder)this.applyExplosionCondition(p_249535_, LootItem.lootTableItem(bonus))).when(BonusLevelTableCondition.bonusLevelFlatChance(registrylookup.getOrThrow(Enchantments.FORTUNE), LEAVES_BONUS_CHANCES))));
+        return this.createLeavesDrops(p_249535_, p_251505_, NORMAL_LEAVES_SAPLING_CHANCES).withPool(LootPool.lootPool().setRolls(ConstantValue.exactly(1.0F)).when(this.checkNotShearsOrSilk()).add(((LootPoolSingletonContainer.Builder)this.applyExplosionCondition(p_249535_, LootItem.lootTableItem(bonus))).when(BonusLevelTableCondition.bonusLevelFlatChance(registrylookup.getOrThrow(Enchantments.FORTUNE), LEAVES_BONUS_CHANCES))));
     }
 
     //original condition builders
