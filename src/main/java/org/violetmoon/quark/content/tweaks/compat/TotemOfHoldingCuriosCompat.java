@@ -16,14 +16,16 @@ public class TotemOfHoldingCuriosCompat {
     public static ItemStack equipCurios(Player player, List<ItemStack> equipedCurios, ItemStack stack) {
         Optional<ICuriosItemHandler> curiosApi = CuriosApi.getCuriosInventory(player);
         if (curiosApi.isPresent()) {
-            for (int j = 0; j < equipedCurios.size(); j++) {
-                ItemStack curiosItem = equipedCurios.get(j);
+            for (int i = 0; i < equipedCurios.size(); i++) {
+                ItemStack curiosItem = equipedCurios.get(i);
                 if (stack.is(curiosItem.getItem())) {
                     IItemHandlerModifiable curiosSlot = curiosApi.get().getEquippedCurios();
-                    if (!curiosSlot.getStackInSlot(j).isEmpty()) continue;
+                    if (!curiosSlot.getStackInSlot(i).isEmpty()) continue;
 
-                    curiosSlot.setStackInSlot(j, stack);
-                    return null;
+                    if (curiosSlot.isItemValid(i, stack)) {
+                        curiosSlot.insertItem(i, stack, false);
+                        return null;
+                    }
                 }
             }
         }
@@ -34,10 +36,8 @@ public class TotemOfHoldingCuriosCompat {
         Optional<ICuriosItemHandler> curiosApi = CuriosApi.getCuriosInventory(player);
         curiosApi.ifPresent(iCuriosItemHandler -> iCuriosItemHandler.getCurios().forEach((a, b) ->
                 IntStream.range(0, b.getStacks().getSlots()).mapToObj(i ->
-                b.getStacks().getPreviousStackInSlot(i)).forEach(stack -> {
-                    if (!stack.isEmpty()) {
-                        totem.addCurios(stack);
-                    }
-                })));
+                        //saving the empty slots helps not needing an extra loop when equiping them back
+                        // ↑ for commit 1151846d68a2a75d552a2b2f35023877c663dd2f
+                        b.getStacks().getPreviousStackInSlot(i)).forEach(totem::addCurios)));
     }
 }
