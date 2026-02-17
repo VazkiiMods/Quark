@@ -53,7 +53,7 @@ public class LootrVariantTrappedChestBlock extends VariantTrappedChestBlock impl
 
     @Override
     public BlockEntity newBlockEntity(BlockPos pPos, BlockState pState) {
-        return new LootrTrappedChestBlockEntity(pPos, pState);
+        return new LootrVariantChestBlockEntity(pPos, pState);
     }
 
     @Override

@@ -1,5 +1,5 @@
 {
-  "parent": "quark:overlevel_enchant",
+  "parent": "quark:content/overlevel_enchant",
   "criteria": {
     "instamine_deepslate": {
       "trigger": "quark:instamine_deepslate"

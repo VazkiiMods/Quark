@@ -1,5 +1,5 @@
 {
-  "parent": "quark:tame_foxhound",
+  "parent": "quark:content/tame_foxhound",
   "criteria": {
     "foxhound_speed_up_furnace": {
       "trigger": "quark:foxhound_furnace"

@@ -77,7 +77,7 @@ public class LootrVariantChestBlock extends VariantChestBlock implements IZetaBl
 
     @Override
     public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
-        return new LootrChestBlockEntity(pos, state);
+        return new LootrVariantChestBlockEntity(pos, state);
     }
 
     @Override
