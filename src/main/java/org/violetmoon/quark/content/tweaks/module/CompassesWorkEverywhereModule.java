@@ -81,7 +81,7 @@ public class CompassesWorkEverywhereModule extends ZetaModule {
 	}
 
 	public static boolean isClockCalculated(ItemStack stack) {
-		return Boolean.TRUE.equals(stack.get(QuarkDataComponents.IS_COMPASS_CALCULATED));
+		return Boolean.TRUE.equals(stack.get(QuarkDataComponents.IS_CLOCK_CALCULATED));
 	}
 
 	public static final String TAG_COMPASS_CALCULATED = "quark:compass_calculated";
