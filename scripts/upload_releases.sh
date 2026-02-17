@@ -11,7 +11,7 @@ function release_github() {
 	   --method POST \
 	   -H "Accept: application/vnd.github+json" \
 	   -H "X-GitHub-Api-Version: 2022-11-28" \
-	   /repos/VazkiiMods/Zeta/releases \
+	   /repos/VazkiiMods/Quark/releases \
 	   -f tag_name="${TAGNAME}")"
 	GH_RELEASE_PAGE=$(echo "$GH_RELEASE_RESPONSE" | jq -r .html_url)
 
