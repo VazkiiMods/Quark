@@ -84,12 +84,6 @@ public class CompassesWorkEverywhereModule extends ZetaModule {
 		return Boolean.TRUE.equals(stack.get(QuarkDataComponents.IS_CLOCK_CALCULATED));
 	}
 
-	public static final String TAG_COMPASS_CALCULATED = "quark:compass_calculated";
-	public static final String TAG_WAS_IN_NETHER = "quark:compass_in_nether";
-	public static final String TAG_POSITION_SET = "quark:compass_position_set";
-	public static final String TAG_NETHER_TARGET_X = "quark:nether_x";
-	public static final String TAG_NETHER_TARGET_Z = "quark:nether_z";
-
 	public static void tickCompass(Player player, ItemStack stack) {
 		boolean calculated = isCompassCalculated(stack);
 		boolean nether = player.level().dimension().location().equals(LevelStem.NETHER.location());
