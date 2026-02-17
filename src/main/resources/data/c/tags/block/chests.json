@@ -3,12 +3,6 @@
     "values": [
         "quark:nether_brick_chest",
         "quark:purpur_chest",
-        "quark:prismarine_chest",
-        "quark:azalea_chest",
-        "quark:trapped_azalea_chest",
-        "quark:blossom_chest",
-        "quark:trapped_blossom_chest",
-        "quark:ancient_chest",
-        "quark:trapped_ancient_chest"
+        "quark:prismarine_chest"
     ]
 }

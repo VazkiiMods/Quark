@@ -1,0 +1,26 @@
+{
+  "replace": false,
+  "values": [
+    "minecraft:cocoa_beans",
+    {
+      "id": "ars_nouveau:bombegranate_pod",
+      "required": false
+    },
+    {
+      "id": "ars_nouveau:bastion_pod",
+      "required": false
+    },
+    {
+      "id": "ars_nouveau:frostaya_pod",
+      "required": false
+    },
+    {
+      "id": "ars_nouveau:mendosteen_pod",
+      "required": false
+    },
+    {
+      "id": "ars_elemental:flashpine_pod",
+      "required": false
+    }
+  ]
+}
