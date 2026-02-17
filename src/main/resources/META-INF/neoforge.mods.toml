@@ -26,7 +26,7 @@ file="META-INF/accesstransformer.cfg"
 [[dependencies.quark]]
     modId="zeta"
     type="required"
-    versionRange="[1.0-28,2.0)"
+    versionRange="[${zeta_ver},1.2)"
     ordering="AFTER"
     side="BOTH"
 
