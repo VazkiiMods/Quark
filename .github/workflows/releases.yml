@@ -47,7 +47,7 @@ jobs:
       - name: Archive Neoforge Artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: Quark-Neoforge-${{ steps.calculate_artifact_names.outputs.version }}-RELEASE
+          name: Quark-Neoforge-${{ steps.calculate_artifact_names.outputs.mod_version }}-RELEASE
           path: |
             ${{ steps.calculate_artifact_names.outputs.neoforge }}
             ${{ steps.calculate_artifact_names.outputs.neoforge }}.asc
