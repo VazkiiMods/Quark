@@ -69,6 +69,7 @@
       "minecraft:ore_lapis_buried",
       "minecraft:ore_copper_large",
       "minecraft:underwater_magma",
+      "quark:ore_lapis_extra",
       "minecraft:disk_sand",
       "minecraft:disk_clay",
       "minecraft:disk_gravel"
@@ -173,6 +174,12 @@
         "maxCount": 6,
         "minCount": 4,
         "weight": 10
+      },
+      {
+        "type": "minecraft:glow_squid",
+        "maxCount": 6,
+        "minCount": 4,
+        "weight": 20
       }
     ],
     "water_ambient": [],
