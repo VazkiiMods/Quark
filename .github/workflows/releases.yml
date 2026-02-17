@@ -33,7 +33,7 @@ jobs:
           BUILD=$(awk -F '=' '/build_number/ { print $2; }' build.properties)
           echo "mod_version=${VERSION}-${BUILD}" >> "$GITHUB_OUTPUT"
           echo "mc_version=$(awk -F ' = ' '/^mc_version/ { print $2; }' build.properties)" >> "$GITHUB_OUTPUT"
-          echo "neoforge=build/libs/Quark-${VERSION}-${BUILD}-SNAPSHOT.jar" >> "$GITHUB_OUTPUT"
+          echo "neoforge=build/libs/Quark-${VERSION}-${BUILD}.jar" >> "$GITHUB_OUTPUT"
 
       - name: Sign jars
         env:
