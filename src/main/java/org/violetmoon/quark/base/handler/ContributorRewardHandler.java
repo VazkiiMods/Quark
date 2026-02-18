@@ -2,6 +2,7 @@ package org.violetmoon.quark.base.handler;
 
 import com.google.common.collect.ImmutableSet;
 
+import com.mojang.authlib.GameProfile;
 import net.minecraft.client.Minecraft;
 import net.minecraft.world.entity.player.Player;
 
@@ -19,7 +20,7 @@ import java.util.*;
 
 public class ContributorRewardHandler {
 
-	private static final ImmutableSet<String> DEV_UUID = ImmutableSet.of(
+	public static final ImmutableSet<String> DEV_UUID = ImmutableSet.of(
 			"8c826f34-113b-4238-a173-44639c53b6e6", // Vazkii
 			"0d054077-a977-4b19-9df9-8a4d5bf20ec3", // wi0iv
 			"458391f5-6303-4649-b416-e4c0d18f837a", // yrsegal
@@ -69,6 +70,8 @@ public class ContributorRewardHandler {
 
 	private static void load(Properties props) {
 		List<String> allPatrons = new ArrayList<>(props.size());
+
+
 
 		props.forEach((k, v) -> {
 			String key = (String) k;
