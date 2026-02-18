@@ -3,27 +3,18 @@
   "pools": [
     {
       "bonus_rolls": 0.0,
+      "conditions": [
+        {
+          "condition": "minecraft:match_tool",
+          "predicate": {
+            "items": "#c:tools/shear"
+          }
+        }
+      ],
       "entries": [
         {
-          "type": "minecraft:alternatives",
-          "children": [
-            {
-              "type": "minecraft:item",
-              "conditions": [
-                {
-                  "condition": "minecraft:match_tool",
-                  "predicate": {
-                    "items": "#c:tools/shear"
-                  }
-                }
-              ],
-              "name": "quark:chorus_twist"
-            },
-            {
-              "type": "minecraft:item",
-              "name": "quark:chorus_twist"
-            }
-          ]
+          "type": "minecraft:item",
+          "name": "quark:chorus_twist"
         }
       ],
       "rolls": 1.0
