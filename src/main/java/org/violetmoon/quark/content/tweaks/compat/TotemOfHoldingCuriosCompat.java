@@ -16,14 +16,17 @@ public class TotemOfHoldingCuriosCompat {
     public static ItemStack equipCurios(Player player, List<ItemStack> equipedCurios, ItemStack stack) {
         Optional<ICuriosItemHandler> curiosApi = CuriosApi.getCuriosInventory(player);
         if (curiosApi.isPresent()) {
-            for (int j = 0; j < equipedCurios.size(); j++) {
-                ItemStack curiosItem = equipedCurios.get(j);
+            for (ItemStack curiosItem : equipedCurios) {
                 if (stack.is(curiosItem.getItem())) {
                     IItemHandlerModifiable curiosSlot = curiosApi.get().getEquippedCurios();
-                    if (!curiosSlot.getStackInSlot(j).isEmpty()) continue;
+                    for (int j = 0; j < curiosApi.get().getSlots(); j++) {
+                        if (!curiosSlot.getStackInSlot(j).isEmpty()) continue;
 
-                    curiosSlot.setStackInSlot(j, stack);
-                    return null;
+                        if (curiosSlot.isItemValid(j, stack)) {
+                            curiosSlot.insertItem(j, stack, false);
+                            return null;
+                        }
+                    }
                 }
             }
         }
@@ -32,12 +35,10 @@ public class TotemOfHoldingCuriosCompat {
 
     public static void saveCurios(Player player, TotemOfHoldingEntity totem) {
         Optional<ICuriosItemHandler> curiosApi = CuriosApi.getCuriosInventory(player);
-        curiosApi.ifPresent(iCuriosItemHandler -> iCuriosItemHandler.getCurios().forEach((a, b) ->
-                IntStream.range(0, b.getStacks().getSlots()).mapToObj(i ->
-                b.getStacks().getPreviousStackInSlot(i)).forEach(stack -> {
-                    if (!stack.isEmpty()) {
-                        totem.addCurios(stack);
-                    }
-                })));
+        curiosApi.ifPresent(iCuriosItemHandler -> iCuriosItemHandler.getCurios().forEach((a, b) -> IntStream.range(0, b.getStacks().getSlots()).mapToObj(i -> b.getStacks().getPreviousStackInSlot(i)).forEach(stack -> {
+            if (!stack.isEmpty()) {
+                totem.addCurios(stack);
+            }
+        })));
     }
 }

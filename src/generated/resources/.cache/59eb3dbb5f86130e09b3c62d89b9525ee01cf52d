@@ -1,4 +1,4 @@
-// 1.21.1	2026-02-16T11:22:57.9599435	Loot Tables
+// 1.21.1	2026-02-18T12:35:18.6363828	Loot Tables
 321167e5d1e420c3799ebd55550623276a62d02f data/quark/loot_table/blocks/acacia_bookshelf.json
 78cf85302095b576b7eda6e9c83fd9141e777c3b data/quark/loot_table/blocks/acacia_chest.json
 2d740f286cb6b31376a3bb00878726966b38c064 data/quark/loot_table/blocks/acacia_hedge.json
@@ -173,8 +173,8 @@ d04e2bc5a1489d3dfdc974517afe9040512425ee data/quark/loot_table/blocks/chiseled_j
 3194e90d2e603f9c6e876e425b60afae69fef150 data/quark/loot_table/blocks/chiseled_shale_bricks.json
 9cd8b7081d7bf1ca2052d05691922fc519ce8400 data/quark/loot_table/blocks/chiseled_soul_sandstone.json
 9501660bc7fe5c198a8722f3008fbc7967eafee3 data/quark/loot_table/blocks/chorus_fruit_block.json
-f8b579f979f5b09e0044392fb7dc4c2f6eef4f0c data/quark/loot_table/blocks/chorus_twist.json
-26e79a4d6659049f63c7066d7351cebe0a3e6d58 data/quark/loot_table/blocks/chorus_weeds.json
+a120fce467170228277a4c18441e678c63711f7c data/quark/loot_table/blocks/chorus_twist.json
+319daed81f49a47291169bfb98613510af7976e8 data/quark/loot_table/blocks/chorus_weeds.json
 d677883e3a7775bcc975176f2d5ce78647fe525f data/quark/loot_table/blocks/chute.json
 72bf3e7e07ea85c73254f53e55be2aca17276da5 data/quark/loot_table/blocks/cloud.json
 bbefc14ac852f38d78d2e279f406afa51396c1c7 data/quark/loot_table/blocks/cobbled_deepslate_vertical_slab.json

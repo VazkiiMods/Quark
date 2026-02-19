@@ -361,7 +361,7 @@ public class QuarkBlockLootTableProvider extends BlockLootSubProvider {
     }
 
     protected LootTable.Builder createShearsDrops(Block block) {
-        return createShearsDispatchTable(block, LootItem.lootTableItem(block.asItem()));
+        return LootTable.lootTable().withPool(LootPool.lootPool().setRolls(ConstantValue.exactly(1.0F)).when(HAS_SHEARS).add(LootItem.lootTableItem(block)));
     }
 
     protected LootTable.Builder createWaterPetalsDrops(Block petalBlock) {
