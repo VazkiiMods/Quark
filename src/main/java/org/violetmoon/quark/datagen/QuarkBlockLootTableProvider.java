@@ -104,7 +104,7 @@ public class QuarkBlockLootTableProvider extends BlockLootSubProvider {
         for(Block block : MoreMudBlocksModule.blocks)
             dropSelfWithRespectToAlternates(block);
         for(Block block : MorePottedPlantsModule.pottedPlants)
-            add(block, createPotFlowerItemTable(MorePottedPlantsModule.getItemLikeFromBlock(block))); //untested
+            add(block, createPotFlowerItemTable(MorePottedPlantsModule.getItemLikeFromBlock(block)));
         for(Block block : MoreStoneVariantsModule.blocks)
             dropSelf(block);
         dropSelf(NetherBrickFenceGateModule.netherBrickFenceGate);
@@ -351,8 +351,7 @@ public class QuarkBlockLootTableProvider extends BlockLootSubProvider {
 
     //original table builders
 
-    protected LootTable.Builder dropDirtyShards(Block block){ //TODO test output
-        System.out.println("GENERATING DIRTY SHARDS");
+    protected LootTable.Builder dropDirtyShards(Block block){
         HolderLookup.RegistryLookup<Enchantment> registrylookup = this.registries.lookupOrThrow(Registries.ENCHANTMENT);
         return createSilkTouchDispatchTable(block, this.applyExplosionDecay(block, LootItem.lootTableItem(GlassShardModule.dirtyShard)
                 .apply(SetItemCountFunction.setCount(UniformGenerator.between(2.0F, 4.0F)))

@@ -14,8 +14,10 @@ import net.minecraft.world.level.biome.Climate;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.ComposterBlock;
+import net.minecraft.world.level.block.FlowerPotBlock;
 import net.minecraft.world.level.levelgen.placement.PlacedFeature;
 import org.violetmoon.quark.base.Quark;
+import org.violetmoon.quark.content.building.module.MorePottedPlantsModule;
 import org.violetmoon.quark.content.world.block.GlowLichenGrowthBlock;
 import org.violetmoon.quark.content.world.block.GlowShroomBlock;
 import org.violetmoon.quark.content.world.block.GlowShroomRingBlock;
@@ -88,8 +90,10 @@ public class GlimmeringWealdModule extends ZetaModule {
         CreativeTabManager.endChain();
 
 
-        event.getVariantRegistry().addFlowerPot(glow_lichen_growth, "glow_lichen_growth", prop -> prop.lightLevel((state) -> 8));
-        event.getVariantRegistry().addFlowerPot(glow_shroom, "glow_shroom", prop -> prop.lightLevel((state) -> 10));
+        FlowerPotBlock glowLichenPot = event.getVariantRegistry().addFlowerPot(glow_lichen_growth, "glow_lichen_growth", prop -> prop.lightLevel((state) -> 8));
+        MorePottedPlantsModule.addJustForDatagen(glowLichenPot, glow_lichen_growth);
+        FlowerPotBlock glowShroomPot = event.getVariantRegistry().addFlowerPot(glow_shroom, "glow_shroom", prop -> prop.lightLevel((state) -> 10));
+        MorePottedPlantsModule.addJustForDatagen(glowShroomPot, glow_shroom);
 
 
         // Feature

@@ -7,6 +7,7 @@ import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.ComposterBlock;
+import net.minecraft.world.level.block.FlowerPotBlock;
 import net.minecraft.world.level.block.grower.TreeGrower;
 import net.minecraft.world.level.levelgen.feature.ConfiguredFeature;
 import net.minecraft.world.level.material.MapColor;
@@ -17,6 +18,7 @@ import net.minecraft.world.level.storage.loot.entries.LootPoolEntryContainer;
 import org.violetmoon.quark.base.Quark;
 import org.violetmoon.quark.base.handler.WoodSetHandler;
 import org.violetmoon.quark.base.handler.WoodSetHandler.WoodSet;
+import org.violetmoon.quark.content.building.module.MorePottedPlantsModule;
 import org.violetmoon.quark.content.world.feature.AncientTreeTopperDecorator;
 import org.violetmoon.quark.content.world.feature.MultiFoliageStraightTrunkPlacer;
 import org.violetmoon.quark.content.world.feature.OffsetFancyFoliagePlacer;
@@ -94,7 +96,8 @@ public class AncientWoodModule extends ZetaModule {
 		woodSet = WoodSetHandler.addWoodSet(event, this, "ancient", MapColor.TERRACOTTA_WHITE, MapColor.TERRACOTTA_WHITE, true);
 		ancient_leaves = new ZetaLeavesBlock(woodSet.name, this, MapColor.PLANT);
 		ancient_sapling = new ZetaSaplingBlock("ancient", this, new TreeGrower("ancient_tree", Optional.empty(), Optional.of(configuredFeatureKey), Optional.empty())); //actually called "ancient_sapling"
-		event.getVariantRegistry().addFlowerPot(ancient_sapling, "ancient_sapling", Functions.identity()); //actually "potted_ancient_sapling"
+		FlowerPotBlock ancientSaplingPot = event.getVariantRegistry().addFlowerPot(ancient_sapling, "ancient_sapling", Functions.identity()); //actually "potted_ancient_sapling"
+		MorePottedPlantsModule.addJustForDatagen(ancientSaplingPot, ancient_sapling);
 
 		// fruit //
 

@@ -6,6 +6,7 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.tags.BiomeTags;
 import net.minecraft.world.level.block.ComposterBlock;
+import net.minecraft.world.level.block.FlowerPotBlock;
 import net.minecraft.world.level.block.grower.TreeGrower;
 import net.minecraft.world.level.levelgen.GenerationStep.Decoration;
 import net.minecraft.world.level.levelgen.feature.ConfiguredFeature;
@@ -15,6 +16,7 @@ import org.violetmoon.quark.base.Quark;
 import org.violetmoon.quark.base.handler.WoodSetHandler;
 import org.violetmoon.quark.base.handler.WoodSetHandler.WoodSet;
 import org.violetmoon.quark.base.util.QuarkWorldGenWeights;
+import org.violetmoon.quark.content.building.module.MorePottedPlantsModule;
 import org.violetmoon.quark.content.world.block.BlossomLeavesBlock;
 import org.violetmoon.quark.content.world.config.BlossomTreeConfig;
 import org.violetmoon.quark.content.world.gen.BlossomTreeGenerator;
@@ -97,7 +99,8 @@ public class BlossomTreesModule extends ZetaModule {
 		);
 		tree.sapling = new ZetaSaplingBlock(regname, this, tree.grower);
 
-		event.getVariantRegistry().addFlowerPot(tree.sapling, this.zeta().registry.getRegistryName(tree.sapling, BuiltInRegistries.BLOCK).getPath(), Functions.identity()); //sure
+		FlowerPotBlock saplingPot = event.getVariantRegistry().addFlowerPot(tree.sapling, this.zeta().registry.getRegistryName(tree.sapling, BuiltInRegistries.BLOCK).getPath(), Functions.identity()); //sure
+		MorePottedPlantsModule.addJustForDatagen(saplingPot, tree.sapling);
 
 		return tree;
 	}
