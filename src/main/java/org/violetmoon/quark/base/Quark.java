@@ -13,19 +13,25 @@ import net.minecraft.server.packs.repository.PackSource;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.alchemy.Potions;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.ChestBlock;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.ModList;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.fml.common.Mod;
+import net.neoforged.neoforge.capabilities.Capabilities;
+import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;
 import net.neoforged.neoforge.event.AddPackFindersEvent;
 import net.neoforged.neoforge.event.brewing.RegisterBrewingRecipesEvent;
+import net.neoforged.neoforge.items.wrapper.InvWrapper;
 import net.neoforged.neoforgespi.locating.IModFile;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.spongepowered.asm.mixin.MixinEnvironment;
 import org.violetmoon.quark.base.proxy.ClientProxy;
 import org.violetmoon.quark.base.proxy.CommonProxy;
+import org.violetmoon.quark.content.building.module.VariantChestsModule;
 import org.violetmoon.quark.content.mobs.module.CrabsModule;
 import org.violetmoon.quark.integration.claim.FlanIntegration;
 import org.violetmoon.quark.integration.claim.IClaimIntegration;
@@ -67,6 +73,7 @@ public class Quark {
 			MixinEnvironment.getCurrentEnvironment().audit();
 
 		bus.addListener(Quark::addPackFinders);
+		bus.addListener(Quark::registerCapabilities);
 	}
 
 	public static final IClaimIntegration FLAN_INTEGRATION = ZETA.modIntegration("flan",
@@ -118,5 +125,21 @@ public class Quark {
 			event.getBuilder().addMix(CrabsModule.RESILIENCE_NORMAL, Items.REDSTONE, CrabsModule.RESILIENCE_LONG);
 			event.getBuilder().addMix(CrabsModule.RESILIENCE_NORMAL, Items.GLOWSTONE_DUST, CrabsModule.RESILIENCE_STRONG);
 		}
+	}
+
+	public static void registerCapabilities(RegisterCapabilitiesEvent event) {
+		Quark.LOG.info("Registering capabilities for " + VariantChestsModule.regularChests.values().size() + " variant chests");
+
+		for(Block chest: VariantChestsModule.regularChests.values()){
+			event.registerBlock(Capabilities.ItemHandler.BLOCK, (level, pos, state, blockEntity, side) -> {
+				return new InvWrapper(ChestBlock.getContainer((ChestBlock) state.getBlock(), state, level, pos, true));
+			}, chest);
+		}
+		for(Block chest: VariantChestsModule.trappedChests.values()){
+			event.registerBlock(Capabilities.ItemHandler.BLOCK, (level, pos, state, blockEntity, side) -> {
+				return new InvWrapper(ChestBlock.getContainer((ChestBlock) state.getBlock(), state, level, pos, true));
+			}, chest);
+		}
+
 	}
 }
