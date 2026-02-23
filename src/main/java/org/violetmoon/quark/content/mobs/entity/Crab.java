@@ -92,6 +92,7 @@ public class Crab extends Animal implements IEntityWithComplexSpawn, Bucketable 
 	public Crab(EntityType<? extends Crab> type, Level worldIn) {
         super(type, worldIn);
         this.setPathfindingMalus(PathType.LAVA, -1.0F);
+		this.setCanPickUpLoot(true);
 
         PositionSource source = new EntityPositionSource(this, this.getEyeHeight());
         this.dynamicJukeboxListener = new DynamicGameEventListener<>(new JukeboxListener(source, GameEvent.JUKEBOX_PLAY.value().notificationRadius()));
@@ -174,6 +175,14 @@ public class Crab extends Animal implements IEntityWithComplexSpawn, Bucketable 
 	@NotNull
 	@Override
 	public InteractionResult mobInteract(@NotNull Player player, @NotNull InteractionHand hand) {
+		if (this.getMainHandItem().isEmpty() && !playerStack.isEmpty() && playerStack.getItem() instanceof net.minecraft.world.item.TieredItem) {
+        if (!this.level().isClientSide) {
+            this.setItemSlot(EquipmentSlot.MAINHAND, playerStack.split(1));
+            this.setGuaranteedDrop(EquipmentSlot.MAINHAND);
+        }
+        return InteractionResult.sidedSuccess(this.level().isClientSide);
+    }
+		
 		if(getScale() >= 2) {
 			if(!this.isFood(player.getItemInHand(hand)) && !this.isVehicle() && !player.isSecondaryUseActive()) {
 				if(!this.level().isClientSide)
@@ -262,6 +271,7 @@ public class Crab extends Animal implements IEntityWithComplexSpawn, Bucketable 
 				.add(Attributes.ARMOR, 3.0D)
 				.add(Attributes.ARMOR_TOUGHNESS, 2.0D)
 				.add(Attributes.KNOCKBACK_RESISTANCE, 0.5D);
+		        .add(Attributes.CAN_PICK_UP_LOOT, 1.0D);
 	}
 
 	@Override
@@ -383,12 +393,29 @@ public class Crab extends Animal implements IEntityWithComplexSpawn, Bucketable 
 	}
 
 	@Override
-	protected void doPush(@NotNull Entity entityIn) {
-		super.doPush(entityIn);
-		if (level().getDifficulty() != Difficulty.PEACEFUL && !noSpike && !hasPassenger(entityIn))
-			if(entityIn instanceof LivingEntity && !(entityIn instanceof Crab))
-				entityIn.hurt(level().damageSources().cactus(), 1f);
-	}
+protected void doPush(@NotNull Entity entityIn) {
+    super.doPush(entityIn);
+    if (level().getDifficulty() != Difficulty.PEACEFUL && !noSpike && !hasPassenger(entityIn)) {
+        if (entityIn instanceof LivingEntity && !(entityIn instanceof Crab)) {
+            
+            float damage = 1.0f;
+            ItemStack heldItem = this.getMainHandItem();
+
+            if (!heldItem.isEmpty()) {
+                AttributeInstance attackDamage = this.getAttribute(Attributes.ATTACK_DAMAGE);
+                if (attackDamage != null) {
+                    damage += (float) attackDamage.getValue();
+                }
+            }
+
+            entityIn.hurt(level().damageSources().cactus(), damage);
+            
+            if (!heldItem.isEmpty() && !level().isClientSide) {
+                heldItem.hurtAndBreak(1, this, EquipmentSlot.MAINHAND);
+            }
+        }
+    }
+}
 
 	@Override
 	public boolean isFood(ItemStack stack) {
