@@ -162,7 +162,11 @@ public class CrabModel extends EntityModel<Crab> {
 		modelRenderer.yRot = y;
 		modelRenderer.zRot = z;
 	}
-
+	
+	public ModelPart getRightClaw() {
+    	return this.rightClaw;
+	}
+	
 	@Override
 	public void setupAnim(Crab crab, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
 		rightLeg1.zRot = -0.2618F + (-1 + Mth.cos(limbSwing * 0.6662F)) * 0.7F * limbSwingAmount;
