@@ -23,6 +23,7 @@ public class CrabRenderer extends MobRenderer<Crab, CrabModel> {
 	public CrabRenderer(EntityRendererProvider.Context context) {
 		super(context, ModelHandler.model(ModelHandler.crab), 0.4F);
 		addLayer(new CrabMoldLayer(this));
+		addLayer(new net.minecraft.client.renderer.entity.layers.ItemInHandLayer<>(this, context.getItemInHandRenderer()));
 	}
 
 	@NotNull
