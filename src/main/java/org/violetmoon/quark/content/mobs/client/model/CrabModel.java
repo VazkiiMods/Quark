@@ -168,6 +168,16 @@ public class CrabModel extends EntityModel<Crab> {
 	}
 	
 	@Override
+    public void translateToHand(HumanoidArm arm, PoseStack poseStack) {
+        this.root.translateTo(poseStack);
+        this.body.translateTo(poseStack);
+        this.rightClaw.translateTo(poseStack);
+
+        poseStack.translate(0.05D, 0.1D, -0.1D); 
+        poseStack.mulPose(com.mojang.math.Axis.XP.rotationDegrees(-90F));
+    }
+	
+	@Override
 	public void setupAnim(Crab crab, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
 		rightLeg1.zRot = -0.2618F + (-1 + Mth.cos(limbSwing * 0.6662F)) * 0.7F * limbSwingAmount;
 		rightLeg2.zRot = -0.5236F + (-1 + Mth.cos(limbSwing * 0.6662F + (float) Math.PI)) * 0.7F * limbSwingAmount;
@@ -208,6 +218,12 @@ public class CrabModel extends EntityModel<Crab> {
 			leftClaw.xRot = armRot;
 			rightClaw.xRot = armRot;
 		}
+		
+		if (!entity.getMainHandItem().isEmpty()) {
+        this.rightClaw.xRot -= 0.5F;
+        this.rightClaw.zRot += Math.cos(ageInTicks * 0.1F) * 0.05F;
+		}
+		
 	}
 
 	@Override
