@@ -239,7 +239,7 @@ public class SeedPouchItem extends ZetaItem implements IUsageTickerOverride, ITr
 				return placeSeed(contents, context, seed, context.getClickedPos());
 			}
 
-			//hold-shift logic starts here
+			//hold-shift on non chest logic starts here
 
 			InteractionResult bestRes = InteractionResult.FAIL;
 
