@@ -126,7 +126,8 @@ public class GoldToolsHaveFortuneModule extends ZetaModule {
 	public static void modifySilkTouch(ItemStack stack, HolderLookup.Provider provider) {
 		if (!staticEnabled) return;
 
-		int builtinSilkTouchLevel = BUILTIN_ENCHANTMENTS.get(stack.getItem()).getOrDefault(Enchantments.SILK_TOUCH, 0);
+		Optional<Object2IntMap<ResourceKey<Enchantment>>> builtinEnchantments = Optional.ofNullable(BUILTIN_ENCHANTMENTS.get(stack.getItem()));
+		int builtinSilkTouchLevel = builtinEnchantments.map(map -> map.getOrDefault(Enchantments.SILK_TOUCH, 0)).orElse(0);
 		if (builtinSilkTouchLevel < 1) return;
 
 		Holder<Enchantment> holder = provider.lookupOrThrow(Registries.ENCHANTMENT).getOrThrow(Enchantments.SILK_TOUCH);
