@@ -393,7 +393,7 @@ public class Crab extends Animal implements IEntityWithComplexSpawn, Bucketable 
 	}
 
 	@Override
-protected void doPush(@NotNull Entity entityIn) {
+    protected void doPush(@NotNull Entity entityIn) {
     super.doPush(entityIn);
     if (level().getDifficulty() != Difficulty.PEACEFUL && !noSpike && !hasPassenger(entityIn)) {
         if (entityIn instanceof LivingEntity && !(entityIn instanceof Crab)) {
