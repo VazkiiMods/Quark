@@ -80,11 +80,14 @@ public class BudgieModule extends ZetaModule {
     }
 
     @ZetaLoadModule(clientReplacement = true)
-    public static class Client extends BudgieModule {
-
-        @LoadEvent
-        public final void clientSetup(ZClientSetup event) {
-            EntityRenderers.register(budgieType, BudgieRenderer::new);
-        }
-    }
+        public static class Client extends BudgiesModule {
+            @LoadEvent
+            public final void clientSetup(ZClientSetup event) {
+                EntityRenderers.register(budgieType, BudgieRenderer::new);
+                }
+            @LoadEvent
+            public final void registerLayerDefinitions(ZRegisterLayerDefinitions event) {
+                event.register(BudgieRenderer.BUDGIE_LAYER, BudgieModel::createBodyLayer);
+                }
+            }
 }
