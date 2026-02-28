@@ -97,6 +97,14 @@ public class Budgie extends ShoulderRidingEntity {
         return new Budgie(BudgiesModule.budgieType, sworld);
     }
 
+    @Override
+    public void setRecordPlayingNearby(BlockPos pos, boolean isPartying) {
+        }
+
+    public Vec3 getRenderOffset(float partialTicks) {
+        return new Vec3(0.4D, -0.2D, 0.0D);
+        }
+    
     public class GroomFlowerGoal extends MoveToBlockGoal {
         public GroomFlowerGoal(Budgie budgie) {
             super(budgie, 1.2D, 12);
