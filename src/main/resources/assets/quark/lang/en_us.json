@@ -350,6 +350,12 @@
 	"quark.subtitles.foxhound_shake": "Foxhound shudders",
 	"quark.subtitles.foxhound_eat": "Foxhound eats",
 	"quark.subtitles.foxhound_crackle": "Foxhound crackles",
+	"quark.subtitles.budgie_ambient": "Budgie chirps",
+    "quark.subtitles.budgie_hurt": "Budgie screeches",
+    "quark.subtitles.budgie_death": "Budgie withers",
+    "quark.subtitles.budgie_step": "Budgie scuttles",
+    "quark.subtitles.budgie_fly": "Budgie flaps",
+    "quark.subtitles.budgie_groom": "Budgie grooms flower",
 	"quark.subtitles.crab_die": "Shell crunches",
 	"quark.subtitles.crab_hurt": "Shell chips",
 	"quark.subtitles.crab_scuttle": "Crab scuttles",
@@ -506,6 +512,7 @@
 	"item.quark.pickarang": "Pickarang",
 	"item.quark.diamond_heart": "Heart of Diamond",
 	"item.quark.ancient_tome": "Ancient Tome",
+	"item.quark.budgie_feather": "Budgie Feather",
 	"item.quark.crab_bucket": "Bucket of Crab",
 	"item.quark.crab_leg": "Raw Crab Leg",
 	"item.quark.cooked_crab_leg": "Cooked Crab Leg",
@@ -1385,6 +1392,7 @@
 	"block.quark.raw_copper_bricks_wall": "Raw Copper Brick Wall",
 
 	"item.quark.stoneling_spawn_egg": "Stoneling Spawn Egg",
+	"item.quark.budgie_spawn_egg": "Budgie Spawn Egg",
 	"item.quark.crab_spawn_egg": "Crab Spawn Egg",
 	"item.quark.foxhound_spawn_egg": "Foxhound Spawn Egg",
 	"item.quark.toretoise_spawn_egg": "Oretoise Spawn Egg",
@@ -1400,6 +1408,7 @@
 	"entity.quark.totem": "Totem of Holding",
 	"entity.quark.stoneling": "Stoneling",
 	"entity.quark.gravisand": "Floating Gravisand",
+	"entity.quark.budgie": "Budgie",
 	"entity.quark.crab": "Crab",
 	"entity.quark.foxhound": "Foxhound",
 	"entity.quark.toretoise": "Oretoise",
@@ -1562,6 +1571,8 @@
 	"advancements.quark.crab_in_a_bucket.description": "Capture a Crab in a Bucket",
 	"advancements.quark.tatami_gaeshi.title": "TATAMI GAESHI!",
 	"advancements.quark.tatami_gaeshi.description": "Hit something with a Bamboo Mat",
-
+    "advancements.quark.two_by_two.budgie.title": "Budgie Love",
+    "advancements.quark.two_by_two.budgie.description": "Breed two Budgies together."
+	
 	"quark.pack.emote_icon_pack": "Quark Emote Icon Pack"
 }
