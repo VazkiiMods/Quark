@@ -192,6 +192,10 @@ public class Toretoise extends Animal {
 						DamageSource useSource = damageSource;
 						if(e == aggressor)
 							useSource = damageSources().mobAttack(this);
+						if(e instanceof Player player && level().getDifficulty() == Difficulty.PEACEFUL){
+							player.push(0, 0.25, 0);
+							//give the player slight upwards knocback so there's some sort of feedback without hurting them in peaceful
+						}
 
 						e.hurt(useSource, 4 + level().getDifficulty().ordinal());
 					}
