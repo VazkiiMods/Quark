@@ -9,6 +9,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.item.enchantment.Enchantments;
+import net.neoforged.fml.ModList;
 import org.violetmoon.zeta.config.Config;
 import org.violetmoon.zeta.event.bus.PlayEvent;
 import org.violetmoon.zeta.event.play.entity.player.ZPlayerInteract;
@@ -17,6 +18,8 @@ import org.violetmoon.zeta.module.ZetaModule;
 
 @ZetaLoadModule(category = "management")
 public class QuickArmorSwappingModule extends ZetaModule {
+
+	boolean curiousArmorStandsInstalled = false;
 
 	@Config
 	public static boolean swapOffHand = true;
@@ -38,6 +41,11 @@ public class QuickArmorSwappingModule extends ZetaModule {
 			swapSlot(player, armorStand, EquipmentSlot.FEET);
 			if(swapOffHand)
 				swapSlot(player, armorStand, EquipmentSlot.OFFHAND);
+
+			//System.out.println("curiousArmorStandsInstalled: " + curiousArmorStandsInstalled);
+			if(curiousArmorStandsInstalled){
+				QASCASHandler.swapCurios(event, player, armorStand);
+			}
 		}
 	}
 
@@ -58,6 +66,12 @@ public class QuickArmorSwappingModule extends ZetaModule {
 
 		player.setItemSlot(slot, armorStandItem);
 		armorStand.setItemSlot(slot, playerItem);
+	}
+
+	@Override
+	public void postConstruct() {
+		curiousArmorStandsInstalled = ModList.get().isLoaded("curiousarmorstands") || ModList.get().isLoaded("curious_armor_stands");
+		//System.out.println("curiousArmorStandsInstalled: " + curiousArmorStandsInstalled);
 	}
 
 }

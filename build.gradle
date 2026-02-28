@@ -233,6 +233,7 @@ dependencies {
     //Curios
     runtimeOnly("top.theillusivec4.curios:curios-neoforge:${deps.curios_version}")
     compileOnly("top.theillusivec4.curios:curios-neoforge:${deps.curios_version}:api")
+    implementation("curse.maven:curious-armor-stands-398784:${deps.cas_curse_file_id}")
     
     //Biolith
     implementation(jarJar("com.terraformersmc:biolith-neoforge:${deps.biolith_version}"))
@@ -255,6 +256,7 @@ dependencies {
     bonusRuntimeOnly("curse.maven:farmers-delight-398521:${deps.farmers_delight_curse_file_id}")
     bonusRuntimeOnly("cc.tweaked:cc-tweaked-${config.mc_version}-forge:${deps.cct_version}") // Tests for a specific RegistryAccess issue basically.
     bonusRuntimeOnly("blusunrize.immersiveengineering:ImmersiveEngineering:${deps.ie_version}")
+    bonusRuntimeOnly("curse.maven:artifacts-312353:${deps.artifacts_curse_file_id}")
 }
 
 pmd {
