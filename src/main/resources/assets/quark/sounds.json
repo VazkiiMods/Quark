@@ -308,6 +308,40 @@
       "mob/chicken/plop"
     ]
   },
+  "entity.budgie.ambient": {
+    "subtitle": "quark.subtitles.budgie_ambient",
+    "sounds": [
+      "quark:entity/budgie/idle1",
+      "quark:entity/budgie/idle2",
+      "quark:entity/budgie/idle3"
+    ]
+  },
+  "entity.budgie.hurt": {
+    "subtitle": "quark.subtitles.budgie_hurt",
+    "sounds": [
+      "quark:entity/budgie/hurt1",
+      "quark:entity/budgie/hurt2"
+    ]
+  },
+  "entity.budgie.death": {
+    "subtitle": "quark.subtitles.budgie_death",
+    "sounds": [
+      "quark:entity/budgie/death"
+    ]
+  },
+  "entity.budgie.fly": {
+    "subtitle": "quark.subtitles.budgie_fly",
+    "sounds": [
+      "quark:entity/budgie/fly1",
+      "quark:entity/budgie/fly2"
+    ]
+  },
+  "entity.budgie.groom": {
+    "subtitle": "quark.subtitles.budgie_groom",
+    "sounds": [
+      "quark:entity/budgie/groom"
+    ]
+  },
   "entity.soul_bead.idle": {
     "subtitle": "quark.subtitles.soul_bead.idle",
     "sounds": [
