@@ -60,10 +60,10 @@ public class InfluenceEntry implements IRecipeCategoryExtension {
 		for(Holder<Enchantment> enchantment : enchantments) {
 			if(enchantment.value() != null) {
 				if(stack.isEmpty()) {
-					stack = ColorRunesModule.withRune(new ItemStack(Items.ENCHANTED_BOOK), runeColor);
+					stack = EnchantedBookItem.createForEnchantment(new EnchantmentInstance(enchantment, enchantment.value().getMaxLevel()));
+					stack = ColorRunesModule.withRune(stack, runeColor);
 					stack.set(DataComponents.CUSTOM_NAME, Component.translatable(locKey).withStyle(chatColor));
 					stack.set(QuarkDataComponents.TABLE_ONLY_ENCHANTS, true);
-					stack = EnchantedBookItem.createForEnchantment(new EnchantmentInstance(enchantment, enchantment.value().getMaxLevel()));
 				}
 				else {
 					stack.enchant(enchantment, enchantment.value().getMaxLevel());
