@@ -225,7 +225,7 @@ public class ChestSearchingModule extends ZetaModule {
 
 			Item item = stack.getItem();
 			ResourceLocation res = BuiltInRegistries.ITEM.getKey(item);
-			if(SimilarBlockTypeHandler.isShulkerBox(res)) {
+			if(SimilarBlockTypeHandler.isShulkerBox(res) && stack.has(DataComponents.BLOCK_ENTITY_DATA)) {
 				CompoundTag cmp = stack.get(DataComponents.BLOCK_ENTITY_DATA).copyTag();
 				Level level = Minecraft.getInstance().level;
 				if(cmp != null && level != null) {
