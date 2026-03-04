@@ -15,6 +15,7 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.item.alchemy.Potions;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.ChestBlock;
+import net.minecraft.world.level.block.entity.FurnaceBlockEntity;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.ModList;
@@ -29,9 +30,14 @@ import net.neoforged.neoforgespi.locating.IModFile;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.spongepowered.asm.mixin.MixinEnvironment;
+import org.violetmoon.quark.addons.oddities.block.be.CrateBlockEntity;
+import org.violetmoon.quark.addons.oddities.block.be.PipeBlockEntity;
+import org.violetmoon.quark.addons.oddities.module.CrateModule;
+import org.violetmoon.quark.addons.oddities.module.PipesModule;
 import org.violetmoon.quark.base.proxy.ClientProxy;
 import org.violetmoon.quark.base.proxy.CommonProxy;
 import org.violetmoon.quark.content.building.module.VariantChestsModule;
+import org.violetmoon.quark.content.building.module.VariantFurnacesModule;
 import org.violetmoon.quark.content.mobs.module.CrabsModule;
 import org.violetmoon.quark.integration.claim.FlanIntegration;
 import org.violetmoon.quark.integration.claim.IClaimIntegration;
@@ -140,6 +146,12 @@ public class Quark {
 				return new InvWrapper(ChestBlock.getContainer((ChestBlock) state.getBlock(), state, level, pos, true));
 			}, chest);
 		}
+
+		Quark.LOG.info("Registering capabilities for other storage blocks");
+
+		event.registerBlock(Capabilities.ItemHandler.BLOCK, (level, pos, state, blockEntity, side) -> new InvWrapper((PipeBlockEntity)blockEntity), PipesModule.pipe, PipesModule.encasedPipe);
+		event.registerBlock(Capabilities.ItemHandler.BLOCK, (level, pos, state, blockEntity, side) -> new InvWrapper((CrateBlockEntity)blockEntity), CrateModule.crate);
+		event.registerBlock(Capabilities.ItemHandler.BLOCK, (level, pos, state, blockEntity, side) -> new InvWrapper((FurnaceBlockEntity)blockEntity), VariantFurnacesModule.blackstoneFurnace, VariantFurnacesModule.deepslateFurnace);
 
 	}
 }
