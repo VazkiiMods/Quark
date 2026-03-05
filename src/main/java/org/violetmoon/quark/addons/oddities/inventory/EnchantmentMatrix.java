@@ -13,6 +13,7 @@ import net.minecraft.util.RandomSource;
 import net.minecraft.util.random.Weight;
 import net.minecraft.util.random.WeightedRandom;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.EnchantedBookItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.enchantment.Enchantment;
@@ -169,8 +170,7 @@ public class EnchantmentMatrix {
 
 			if(isValid
 					&& !MatrixEnchantingModule.disallowedEnchantments.contains(id)
-					//todo: An additional check exists to see if an enchantment was allowed on books, will need to be replaced. "|| (book && enchantment.isAllowedOnBooks())"
-					&& ((enchantment.value().canEnchant(target) && enchantment.value().isPrimaryItem(target)))) {
+					&& ((enchantment.value().canEnchant(target) && enchantment.value().isPrimaryItem(target)) || (book))) {
 				int enchantLevel = 1;
 				if(book) {
 					for(int i = enchantment.value().getMaxLevel(); i > enchantment.value().getMinLevel() - 1; --i) {
