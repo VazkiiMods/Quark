@@ -43,7 +43,7 @@ public class FallenLogsModule extends ZetaModule {
 	@Config
 	public static int sparseBiomeRarity = 12;
 	
-	@Config(description = "Tags that define which biomes can have which wood types")
+	@Config(description = "Tags that define which biomes can have which wood types. These are all tags under the Quark namespace")
 	public static List<String> biomeTags = Arrays.asList(
 			"has_fallen_acacia=minecraft:acacia_log",
             "has_fallen_birch=minecraft:birch_log",
