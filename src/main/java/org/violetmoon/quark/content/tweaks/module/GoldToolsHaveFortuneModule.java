@@ -13,16 +13,21 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.*;
 import net.minecraft.world.item.component.Tool;
 import net.minecraft.world.item.enchantment.Enchantment;
+import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.item.enchantment.ItemEnchantments;
 import net.minecraft.world.level.block.state.BlockState;
+import org.violetmoon.quark.base.Quark;
 import org.violetmoon.zeta.config.Config;
 import org.violetmoon.zeta.config.Config.Max;
 import org.violetmoon.zeta.config.Config.Min;
 import org.violetmoon.zeta.event.bus.LoadEvent;
+import org.violetmoon.zeta.event.bus.PlayEvent;
+import org.violetmoon.zeta.event.load.ZAddReloadListener;
 import org.violetmoon.zeta.event.load.ZConfigChanged;
 import org.violetmoon.zeta.module.ZetaLoadModule;
 import org.violetmoon.zeta.module.ZetaModule;
@@ -34,6 +39,8 @@ import java.util.*;
 public class GoldToolsHaveFortuneModule extends ZetaModule {
 
 	private static final Tier[] TIERS = new Tier[] {Tiers.WOOD, Tiers.STONE, Tiers.IRON, Tiers.DIAMOND, Tiers.NETHERITE};
+	private static final TagKey<Item> IGNORED_BY_GTHF = Quark.asTagKey(Registries.ITEM, "ignored_by_gold_tools_have_fortune");
+	private static final TagKey<Item> COUNTS_AS_WEAPON_FOR_GTHF = Quark.asTagKey(Registries.ITEM, "counts_as_weapon_for_gold_tools_have_fortune");
 
 	@Config
 	@Min(0)
@@ -68,6 +75,11 @@ public class GoldToolsHaveFortuneModule extends ZetaModule {
 
 	@LoadEvent
 	public final void configChanged(ZConfigChanged event) {
+		//no-op, moved to onServerReload
+	}
+
+	@PlayEvent
+	public final void onServerReload(ZAddReloadListener e) {
 		staticEnabled = isEnabled();
 		BUILTIN_ENCHANTMENTS.clear();
 
@@ -89,9 +101,10 @@ public class GoldToolsHaveFortuneModule extends ZetaModule {
 
 		if (fortuneLevel > 0) {
 			for (Item item : BuiltInRegistries.ITEM) {
-				if (item instanceof TieredItem tiered && tiered.getTier() == Tiers.GOLD) {
+				if (item instanceof TieredItem tiered && tiered.getTier() == Tiers.GOLD && !item.getDefaultInstance().is(IGNORED_BY_GTHF)) {
 					Object2IntMap<ResourceKey<Enchantment>> entry = BUILTIN_ENCHANTMENTS.computeIfAbsent(item, it -> new Object2IntArrayMap<>());
-					entry.computeIfAbsent(item instanceof SwordItem ? Enchantments.LOOTING : Enchantments.FORTUNE, ench -> fortuneLevel);
+					boolean acceptsLooting = item.getDefaultInstance().is(COUNTS_AS_WEAPON_FOR_GTHF);
+					entry.computeIfAbsent(acceptsLooting ? Enchantments.LOOTING : Enchantments.FORTUNE, ench -> fortuneLevel);
 				}
 			}
 		}
