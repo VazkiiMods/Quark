@@ -80,6 +80,8 @@ public class GoldToolsHaveFortuneModule extends ZetaModule {
 
 	@PlayEvent
 	public final void onServerReload(ZAddReloadListener e) {
+		//TODO this doesn't work on first opening a world after launching a game. It runs but the results are incorrect,
+		//the IGNORED_BY_GTHF and COUNTS_AS_WEAPON_FOR_GTHF tags do not seem to be loaded upon first opening a world
 		staticEnabled = isEnabled();
 		BUILTIN_ENCHANTMENTS.clear();
 

@@ -68,7 +68,7 @@ public class FallenLogsModule extends ZetaModule {
 	}
 	
 	@LoadEvent
-	public final void configChanged(ZConfigChanged event) {
+	public final void configChanged(ZConfigChanged event) throws ParseException {
 		blocksPerTag.clear();
 		for(String s : biomeTags) {
 			String[] toks = s.split("=");
@@ -80,7 +80,7 @@ public class FallenLogsModule extends ZetaModule {
 			if(k.contains(":")){
 				tag = TagKey.create(Registries.BIOME, ResourceLocation.parse(k));
 				if(s.contains("quark:")) {
-					Quark.warnOldConfig(this.displayName());
+					Quark.crashOnOldConfig(this.displayName(), s.indexOf("quark:"));
 				}
 			}
 			else{

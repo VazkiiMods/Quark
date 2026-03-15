@@ -1,6 +1,7 @@
 package org.violetmoon.quark.content.management.module;
 
 import com.google.common.collect.Lists;
+import net.minecraft.ResourceLocationException;
 import net.minecraft.core.Holder;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.core.component.DataComponents;
@@ -27,6 +28,7 @@ import org.violetmoon.zeta.config.Config;
 import org.violetmoon.zeta.config.SyncedFlagHandler;
 import org.violetmoon.zeta.event.bus.LoadEvent;
 import org.violetmoon.zeta.event.bus.PlayEvent;
+import org.violetmoon.zeta.event.load.ZAddReloadListener;
 import org.violetmoon.zeta.event.load.ZConfigChanged;
 import org.violetmoon.zeta.event.play.entity.player.ZPlayerDestroyItem;
 import org.violetmoon.zeta.event.play.entity.player.ZPlayerTick;
@@ -88,6 +90,22 @@ public class AutomaticToolRestockModule extends ZetaModule {
 	@LoadEvent
 	public final void configChanged(ZConfigChanged event) {
 		itemsToIgnore = RegistryUtil.massRegistryGet(ignoredItems, BuiltInRegistries.ITEM);
+	}
+
+	@PlayEvent
+	public final void onServerReload(ZAddReloadListener e) {
+		//in 4.1-474 and earlier 1.21 versions, generateDefaultEnchantmentList generates the wrong format
+		try {
+			RegistryUtil.massRegistryGet(enchantNames, e.getRegistryAccess().registryOrThrow(Registries.ENCHANTMENT));
+		} catch (ResourceLocationException resourceLocationException) {
+			Quark.LOG.error(this.displayName() + " Important Enchantments enchantNames is in the wrong format:" + resourceLocationException.getMessage());
+			for (String entry : enchantNames) {
+				if (entry.contains("ResourceKey")) {
+					Quark.LOG.error(this.displayName() + " has an older, incorrect version of the config. It should be: " + generateDefaultEnchantmentList());
+					//we could throw an error here if we wanted
+				}
+			}
+		}
 	}
 
 	@PlayEvent
@@ -281,7 +299,7 @@ public class AutomaticToolRestockModule extends ZetaModule {
 
         List<String> enchantments = new ArrayList<>();
         for (ResourceKey<Enchantment> e : enchants) {
-            enchantments.add(e.location().toString());
+            enchantments.add(e.location().getNamespace() + ":" + e.location().getPath());
         }
         return enchantments;
     }

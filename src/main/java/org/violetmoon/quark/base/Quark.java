@@ -48,6 +48,7 @@ import org.violetmoon.zeta.multiloader.Env;
 import org.violetmoon.zetaimplforge.ForgeZeta;
 
 import java.nio.file.Path;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -64,8 +65,6 @@ public class Quark {
 
 	public static final Zeta ZETA = new ForgeZeta(MOD_ID, LogManager.getLogger("quark-zeta"));
 	public static final String ODDITIES_ID = ZETA.isProduction ? "quarkoddities" : "quark";
-
-	public static List<String> modulesWarnedForOldConfig = new ArrayList<>();
 
 	public static Quark instance;
 	public static CommonProxy proxy;
@@ -159,15 +158,15 @@ public class Quark {
 
 	}
 
-	public static void warnOldConfig(String moduleName){
+	public static void crashOnOldConfig(String moduleName, int parseFailedPosition) throws ParseException {
 		final String OLD_VERSION = "1.20.1", THIS_VERSION = "1.21.1";
 
-		if(!modulesWarnedForOldConfig.contains(moduleName)){
-			Quark.LOG.warn("Quark has detected you are likely using a " + OLD_VERSION + " config file." +
-					" We recommend you do not do this in " + THIS_VERSION + " as the spec has changed." +
-					" This was caught by module " + moduleName + " which has handled it gracefully, but" +
-					" we recommend you delete your old config and then re-create it with the in-game config menu to prevent other potential issues");
-			modulesWarnedForOldConfig.add(moduleName);
-		}
+		String err = "Quark has detected you are likely using a " + OLD_VERSION + " config file." +
+				" We recommend you do not do this in " + THIS_VERSION + " as the format has changed." +
+				" We recommend you delete your old config and then re-create it with the in-game config menu to prevent issues.";
+
+		Quark.LOG.error("Caught by: " + moduleName);
+
+		throw new ParseException(err, parseFailedPosition);
 	}
 }
