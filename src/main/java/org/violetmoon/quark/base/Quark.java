@@ -48,6 +48,8 @@ import org.violetmoon.zeta.multiloader.Env;
 import org.violetmoon.zetaimplforge.ForgeZeta;
 
 import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 import static org.violetmoon.quark.content.mobs.module.CrabsModule.EFFECTS;
@@ -62,6 +64,8 @@ public class Quark {
 
 	public static final Zeta ZETA = new ForgeZeta(MOD_ID, LogManager.getLogger("quark-zeta"));
 	public static final String ODDITIES_ID = ZETA.isProduction ? "quarkoddities" : "quark";
+
+	public static List<String> modulesWarnedForOldConfig = new ArrayList<>();
 
 	public static Quark instance;
 	public static CommonProxy proxy;
@@ -134,7 +138,7 @@ public class Quark {
 	}
 
 	public static void registerCapabilities(RegisterCapabilitiesEvent event) {
-		Quark.LOG.info("Registering capabilities for " + VariantChestsModule.regularChests.values().size() + " variant chests");
+		//Quark.LOG.info("Registering capabilities for " + VariantChestsModule.regularChests.values().size() + " variant chests");
 
 		for(Block chest: VariantChestsModule.regularChests.values()){
 			event.registerBlock(Capabilities.ItemHandler.BLOCK, (level, pos, state, blockEntity, side) -> {
@@ -147,11 +151,23 @@ public class Quark {
 			}, chest);
 		}
 
-		Quark.LOG.info("Registering capabilities for other storage blocks");
+		//Quark.LOG.info("Registering capabilities for other storage blocks");
 
 		event.registerBlock(Capabilities.ItemHandler.BLOCK, (level, pos, state, blockEntity, side) -> new InvWrapper((PipeBlockEntity)blockEntity), PipesModule.pipe, PipesModule.encasedPipe);
 		event.registerBlock(Capabilities.ItemHandler.BLOCK, (level, pos, state, blockEntity, side) -> new InvWrapper((CrateBlockEntity)blockEntity), CrateModule.crate);
 		event.registerBlock(Capabilities.ItemHandler.BLOCK, (level, pos, state, blockEntity, side) -> new InvWrapper((FurnaceBlockEntity)blockEntity), VariantFurnacesModule.blackstoneFurnace, VariantFurnacesModule.deepslateFurnace);
 
+	}
+
+	public static void warnOldConfig(String moduleName){
+		final String OLD_VERSION = "1.20.1", THIS_VERSION = "1.21.1";
+
+		if(!modulesWarnedForOldConfig.contains(moduleName)){
+			Quark.LOG.warn("Quark has detected you are likely using a " + OLD_VERSION + " config file." +
+					" We recommend you do not do this in " + THIS_VERSION + " as the spec has changed." +
+					" This was caught by module " + moduleName + " which has handled it gracefully, but" +
+					" we recommend you delete your old config and then re-create it with the in-game config menu to prevent other potential issues");
+			modulesWarnedForOldConfig.add(moduleName);
+		}
 	}
 }
