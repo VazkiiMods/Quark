@@ -29,6 +29,7 @@ import org.violetmoon.zeta.event.bus.LoadEvent;
 import org.violetmoon.zeta.event.bus.PlayEvent;
 import org.violetmoon.zeta.event.load.ZAddReloadListener;
 import org.violetmoon.zeta.event.load.ZConfigChanged;
+import org.violetmoon.zeta.event.load.ZTagsUpdated;
 import org.violetmoon.zeta.module.ZetaLoadModule;
 import org.violetmoon.zeta.module.ZetaModule;
 import org.violetmoon.zeta.util.Hint;
@@ -79,7 +80,7 @@ public class GoldToolsHaveFortuneModule extends ZetaModule {
 	}
 
 	@PlayEvent
-	public final void onServerReload(ZAddReloadListener e) {
+	public final void onServerReload(ZTagsUpdated eventLmfao) {
 		//TODO this doesn't work on first opening a world after launching a game. It runs but the results are incorrect,
 		//the IGNORED_BY_GTHF and COUNTS_AS_WEAPON_FOR_GTHF tags do not seem to be loaded upon first opening a world
 		staticEnabled = isEnabled();

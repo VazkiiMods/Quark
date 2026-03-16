@@ -26,6 +26,7 @@ import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;
 import net.neoforged.neoforge.event.AddPackFindersEvent;
 import net.neoforged.neoforge.event.brewing.RegisterBrewingRecipesEvent;
 import net.neoforged.neoforge.items.wrapper.InvWrapper;
+import net.neoforged.neoforge.items.wrapper.SidedInvWrapper;
 import net.neoforged.neoforgespi.locating.IModFile;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -152,9 +153,9 @@ public class Quark {
 
 		//Quark.LOG.info("Registering capabilities for other storage blocks");
 
-		event.registerBlock(Capabilities.ItemHandler.BLOCK, (level, pos, state, blockEntity, side) -> new InvWrapper((PipeBlockEntity)blockEntity), PipesModule.pipe, PipesModule.encasedPipe);
+		event.registerBlock(Capabilities.ItemHandler.BLOCK, (level, pos, state, blockEntity, side) -> new SidedInvWrapper((PipeBlockEntity)blockEntity, side), PipesModule.pipe, PipesModule.encasedPipe);
 		event.registerBlock(Capabilities.ItemHandler.BLOCK, (level, pos, state, blockEntity, side) -> new InvWrapper((CrateBlockEntity)blockEntity), CrateModule.crate);
-		event.registerBlock(Capabilities.ItemHandler.BLOCK, (level, pos, state, blockEntity, side) -> new InvWrapper((FurnaceBlockEntity)blockEntity), VariantFurnacesModule.blackstoneFurnace, VariantFurnacesModule.deepslateFurnace);
+		event.registerBlock(Capabilities.ItemHandler.BLOCK, (level, pos, state, blockEntity, side) -> new SidedInvWrapper((FurnaceBlockEntity)blockEntity, side), VariantFurnacesModule.blackstoneFurnace, VariantFurnacesModule.deepslateFurnace);
 
 	}
 

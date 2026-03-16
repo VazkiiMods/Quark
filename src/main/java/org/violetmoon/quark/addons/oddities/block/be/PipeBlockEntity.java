@@ -364,9 +364,9 @@ public class PipeBlockEntity extends SimpleInventoryBlockEntity {
 	}
 
 	@Override
-	public void setItem(int i, @NotNull ItemStack itemstack) {
-		if(!itemstack.isEmpty()) {
-			Direction side = Direction.values()[i];
+	public void setItem(int index, @NotNull ItemStack itemstack) {
+			if(!itemstack.isEmpty()) {
+			Direction side = Direction.values()[index];
 			passIn(itemstack, side);
 
 			if(!getLevel().isClientSide && !skipSync)
