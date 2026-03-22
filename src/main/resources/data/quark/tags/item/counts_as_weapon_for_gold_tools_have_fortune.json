@@ -1,0 +1,34 @@
+{
+    "replace": false,
+    "values": [
+        "minecraft:golden_sword",
+        {
+            "id": "farmersdelight:golden_knife",
+            "required": false
+        },
+        {
+            "id": "basicweapons:golden_dagger",
+            "required": false
+        },
+        {
+            "id": "basicweapons:golden_club",
+            "required": false
+        },
+        {
+            "id": "basicweapons:golden_hammer",
+            "required": false
+        },
+        {
+            "id": "basicweapons:golden_quarterstaff",
+            "required": false
+        },
+        {
+            "id": "basicweapons:golden_glaive",
+            "required": false
+        },
+        {
+            "id": "basicweapons:golden_spear",
+            "required": false
+        }
+    ]
+}

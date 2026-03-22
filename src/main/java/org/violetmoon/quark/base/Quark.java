@@ -15,6 +15,7 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.item.alchemy.Potions;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.ChestBlock;
+import net.minecraft.world.level.block.entity.FurnaceBlockEntity;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.ModList;
@@ -25,13 +26,19 @@ import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;
 import net.neoforged.neoforge.event.AddPackFindersEvent;
 import net.neoforged.neoforge.event.brewing.RegisterBrewingRecipesEvent;
 import net.neoforged.neoforge.items.wrapper.InvWrapper;
+import net.neoforged.neoforge.items.wrapper.SidedInvWrapper;
 import net.neoforged.neoforgespi.locating.IModFile;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.spongepowered.asm.mixin.MixinEnvironment;
+import org.violetmoon.quark.addons.oddities.block.be.CrateBlockEntity;
+import org.violetmoon.quark.addons.oddities.block.be.PipeBlockEntity;
+import org.violetmoon.quark.addons.oddities.module.CrateModule;
+import org.violetmoon.quark.addons.oddities.module.PipesModule;
 import org.violetmoon.quark.base.proxy.ClientProxy;
 import org.violetmoon.quark.base.proxy.CommonProxy;
 import org.violetmoon.quark.content.building.module.VariantChestsModule;
+import org.violetmoon.quark.content.building.module.VariantFurnacesModule;
 import org.violetmoon.quark.content.mobs.module.CrabsModule;
 import org.violetmoon.quark.integration.claim.FlanIntegration;
 import org.violetmoon.quark.integration.claim.IClaimIntegration;
@@ -42,6 +49,9 @@ import org.violetmoon.zeta.multiloader.Env;
 import org.violetmoon.zetaimplforge.ForgeZeta;
 
 import java.nio.file.Path;
+import java.text.ParseException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 import static org.violetmoon.quark.content.mobs.module.CrabsModule.EFFECTS;
@@ -128,7 +138,7 @@ public class Quark {
 	}
 
 	public static void registerCapabilities(RegisterCapabilitiesEvent event) {
-		Quark.LOG.info("Registering capabilities for " + VariantChestsModule.regularChests.values().size() + " variant chests");
+		//Quark.LOG.info("Registering capabilities for " + VariantChestsModule.regularChests.values().size() + " variant chests");
 
 		for(Block chest: VariantChestsModule.regularChests.values()){
 			event.registerBlock(Capabilities.ItemHandler.BLOCK, (level, pos, state, blockEntity, side) -> {
@@ -141,5 +151,23 @@ public class Quark {
 			}, chest);
 		}
 
+		//Quark.LOG.info("Registering capabilities for other storage blocks");
+
+		event.registerBlock(Capabilities.ItemHandler.BLOCK, (level, pos, state, blockEntity, side) -> new SidedInvWrapper((PipeBlockEntity)blockEntity, side), PipesModule.pipe, PipesModule.encasedPipe);
+		event.registerBlock(Capabilities.ItemHandler.BLOCK, (level, pos, state, blockEntity, side) -> new InvWrapper((CrateBlockEntity)blockEntity), CrateModule.crate);
+		event.registerBlock(Capabilities.ItemHandler.BLOCK, (level, pos, state, blockEntity, side) -> new SidedInvWrapper((FurnaceBlockEntity)blockEntity, side), VariantFurnacesModule.blackstoneFurnace, VariantFurnacesModule.deepslateFurnace);
+
+	}
+
+	public static void crashOnOldConfig(String moduleName, int parseFailedPosition) throws ParseException {
+		final String OLD_VERSION = "1.20.1", THIS_VERSION = "1.21.1";
+
+		String err = "Quark has detected you are likely using a " + OLD_VERSION + " config file." +
+				" We recommend you do not do this in " + THIS_VERSION + " as the format has changed." +
+				" We recommend you delete your old config and then re-create it with the in-game config menu to prevent issues.";
+
+		Quark.LOG.error("Caught by: " + moduleName);
+
+		throw new ParseException(err, parseFailedPosition);
 	}
 }

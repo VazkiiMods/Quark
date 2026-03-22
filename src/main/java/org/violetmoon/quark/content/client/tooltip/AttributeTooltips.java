@@ -77,7 +77,7 @@ public class AttributeTooltips {
 			}
 			case ADD_MULTIPLIED_TOTAL -> {
 				AttributeSupplier supplier = DefaultAttributes.getSupplier(EntityType.PLAYER);
-				double scaledValue = value / supplier.getBaseValue(entry.attribute());
+				double scaledValue = value;
 				return Component.literal(ItemAttributeModifiers.ATTRIBUTE_MODIFIER_FORMAT.format(scaledValue) + "x")
 						.withStyle(scaledValue < 1 ? ChatFormatting.RED : ChatFormatting.WHITE);
 			}

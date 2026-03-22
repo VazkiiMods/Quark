@@ -1,5 +1,6 @@
 package org.violetmoon.quark.content.world.module;
 
+import java.text.ParseException;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -43,7 +44,7 @@ public class FallenLogsModule extends ZetaModule {
 	@Config
 	public static int sparseBiomeRarity = 12;
 	
-	@Config(description = "Tags that define which biomes can have which wood types")
+	@Config(description = "Tags that define which biomes can have which wood types. These are all biome tags under the Quark namespace")
 	public static List<String> biomeTags = Arrays.asList(
 			"has_fallen_acacia=minecraft:acacia_log",
             "has_fallen_birch=minecraft:birch_log",
@@ -67,15 +68,25 @@ public class FallenLogsModule extends ZetaModule {
 	}
 	
 	@LoadEvent
-	public final void configChanged(ZConfigChanged event) {
+	public final void configChanged(ZConfigChanged event) throws ParseException {
 		blocksPerTag.clear();
 		for(String s : biomeTags) {
 			String[] toks = s.split("=");
 			
 			String k = toks[0];
 			String v = toks[1];
-			
-			TagKey<Biome> tag = Quark.asTagKey(Registries.BIOME, (k));
+
+			TagKey<Biome> tag;
+			if(k.contains(":")){
+				tag = TagKey.create(Registries.BIOME, ResourceLocation.parse(k));
+				if(s.contains("quark:")) {
+					Quark.crashOnOldConfig(this.displayName(), s.indexOf("quark:"));
+				}
+			}
+			else{
+				tag = Quark.asTagKey(Registries.BIOME, (k));
+			}
+
 			Block block = BuiltInRegistries.BLOCK.get(ResourceLocation.parse(v));
 			
 			if(block == null)

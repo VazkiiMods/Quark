@@ -1,1 +1,25 @@
-Fix incompatibility with Mixed Litter.
+# Quark 4.1-475 For Neoforge 1.21.1
+
+# Fixes
+
+- Fix #5448: When playing with Quark, enchantment glints are weaker than normal
+- Fix #5421: 472 silk touch doesn't work as custom baked enchant
+- Potentially fixed #5465: [1.21.1] When the player equips the backpack and plays for a while, there is a chance that the game crashes when saving and exiting. (testing required)
+- Fixed a crash relating to searching in chests and shulker boxes
+- Fix #5444: Potted plants and Chorus Vegetation loot table issues
+- Fix #5436: Matrix influencing "recipes" only show one enchantment in JEI
+- Fix #5446: [1.21.1] Tiny Coal items missing fuel burn time with Improved Tooltips
+- Fix Automatic Tool Restock's Important Enchantments not working
+- Fix attribute tooltip sizing
+- Fix #5464: [1.21.1] Books cannot be Matrix Enchanted
+- Merge #5315: Greener Grass Module: update Valhelsia Structures defaults
+
+# Additions
+- Improved Gold Tools Have Fortune module: Now checks for `quark:counts_as_weapon_for_gold_tools_have_fortune` and `quark:ignored_by_gold_tools_have_fortune` item tags
+- Capabilities have returned to variant chests and pipes, improving compatibility.
+- Added Rad Shiba
+- The Oretoise no longer hurts you in Peaceful mode, instead giving you very slight vertical knockback
+- Added Ars Nouveau's fruits to `hoe_harvestables` block tag
+- Added an intentional startup crash when detecting a 1.20.1 config file. Using configs in the wrong format will cause issues, so we recommend you regenerate it
+- Improved the `quark:enchant_tome` loot function for use in datapacks; see `quark:demo/enchant_tome_function_demo` loot table for usage.
+- Removed old general config options that weren't being used. These don't require you do regenerate the config, don't worry chat

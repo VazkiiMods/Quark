@@ -75,18 +75,6 @@ public class QuarkGeneralConfig {
 	@Config(description = "If set to true, the 'Allowed Screens' option will work as a Blacklist rather than a Whitelist. WARNING: Use at your own risk as some mods may not support this.")
 	private static boolean useScreenListBlacklist = false;
 
-	@Config(description = "If 'true' and TerraBlender is present, Quark will add a TerraBlender region. The region will contain vanilla biomes and the Glimmering Weald.")
-	public static boolean terrablenderAddRegion = true;
-
-	@Config(description = "Quark will set this weight for its TerraBlender region.")
-	public static int terrablenderRegionWeight = 1;
-
-	@Config(
-		description = "If 'true', Quark will modify the `minecraft:overworld` MultiNoiseBiomeSourceParameterList preset, even when Terrablender is installed.\n" +
-				"This will have various knock-on effects but might make the Weald more common, or appear closer to modded biomes. Who knows?"
-	)
-	public static boolean terrablenderModifyVanillaAnyway = false;
-
 	@Config(description = "Set to false to disable the popup message telling you that you can config quark in the q menu")
 	public static boolean enableOnboarding = true;
 	

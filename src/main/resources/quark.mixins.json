@@ -16,6 +16,7 @@
     "BeehiveBlockEntityMixin",
     "BlockBehaviourMixin",
     "BlockItemMixin",
+    "BlockMixin",
     "BoatMixin",
     "CeilingHangingSignBlockMixin",
     "ChunkGeneratorMixin",

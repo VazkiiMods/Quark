@@ -31,10 +31,17 @@ public class FuelTooltips {
 		if(!stack.isEmpty()) {
 			Screen screen = Minecraft.getInstance().screen;
 			if(screen != null && screen instanceof AbstractFurnaceScreen<?>) {
+				//for fuel times added with NeoForge data maps:
 				int count = Quark.ZETA.itemExtensions.get(stack).getBurnTimeZeta(stack, RecipeType.SMELTING);
 				if(count == 0){
+					//for fuel times added with Zeta code:
 					count = Quark.ZETA.fuel.fuelValues.getOrDefault(stack.getItem(), 0);
 				}
+				if(count == 0){
+					//for fuel times added with item class getBurnTime overrides
+					count = stack.getItem().getBurnTime(stack, RecipeType.SMELTING);
+				}
+
 
 				if(count > 0) {
 					Font font = Minecraft.getInstance().font;

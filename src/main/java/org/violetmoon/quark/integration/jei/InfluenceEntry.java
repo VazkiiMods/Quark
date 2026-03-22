@@ -2,15 +2,20 @@ package org.violetmoon.quark.integration.jei;
 
 import mezz.jei.api.recipe.category.extensions.IRecipeCategoryExtension;
 import net.minecraft.ChatFormatting;
+import net.minecraft.client.gui.screens.inventory.AnvilScreen;
 import net.minecraft.core.Holder;
 import net.minecraft.core.NonNullList;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
+import net.minecraft.world.inventory.AnvilMenu;
 import net.minecraft.world.item.EnchantedBookItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.enchantment.Enchantment;
+import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.item.enchantment.EnchantmentInstance;
+import net.minecraft.world.item.enchantment.ItemEnchantments;
+import net.minecraft.world.level.block.AnvilBlock;
 import net.minecraft.world.level.block.Block;
 import org.violetmoon.quark.addons.oddities.util.Influence;
 import org.violetmoon.quark.base.components.QuarkDataComponents;
@@ -55,11 +60,14 @@ public class InfluenceEntry implements IRecipeCategoryExtension {
 		for(Holder<Enchantment> enchantment : enchantments) {
 			if(enchantment.value() != null) {
 				if(stack.isEmpty()) {
-					stack = ColorRunesModule.withRune(new ItemStack(Items.ENCHANTED_BOOK), runeColor);
+					stack = EnchantedBookItem.createForEnchantment(new EnchantmentInstance(enchantment, enchantment.value().getMaxLevel()));
+					stack = ColorRunesModule.withRune(stack, runeColor);
 					stack.set(DataComponents.CUSTOM_NAME, Component.translatable(locKey).withStyle(chatColor));
 					stack.set(QuarkDataComponents.TABLE_ONLY_ENCHANTS, true);
 				}
-				stack = EnchantedBookItem.createForEnchantment(new EnchantmentInstance(enchantment, enchantment.value().getMaxLevel()));
+				else {
+					stack.enchant(enchantment, enchantment.value().getMaxLevel());
+				}
 			}
 		}
 

@@ -184,7 +184,7 @@ public class AncientTomesModule extends ZetaModule {
 			LootPoolEntryContainer entry = LootItem.lootTableItem(ancient_tome)
 					.setWeight(weight)
 					.setQuality(itemQuality)
-					.apply(() -> new EnchantTome(List.of(new LootItemCondition[0])))
+					.apply(() -> new EnchantTome(List.of(new LootItemCondition[0]), Optional.empty(), true))
 					.build();
 
 			event.add(entry);

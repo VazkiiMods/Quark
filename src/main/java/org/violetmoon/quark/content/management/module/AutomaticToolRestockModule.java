@@ -1,6 +1,7 @@
 package org.violetmoon.quark.content.management.module;
 
 import com.google.common.collect.Lists;
+import net.minecraft.ResourceLocationException;
 import net.minecraft.core.Holder;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.core.component.DataComponents;
@@ -25,8 +26,10 @@ import org.violetmoon.quark.api.event.GatherToolClassesEvent;
 import org.violetmoon.quark.base.Quark;
 import org.violetmoon.zeta.config.Config;
 import org.violetmoon.zeta.config.SyncedFlagHandler;
+import org.violetmoon.zeta.config.ValueDefinition;
 import org.violetmoon.zeta.event.bus.LoadEvent;
 import org.violetmoon.zeta.event.bus.PlayEvent;
+import org.violetmoon.zeta.event.load.ZAddReloadListener;
 import org.violetmoon.zeta.event.load.ZConfigChanged;
 import org.violetmoon.zeta.event.play.entity.player.ZPlayerDestroyItem;
 import org.violetmoon.zeta.event.play.entity.player.ZPlayerTick;
@@ -88,6 +91,41 @@ public class AutomaticToolRestockModule extends ZetaModule {
 	@LoadEvent
 	public final void configChanged(ZConfigChanged event) {
 		itemsToIgnore = RegistryUtil.massRegistryGet(ignoredItems, BuiltInRegistries.ITEM);
+	}
+
+	@PlayEvent
+	public final void onServerReload(ZAddReloadListener e) {
+		//in 4.1-474 and earlier 1.21 versions, generateDefaultEnchantmentList generates the wrong format
+		try {
+			RegistryUtil.massRegistryGet(enchantNames, e.getRegistryAccess().registryOrThrow(Registries.ENCHANTMENT));
+		} catch (ResourceLocationException resourceLocationException) {
+			Quark.LOG.error(this.displayName() + " Important Enchantments enchantNames is in the wrong format:" + resourceLocationException.getMessage());
+			boolean oldConfig = false;
+			for (String entry : enchantNames) {
+				if (entry.contains("ResourceKey")) {
+					oldConfig = true;
+					break;
+					//we could throw an error here if we wanted
+				}
+			}
+
+			if (oldConfig) {
+				Quark.LOG.error(this.displayName() + " has an older, incorrect version of the config. It should be: " + generateDefaultEnchantmentList());
+
+				try {
+					Quark.ZETA.configInternals.set(
+							(ValueDefinition<List<String>>) Quark.ZETA.configManager.getCategorySection(Quark.ZETA.modules.getCategory("management")).subsections.get("automatic_tool_restock").getValue("Important Enchantments"),
+							generateDefaultEnchantmentList()
+					);
+					Quark.ZETA.configInternals.flush();
+				} catch (Exception exception) {
+					Quark.LOG.error("Config repairer broke. You are cooked sorry.\n If this is in zthe log can you try to get this over to Siuolplex please thanks.");
+					throw exception;
+				}
+
+				Quark.LOG.error("We fixed that for you.");
+			}
+		}
 	}
 
 	@PlayEvent
@@ -281,7 +319,7 @@ public class AutomaticToolRestockModule extends ZetaModule {
 
         List<String> enchantments = new ArrayList<>();
         for (ResourceKey<Enchantment> e : enchants) {
-            enchantments.add(e.location().toString());
+            enchantments.add(e.location().getNamespace() + ":" + e.location().getPath());
         }
         return enchantments;
     }

@@ -43,9 +43,6 @@ public class QuarkConfigHomeScreen extends ZetaConfigHomeScreen {
 		addRenderableWidget(new SocialButton(iter.next(), height - 55, Component.translatable("quark.gui.config.social.bluesky"), 0x1da1f2, 4, "https://bsky.app/profile/violetmoon.org"));
 	}
 
-	//annoyingly it's not passed to renderBackground
-	//protected float partialTicks;
-
 	@Override
 	public void renderBackground(GuiGraphics graphics, int mouseX, int mouseY, float partialTick) {
 		time += partialTick;
