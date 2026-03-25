@@ -88,6 +88,8 @@ public class VariantChestsModule extends ZetaModule {
 	// donk chest!
 	private static final String DONK_CHEST = "Quark:DonkChest";
 
+	public static boolean staticEnabled;
+
 	public interface IVariantChest {
 		String getTexturePath();
 
@@ -166,6 +168,8 @@ public class VariantChestsModule extends ZetaModule {
 
 	@LoadEvent
 	public final void configChanged(ZConfigChanged event) {
+		staticEnabled = isEnabled();
+
 		manualChestMappings.clear();
 		manualTrappedChestMappings.clear();
 		List<String> chestsClone = new ArrayList<>(structureChests);

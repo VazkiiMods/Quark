@@ -1,3 +1,10 @@
 # Quark 4.1-476 For Neoforge 1.21.1
 
-- move some datapack stuff around idk yet lol
+This is mostly an internal update addressing some niche issues (so far).
+
+## Internal changes
+- Quark VDO has been split into different datapacks for each relevant module. Each datapack now uses datapack filters to disable relevant vanilla recipes instead of overriding the entire file. This should fix problems with Quark always overriding certain data files no matter what.
+
+## Additions
+
+- Added a General config option to disable ALL Quark VDO datapacks. Only do this if you know what you're doing!

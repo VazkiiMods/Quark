@@ -82,8 +82,11 @@ public class QuarkGeneralConfig {
 	public static int chestButtonSlotTarget = 27;
 
 	@Config(description = "Set this to false to not generate the Quark Programmer Art resource pack")
-	public static boolean generateProgrammerArt = true;
-	
+	public static boolean generateProgrammerArt = true; //TODO rework this, we don't need to deploy the file with AddPackFinderEvent
+
+	@Config(description = "Set this to false to prevent Quark from ever disabling any vanilla data files. This will break certain modules, so only do this if you know what you're doing!")
+	public static boolean quarkVDO = true;
+
 	@Config
 	public static ChestOffsets chestButtonOffsets = new ChestOffsets();
 	

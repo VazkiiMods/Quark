@@ -9,6 +9,7 @@ import org.violetmoon.zeta.block.ZetaFlammableBlock;
 import org.violetmoon.zeta.block.ZetaFlammablePillarBlock;
 import org.violetmoon.zeta.config.Config;
 import org.violetmoon.zeta.event.bus.LoadEvent;
+import org.violetmoon.zeta.event.load.ZConfigChanged;
 import org.violetmoon.zeta.event.load.ZLoadComplete;
 import org.violetmoon.zeta.event.load.ZRegister;
 import org.violetmoon.zeta.module.ZetaLoadModule;
@@ -101,6 +102,8 @@ public class CompressedBlocksModule extends ZetaModule {
 	//these are purely for datagen
 	public static Block sugarCane, cactus, chorus, apple, potato, carrot, golden_carrot,
 			beetroot, cocoa, wart, gunpowder, berry, glowberry, leather, hide;
+
+	public static boolean staticEnabled;
 
 	@LoadEvent
 	public final void register(ZRegister event) {
@@ -238,6 +241,11 @@ public class CompressedBlocksModule extends ZetaModule {
 		if(compost)
 			compostable.add(block);
 		return block;
+	}
+
+	@LoadEvent
+	public final void configChanged(ZConfigChanged event) {
+		staticEnabled = isEnabled();
 	}
 
 }

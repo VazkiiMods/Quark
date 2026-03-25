@@ -1,0 +1,30 @@
+{
+  "pack": {
+    "description": "Quark Vanilla Data Overrides - Better Stone Tools",
+    "pack_format": 48
+  },
+  "filter": {
+    "block": [
+      {
+        "namespace": "minecraft",
+        "path": "recipe/stone_axe"
+      },
+      {
+        "namespace": "minecraft",
+        "path": "recipe/stone_hoe"
+      },
+      {
+        "namespace": "minecraft",
+        "path": "recipe/stone_pickaxe"
+      },
+      {
+        "namespace": "minecraft",
+        "path": "recipe/stone_shovel"
+      },
+      {
+        "namespace": "minecraft",
+        "path": "recipe/stone_sword"
+      }
+    ]
+  }
+}

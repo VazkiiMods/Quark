@@ -3,8 +3,6 @@ loaderVersion="[3,)"
 issueTrackerURL="https://github.com/VazkiiMods/Quark"
 license="https://github.com/VazkiiMods/Quark/blob/master/LICENSE.md"
 
-showAsDataPack=true
-
 [[mods]]
 modId="quark"
 displayName="Quark"

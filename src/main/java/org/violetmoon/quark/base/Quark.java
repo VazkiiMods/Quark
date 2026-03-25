@@ -4,6 +4,7 @@ import net.minecraft.core.Registry;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.commands.DataPackCommand;
 import net.minecraft.server.packs.PackLocationInfo;
 import net.minecraft.server.packs.PackSelectionConfig;
 import net.minecraft.server.packs.PackType;
@@ -35,11 +36,12 @@ import org.violetmoon.quark.addons.oddities.block.be.CrateBlockEntity;
 import org.violetmoon.quark.addons.oddities.block.be.PipeBlockEntity;
 import org.violetmoon.quark.addons.oddities.module.CrateModule;
 import org.violetmoon.quark.addons.oddities.module.PipesModule;
+import org.violetmoon.quark.base.config.QuarkGeneralConfig;
 import org.violetmoon.quark.base.proxy.ClientProxy;
 import org.violetmoon.quark.base.proxy.CommonProxy;
-import org.violetmoon.quark.content.building.module.VariantChestsModule;
-import org.violetmoon.quark.content.building.module.VariantFurnacesModule;
+import org.violetmoon.quark.content.building.module.*;
 import org.violetmoon.quark.content.mobs.module.CrabsModule;
+import org.violetmoon.quark.content.tweaks.module.UtilityRecipesModule;
 import org.violetmoon.quark.integration.claim.FlanIntegration;
 import org.violetmoon.quark.integration.claim.IClaimIntegration;
 import org.violetmoon.quark.integration.lootr.ILootrIntegration;
@@ -50,9 +52,7 @@ import org.violetmoon.zetaimplforge.ForgeZeta;
 
 import java.nio.file.Path;
 import java.text.ParseException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 import static org.violetmoon.quark.content.mobs.module.CrabsModule.EFFECTS;
 import static org.violetmoon.quark.content.mobs.module.CrabsModule.POTIONS;
@@ -107,23 +107,41 @@ public class Quark {
 	}
 
 	private static void addPackFinders(AddPackFindersEvent event){
-		final boolean QUARK_VDO = true; //make config maybe?
-		IModFile quarkJar = ModList.get().getModFileById(MOD_ID).getFile();
-		if (event.getPackType() == PackType.SERVER_DATA && QUARK_VDO) {
-			Path path = quarkJar.findResource("datapacks", "quark_vdo");
+		if(QuarkGeneralConfig.quarkVDO) {
+			final Map<String, Boolean> VDO_PACKS = new HashMap<>();
+			VDO_PACKS.put("variant_bookshelves", VariantBookshelvesModule.staticEnabled);
+			VDO_PACKS.put("variant_chests", VariantChestsModule.staticEnabled);
+			VDO_PACKS.put("variant_ladders", VariantLaddersModule.staticEnabled);
+			VDO_PACKS.put("nether_wart_sack", CompressedBlocksModule.enableNetherWartSack);
+			VDO_PACKS.put("better_stone_tools", UtilityRecipesModule.betterStoneToolCrafting);
 
-			PackSelectionConfig packSelectionConfig = new PackSelectionConfig(false, Pack.Position.TOP, true);
-			PackLocationInfo packLocationInfo = new PackLocationInfo("quark_vdo", Component.literal("Quark VDO"), PackSource.BUILT_IN,
-					Optional.empty()
-			);
-
-			PathPackResources.PathResourcesSupplier pathResourcesSupplier = new PathPackResources.PathResourcesSupplier(path);
-			Pack pack = Pack.readMetaAndCreate(packLocationInfo, pathResourcesSupplier, PackType.SERVER_DATA, packSelectionConfig);
-			event.addRepositorySource(packConsumer -> {
-				packConsumer.accept(pack);
-			});
+			if (event.getPackType() == PackType.SERVER_DATA) {
+				for(String vdoPack : VDO_PACKS.keySet()){
+					if(VDO_PACKS.get(vdoPack)){
+						addSubDataPack(vdoPack, event);
+					}
+				}
+			}
 		}
 	}
+
+	private static void addSubDataPack(String subPackName, AddPackFindersEvent event){
+		IModFile quarkJar = ModList.get().getModFileById(MOD_ID).getFile();
+		String packName = "quark_vdo_" + subPackName;
+		Path path = quarkJar.findResource("datapacks", packName);
+
+		PackSelectionConfig packSelectionConfig = new PackSelectionConfig(false, Pack.Position.TOP, false);
+		PackLocationInfo packLocationInfo = new PackLocationInfo(packName, Component.literal("quark_vdo_" + subPackName), PackSource.BUILT_IN,
+				Optional.empty()
+		);
+
+		PathPackResources.PathResourcesSupplier pathResourcesSupplier = new PathPackResources.PathResourcesSupplier(path);
+		Pack pack = Pack.readMetaAndCreate(packLocationInfo, pathResourcesSupplier, PackType.SERVER_DATA, packSelectionConfig);
+		event.addRepositorySource(packConsumer -> {
+			packConsumer.accept(pack);
+		});
+	}
+
 
 	@EventBusSubscriber(modid = Quark.MOD_ID)
 	private static class RegisterBrewing {

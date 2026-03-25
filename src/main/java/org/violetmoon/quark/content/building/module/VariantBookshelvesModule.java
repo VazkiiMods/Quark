@@ -25,6 +25,8 @@ public class VariantBookshelvesModule extends ZetaModule {
 	@Config
 	public static boolean changeNames = true;
 
+	public static boolean staticEnabled;
+
 	@LoadEvent
 	public final void register(ZRegister event) {
 		CreativeTabManager.startChain(CreativeModeTabs.FUNCTIONAL_BLOCKS, false, false, Blocks.BOOKSHELF);
@@ -39,5 +41,6 @@ public class VariantBookshelvesModule extends ZetaModule {
 	@LoadEvent
 	public final void configChanged(ZConfigChanged event) {
 		zeta().nameChanger.changeBlock(Blocks.BOOKSHELF, "block.quark.oak_bookshelf", changeNames && isEnabled());
+		staticEnabled = isEnabled();
 	}
 }

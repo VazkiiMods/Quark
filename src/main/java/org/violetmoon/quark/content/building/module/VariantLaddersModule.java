@@ -27,7 +27,7 @@ public class VariantLaddersModule extends ZetaModule {
 
 	public static List<Block> variantLadders = new LinkedList<>();
 
-	public static boolean moduleEnabled;
+	public static boolean staticEnabled;
 
 	@LoadEvent
 	public final void register(ZRegister event) {
@@ -44,7 +44,7 @@ public class VariantLaddersModule extends ZetaModule {
 
 	@LoadEvent
 	public final void configChanged(ZConfigChanged event) {
-		moduleEnabled = isEnabled();
+		staticEnabled = isEnabled();
 		zeta().nameChanger.changeBlock(Blocks.LADDER, "block.quark.oak_ladder", changeNames && isEnabled());
 	}
 
