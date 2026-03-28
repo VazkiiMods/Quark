@@ -16,6 +16,7 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.item.alchemy.Potions;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.ChestBlock;
+import net.minecraft.world.level.block.entity.AbstractFurnaceBlockEntity;
 import net.minecraft.world.level.block.entity.FurnaceBlockEntity;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.bus.api.SubscribeEvent;
@@ -123,6 +124,24 @@ public class Quark {
 				}
 			}
 		}
+
+		if(QuarkGeneralConfig.generateProgrammerArt){
+			if (event.getPackType() == PackType.CLIENT_RESOURCES) {
+				IModFile quarkJar = ModList.get().getModFileById(MOD_ID).getFile();
+				Path path = quarkJar.findResource("resourcepacks", "quark_programmer_art");
+
+				PackSelectionConfig packSelectionConfig = new PackSelectionConfig(false, Pack.Position.TOP, false);
+				PackLocationInfo packLocationInfo = new PackLocationInfo("quark_programmer_art", Component.literal("Quark Programmer Art"), PackSource.BUILT_IN,
+						Optional.empty()
+				);
+
+				PathPackResources.PathResourcesSupplier pathResourcesSupplier = new PathPackResources.PathResourcesSupplier(path);
+				Pack pack = Pack.readMetaAndCreate(packLocationInfo, pathResourcesSupplier, PackType.SERVER_DATA, packSelectionConfig);
+				event.addRepositorySource(packConsumer -> {
+					packConsumer.accept(pack);
+				});
+			}
+		}
 	}
 
 	private static void addSubDataPack(String subPackName, AddPackFindersEvent event){
@@ -173,7 +192,7 @@ public class Quark {
 
 		event.registerBlock(Capabilities.ItemHandler.BLOCK, (level, pos, state, blockEntity, side) -> new SidedInvWrapper((PipeBlockEntity)blockEntity, side), PipesModule.pipe, PipesModule.encasedPipe);
 		event.registerBlock(Capabilities.ItemHandler.BLOCK, (level, pos, state, blockEntity, side) -> new InvWrapper((CrateBlockEntity)blockEntity), CrateModule.crate);
-		event.registerBlock(Capabilities.ItemHandler.BLOCK, (level, pos, state, blockEntity, side) -> new SidedInvWrapper((FurnaceBlockEntity)blockEntity, side), VariantFurnacesModule.blackstoneFurnace, VariantFurnacesModule.deepslateFurnace);
+		event.registerBlock(Capabilities.ItemHandler.BLOCK, (level, pos, state, blockEntity, side) -> new SidedInvWrapper((AbstractFurnaceBlockEntity)blockEntity, side), VariantFurnacesModule.blackstoneFurnace, VariantFurnacesModule.deepslateFurnace);
 
 	}
 

@@ -18,7 +18,6 @@ import org.violetmoon.quark.base.client.config.QuarkConfigHomeScreen;
 import org.violetmoon.quark.base.client.handler.ClientUtil;
 import org.violetmoon.quark.base.client.handler.InventoryButtonHandler;
 import org.violetmoon.quark.base.client.handler.ModelHandler;
-import org.violetmoon.quark.base.client.handler.QuarkProgrammerArtHandler;
 import org.violetmoon.quark.base.handler.ContributorRewardHandler;
 import org.violetmoon.quark.base.handler.WoodSetHandler;
 import org.violetmoon.quark.catnip.animation.AnimationTickHolder;
@@ -43,7 +42,6 @@ public class ClientProxy extends CommonProxy {
 				.subscribe(ModelHandler.class) //TODO: Make this especially not a singleton, move it into respective modules
 				.subscribe(ContributorRewardHandler.Client.class)
 				.subscribe(WoodSetHandler.Client.class)
-				.subscribe(QuarkProgrammerArtHandler.class)
 				.subscribe(ClientUtil.class);
 		
 		Quark.ZETA.playBus

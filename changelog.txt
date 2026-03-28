@@ -1,9 +1,15 @@
 # Quark 4.1-476 For Neoforge 1.21.1
 
-This is mostly an internal update addressing some niche issues (so far).
+More bugfixes! Yippee!
 
-## Internal changes
+## Fixes
+- Added a potential fix for #5492: Latest versions of Quark+Create (ClassCastException) issue Neoforge 1.21.1
+- Fixed #5483: Singleplayer performance issue with expensive worldgen and EnhancedLaddersModule
+- Fixed #5484: [1.21.1] Other mods' built in override recipe for stone tools doesn't work and only Quark's version load even if you set the mod to load after Quark
+
+## Changes
 - Quark VDO has been split into different datapacks for each relevant module. Each datapack now uses datapack filters to disable relevant vanilla recipes instead of overriding the entire file. This should fix problems with Quark always overriding certain data files no matter what.
+- The Quark Programmer Art is no longer deployed to the instance's resourcepacks folder if the option is enabled. Instead, it is directly added to the resource pack selection screen under "Available", similar to other mods' optional resource packs. You can safely delete Quark Programmer Art.zip from your resourcepacks folder if it was previously deployed.
 
 ## Additions
 

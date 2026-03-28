@@ -81,8 +81,8 @@ public class QuarkGeneralConfig {
 	@Config(description = "The amount of slots the chest button system should seek when trying to figure out if a container should be eligible for them.")
 	public static int chestButtonSlotTarget = 27;
 
-	@Config(description = "Set this to false to not generate the Quark Programmer Art resource pack")
-	public static boolean generateProgrammerArt = true; //TODO rework this, we don't need to deploy the file with AddPackFinderEvent
+	@Config(description = "Set this to false to not show the Quark Programmer Art resource pack in the resource pack selection screen")
+	public static boolean generateProgrammerArt = true;
 
 	@Config(description = "Set this to false to prevent Quark from ever disabling any vanilla data files. This will break certain modules, so only do this if you know what you're doing!")
 	public static boolean quarkVDO = true;

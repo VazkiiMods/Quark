@@ -193,7 +193,7 @@ public class EnhancedLaddersModule extends ZetaModule {
 				return;
 
 			Player player = event.getPlayer();
-			if(player.onClimbable() && player.level().isClientSide) {
+			if(player.level().isClientSide() && player.onClimbable()) {
 				BlockPos playerPos = player.blockPosition();
 				BlockPos downPos = playerPos.below();
 
