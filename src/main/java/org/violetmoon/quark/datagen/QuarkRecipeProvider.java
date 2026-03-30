@@ -1607,7 +1607,16 @@ public class QuarkRecipeProvider extends RecipeProvider implements IConditionBui
                 .define('S', Tags.Items.COBBLESTONES)
                 .define('C', ColorRunesModule.rune)
                 .unlockedBy("test", PlayerTrigger.TriggerInstance.tick())
-                .save(recipeOutput.withConditions(zCond("color_runes")), "quark:tools/crafting/rune_duplication");
+                .save(recipeOutput.withConditions(zCond("color_runes"), zCond("corundum")), "quark:tools/crafting/rune_duplication");
+        ShapedRecipeBuilder.shaped(RecipeCategory.TOOLS, ColorRunesModule.rune, 2)
+                .pattern("#S#")
+                .pattern("#C#")
+                .pattern("###")
+                .define('#', Blocks.AMETHYST_BLOCK)
+                .define('S', Tags.Items.COBBLESTONES)
+                .define('C', ColorRunesModule.rune)
+                .unlockedBy("test", PlayerTrigger.TriggerInstance.tick())
+                .save(recipeOutput.withConditions(zCond("color_runes"), not(zCond("corundum"))), "quark:tools/crafting/rune_duplication_no_corundum");
         ShapedRecipeBuilder.shaped(RecipeCategory.TOOLS, SeedPouchModule.seed_pouch)
                 .pattern(" S ")
                 .pattern("HXH")

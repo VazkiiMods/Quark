@@ -1,4 +1,4 @@
-// 1.21.1	2026-02-15T09:10:01.4136919	Recipes
+// 1.21.1	2026-03-30T16:50:50.9840375	Recipes
 bb24f1bac2cb3ef401eb56f32a5b7364bcee7552 data/quark/advancement/recipes/building_blocks/building/crafting/bamboo_mat.json
 31f4957990f1d18f202f816de898f77458b18140 data/quark/advancement/recipes/building_blocks/building/crafting/bamboo_mat_carpet.json
 8df9c4ad585c2226233ee6e8f7bc96f33806df86 data/quark/advancement/recipes/building_blocks/building/crafting/blackstone_bricks.json
@@ -940,7 +940,8 @@ fe5a56b81c59236a9a893cf4421266cbf6181d80 data/quark/advancement/recipes/tools/ex
 ef4fa9997bf81b6082a575840788cd03079df120 data/quark/advancement/recipes/tools/tools/crafting/abacus.json
 8987284ff53171a0924289d6fa63c823d63aff63 data/quark/advancement/recipes/tools/tools/crafting/pickarang_heart.json
 2bb191a5824488b5362aabed22005ce5bd8ff3ff data/quark/advancement/recipes/tools/tools/crafting/pickarang_no_heart.json
-48ad79576ee5f0a24c326b781eb12bbb166d7d49 data/quark/advancement/recipes/tools/tools/crafting/rune_duplication.json
+2e79f764f3ac8ff09ee72ca6aae7bbc1002924c8 data/quark/advancement/recipes/tools/tools/crafting/rune_duplication.json
+4d33ce9c246e4528f7130c0ceb00161905af374b data/quark/advancement/recipes/tools/tools/crafting/rune_duplication_no_corundum.json
 7c63e3321af6b1f17b9fdc13f6b6477c2824ff52 data/quark/advancement/recipes/tools/tools/crafting/seed_pouch.json
 307716f1c0df511870bd110f45f5155f2d743764 data/quark/advancement/recipes/tools/tools/crafting/torch_arrow.json
 36e3222d382af2f9f411628cf982446d0bc0ac43 data/quark/advancement/recipes/tools/tools/crafting/trowel.json
@@ -1706,7 +1707,8 @@ f7fc1f6d3073f5e354f3889b5c1dbc1971283cbd data/quark/recipe/oddities/crafting/mag
 9a3f79f42ab95d8d5387c34d6954ce21aebaa1ae data/quark/recipe/tools/crafting/abacus.json
 2b3ea0b07c7040c2178b1657cf8b7a2c7bdf4f76 data/quark/recipe/tools/crafting/pickarang_heart.json
 4a74b455ce1118d3b897eb10b634fb047e35df87 data/quark/recipe/tools/crafting/pickarang_no_heart.json
-1a953570c25fb199ef5f56ee16454a2ddcb9b6a1 data/quark/recipe/tools/crafting/rune_duplication.json
+4aefa413a2eba96249eb9693436b01da3d67a12f data/quark/recipe/tools/crafting/rune_duplication.json
+4a1746404baab91458c12fd45fb3f26c4755f78d data/quark/recipe/tools/crafting/rune_duplication_no_corundum.json
 6488e25624df8fc58c89e116371b662f09303622 data/quark/recipe/tools/crafting/seed_pouch.json
 04fd8bf83460c9e6797d334aabbc57302c472830 data/quark/recipe/tools/crafting/torch_arrow.json
 5279378758bf9758a849760cbcee12ca588020bc data/quark/recipe/tools/crafting/trowel.json

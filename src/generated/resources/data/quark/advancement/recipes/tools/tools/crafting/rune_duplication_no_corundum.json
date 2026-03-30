@@ -5,15 +5,18 @@
       "flag": "color_runes"
     },
     {
-      "type": "zeta:flag",
-      "flag": "corundum"
+      "type": "neoforge:not",
+      "value": {
+        "type": "zeta:flag",
+        "flag": "corundum"
+      }
     }
   ],
   "parent": "minecraft:recipes/root",
   "criteria": {
     "has_the_recipe": {
       "conditions": {
-        "recipe": "quark:tools/crafting/rune_duplication"
+        "recipe": "quark:tools/crafting/rune_duplication_no_corundum"
       },
       "trigger": "minecraft:recipe_unlocked"
     },
@@ -29,7 +32,7 @@
   ],
   "rewards": {
     "recipes": [
-      "quark:tools/crafting/rune_duplication"
+      "quark:tools/crafting/rune_duplication_no_corundum"
     ]
   }
 }

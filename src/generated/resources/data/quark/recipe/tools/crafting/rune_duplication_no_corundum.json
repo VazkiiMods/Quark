@@ -5,15 +5,18 @@
       "flag": "color_runes"
     },
     {
-      "type": "zeta:flag",
-      "flag": "corundum"
+      "type": "neoforge:not",
+      "value": {
+        "type": "zeta:flag",
+        "flag": "corundum"
+      }
     }
   ],
   "type": "minecraft:crafting_shaped",
   "category": "equipment",
   "key": {
     "#": {
-      "tag": "quark:corundum"
+      "item": "minecraft:amethyst_block"
     },
     "C": {
       "item": "quark:smithing_template_rune"

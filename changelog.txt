@@ -8,6 +8,7 @@ More bugfixes! Yippee! There's still some things not working quite right, but I 
 - Fixed #5484: [1.21.1] Other mods' built in override recipe for stone tools doesn't work and only Quark's version load even if you set the mod to load after Quark
 - Added a potential fix for #5492: Latest versions of Quark+Create (ClassCastException) issue Neoforge 1.21.1
 - Fixed #5494: quark runes don't spawn in the loot tables
+- Fixed Runic Etching Smithing Template duplication recipe using corundum when corundum is disabled (an alternative recipe using Amethyst Blocks now exists)
 
 ## Changes
 - Quark VDO has been split into different datapacks for each relevant feature. Each datapack now uses datapack filters to disable relevant vanilla recipes instead of overriding the entire file. This should fix problems with Quark always overriding certain data files no matter what.
