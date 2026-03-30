@@ -137,13 +137,13 @@ public class ColorRunesModule extends ZetaModule {
 	public void onLootTableLoad(ZLootTableLoad event) {
 		int weight = 0;
 
-		if(event.getName().equals(BuiltInLootTables.SIMPLE_DUNGEON))
+		if(event.getName().equals(BuiltInLootTables.SIMPLE_DUNGEON.location()))
 			weight = dungeonWeight;
-		else if(event.getName().equals(BuiltInLootTables.NETHER_BRIDGE))
+		else if(event.getName().equals(BuiltInLootTables.NETHER_BRIDGE.location()))
 			weight = netherFortressWeight;
-		else if(event.getName().equals(BuiltInLootTables.JUNGLE_TEMPLE))
+		else if(event.getName().equals(BuiltInLootTables.JUNGLE_TEMPLE.location()))
 			weight = jungleTempleWeight;
-		else if(event.getName().equals(BuiltInLootTables.DESERT_PYRAMID))
+		else if(event.getName().equals(BuiltInLootTables.DESERT_PYRAMID.location()))
 			weight = desertTempleWeight;
 
 		if(weight > 0) {
