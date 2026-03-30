@@ -1,16 +1,17 @@
 # Quark 4.1-476 For Neoforge 1.21.1
 
-More bugfixes! Yippee!
+More bugfixes! Yippee! There's still some things not working quite right, but I hope this release fixes all the major/fatal issues for now.
 
 ## Fixes
-- Added a potential fix for #5492: Latest versions of Quark+Create (ClassCastException) issue Neoforge 1.21.1
+- Fixed #5456: Crash on client startup / screen init: BackButtonKeybindModule NPE (this.backKey is null) on NeoForge 1.21.1 (Thanks auri-f5bde6)
 - Fixed #5483: Singleplayer performance issue with expensive worldgen and EnhancedLaddersModule
 - Fixed #5484: [1.21.1] Other mods' built in override recipe for stone tools doesn't work and only Quark's version load even if you set the mod to load after Quark
+- Added a potential fix for #5492: Latest versions of Quark+Create (ClassCastException) issue Neoforge 1.21.1
+- Fixed #5494: quark runes don't spawn in the loot tables
 
 ## Changes
-- Quark VDO has been split into different datapacks for each relevant module. Each datapack now uses datapack filters to disable relevant vanilla recipes instead of overriding the entire file. This should fix problems with Quark always overriding certain data files no matter what.
-- The Quark Programmer Art is no longer deployed to the instance's resourcepacks folder if the option is enabled. Instead, it is directly added to the resource pack selection screen under "Available", similar to other mods' optional resource packs. You can safely delete Quark Programmer Art.zip from your resourcepacks folder if it was previously deployed.
+- Quark VDO has been split into different datapacks for each relevant feature. Each datapack now uses datapack filters to disable relevant vanilla recipes instead of overriding the entire file. This should fix problems with Quark always overriding certain data files no matter what.
+- The Quark Programmer Art resource pack is no longer deployed to the instance's resourcepacks folder if the option is enabled. Instead, it is directly added to the resource pack selection screen under "Available", similar to other mods' optional resource packs. You can safely delete Quark Programmer Art.zip from your resourcepacks folder if it was previously deployed.
 
 ## Additions
-
 - Added a General config option to disable ALL Quark VDO datapacks. Only do this if you know what you're doing!
