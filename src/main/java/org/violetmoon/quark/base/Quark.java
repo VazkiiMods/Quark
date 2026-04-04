@@ -113,8 +113,8 @@ public class Quark {
 			VDO_PACKS.put("variant_bookshelves", VariantBookshelvesModule.staticEnabled);
 			VDO_PACKS.put("variant_chests", VariantChestsModule.staticEnabled);
 			VDO_PACKS.put("variant_ladders", VariantLaddersModule.staticEnabled);
-			VDO_PACKS.put("nether_wart_sack", CompressedBlocksModule.enableNetherWartSack);
-			VDO_PACKS.put("better_stone_tools", UtilityRecipesModule.betterStoneToolCrafting);
+			VDO_PACKS.put("nether_wart_sack", (CompressedBlocksModule.staticEnabled && CompressedBlocksModule.enableNetherWartSack));
+			VDO_PACKS.put("better_stone_tools", (UtilityRecipesModule.staticEnabled && UtilityRecipesModule.betterStoneToolCrafting));
 
 			if (event.getPackType() == PackType.SERVER_DATA) {
 				for(String vdoPack : VDO_PACKS.keySet()){

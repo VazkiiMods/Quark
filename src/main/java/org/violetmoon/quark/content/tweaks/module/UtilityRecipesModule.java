@@ -71,10 +71,13 @@ public class UtilityRecipesModule extends ZetaModule {
 
 	private boolean needsChange = false;
 
+	public static boolean staticEnabled;
+
 	@LoadEvent
 	public final void configChanged(ZConfigChanged event) {
 		// This has to be defered to a safer thread, making these changes in this thread can result in concurrency errors
 		needsChange = true;
+		staticEnabled = isEnabled();
 	}
 
 	@PlayEvent
