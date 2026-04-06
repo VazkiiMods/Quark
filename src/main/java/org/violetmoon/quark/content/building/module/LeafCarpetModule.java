@@ -5,6 +5,10 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.ComposterBlock;
 
 import org.violetmoon.quark.base.Quark;
+import org.violetmoon.quark.base.util.CompostManager;
+import org.violetmoon.zeta.event.bus.PlayEvent;
+import org.violetmoon.zeta.event.load.ZAddReloadListener;
+import org.violetmoon.zeta.event.load.ZCommonSetup;
 import org.violetmoon.zeta.util.VanillaWoods;
 import org.violetmoon.zeta.util.VanillaWoods.Wood;
 import org.violetmoon.quark.content.building.block.LeafCarpetBlock;
@@ -44,14 +48,14 @@ public class LeafCarpetModule extends ZetaModule {
 		carpetBlock(AncientWoodModule.ancient_leaves).setCondition(() -> Quark.ZETA.modules.isEnabled(AncientWoodModule.class)); //15
 	}
 
-	@LoadEvent
-	public void loadComplete(ZLoadComplete event) {
-		event.enqueueWork(() -> {
-			for(LeafCarpetBlock c : carpets) {
-				if(c.asItem() != null)
-					ComposterBlock.COMPOSTABLES.put(c.asItem(), 0.2F);
-			}
-		});
+	@PlayEvent
+	public void onServerReload(ZAddReloadListener event) {
+		//TODO make an event that fires AFTER NeoForge's AddReloadListenerEvent
+		//(and move all compost code across quark to it)
+		for(LeafCarpetBlock c : carpets) {
+			if(c.asItem() != null && c.isEnabled())
+				CompostManager.addChance(c.asItem(), 0.2F);
+		}
 	}
 
 	private void carpet(Block base) {

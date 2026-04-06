@@ -4,7 +4,6 @@ import net.minecraft.core.Registry;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.server.commands.DataPackCommand;
 import net.minecraft.server.packs.PackLocationInfo;
 import net.minecraft.server.packs.PackSelectionConfig;
 import net.minecraft.server.packs.PackType;
@@ -17,7 +16,6 @@ import net.minecraft.world.item.alchemy.Potions;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.ChestBlock;
 import net.minecraft.world.level.block.entity.AbstractFurnaceBlockEntity;
-import net.minecraft.world.level.block.entity.FurnaceBlockEntity;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.ModList;
@@ -26,6 +24,7 @@ import net.neoforged.fml.common.Mod;
 import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;
 import net.neoforged.neoforge.event.AddPackFindersEvent;
+import net.neoforged.neoforge.event.AddReloadListenerEvent;
 import net.neoforged.neoforge.event.brewing.RegisterBrewingRecipesEvent;
 import net.neoforged.neoforge.items.wrapper.InvWrapper;
 import net.neoforged.neoforge.items.wrapper.SidedInvWrapper;
@@ -40,6 +39,7 @@ import org.violetmoon.quark.addons.oddities.module.PipesModule;
 import org.violetmoon.quark.base.config.QuarkGeneralConfig;
 import org.violetmoon.quark.base.proxy.ClientProxy;
 import org.violetmoon.quark.base.proxy.CommonProxy;
+import org.violetmoon.quark.base.util.CompostManager;
 import org.violetmoon.quark.content.building.module.*;
 import org.violetmoon.quark.content.mobs.module.CrabsModule;
 import org.violetmoon.quark.content.tweaks.module.UtilityRecipesModule;
@@ -163,7 +163,7 @@ public class Quark {
 
 
 	@EventBusSubscriber(modid = Quark.MOD_ID)
-	private static class RegisterBrewing {
+	private static class QuarkEventBusSubscriber {
 
 		@SubscribeEvent
 		private static void brewingRecipesEvent(RegisterBrewingRecipesEvent event) {
@@ -171,6 +171,12 @@ public class Quark {
 			event.getBuilder().addMix(Potions.AWKWARD, CrabsModule.crab_shell, CrabsModule.RESILIENCE_NORMAL);
 			event.getBuilder().addMix(CrabsModule.RESILIENCE_NORMAL, Items.REDSTONE, CrabsModule.RESILIENCE_LONG);
 			event.getBuilder().addMix(CrabsModule.RESILIENCE_NORMAL, Items.GLOWSTONE_DUST, CrabsModule.RESILIENCE_STRONG);
+		}
+
+		@SubscribeEvent
+		public static void onNeoforgeReload(AddReloadListenerEvent event){
+			Quark.LOG.info("flushing CompostManager @" + event.toString());
+			CompostManager.flush();
 		}
 	}
 

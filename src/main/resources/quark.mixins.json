@@ -21,6 +21,7 @@
     "CeilingHangingSignBlockMixin",
     "ChunkGeneratorMixin",
     "ClimateParameterPointMixin",
+    "ComposterBlockMixin",
     "ConcretePowderBlockMixin",
     "DamageSourcesMixin",
     "ElytraItemMixin",
