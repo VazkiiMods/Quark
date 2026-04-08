@@ -19,7 +19,7 @@ import org.violetmoon.zeta.util.VanillaWoods.Wood;
 import java.util.LinkedList;
 import java.util.List;
 
-@ZetaLoadModule(category = "building", antiOverlap = { "woodworks", "woodster" })
+@ZetaLoadModule(category = "building", antiOverlap = { "woodworks", "woodster", "carved_wood" })
 public class VariantLaddersModule extends ZetaModule {
 
 	@Config

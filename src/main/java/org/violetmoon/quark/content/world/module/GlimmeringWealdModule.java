@@ -13,10 +13,10 @@ import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.biome.Climate;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.ComposterBlock;
 import net.minecraft.world.level.block.FlowerPotBlock;
 import net.minecraft.world.level.levelgen.placement.PlacedFeature;
 import org.violetmoon.quark.base.Quark;
+import org.violetmoon.quark.base.util.CompostManager;
 import org.violetmoon.quark.content.building.module.MorePottedPlantsModule;
 import org.violetmoon.quark.content.world.block.GlowLichenGrowthBlock;
 import org.violetmoon.quark.content.world.block.GlowShroomBlock;
@@ -128,13 +128,12 @@ public class GlimmeringWealdModule extends ZetaModule {
     public void setup(ZCommonSetup e) {
         glowShroomFeedablesTag = Quark.asTagKey(Registries.ITEM,"glow_shroom_feedables");
 
-        e.enqueueWork(() -> {
-            ComposterBlock.COMPOSTABLES.put(glow_shroom.asItem(), 0.65F);
-            ComposterBlock.COMPOSTABLES.put(glow_shroom_block.asItem(), 0.65F);
-            ComposterBlock.COMPOSTABLES.put(glow_shroom_stem.asItem(), 0.65F);
-            ComposterBlock.COMPOSTABLES.put(glow_shroom_ring.asItem(), 0.65F);
-
-            ComposterBlock.COMPOSTABLES.put(glow_lichen_growth.asItem(), 0.5F);
-        });
+        if(this.isEnabled()){
+            CompostManager.addChance(glow_shroom.asItem(), 0.65F);
+            CompostManager.addChance(glow_shroom_block.asItem(), 0.65F);
+            CompostManager.addChance(glow_shroom_stem.asItem(), 0.65F);
+            CompostManager.addChance(glow_shroom_ring.asItem(), 0.65F);
+            CompostManager.addChance(glow_lichen_growth.asItem(), 0.5F);
+        }
     }
 }

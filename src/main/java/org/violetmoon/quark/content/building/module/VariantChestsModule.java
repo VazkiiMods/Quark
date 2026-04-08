@@ -59,7 +59,7 @@ import org.violetmoon.zeta.util.handler.StructureBlockReplacementHandler.Structu
 import java.util.*;
 import java.util.function.BooleanSupplier;
 
-@ZetaLoadModule(category = "building", antiOverlap = { "woodworks" })
+@ZetaLoadModule(category = "building", antiOverlap = { "woodworks", "carved_wood" })
 public class VariantChestsModule extends ZetaModule {
 
 	@Config(flag = "chest_reversion")

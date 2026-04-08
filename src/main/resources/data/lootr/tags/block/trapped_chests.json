@@ -1,4 +1,10 @@
 {
+  "neoforge:conditions": [
+    {
+      "type": "zeta:flag",
+      "flag": "variant_chests"
+    }
+  ],
   "replace": false,
   "values": [
     { "id": "quark:trapped_lootr_oak_chest", "required": false },

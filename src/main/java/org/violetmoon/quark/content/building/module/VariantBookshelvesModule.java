@@ -17,7 +17,7 @@ import org.violetmoon.zeta.registry.CreativeTabManager;
 import java.util.ArrayList;
 import java.util.List;
 
-@ZetaLoadModule(category = "building", antiOverlap = { "woodworks", "woodster" })
+@ZetaLoadModule(category = "building", antiOverlap = { "woodworks", "woodster", "carved_wood" })
 public class VariantBookshelvesModule extends ZetaModule {
 
 	public static List<VariantBookshelfBlock> variantBookshelves = new ArrayList<>();

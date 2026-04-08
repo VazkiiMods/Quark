@@ -173,11 +173,16 @@ public class Quark {
 			event.getBuilder().addMix(CrabsModule.RESILIENCE_NORMAL, Items.GLOWSTONE_DUST, CrabsModule.RESILIENCE_STRONG);
 		}
 
+		/*
+		//Train: I decided it's not a big deal if this isn't reloadable
+		//we would need a zeta event or mixin or smth
+		//that fires after this event to be called in each relevant module
 		@SubscribeEvent
 		public static void onNeoforgeReload(AddReloadListenerEvent event){
 			Quark.LOG.info("flushing CompostManager @" + event.toString());
 			CompostManager.flush();
 		}
+		 */
 	}
 
 	public static void registerCapabilities(RegisterCapabilitiesEvent event) {
