@@ -10,6 +10,7 @@ import org.violetmoon.zeta.block.ZetaFlammableBlock;
 import org.violetmoon.zeta.block.ZetaFlammablePillarBlock;
 import org.violetmoon.zeta.config.Config;
 import org.violetmoon.zeta.event.bus.LoadEvent;
+import org.violetmoon.zeta.event.load.ZCommonSetup;
 import org.violetmoon.zeta.event.load.ZConfigChanged;
 import org.violetmoon.zeta.event.load.ZLoadComplete;
 import org.violetmoon.zeta.event.load.ZRegister;
@@ -23,7 +24,6 @@ import net.minecraft.world.item.CreativeModeTabs;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.ComposterBlock;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.properties.NoteBlockInstrument;
 import net.minecraft.world.level.material.MapColor;
@@ -182,13 +182,15 @@ public class CompressedBlocksModule extends ZetaModule {
 	}
 
 	@LoadEvent
-	public void loadComplete(ZLoadComplete event) {
-		event.enqueueWork(() -> {
-			for(Block block : compostable)
-				if(block.asItem() != null && block instanceof ZetaBlock zetaBlock && zetaBlock.isEnabled() )
-					CompostManager.addChance(block.asItem(), 1F);
-		});
+	public void setup(ZCommonSetup zCommonSetup){
+		for(Block block : compostable) {
+			if (block instanceof ZetaBlock zetaBlock && zetaBlock.isEnabled())
+				CompostManager.addChance(block.asItem(), 1F);
+		}
+	}
 
+	@LoadEvent
+	public void loadComplete(ZLoadComplete event) {
 		Quark.ZETA.fuel.addFuel(stick_block, stickBlockFuelTime);
 		Quark.ZETA.fuel.addFuel(charcoal_block, charcoalBlockFuelTime);
 		Quark.ZETA.fuel.addFuel(blaze_lantern, blazeLanternFuelTime);
