@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.function.BooleanSupplier;
 
 import org.violetmoon.quark.base.Quark;
+import org.violetmoon.quark.base.util.CompostManager;
 import org.violetmoon.zeta.block.ZetaBlock;
 import org.violetmoon.zeta.block.ZetaFlammableBlock;
 import org.violetmoon.zeta.block.ZetaFlammablePillarBlock;
@@ -184,8 +185,8 @@ public class CompressedBlocksModule extends ZetaModule {
 	public void loadComplete(ZLoadComplete event) {
 		event.enqueueWork(() -> {
 			for(Block block : compostable)
-				if(block.asItem() != null)
-					ComposterBlock.COMPOSTABLES.put(block.asItem(), 1F);
+				if(block.asItem() != null && block instanceof ZetaBlock zetaBlock && zetaBlock.isEnabled() )
+					CompostManager.addChance(block.asItem(), 1F);
 		});
 
 		Quark.ZETA.fuel.addFuel(stick_block, stickBlockFuelTime);

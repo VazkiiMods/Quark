@@ -1,10 +1,4 @@
 {
-    "neoforge:conditions": [
-        {
-            "type": "zeta:flag",
-            "flag": "variant_chests"
-        }
-    ],
     "replace": false,
     "values": [
         "quark:trapped_oak_chest",
