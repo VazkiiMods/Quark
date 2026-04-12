@@ -1,8 +1,17 @@
 {
   "neoforge:conditions": [
     {
-      "type": "zeta:flag",
-      "flag": "vertical_slabs"
+      "type": "neoforge:and",
+      "values": [
+        {
+          "type": "zeta:flag",
+          "flag": "vertical_slabs"
+        },
+        {
+          "type": "zeta:flag",
+          "flag": "limestone"
+        }
+      ]
     }
   ],
   "type": "minecraft:crafting_shaped",

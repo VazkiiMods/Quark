@@ -15,6 +15,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.NotNull;
+import org.violetmoon.quark.base.util.RotationHelper;
 import org.violetmoon.zeta.util.MiscUtil;
 import org.violetmoon.zeta.util.SimpleInventoryBlockEntity;
 
@@ -23,7 +24,7 @@ import java.util.Random;
 public abstract class AbstractEnchantingTableBlockEntity extends SimpleInventoryBlockEntity implements Nameable {
 
 	public int tickCount;
-	public float pageFlip, pageFlipPrev, flipT, flipA, bookSpread, bookSpreadPrev, bookRotation, bookRotationPrev, tRot;
+	public float pageFlip, pageFlipPrev, flipT, flipA, bookSpread, bookSpreadPrev, bookRotation, bookRotationPrev, targetRotation;
 
 	private static final Random rand = new Random();
 	private Component customName;
@@ -68,9 +69,9 @@ public abstract class AbstractEnchantingTableBlockEntity extends SimpleInventory
 		Player entityplayer = this.level.getNearestPlayer((this.worldPosition.getX() + 0.5F), (this.worldPosition.getY() + 0.5F), (this.worldPosition.getZ() + 0.5F), 3.0D, false);
 
 		if(entityplayer != null) {
-			double d0 = entityplayer.getX() - (this.worldPosition.getX() + 0.5F);
-			double d1 = entityplayer.getZ() - (this.worldPosition.getZ() + 0.5F);
-			this.tRot = (float) Mth.atan2(d1, d0);
+			double xDiff = entityplayer.getX() - (this.worldPosition.getX() + 0.5F);
+			double zDiff = entityplayer.getZ() - (this.worldPosition.getZ() + 0.5F);
+			this.targetRotation = (float) Mth.atan2(zDiff, xDiff);
 			this.bookSpread += 0.1F;
 
 			if(this.bookSpread < 0.5F || rand.nextInt(40) == 0) {
@@ -81,35 +82,16 @@ public abstract class AbstractEnchantingTableBlockEntity extends SimpleInventory
 				} while(!(f1 != this.flipT));
 			}
 		} else {
-			this.tRot += 0.02F;
+			this.targetRotation += 0.02F;
 			this.bookSpread -= 0.1F;
 		}
 
-		while(this.bookRotation >= (float) Math.PI) {
-			this.bookRotation -= ((float) Math.PI * 2F);
-		}
+        bookRotation = RotationHelper.wrapRadians(bookRotation);
+		targetRotation = RotationHelper.wrapRadians(targetRotation);
 
-		while(this.bookRotation < -(float) Math.PI) {
-			this.bookRotation += ((float) Math.PI * 2F);
-		}
+		float targetDiff = RotationHelper.wrapRadians(this.targetRotation - this.bookRotation);
 
-		while(this.tRot >= (float) Math.PI) {
-			this.tRot -= ((float) Math.PI * 2F);
-		}
-
-		while(this.tRot < -(float) Math.PI) {
-			this.tRot += ((float) Math.PI * 2F);
-		}
-
-		float f2 = this.tRot - this.bookRotation;
-
-		while(f2 >= Math.PI)
-			f2 -= (Math.PI * 2F);
-
-		while(f2 < -Math.PI)
-			f2 += (Math.PI * 2F);
-
-		this.bookRotation += f2 * 0.4F;
+		this.bookRotation += targetDiff * 0.4F;
 		this.bookSpread = Mth.clamp(this.bookSpread, 0.0F, 1.0F);
 		++this.tickCount;
 		this.pageFlipPrev = this.pageFlip;

@@ -12,8 +12,8 @@ import org.violetmoon.quark.base.Quark;
 import java.util.concurrent.CompletableFuture;
 
 public class QuarkBiomeTagProvider extends BiomeTagsProvider {
-    public QuarkBiomeTagProvider(PackOutput p_255800_, CompletableFuture<HolderLookup.Provider> p_256205_, String modId, @Nullable ExistingFileHelper existingFileHelper) {
-        super(p_255800_, p_256205_, Quark.MOD_ID, existingFileHelper);
+    public QuarkBiomeTagProvider(PackOutput output, CompletableFuture<HolderLookup.Provider> provider, @Nullable ExistingFileHelper existingFileHelper) {
+        super(output, provider, Quark.MOD_ID, existingFileHelper);
     }
 
     @Override

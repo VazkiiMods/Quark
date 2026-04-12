@@ -22,7 +22,6 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.enchantment.Enchantment;
-import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.item.enchantment.EnchantmentInstance;
 
 import net.minecraft.world.item.enchantment.ItemEnchantments;
@@ -38,7 +37,6 @@ import org.violetmoon.zeta.module.IDisableable;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 public class EnchantedBookTooltips {
 
@@ -173,8 +171,7 @@ public class EnchantedBookTooltips {
 			String left = tokens[0];
 			String right = tokens[1];
 
-			//Evil getConnection
-			Minecraft.getInstance().getConnection().registryAccess().registry(Registries.ENCHANTMENT).get().getOptional(ResourceLocation.parse(left))
+			Quark.ZETA.hackilyGetCurrentLevelRegistryAccess().registry(Registries.ENCHANTMENT).get().getOptional(ResourceLocation.parse(left))
 					.ifPresent(ench -> {
 						for(String itemId : right.split(",")) {
 							BuiltInRegistries.ITEM.getOptional(ResourceLocation.parse(itemId)).ifPresent(item -> additionalStacks.put(ench, new ItemStack(item)));

@@ -67,8 +67,8 @@ public class TinyPotatoBlockItem extends ZetaBlockItem implements IRuneColorProv
 			}*/
 		}
 
-		if(Boolean.TRUE.equals(stack.get(QuarkDataComponents.IS_ANGRY)))
-			stack.set(QuarkDataComponents.IS_ANGRY, false);
+		if(stack.get(QuarkDataComponents.IS_ANGRY) != null && !stack.get(QuarkDataComponents.IS_ANGRY)) //angry set to false
+			stack.remove(QuarkDataComponents.IS_ANGRY);
 	}
 
 	@Override

@@ -19,9 +19,9 @@
           "flag": "wood_to_chest_recipes"
         },
         {
-          "type": "forge:not",
+          "type": "neoforge:not",
           "value": {
-            "type": "quark:flag",
+            "type": "zeta:flag",
             "flag": "variant_chests"
           }
         }

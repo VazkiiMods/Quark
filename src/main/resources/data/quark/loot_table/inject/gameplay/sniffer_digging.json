@@ -1,0 +1,42 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "zeta:flag",
+      "flag": "ancient_wood"
+    }
+  ],
+  "type": "minecraft:block",
+  "pools": [
+    {
+      "rolls": 1,
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "quark:ancient_sapling",
+          "functions": [],
+          "conditions": []
+        }
+      ],
+      "functions": [
+        {
+          "function": "minecraft:set_count",
+          "count": {
+            "type": "minecraft:uniform",
+            "min": 1,
+            "max": 4
+          }
+        },
+        {
+          "function": "minecraft:limit_count",
+          "limit": {
+            "min": 1,
+            "max": 4
+          }
+        },
+        {
+          "function": "minecraft:explosion_decay"
+        }
+      ]
+    }
+  ]
+}

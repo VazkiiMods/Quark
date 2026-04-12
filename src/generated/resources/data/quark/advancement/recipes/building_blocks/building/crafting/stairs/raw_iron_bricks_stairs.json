@@ -7,11 +7,11 @@
   ],
   "parent": "minecraft:recipes/root",
   "criteria": {
-    "has_blue_nether_bricks": {
+    "has_raw_iron_bricks": {
       "conditions": {
         "items": [
           {
-            "items": "quark:blue_nether_bricks"
+            "items": "quark:raw_iron_bricks"
           }
         ]
       },
@@ -27,7 +27,7 @@
   "requirements": [
     [
       "has_the_recipe",
-      "has_blue_nether_bricks"
+      "has_raw_iron_bricks"
     ]
   ],
   "rewards": {

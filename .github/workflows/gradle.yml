@@ -6,52 +6,59 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v4
-    - name: Set up JDK
-      uses: actions/setup-java@v4
-      with:
-        distribution: 'temurin'
-        java-version: '21'
-    - name: Validate wrapper and restore Gradle cache
-      uses: gradle/actions/setup-gradle@v4
-    - name: Build with Gradle
-      run: ./gradlew pmdMain build
-    - name: PMD report
-      uses: jwgmeligmeyling/pmd-github-action@v1
-      if: failure()
-      with:
-        path: '**/reports/pmd/main.xml'
-    - name: Stop Gradle
-      run: |
-        ./gradlew --stop
-    - name: Calculate artifact names
-      id: calculate_artifact_names
-      run: |
-        VERSION=$(awk -F '=' '/^version/ { print $2; }' build.properties)
-        BUILD=$(awk -F '=' '/build_number/ { print $2; }' build.properties)
-        echo "forge=build/libs/Quark-${VERSION}-${BUILD}.jar" >> "$GITHUB_OUTPUT"
-    - name: Sign jars
-      env:
-        SIGNING_KEY: ${{ secrets.VIOLET_MOON_SIGNING_KEY }}
-      if: ${{ env.SIGNING_KEY != '' }}
-      run: |
-        echo "${SIGNING_KEY}" | gpg --import -
-        gpg --local-user "Violet Moon Signing Key" --armor \
-          --detach-sign ${{ steps.calculate_artifact_names.outputs.forge }}
-    - name: Archive Forge Artifacts
-      uses: actions/upload-artifact@v4
-      with:
-        name: Forge
-        path: |
-          ${{ steps.calculate_artifact_names.outputs.forge }}
-          ${{ steps.calculate_artifact_names.outputs.forge }}.asc
-    - name: Upload Releases
-      if: startsWith(github.ref, 'refs/tags/release-')
-      env:
-        GH_TOKEN: ${{ github.token }}
-        GIT_REF: ${{ github.ref }}
-        FORGE_JAR: ${{ steps.calculate_artifact_names.outputs.forge }}
-        CURSEFORGE_TOKEN: ${{ secrets.VAZKII_CURSEFORGE_TOKEN }}
-        MODRINTH_TOKEN: ${{ secrets.VAZKII_MODRINTH_TOKEN }}
-      run: |
-        scripts/upload_releases.sh
+      - uses: actions/checkout@v4
+
+      - name: Setup Java 21
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '21'
+
+      - name: Validate wrapper and restore Gradle cache
+        uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-home-cache-excludes: |
+            caches/build-cache-1
+            caches/keyrings
+            **/Zeta*.jar
+
+      - name: Build with Gradle
+        run: |
+          RELEASE_MODE=${{false}} \
+          ./gradlew build
+      #    - name: Build with Gradle
+      #      run: ./gradlew pmdMain build
+      #    - name: PMD report
+      #      uses: jwgmeligmeyling/pmd-github-action@v1
+      #      if: failure()
+      #      with:
+      #        path: '**/reports/pmd/main.xml'
+
+      - name: Stop Gradle
+        run: |
+          ./gradlew --stop
+
+      - name: Calculate artifact names
+        id: calculate_artifact_names
+        run: |
+          VERSION=$(awk -F '=' '/^version/ { print $2; }' build.properties)
+          BUILD=$(awk -F '=' '/^build_number/ { print $2; }' build.properties)
+          echo "mod_version=${VERSION}-${BUILD}" >> "$GITHUB_OUTPUT"
+          echo "neoforge=build/libs/Quark-${VERSION}-${BUILD}-SNAPSHOT.jar" >> "$GITHUB_OUTPUT"
+
+      - name: Sign jars
+        env:
+          SIGNING_KEY: ${{ secrets.VIOLET_MOON_SIGNING_KEY }}
+        if: ${{ env.SIGNING_KEY != '' }}
+        run: |
+          echo "${SIGNING_KEY}" | gpg --import -
+          gpg --local-user "Violet Moon Signing Key" --armor \
+            --detach-sign ${{ steps.calculate_artifact_names.outputs.neoforge }}
+
+      - name: Archive Neoforge Artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: Quark-Neoforge-${{ steps.calculate_artifact_names.outputs.mod_version }}-SNAPSHOT
+          path: |
+            ${{ steps.calculate_artifact_names.outputs.neoforge }}
+            ${{ steps.calculate_artifact_names.outputs.neoforge }}.asc

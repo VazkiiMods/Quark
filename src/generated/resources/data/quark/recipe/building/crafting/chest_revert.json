@@ -1,0 +1,19 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "zeta:flag",
+      "flag": "chest_reversion"
+    }
+  ],
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    {
+      "tag": "quark:revertable_chests"
+    }
+  ],
+  "result": {
+    "count": 1,
+    "id": "minecraft:chest"
+  }
+}

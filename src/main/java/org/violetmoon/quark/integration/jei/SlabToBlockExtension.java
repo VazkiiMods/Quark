@@ -11,7 +11,6 @@ import net.minecraft.world.item.crafting.CraftingRecipe;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import org.apache.commons.compress.utils.Lists;
 import org.violetmoon.quark.content.tweaks.module.SlabsToBlocksModule;
-import org.violetmoon.quark.content.tweaks.recipe.SlabToBlockRecipe;
 
 import java.util.Arrays;
 import java.util.List;

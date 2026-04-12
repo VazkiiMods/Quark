@@ -178,8 +178,8 @@
 	"quark.jei.influence": "矩陣影響",
 	"quark.jei.boost_influence": "提升機率：",
 	"quark.jei.dampen_influence": "降低機率：",
-	"quark.jei.hint_preamble": "[Quark]\n",
 
+    "quark.jei.hint.preamble": "[Quark]\n",
 	"quark.jei.hint.pickarang": "這是把迴力鎬！可以被丟出去並挖掘擊中的任何東西，然後將掉落物帶回來給你。它也可以被附魔以獲得更好的效能。",
 	"quark.jei.hint.flamerang": "與迴力鎬類似，但它撿起的任何物品在飛行時都會免疫火焰和熔岩傷害。",
 	"quark.jei.hint.abacus": "對著一個方塊使用它，它會計算你正在看的方塊和你點擊的方塊之間的距離，最多 48 個方塊。",

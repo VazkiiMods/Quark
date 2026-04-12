@@ -1,0 +1,18 @@
+{
+  "pack": {
+    "description": "Quark Vanilla Data Overrides - Variant Bookshelves",
+    "pack_format": 48
+  },
+  "filter": {
+    "block": [
+      {
+        "namespace": "minecraft",
+        "path": "recipe/bookshelf"
+      },
+      {
+        "namespace": "minecraft",
+        "path": "recipe/lectern"
+      }
+    ]
+  }
+}

@@ -1,6 +1,7 @@
 package org.violetmoon.quark.content.world.module;
 
 import com.google.common.collect.ImmutableSet;
+import com.terraformersmc.biolith.api.biome.BiomePlacement;
 import net.minecraft.core.Holder;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
@@ -12,10 +13,11 @@ import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.biome.Climate;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.ComposterBlock;
-import net.minecraft.world.level.levelgen.feature.Feature;
+import net.minecraft.world.level.block.FlowerPotBlock;
 import net.minecraft.world.level.levelgen.placement.PlacedFeature;
 import org.violetmoon.quark.base.Quark;
+import org.violetmoon.quark.base.util.CompostManager;
+import org.violetmoon.quark.content.building.module.MorePottedPlantsModule;
 import org.violetmoon.quark.content.world.block.GlowLichenGrowthBlock;
 import org.violetmoon.quark.content.world.block.GlowShroomBlock;
 import org.violetmoon.quark.content.world.block.GlowShroomRingBlock;
@@ -41,7 +43,7 @@ public class GlimmeringWealdModule extends ZetaModule {
 	public static ResourceKey<PlacedFeature> GLOW_SHROOMS_EXTRAS_FEATURE = Quark.asResourceKey(Registries.PLACED_FEATURE, "glow_shrooms_extras");
 
     public static GlowShroomsFeature glow_shrooms_feature;
-    public static GlowExtrasFeature glow_shrooms_extra_feature;
+    public static GlowExtrasFeature glow_shrooms_extras_feature;
 
     public static Holder<PlacedFeature> ore_lapis_extra;
     public static Holder<PlacedFeature> placed_glow_shrooms;
@@ -58,21 +60,23 @@ public class GlimmeringWealdModule extends ZetaModule {
     public static TagKey<Item> glowShroomFeedablesTag;
 
     //TODO: add back some sort of config
-    /*
-    @Config(
+
+    /*@Config(
             name = "Min Depth Range",
             description = "Experimental, dont change if you dont know what you are doing. Depth min value from which biome will spawn. Decreasing will make biome appear more often"
     )
     @Config.Min(-2)
     @Config.Max(2)
     public static double minDepthRange = 1.55F;
+
+
     @Config(
             name = "Max Weirdness Range",
             description = "Experimental, dont change if you dont know what you are doing. Depth max value until which biome will spawn. Increasing will make biome appear more often"
     )
     @Config.Min(-2)
     @Config.Max(2)
-    public static double maxDepthRange = 2;*/
+    public static double maxWeirdnessRange = 2;*/
 
     @LoadEvent
     public final void register(ZRegister event) {
@@ -86,20 +90,23 @@ public class GlimmeringWealdModule extends ZetaModule {
         CreativeTabManager.endChain();
 
 
-        event.getVariantRegistry().addFlowerPot(glow_lichen_growth, "glow_lichen_growth", prop -> prop.lightLevel((state) -> 8));
-        event.getVariantRegistry().addFlowerPot(glow_shroom, "glow_shroom", prop -> prop.lightLevel((state) -> 10));
+        FlowerPotBlock glowLichenPot = event.getVariantRegistry().addFlowerPot(glow_lichen_growth, "glow_lichen_growth", prop -> prop.lightLevel((state) -> 8));
+        MorePottedPlantsModule.addJustForDatagen(glowLichenPot, glow_lichen_growth);
+        FlowerPotBlock glowShroomPot = event.getVariantRegistry().addFlowerPot(glow_shroom, "glow_shroom", prop -> prop.lightLevel((state) -> 10));
+        MorePottedPlantsModule.addJustForDatagen(glowShroomPot, glow_shroom);
 
 
         // Feature
         glow_shrooms_feature = new GlowShroomsFeature();
         event.getRegistry().register(glow_shrooms_feature, GLOW_SHROOMS_FEATURE.location(), Registries.FEATURE);
-        glow_shrooms_extra_feature = new GlowExtrasFeature();
-        event.getRegistry().register(glow_shrooms_extra_feature, GLOW_SHROOMS_EXTRAS_FEATURE.location(), Registries.FEATURE);
+        glow_shrooms_extras_feature = new GlowExtrasFeature();
+        event.getRegistry().register(glow_shrooms_extras_feature, GLOW_SHROOMS_EXTRAS_FEATURE.location(), Registries.FEATURE);
     }
 
     @LoadEvent
     public void postRegister(ZRegister.Post e) {
         Climate.Parameter FULL_RANGE = Climate.Parameter.span(-1.0F, 1.0F);
+        //Climate.Parameter weirdnessRange = Climate.Parameter.span(-1, maxWeirdnessRange)''
 		Climate.ParameterPoint climatePoint = Climate.parameters(FULL_RANGE, FULL_RANGE,
                 Climate.Parameter.span(-1.2f, 0.75f), //set like that to stay away from dripstone caves
 				Climate.Parameter.span(-0.28f, 0.08f), //erosion. a bit after deep dark biome
@@ -108,22 +115,25 @@ public class GlimmeringWealdModule extends ZetaModule {
 				FULL_RANGE, //weirdness
 				0F);
 
-		Quark.TERRABLENDER_INTEGRATION.registerUndergroundBiome(this, BIOME_NAME, climatePoint);
+        if (isEnabled()) {
+            BiomePlacement.addOverworld(BIOME_KEY, climatePoint);
+        }
 
         Quark.ZETA.advancementModifierRegistry.addModifier(new AdventuringTimeModifier(this, ImmutableSet.of(BIOME_KEY)));
     }
+
+
 
     @LoadEvent
     public void setup(ZCommonSetup e) {
         glowShroomFeedablesTag = Quark.asTagKey(Registries.ITEM,"glow_shroom_feedables");
 
-        e.enqueueWork(() -> {
-            ComposterBlock.COMPOSTABLES.put(glow_shroom.asItem(), 0.65F);
-            ComposterBlock.COMPOSTABLES.put(glow_shroom_block.asItem(), 0.65F);
-            ComposterBlock.COMPOSTABLES.put(glow_shroom_stem.asItem(), 0.65F);
-            ComposterBlock.COMPOSTABLES.put(glow_shroom_ring.asItem(), 0.65F);
-
-            ComposterBlock.COMPOSTABLES.put(glow_lichen_growth.asItem(), 0.5F);
-        });
+        if(this.isEnabled()){
+            CompostManager.addChance(glow_shroom.asItem(), 0.65F);
+            CompostManager.addChance(glow_shroom_block.asItem(), 0.65F);
+            CompostManager.addChance(glow_shroom_stem.asItem(), 0.65F);
+            CompostManager.addChance(glow_shroom_ring.asItem(), 0.65F);
+            CompostManager.addChance(glow_lichen_growth.asItem(), 0.5F);
+        }
     }
 }

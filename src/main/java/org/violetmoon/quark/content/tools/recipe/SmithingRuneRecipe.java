@@ -35,18 +35,18 @@ public final class SmithingRuneRecipe extends SmithingTrimRecipe { // Extends to
 	public static final Serializer SERIALIZER = new Serializer();
 
 	private final Ingredient template;
-	private final Ingredient addition;
-	private final RuneColor runeColor;
+	public final Ingredient addition;
+	public final RuneColor runeColor;
 	private static Ingredient used;
 
-	private static ItemStack makeEnchantedDisplayItem(ItemStack input) {
+	public static ItemStack makeEnchantedDisplayItem(ItemStack input) {
 		ItemStack stack = input.copy();
 		stack.set(DataComponents.CUSTOM_NAME, Component.translatable("quark.jei.any_enchanted"));
 		stack.set(DataComponents.ENCHANTMENT_GLINT_OVERRIDE, true);
 		return stack;
 	}
 
-	private static Ingredient createBaseIngredient() {
+	public static Ingredient createBaseIngredient() {
 		if (used == null) {
 			Stream<ItemStack> displayItems;
 			if (Quark.ZETA.modules.isEnabled(ImprovedTooltipsModule.class) && ImprovedTooltipsModule.enchantingTooltips) {
@@ -66,6 +66,8 @@ public final class SmithingRuneRecipe extends SmithingTrimRecipe { // Extends to
 		return used;
 	}
 
+
+
 	private SmithingRuneRecipe(Ingredient template, Ingredient addition, RuneColor runeColor) {
 		super(template, createBaseIngredient(), addition);
 		this.template = template;
@@ -80,15 +82,17 @@ public final class SmithingRuneRecipe extends SmithingTrimRecipe { // Extends to
 
 	@Override
 	public ItemStack assemble(SmithingRecipeInput input, HolderLookup.Provider provider) {
-		ItemStack baseItem = input.getItem(1);
+		ItemStack baseItem = input.base();
 		if (isBaseIngredient(baseItem)) {
-			if (ColorRunesModule.getStackColor(baseItem) == runeColor)
+			if (ColorRunesModule.getStackColor(baseItem) == runeColor) {
 				return ItemStack.EMPTY;
+			}
 
-			ItemStack newStack = baseItem.copy();
-			newStack.setCount(1);
-			return ColorRunesModule.withRune(newStack, runeColor);
+			ItemStack newStack = baseItem.copyWithCount(1);
+            ColorRunesModule.withRune(newStack, runeColor);
+			return newStack;
 		}
+
 		return ItemStack.EMPTY;
 	}
 
@@ -118,7 +122,7 @@ public final class SmithingRuneRecipe extends SmithingTrimRecipe { // Extends to
 	@Nonnull
 	@Override
 	public RecipeSerializer<?> getSerializer() {
-		return RecipeSerializer.SMITHING_TRIM;
+		return SERIALIZER;
 	}
 
     public static class Serializer implements RecipeSerializer<SmithingRuneRecipe> {

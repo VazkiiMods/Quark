@@ -34,6 +34,7 @@ public class SeedPouchModule extends ZetaModule {
 
 	public static final TagKey<Item> seedPouchHoldableTag = ItemTags.create(Quark.asResource("seed_pouch_holdable"));
 	public static final TagKey<Item> seedPouchFertilizersTag = ItemTags.create(Quark.asResource("seed_pouch_fertilizers"));
+	public static final TagKey<Item> seedPouchVerticalPlacementTag = ItemTags.create(Quark.asResource("seed_pouch_vertical_placement"));
 
 	@Config
 	public static int maxItems = 640;

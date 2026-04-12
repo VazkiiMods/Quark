@@ -9,6 +9,7 @@ import org.violetmoon.zeta.block.IZetaBlock;
 import org.violetmoon.zeta.block.ZetaGlassBlock;
 import org.violetmoon.zeta.block.ZetaInheritedPaneBlock;
 import org.violetmoon.zeta.event.bus.LoadEvent;
+import org.violetmoon.zeta.event.load.ZConfigChanged;
 import org.violetmoon.zeta.event.load.ZRegister;
 import org.violetmoon.zeta.module.ZetaLoadModule;
 import org.violetmoon.zeta.module.ZetaModule;
@@ -33,6 +34,8 @@ public class FramedGlassModule extends ZetaModule {
 
     public static List<Block> stainedFramedGlass = new ArrayList<>();
     public static List<Block> stainedFramedGlassPanes = new ArrayList<>();
+
+	public static boolean staticEnabled;
 
 	@LoadEvent
 	public final void register(ZRegister event) {
@@ -65,4 +68,8 @@ public class FramedGlassModule extends ZetaModule {
 		CreativeTabManager.endChain();
 	}
 
+	@LoadEvent
+	public final void configChanged(ZConfigChanged event) {
+		staticEnabled = isEnabled();
+	}
 }

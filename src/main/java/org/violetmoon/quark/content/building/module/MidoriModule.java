@@ -5,10 +5,9 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.ComposterBlock;
 import net.minecraft.world.level.block.state.properties.NoteBlockInstrument;
 import net.minecraft.world.level.material.MapColor;
-
+import org.violetmoon.quark.base.util.CompostManager;
 import org.violetmoon.zeta.block.IZetaBlock;
 import org.violetmoon.zeta.block.ZetaBlock;
 import org.violetmoon.zeta.block.ZetaPillarBlock;
@@ -50,9 +49,9 @@ public class MidoriModule extends ZetaModule {
 
 	@LoadEvent
 	public void loadComplete(ZLoadComplete event) {
-		event.enqueueWork(() -> {
-			ComposterBlock.COMPOSTABLES.put(moss_paste, 0.5F);
-		});
+		if(isEnabled()){
+			CompostManager.addChance(moss_paste, 0.5F);
+		}
 	}
 
 }

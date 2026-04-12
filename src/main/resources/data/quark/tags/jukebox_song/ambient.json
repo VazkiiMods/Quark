@@ -1,0 +1,13 @@
+{
+  "replace": false,
+  "values": [
+    "quark:ambient/drips",
+    "quark:ambient/ocean",
+    "quark:ambient/rain",
+    "quark:ambient/wind",
+    "quark:ambient/fire",
+    "quark:ambient/clock",
+    "quark:ambient/crickets",
+    "quark:ambient/chatter"
+  ]
+}

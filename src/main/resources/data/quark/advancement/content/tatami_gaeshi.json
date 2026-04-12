@@ -1,0 +1,56 @@
+{
+  "parent": "minecraft:adventure/root",
+  "criteria": {
+    "hit_with_bamboo_mat": {
+      "trigger": "minecraft:player_hurt_entity",
+      "conditions": {
+        "player": {
+          "equipment": {
+            "mainhand": {
+              "items": "quark:bamboo_mat"
+            }
+          }
+        }
+      }
+    },
+    "hit_with_bamboo_mat_carpet": {
+      "trigger": "minecraft:player_hurt_entity",
+      "conditions": {
+        "player": {
+          "equipment": {
+            "mainhand": {
+              "items": "quark:bamboo_mat_carpet"
+            }
+          }
+        }
+      }
+    }
+  },
+  "display": {
+    "announce_to_chat": true,
+    "description": {
+      "translate": "advancements.quark.tatami_gaeshi.description"
+    },
+    "frame": "challenge",
+    "hidden": true,
+    "icon": {
+      "id": "quark:bamboo_mat_carpet"
+    },
+    "show_toast": true,
+    "title": {
+      "translate": "advancements.quark.tatami_gaeshi.title"
+    }
+  },
+  "requirements": [
+    [
+      "hit_with_bamboo_mat",
+      "hit_with_bamboo_mat_carpet"
+    ]
+  ],
+  "neoforge:conditions": [
+    {
+      "type": "zeta:flag",
+      "flag": "bamboo_mat"
+    }
+  ]
+}

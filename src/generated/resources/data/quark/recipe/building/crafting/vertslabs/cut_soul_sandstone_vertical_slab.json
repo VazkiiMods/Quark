@@ -5,6 +5,10 @@
       "values": [
         {
           "type": "zeta:flag",
+          "flag": "vertical_slabs"
+        },
+        {
+          "type": "zeta:flag",
           "flag": "soul_sandstone"
         }
       ]

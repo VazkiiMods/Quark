@@ -6,7 +6,6 @@ import java.util.Map;
 import net.minecraft.core.registries.Registries;
 import org.violetmoon.quark.base.Quark;
 import org.violetmoon.quark.content.tweaks.block.DirtyGlassBlock;
-import org.violetmoon.zeta.block.IZetaBlock;
 import org.violetmoon.zeta.block.ZetaBlock;
 import org.violetmoon.zeta.block.ZetaInheritedPaneBlock;
 import org.violetmoon.zeta.event.bus.LoadEvent;

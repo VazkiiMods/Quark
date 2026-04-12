@@ -1,5 +1,5 @@
 {
-  "parent": "quark:get_diamond_heart",
+  "parent": "quark:content/get_diamond_heart",
   "criteria": {
     "make_stoneling": {
       "trigger": "quark:make_stoneling"

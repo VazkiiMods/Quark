@@ -2,7 +2,6 @@ package org.violetmoon.quark.content.mobs.entity;
 
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.core.particles.ColorParticleOption;
-import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;

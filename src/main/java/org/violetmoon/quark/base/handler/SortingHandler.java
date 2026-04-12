@@ -18,14 +18,13 @@ import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.ItemEnchantments;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
-import net.neoforged.neoforge.items.IItemHandler;
-import net.neoforged.neoforge.items.SlotItemHandler;
-import net.neoforged.neoforge.items.wrapper.InvWrapper;
 import org.violetmoon.quark.addons.oddities.inventory.BackpackMenu;
 import org.violetmoon.quark.addons.oddities.inventory.slot.CachedItemHandlerSlot;
 import org.violetmoon.quark.api.ICustomSorting;
 import org.violetmoon.quark.api.ISortingLockedSlots;
+import org.violetmoon.quark.api.QuarkCapabilities;
 import org.violetmoon.quark.base.Quark;
+import org.violetmoon.quark.base.components.QuarkDataComponents;
 import org.violetmoon.quark.content.management.module.InventorySortingModule;
 
 import java.util.*;
@@ -64,6 +63,14 @@ public final class SortingHandler {
 			SortingHandler::damageCompare));
 
 	private static final Comparator<ItemStack> POTION_COMPARATOR = jointComparator(Arrays.asList(
+			SortingHandler::potionComplexityCompare,
+			SortingHandler::potionTypeCompare));
+
+	private static final Comparator<ItemStack> ENCHANTED_BOOK_COMPARATOR = jointComparator(Arrays.asList(
+			SortingHandler::potionComplexityCompare,
+			SortingHandler::potionTypeCompare));
+
+	private static final Comparator<ItemStack> TOME_COMPARATOR = jointComparator(Arrays.asList(
 			SortingHandler::potionComplexityCompare,
 			SortingHandler::potionTypeCompare));
 
@@ -152,7 +159,7 @@ public final class SortingHandler {
 		}
 
 		// Set the sorted slots to what they are supposed to be.
-		for (int slot = iStart; slot < iEnd; slot++) {
+		for (int slot = iStart; (slot < iEnd) && (stacks.size() > slot - iStart - skipped); slot++) {
 			// Check if it's a locked slot, in which case we skip it.
 			if(isLocked(slot, lockedSlots)) {
 				container.setItem(slot, containerCopy.get(slot));
@@ -437,24 +444,65 @@ public final class SortingHandler {
 		return BuiltInRegistries.POTION.getId(potion2.value()) - BuiltInRegistries.POTION.getId(potion1.value());
 	}
 
+	public static int enchantedBookCompare(ItemStack stack1, ItemStack stack2) {
+		ItemEnchantments ench1 = stack1.get(DataComponents.STORED_ENCHANTMENTS);
+		ItemEnchantments ench2 = stack2.get(DataComponents.STORED_ENCHANTMENTS);
+
+		int compareValue = ench2.keySet().size() - ench1.keySet().size();
+		if (compareValue != 0) return compareValue;
+
+		String str1 = "";
+		for (Holder<Enchantment> holder1 : ench1.keySet()) {
+			str1 = str1 + holder1.getRegisteredName();
+		}
+
+		String str2 = "";
+		for (Holder<Enchantment> holder2 : ench2.keySet()) {
+			str2 = str2 + holder2.getRegisteredName();
+		}
+
+		compareValue = str2.compareTo(str1);
+		if (compareValue != 0) return compareValue;
+
+		List<Holder<Enchantment>> hold1 = ench1.keySet().stream().toList();
+		List<Holder<Enchantment>> hold2 = ench2.keySet().stream().toList();
+
+		for (int i = 0; i < hold1.size(); i++) {
+			int lvl1 = ench1.getLevel(hold1.get(i));
+			int lvl2 = ench2.getLevel(hold2.get(i));
+			if (lvl2 - lvl1 != 0) return lvl2-lvl1;
+		}
+
+		return 0;
+	}
+
+	public static int tomeCompare(ItemStack stack1, ItemStack stack2) {
+		ItemEnchantments ench1 = stack1.get(QuarkDataComponents.TOME_ENCHANTMENTS);
+		ItemEnchantments ench2 = stack2.get(QuarkDataComponents.TOME_ENCHANTMENTS);
+
+		int compareValue = ench2.keySet().size() - ench1.keySet().size();
+		if (compareValue != 0) return compareValue;
+
+		String str1 = "";
+		for (Holder<Enchantment> holder1 : ench1.keySet()) {
+			str1 = str1 + holder1.getRegisteredName();
+		}
+
+		String str2 = "";
+		for (Holder<Enchantment> holder2 : ench2.keySet()) {
+			str2 = str2 + holder2.getRegisteredName();
+		}
+
+		compareValue = str2.compareTo(str1);
+		return compareValue;
+	}
+
 	static boolean hasCustomSorting(ItemStack stack) {
-		return false;
-		//return Quark.ZETA.capabilityManager.hasCapability(QuarkCapabilities.SORTING, stack);
+		return stack.getCapability(QuarkCapabilities.CUSTOM_SORTING_CAPABILITY) != null;
 	}
 
 	static ICustomSorting getCustomSorting(ItemStack stack) {
-		return new ICustomSorting() {
-			@Override
-			public Comparator<ItemStack> getItemComparator() {
-				return null;
-			}
-
-			@Override
-			public String getSortingCategory() {
-				return "NULL";
-			}
-		};
-		//return Quark.ZETA.capabilityManager.getCapability(QuarkCapabilities.SORTING, stack);
+		return stack.getCapability(QuarkCapabilities.CUSTOM_SORTING_CAPABILITY);
 	}
 
 	private enum ItemType {
@@ -470,12 +518,14 @@ public final class SortingHandler {
 		CROSSBOW(classPredicate(CrossbowItem.class), BOW_COMPARATOR),
 		TRIDENT(classPredicate(TridentItem.class), BOW_COMPARATOR),
 		ARROWS(classPredicate(ArrowItem.class)),
-		POTION(classPredicate(PotionItem.class), POTION_COMPARATOR),
-		TIPPED_ARROW(classPredicate(TippedArrowItem.class), POTION_COMPARATOR),
+		POTION(stack -> stack.has(DataComponents.POTION_CONTENTS) && stack.get(DataComponents.POTION_CONTENTS).potion().isPresent(), POTION_COMPARATOR),
+		//TIPPED_ARROW(classPredicate(TippedArrowItem.class), POTION_COMPARATOR),
 		MINECART(classPredicate(MinecartItem.class)),
 		RAIL(list(Blocks.RAIL, Blocks.POWERED_RAIL, Blocks.DETECTOR_RAIL, Blocks.ACTIVATOR_RAIL)),
 		DYE(classPredicate(DyeItem.class)),
 		FOOD(stack -> (stack.has(DataComponents.FOOD)), FOOD_COMPARATOR),
+		ENCHANTED_BOOK(stack -> (stack.has(DataComponents.STORED_ENCHANTMENTS) && !stack.get(DataComponents.STORED_ENCHANTMENTS).isEmpty()), SortingHandler::enchantedBookCompare),
+		ANCIENT_TOME(stack -> (stack.has(QuarkDataComponents.TOME_ENCHANTMENTS) && !stack.get(QuarkDataComponents.TOME_ENCHANTMENTS).isEmpty()), SortingHandler::tomeCompare),
 		ANY(inverseClassPredicate(BlockItem.class)),
 		BLOCK(classPredicate(BlockItem.class));
 

@@ -3,6 +3,10 @@
     {
       "type": "zeta:flag",
       "flag": "color_runes"
+    },
+    {
+      "type": "zeta:flag",
+      "flag": "corundum"
     }
   ],
   "type": "minecraft:crafting_shaped",
@@ -24,7 +28,7 @@
     "###"
   ],
   "result": {
-    "count": 1,
+    "count": 2,
     "id": "quark:smithing_template_rune"
   }
 }

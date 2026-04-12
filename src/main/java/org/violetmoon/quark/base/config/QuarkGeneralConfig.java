@@ -19,6 +19,7 @@ public class QuarkGeneralConfig {
 	 * 
 	 * - Vazkii, from the past.
 	 */
+    // What the fuck
 	private static final List<String> STATIC_ALLOWED_SCREENS = Lists.newArrayList(
 			"appeng.client.gui.implementations.SkyChestScreen",
 			"com.progwml6.ironchest.client.screen.IronChestScreen",
@@ -74,27 +75,18 @@ public class QuarkGeneralConfig {
 	@Config(description = "If set to true, the 'Allowed Screens' option will work as a Blacklist rather than a Whitelist. WARNING: Use at your own risk as some mods may not support this.")
 	private static boolean useScreenListBlacklist = false;
 
-	@Config(description = "If 'true' and TerraBlender is present, Quark will add a TerraBlender region. The region will contain vanilla biomes and the Glimmering Weald.")
-	public static boolean terrablenderAddRegion = true;
-
-	@Config(description = "Quark will set this weight for its TerraBlender region.")
-	public static int terrablenderRegionWeight = 1;
-
-	@Config(
-		description = "If 'true', Quark will modify the `minecraft:overworld` MultiNoiseBiomeSourceParameterList preset, even when Terrablender is installed.\n" +
-				"This will have various knock-on effects but might make the Weald more common, or appear closer to modded biomes. Who knows?"
-	)
-	public static boolean terrablenderModifyVanillaAnyway = false;
-
 	@Config(description = "Set to false to disable the popup message telling you that you can config quark in the q menu")
 	public static boolean enableOnboarding = true;
 	
 	@Config(description = "The amount of slots the chest button system should seek when trying to figure out if a container should be eligible for them.")
 	public static int chestButtonSlotTarget = 27;
 
-	@Config(description = "Set this to false to not generate the Quark Programmer Art resource pack")
+	@Config(description = "Set this to false to not show the Quark Programmer Art resource pack in the resource pack selection screen")
 	public static boolean generateProgrammerArt = true;
-	
+
+	@Config(description = "Set this to false to prevent Quark from ever disabling any vanilla data files. This will break certain modules, so only do this if you know what you're doing!")
+	public static boolean quarkVDO = true;
+
 	@Config
 	public static ChestOffsets chestButtonOffsets = new ChestOffsets();
 	

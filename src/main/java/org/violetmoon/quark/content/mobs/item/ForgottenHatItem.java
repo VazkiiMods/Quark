@@ -1,5 +1,6 @@
 package org.violetmoon.quark.content.mobs.item;
 
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
@@ -9,6 +10,7 @@ import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.item.*;
 import net.minecraft.world.item.component.ItemAttributeModifiers;
+import net.minecraft.world.item.component.Unbreakable;
 import org.jetbrains.annotations.NotNull;
 import org.violetmoon.quark.base.Quark;
 import org.violetmoon.zeta.item.IZetaItem;
@@ -28,8 +30,9 @@ public class ForgottenHatItem extends ZetaArmorItem implements IZetaItem {
 		super(ArmorMaterials.LEATHER, Type.HELMET,
 				new Item.Properties()
 						.stacksTo(1)
-						.durability(0)
-						.rarity(Rarity.RARE)
+						.durability(1)
+						.rarity(Rarity.UNCOMMON)
+                        .component(DataComponents.UNBREAKABLE, new Unbreakable(false))
 						.attributes(createAttributes()));
 
 		Quark.ZETA.registry.registerItem(this, "forgotten_hat");

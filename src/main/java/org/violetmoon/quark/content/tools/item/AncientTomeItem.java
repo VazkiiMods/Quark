@@ -2,17 +2,18 @@ package org.violetmoon.quark.content.tools.item;
 
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.Holder;
+import net.minecraft.core.RegistryAccess;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.*;
 import net.minecraft.world.item.enchantment.Enchantment;
+import net.minecraft.world.item.enchantment.ItemEnchantments;
 import org.jetbrains.annotations.NotNull;
-import org.violetmoon.quark.base.QuarkClient;
+import org.violetmoon.quark.base.components.QuarkDataComponents;
 import org.violetmoon.quark.content.tools.module.AncientTomesModule;
 import org.violetmoon.zeta.item.ZetaItem;
 import org.violetmoon.zeta.module.ZetaModule;
 import org.violetmoon.zeta.registry.CreativeTabManager;
-import org.violetmoon.zeta.util.ZetaSide;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,44 +35,42 @@ public class AncientTomeItem extends ZetaItem implements CreativeTabManager.Appe
 		return true;
 	}
 
-	public static ItemStack getEnchantedItemStack(Holder<Enchantment> ench) {
+	public static ItemStack getEnchantedItemStack(Holder<Enchantment> enchantment) {
 		ItemStack stack = new ItemStack(AncientTomesModule.ancient_tome);
-		stack.enchant(ench, ench.value().getMaxLevel());
+        ItemEnchantments.Mutable enchantments = new ItemEnchantments.Mutable(ItemEnchantments.EMPTY);
+        enchantments.set(enchantment, enchantment.value().getMaxLevel());
+        stack.set(QuarkDataComponents.TOME_ENCHANTMENTS, enchantments.toImmutable());
 		return stack;
 	}
 
 	public static Component getFullTooltipText(Holder<Enchantment> ench) {
-		return Component.translatable("quark.misc.ancient_tome_tooltip", Component.translatable(ench.value().description().getString()), Component.translatable("enchantment.level." + (ench.value().getMaxLevel() + 1))).withStyle(ChatFormatting.GRAY);
+		return Component.translatable("quark.misc.ancient_tome_tooltip", Component.translatable(ench.value().description().getString()), Component.translatable("enchantment.level." + (ench.value().getMaxLevel() + AncientTomesModule.maxLimitBreakLevels))).withStyle(ChatFormatting.GRAY);
 	}
 
 	@Override
-	public void appendHoverText(@NotNull ItemStack stack, Item.TooltipContext tooltipContext, @NotNull List<Component> tooltip, @NotNull TooltipFlag flagIn) {
-		super.appendHoverText(stack, tooltipContext, tooltip, flagIn);
-
+	public void appendHoverText(@NotNull ItemStack stack, @NotNull Item.TooltipContext tooltipContext, @NotNull List<Component> tooltips, @NotNull TooltipFlag flag) {
+		super.appendHoverText(stack, tooltipContext, tooltips, flag);
 		Holder<Enchantment> ench = AncientTomesModule.getTomeEnchantment(stack);
-		if(ench != null)
-			tooltip.add(getFullTooltipText(ench));
-		else
-			tooltip.add(Component.translatable("quark.misc.ancient_tome_tooltip_any").withStyle(ChatFormatting.GRAY));
+        Component component = ench != null ? getFullTooltipText(ench) : Component.translatable("quark.misc.ancient_tome_tooltip_any").withStyle(ChatFormatting.GRAY);
+        tooltips.add(component);
 
-		if(AncientTomesModule.curseGear) {
-			tooltip.add(Component.translatable("quark.misc.ancient_tome_tooltip_curse").withStyle(ChatFormatting.RED));
+		if (AncientTomesModule.curseGear) {
+			tooltips.add(Component.translatable("quark.misc.ancient_tome_tooltip_curse").withStyle(ChatFormatting.RED));
 		}
 	}
 
 	@Override
-	public List<ItemStack> appendItemsToCreativeTab() {
+	public List<ItemStack> appendItemsToCreativeTab(RegistryAccess access) {
 		List<ItemStack> items = new ArrayList<>();
 
-		if (getModule().zeta().side == ZetaSide.CLIENT) {
-			QuarkClient.ZETA_CLIENT.hackilyGetCurrentClientLevelRegistryAccess().registry(Registries.ENCHANTMENT).get().asHolderIdMap().forEach(ench -> {
-				if (!AncientTomesModule.sanityCheck || ench.value().getMaxLevel() != 1) {
-					if (!AncientTomesModule.isInitialized() || AncientTomesModule.validEnchants.contains(ench)) {
-						items.add(getEnchantedItemStack(ench));
-					}
-				}
-			});
-        }
+        access.registry(Registries.ENCHANTMENT).get().asHolderIdMap().forEach(ench -> {
+            if (!AncientTomesModule.sanityCheck || ench.value().getMaxLevel() != 1) {
+                if (!AncientTomesModule.isInitialized() && AncientTomesModule.validEnchants.contains(ench)) {
+                    items.add(getEnchantedItemStack(ench));
+                }
+            }
+        });
+
         return items;
     }
 }

@@ -45,7 +45,7 @@ public class MagnetsModule extends ZetaModule {
     public static List<String> magneticWhitelist = Lists.newArrayList("minecraft:chipped_anvil", "minecraft:damaged_anvil", "minecraft:iron_horse_armor", "minecraft:chainmail_helmet", "minecraft:chainmail_boots", "minecraft:chainmail_leggings", "minecraft:chainmail_chestplate", "#minecraft:cauldrons");
 
     @Config(description = "Block/Item IDs to force-disable magnetism on, regardless of their crafting recipe")
-    public static List<String> magneticBlacklist = Lists.newArrayList("minecraft:tripwire_hook", "minecraft:map");
+    public static List<String> magneticBlacklist = Lists.newArrayList("minecraft:tripwire_hook", "minecraft:map", "#minecraft:all_hanging_signs", "#minecraft:hanging_signs");
 
     @Config(flag = "magnet_pre_end")
     public static boolean usePreEndRecipe = false;

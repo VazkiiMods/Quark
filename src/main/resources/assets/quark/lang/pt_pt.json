@@ -174,8 +174,8 @@
 	"quark.jei.influence": "Influência de Matrix",
 	"quark.jei.boost_influence": "Melhora probabilidades de:",
 	"quark.jei.dampen_influence": "Diminui probabilidades de:",
-	"quark.jei.hint_preamble": "[Quark]\n",
 
+    "quark.jei.hint.preamble": "[Quark]\n",
 	"quark.jei.hint.pickarang": "É uma picareta boomerang! Pode ser atirado e vai minar tudo o que atingir e trazer os drops de volta. Também pode ser encantado para um melhor desempenho.",
 	"quark.jei.hint.flamerang": "Funciona como um Pickarang, mas todos os objetos que apanha tornam-se imunes a danos de fogo e lava enquanto viajam.",
 	"quark.jei.hint.abacus": "Utiliza este botão num bloco e ele conta a distância entre o bloco que estás a ver e aquele em que clicaste, até 48 blocos.",
@@ -236,7 +236,7 @@
 	"quark.jei.hint.rotating_bundles": "Ao deslocar o cursor sobre uma bolsa, os itens são rodados.",
 	"quark.jei.hint.crab_info": "Os caranguejos podem ser encontrados nas praias e criados com trigo, galinha ou qualquer tipo de peixe.",
 	"quark.jei.hint.ambience_discs": "Os discos ambientais podem ser obtidos quando um esqueleto mata uma aranha. Ao contrário dos discos de música, estes repetem-se infinitamente.",
-	"quark.jei.hint.runes": "Combina numa bigorna com um item encantado para mudar a cor do seu brilho. Isto é puramente visual.",
+	"quark.jei.hint.smithing_template_rune": "Combina numa bigorna com um item encantado para mudar a cor do seu brilho. Isto é puramente visual.",
 	"quark.jei.hint.parrot_eggs": "Jogar para criar um papagaio bebé. Alimente um papagaio com muitas sementes de beterraba até gostar de si e, depois de 10 minutos, ele vai chocar um.",
 	"quark.jei.hint.doors_open_together": "Ao criar uma porta dupla, estas abrem/fecham em conjunto.",
 	"quark.jei.hint.fence_gates_open_together": "Quando outro portão é colocado por cima ou por baixo deste, estes abrem ou fecham em conjunto.",

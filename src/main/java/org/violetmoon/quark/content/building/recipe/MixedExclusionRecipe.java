@@ -20,8 +20,6 @@ import net.minecraft.world.item.crafting.*;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.stream.Stream;
-
 public class MixedExclusionRecipe implements CraftingRecipe {
     public static final MixedExclusionRecipe.Serializer SERIALIZER = new MixedExclusionRecipe.Serializer();
 

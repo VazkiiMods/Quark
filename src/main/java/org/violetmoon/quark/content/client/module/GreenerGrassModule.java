@@ -90,8 +90,7 @@ public class GreenerGrassModule extends ZetaModule {
 			"environmental:giant_tall_grass",
 			"grassslabs:grass_carpet",
 			"grassslabs:grass_slab",
-			"grassslabs:grass_stairs",
-			"valhelsia_structures:grass_block");
+			"grassslabs:grass_stairs");
 
 	@Config
 	public static List<String> leavesList = Lists.newArrayList(
@@ -107,7 +106,8 @@ public class GreenerGrassModule extends ZetaModule {
 			"autumnity:maple_leaves",
 			"environmental:willow_leaves",
 			"environmental:hanging_willow_leaves",
-			"minecraft:vine");
+			"minecraft:vine",
+            "valhelsia_structures:hanging_vines");
 
 	@Config
 	public static ConvulsionMatrixConfig colorMatrix = new ConvulsionMatrixConfig(GRASS_PARAMS);

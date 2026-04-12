@@ -30,12 +30,15 @@ public record ShareItemS2CMessage(UUID senderUuid, Component senderName, ItemSta
 	public void handle(LocalPlayer player) {
 		if (Minecraft.getInstance().isBlocked(senderUuid))
 			return;
+        Component shared = Component.translatable("chat.type.text", senderName, ItemSharingModule.createStackComponent(stack));
+        Component narrated = Component.translatable("chat.type.text.narrate", senderName, ItemSharingModule.createStackComponent(stack)); //Todo: Maybe note in the narration that this is an item being shared?
 
 		Minecraft.getInstance().gui.getChat().addMessage(
-				Component.translatable("chat.type.text", senderName, ItemSharingModule.createStackComponent(stack)),
+				shared,
 				null,
 				new GuiMessageTag(0xDEB483, null, null, "Quark shared item")
 		);
+        Minecraft.getInstance().getNarrator().sayChat(narrated);
 	}
 
 	@Override

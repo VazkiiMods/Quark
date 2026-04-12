@@ -32,7 +32,7 @@
 	"quark.gui.config.social.discord": "Quark/Violet Moon Discord",
 	"quark.gui.config.social.patreon": "Vazkii's Patreon",
 	"quark.gui.config.social.forum": "Violet Moon Forums",
-	"quark.gui.config.social.twitter": "@VazkiiMods Twitter",
+	"quark.gui.config.social.bluesky": "@violetmoon.org on Bluesky",
 	"quark.gui.config.subheader1": "Quark is possible thanks to the support of %s%s%s and others.",
 	"quark.gui.config.subheader2": "Consider supporting us on Patreon for cool ingame rewards like this!",
 
@@ -169,8 +169,8 @@
 	"quark.jei.influence": "Matrix Influencing",
 	"quark.jei.boost_influence": "Boosts odds of: ",
 	"quark.jei.dampen_influence": "Dampens odds of: ",
-	"quark.jei.hint_preamble": "[Quark]\n",
 
+    "quark.jei.hint.preamble": "[Quark]\n",
 	"quark.jei.hint.pickarang": "It's a Pickaxe Boomerang! Can be thrown and will mine anything it hits and bring you the drops back. It can also be enchanted for better performance.",
 	"quark.jei.hint.flamerang": "Works like a Pickarang, but any items it picks up become immune to fire and lava damage while they travel.",
 	"quark.jei.hint.abacus": "Use this on a block and it'll count the distance between the block you're looking at and the one you clicked, up to 48 blocks.",
@@ -329,6 +329,7 @@
 	"quark.subtitles.shiba_ambient": "Shiba pants",
 	"quark.subtitles.shiba_hurt": "Shiba hurts",
 	"quark.subtitles.shiba_dead": "Shiba dies",
+
 	"quark.subtitles.meep": "Stoneling runs away",
 	"quark.subtitles.give_stoneling": "Stoneling gives item",
 	"quark.subtitles.take_stoneling": "Stoneling takes item",
@@ -336,6 +337,7 @@
 	"quark.subtitles.hurt_stoneling": "Stoneling cries",
 	"quark.subtitles.kill_stoneling": "Stoneling breaks",
 	"quark.subtitles.purr": "Stoneling \"purrs\"",
+
 	"quark.subtitles.throw_pickarang": "Pickarang is flung",
 	"quark.subtitles.clank_pickarang": "Pickarang clanks",
 	"quark.subtitles.spark_pickarang": "Pickarang is reflected",
@@ -378,6 +380,7 @@
 	"quark.subtitles.pet.neko": "Player purrs",
 	"quark.subtitles.pet.slime": "Player squishes",
 	"quark.subtitles.pet.wire": "Player sighs",
+
 	"quark.subtitles.ambient.drips": "Water dripping",
 	"quark.subtitles.ambient.ocean": "Light ocean waves",
 	"quark.subtitles.ambient.rain": "Heavy rain",
@@ -451,6 +454,7 @@
 	"quark.misc.variant_tooltip_hold_shift": "(SHIFT for Variants)",
 	"quark.misc.variant_tooltip_header": "Variants:",
 	"quark.misc.disable_slot": "Click to Disable Slot",
+	"quark.misc.totem_darksouls": "You feel a sense of dread as a previous Totem of Holding shatters",
 
 	"quark.misc.you_came_to_the_wrong_neighborhood.0": "Six letter word just to get me along",
 	"quark.misc.you_came_to_the_wrong_neighborhood.1": "It's a intricacy and I'm coding on my mod and I,",
@@ -509,7 +513,9 @@
 	"item.quark.dragon_scale": "Dragon Scale",
 	"item.quark.moss_paste": "Moss Paste",
 	"item.quark.backpack": "Backpack",
-	"item.quark.ravager_hide": "Ravager Hide",
+    "item.quark.backpack.warning.line_1": "WARNING",
+    "item.quark.backpack.warning.line_2": "This backpack has items in it, it will be wiped if its not equipped whilst in survival.",
+    "item.quark.ravager_hide": "Ravager Hide",
 	"item.quark.bottled_cloud": "Cloud in a Bottle",
 	"item.quark.flamerang": "Flamarang",
 	"item.quark.seed_pouch": "Seed Pouch",
@@ -551,6 +557,7 @@
 	"item.quark.hammer": "Hammer",
 
 	"upgrade.quark.rune_upgrade": "Runic Etching",
+	"item.quark.smithing_template_rune": "Smithing Template",
 	"item.quark.smithing_template.rune.applies_to": "Enchanted Items",
 	"item.quark.smithing_template.rune.base_slot_description": "Add an enchanted item",
 	"item.quark.smithing_template.rune.ingredients": "Blaze Powder, Dye, or Nothing",
@@ -1528,7 +1535,7 @@
 	"advancements.quark.apply_color_rune.title": "Glorious Eminence",
 	"advancements.quark.apply_color_rune.description": "Apply a Rune to an enchanted item in an Anvil",
 	"advancements.quark.wear_full_rainbow.title": "Taste the Rainbow",
-	"advancements.quark.wear_full_rainbow.description": "Wear a full set of armor with Rainbow Runes applied",
+	"advancements.quark.wear_full_rainbow.description": "Wear a full set of armor with Rainbow Runic Etching applied",
 	"advancements.quark.throw_parrot_egg.title": "Just the Parrots",
 	"advancements.quark.throw_parrot_egg.description": "Feed Beetroot Seeds to a Parrot and toss the egg it lays",
 	"advancements.quark.pathfinder_map_center.title": "Road to Tomorrow",
@@ -1553,6 +1560,8 @@
 	"advancements.quark.poison_baby.description": "Successfully poison a baby animal with a Poisoned Potato",
 	"advancements.quark.crab_in_a_bucket.title": "Crabtured",
 	"advancements.quark.crab_in_a_bucket.description": "Capture a Crab in a Bucket",
+	"advancements.quark.tatami_gaeshi.title": "TATAMI GAESHI!",
+	"advancements.quark.tatami_gaeshi.description": "Hit something with a Bamboo Mat",
 
 	"quark.pack.emote_icon_pack": "Quark Emote Icon Pack"
 }

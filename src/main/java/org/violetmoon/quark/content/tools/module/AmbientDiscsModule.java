@@ -89,17 +89,17 @@ public class AmbientDiscsModule extends ZetaModule {
 				} else {
 					ItemStack stack = tile.getTheItem();
 					if (stack.getItem() instanceof AmbientDiscItem disc)
-						playAmbientSound(disc, pos);
+						playAmbientSound(disc.song, pos);
 				}
 			}
 		}
 
-		public static boolean playAmbientSound(AmbientDiscItem disc, BlockPos pos) {
+		public static boolean playAmbientSound(ResourceKey<JukeboxSong> song, BlockPos pos) {
             Minecraft mc = Minecraft.getInstance();
             SoundManager soundEngine = mc.getSoundManager();
             LevelRenderer render = mc.levelRenderer;
 
-            SimpleSoundInstance simplesound = new SimpleSoundInstance(disc.song.location(), SoundSource.RECORDS, (float) AmbientDiscsModule.volume, 1.0F, SoundInstance.createUnseededRandom(), true, 0, SoundInstance.Attenuation.LINEAR, pos.getX(), pos.getY(), pos.getZ(), false);
+            SimpleSoundInstance simplesound = new SimpleSoundInstance(song.location(), SoundSource.RECORDS, (float) AmbientDiscsModule.volume, 1.0F, SoundInstance.createUnseededRandom(), true, 0, SoundInstance.Attenuation.LINEAR, pos.getX(), pos.getY(), pos.getZ(), false);
 
             ((AccessorLevelRenderer)render).getPlayingJukeboxSongs().put(pos, simplesound);
             soundEngine.play(simplesound);

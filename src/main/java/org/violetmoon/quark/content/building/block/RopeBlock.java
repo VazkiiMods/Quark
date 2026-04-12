@@ -5,7 +5,6 @@ import net.minecraft.core.Direction;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.stats.Stats;
-import net.minecraft.tags.BlockTags;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.ItemInteractionResult;
@@ -26,7 +25,6 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
-import net.minecraft.world.level.entity.EntityTypeTest;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.level.material.PushReaction;
@@ -42,7 +40,6 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.violetmoon.quark.content.automation.module.PistonsMoveTileEntitiesModule;
 import org.violetmoon.quark.content.building.module.RopeModule;
-import org.violetmoon.zeta.block.SimpleFluidloggedBlock;
 import org.violetmoon.zeta.block.ZetaBlock;
 import org.violetmoon.zeta.item.ZetaBlockItem;
 import org.violetmoon.zeta.module.ZetaModule;
@@ -115,7 +112,7 @@ public class RopeBlock extends ZetaBlock implements IZetaBlockItemProvider, Simp
 
 	@Override
 	protected InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos, Player player, BlockHitResult result) {
-		if (pullUp(level, pos)) {
+		if (player.getMainHandItem().getItem() != asItem() && pullUp(level, pos)) {
 			if(!player.getAbilities().instabuild) {
 				if(!player.addItem(new ItemStack(this)))
 					player.drop(new ItemStack(this), false);
@@ -258,8 +255,11 @@ public class RopeBlock extends ZetaBlock implements IZetaBlockItemProvider, Simp
 	}
 
 	private void moveBlock(Level world, BlockPos srcPos, BlockPos dstPos) {
+        if (world.isClientSide)
+            return;
+
 		BlockState state = world.getBlockState(srcPos);
-        //zif (!state.getFluidState().is(Fluids.EMPTY)) return;
+        //if (!state.getFluidState().is(Fluids.EMPTY)) return;
 
 		Block block = state.getBlock();
 
@@ -275,6 +275,8 @@ public class RopeBlock extends ZetaBlock implements IZetaBlockItemProvider, Simp
 			tile.setRemoved();
 		}
 
+
+
 		FluidState fluidState = world.getFluidState(srcPos);
 		world.setBlockAndUpdate(srcPos, fluidState.createLegacyBlock());
 
@@ -282,16 +284,18 @@ public class RopeBlock extends ZetaBlock implements IZetaBlockItemProvider, Simp
 		if(nextState.getProperties().contains(BlockStateProperties.WATERLOGGED))
 			nextState = nextState.setValue(BlockStateProperties.WATERLOGGED, world.getFluidState(dstPos).getType() == Fluids.WATER);
 
-		if(tile != null) {
-			BlockEntity target = BlockEntity.loadStatic(dstPos, state, tile.saveWithFullMetadata(world.registryAccess()), world.registryAccess());
+        world.setBlockAndUpdate(dstPos, nextState);
+
+        // You gotta write the block entity data AFTER you move the block.
+        if(tile != null) {
+			BlockEntity target = BlockEntity.loadStatic(dstPos, nextState, tile.saveWithFullMetadata(world.registryAccess()).copy(), world.registryAccess());
 			if(target != null) {
 				world.setBlockEntity(target);
-				target.setBlockState(state);
+                //world.setBlockAndUpdate(dstPos, state);
 				target.setChanged();
 			}
 		}
 
-        world.setBlockAndUpdate(dstPos, nextState);
         nextState.handleNeighborChanged(world, dstPos, nextState.getBlock(), srcPos, true);
 
         world.updateNeighborsAt(dstPos, state.getBlock());

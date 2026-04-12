@@ -174,8 +174,8 @@
     "quark.jei.influence": "Matrisinfluens",
     "quark.jei.boost_influence": "Ökar oddsen för: ",
     "quark.jei.dampen_influence": "Minskar oddsen för: ",
-    "quark.jei.hint_preamble": "[Quark]\n",
-    
+
+    "quark.jei.hint.preamble": "[Quark]\n",
     "quark.jei.hint.pickarang": "Det är en hacka och bumerang! Kan kastas och bryter allting i den träffar innan den återvänder med föremål. Den kan också förtrollas för att prestera bättre.",
     "quark.jei.hint.flamerang": "Fungerar som en hackarang, men alla föremål den plockar upp blir immuna mot eld och lava när de färdas.",
     "quark.jei.hint.echorang": "Fungerar som en hackarang, men avger konstanta vibrationer och kommer öka dess flygtid om den hör en sculkskrikare.",
@@ -237,7 +237,7 @@
     "quark.jei.hint.rotating_bundles": "Rulla med mushjulet medan du vilar musen över en påse för att rotera föremålen inuti.",
     "quark.jei.hint.crab_info": "Krabbor kan hittas på stränder och para sig när de matas med vete, kyckling eller valfri typ av fisk.",
     "quark.jei.hint.ambience_discs": "Stämningsskivor fås från spindlar som dödas av ett skelett. Till skillnad från musikskivor spelas dessa upp i en oändlig slinga.",
-    "quark.jei.hint.runes": "Kombineras i ett städ med ett förtrollat föremål för att ändra färgen på dess skimmer. Detta är helt och hållet en visuell grej.",
+    "quark.jei.hint.smithing_template_rune": "Kombineras i ett städ med ett förtrollat föremål för att ändra färgen på dess skimmer. Detta är helt och hållet en visuell grej.",
     "quark.jei.hint.parrot_eggs": "Kastas för att skapa en babypapegoja. Mata en papegoja med många rödbetsfrön tills den älskar dig och sedan lägger den ett ägg efter 10 minuter.",
     "quark.jei.hint.doors_open_together": "När dubbeldörrar placeras ut kommer de öppnas och stängas tillsammans.",
     "quark.jei.hint.fence_gates_open_together": "När en grind placeras ovanför eller bredvid en annan kommer de öppnas och stängas tillsammans.",

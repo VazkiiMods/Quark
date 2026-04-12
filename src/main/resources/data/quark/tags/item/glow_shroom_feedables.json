@@ -1,4 +1,10 @@
 {
+  "neoforge:conditions": [
+    {
+      "type": "zeta:flag",
+      "flag": "glimmering_weald"
+    }
+  ],
   "values": [
     "quark:glow_shroom"
   ]

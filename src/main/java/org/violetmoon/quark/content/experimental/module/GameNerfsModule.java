@@ -1,30 +1,22 @@
 package org.violetmoon.quark.content.experimental.module;
 
-import com.mojang.serialization.Dynamic;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.Holder;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.nbt.NbtOps;
-import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.ai.gossip.GossipContainer;
-import net.minecraft.world.entity.ai.gossip.GossipType;
-import net.minecraft.world.entity.monster.ZombieVillager;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.enchantment.Enchantment;
-import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.item.enchantment.ItemEnchantments;
 import net.minecraft.world.level.Level;
 import org.violetmoon.quark.base.Quark;
-import org.violetmoon.quark.base.util.ItemEnchantsUtil;
 import org.violetmoon.zeta.config.Config;
 import org.violetmoon.zeta.event.bus.LoadEvent;
 import org.violetmoon.zeta.event.bus.PlayEvent;
@@ -33,17 +25,16 @@ import org.violetmoon.zeta.event.play.ZAnvilUpdate;
 import org.violetmoon.zeta.event.play.ZItemTooltip;
 import org.violetmoon.zeta.event.play.entity.ZEntityMobGriefing;
 import org.violetmoon.zeta.event.play.entity.living.ZLivingDrops;
-import org.violetmoon.zeta.event.play.entity.living.ZLivingTick;
 import org.violetmoon.zeta.module.ZetaLoadModule;
 import org.violetmoon.zeta.module.ZetaModule;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Optional;
 import java.util.function.Predicate;
 
 @ZetaLoadModule(category = "experimental", enabledByDefault = false)
 public class GameNerfsModule extends ZetaModule {
-
-	private static final String TAG_TRADES_ADJUSTED = "quark:zombie_trades_adjusted";
 
 	@Config(
 		description = "Makes Mending act like the Unmending mod\n"
@@ -56,9 +47,6 @@ public class GameNerfsModule extends ZetaModule {
 				"If you want Mending II, disable the sanity check on Ancient Tomes and add minecraft:mending to the tomes."
 	)
 	public static boolean noNerfForMendingTwo = false;
-
-	@Config(description = "Resets all villager discounts when zombified to prevent reducing prices to ridiculous levels")
-	public static boolean nerfVillagerDiscount = true;
 
 	@Config(description = "Makes Iron Golems not drop Iron Ingots")
 	public static boolean disableIronFarms = true;
@@ -160,7 +148,12 @@ public class GameNerfsModule extends ZetaModule {
 	}
 
 	private boolean hasMending(ItemStack stack, Holder<Enchantment> mending) {
-		int mendingLevel = EnchantmentHelper.getTagEnchantmentLevel(mending, stack);
+		int mendingLevel = 0;
+        if (stack.has(DataComponents.STORED_ENCHANTMENTS)) {
+            mendingLevel = stack.get(DataComponents.STORED_ENCHANTMENTS).getLevel(mending);
+        } else if (stack.has(DataComponents.ENCHANTMENTS)) {
+            mendingLevel = stack.get(DataComponents.ENCHANTMENTS).getLevel(mending);
+        }
 		return mendingLevel > 0 && (!noNerfForMendingTwo || mendingLevel < 2);
 	}
 
@@ -178,7 +171,7 @@ public class GameNerfsModule extends ZetaModule {
 		boolean isMended = false;
 
 		if (hasMending(left, mending) || hasMending(right, mending)) {
-			if ((left.getItem() == right.getItem()) || (right.getItem() == Items.ENCHANTED_BOOK)) {
+			if ((left.getItem().equals(right.getItem())) || (right.getItem().equals(Items.ENCHANTED_BOOK))) {
 				isMended = true;
 			}
 		}
@@ -192,30 +185,27 @@ public class GameNerfsModule extends ZetaModule {
 			ItemEnchantments.Mutable toApply = new ItemEnchantments.Mutable(enchLeft);
 			ItemEnchantments enchRight = Optional.ofNullable(right.get(DataComponents.ENCHANTMENTS)).orElse(ItemEnchantments.EMPTY);
 
-			if (!enchRight.isEmpty()) {
-
-			}
-
-			toApply.set(mending, 0);
-			output.set(DataComponents.ENCHANTMENTS, toApply.toImmutable());
-
-			ItemEnchantments enchOutput = output.get(DataComponents.ENCHANTMENTS);
 			for(Holder<Enchantment> enchantment : enchRight.keySet()) {
 				if(enchantment.value().canEnchant(output)) {
 					int level = enchRight.getLevel(enchantment);
-					if(enchOutput.keySet().contains(enchantment)) {
-						int levelPresent = enchOutput.getLevel(enchantment);
+					if(toApply.keySet().contains(enchantment)) {
+						int levelPresent = toApply.getLevel(enchantment);
 						if(level > levelPresent)
-							enchOutput = ItemEnchantsUtil.addEnchantmentToList(enchOutput, enchantment, level);
+							toApply.set(enchantment, level);
 						else if(level == levelPresent && enchantment.value().getMaxLevel() > level)
-							enchOutput = ItemEnchantsUtil.addEnchantmentToList(enchOutput, enchantment, level + 1);
+							toApply.set(enchantment, level + 1);
 					} else {
-						enchOutput = ItemEnchantsUtil.addEnchantmentToList(enchOutput, enchantment, level);
+						toApply.set(enchantment, level);
 					}
 				}
 			}
 
-			output.set(DataComponents.REPAIR_COST, 0);
+            toApply.removeIf(enchantmentHolder -> enchantmentHolder.is(mending));
+
+            output.set(DataComponents.ENCHANTMENTS, toApply.toImmutable());
+
+
+            output.set(DataComponents.REPAIR_COST, 0);
 			if (output.isDamageableItem()) {
 				output.setDamageValue(0);
 			}
@@ -236,28 +226,6 @@ public class GameNerfsModule extends ZetaModule {
 			if (Optional.ofNullable(event.getItemStack().get(DataComponents.REPAIR_COST)).orElse(0) > 0) {
 				event.getToolTip().add(itemgotmodified);
 			}
-		}
-	}
-
-	@PlayEvent
-	public void onTick(ZLivingTick event) {
-		if(nerfVillagerDiscount && event.getEntity().getType() == EntityType.ZOMBIE_VILLAGER && !event.getEntity().getPersistentData().contains(TAG_TRADES_ADJUSTED)) {
-			ZombieVillager zombie = (ZombieVillager) event.getEntity();
-
-			Tag gossipsNbt = zombie.gossips;
-
-			GossipContainer manager = new GossipContainer();
-			manager.update(new Dynamic<>(NbtOps.INSTANCE, gossipsNbt));
-
-			for(UUID uuid : manager.gossips.keySet()) {
-				GossipContainer.EntityGossips gossips = manager.gossips.get(uuid);
-				gossips.remove(GossipType.MAJOR_POSITIVE);
-				gossips.remove(GossipType.MINOR_POSITIVE);
-			}
-
-			zombie.gossips = manager.store(NbtOps.INSTANCE);
-
-			zombie.getPersistentData().putBoolean(TAG_TRADES_ADJUSTED, true);
 		}
 	}
 

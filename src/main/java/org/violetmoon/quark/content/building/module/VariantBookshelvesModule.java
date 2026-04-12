@@ -17,13 +17,15 @@ import org.violetmoon.zeta.registry.CreativeTabManager;
 import java.util.ArrayList;
 import java.util.List;
 
-@ZetaLoadModule(category = "building", antiOverlap = { "woodworks", "woodster" })
+@ZetaLoadModule(category = "building", antiOverlap = { "woodworks", "woodster", "carved_wood" })
 public class VariantBookshelvesModule extends ZetaModule {
 
 	public static List<VariantBookshelfBlock> variantBookshelves = new ArrayList<>();
 
 	@Config
 	public static boolean changeNames = true;
+
+	public static boolean staticEnabled;
 
 	@LoadEvent
 	public final void register(ZRegister event) {
@@ -39,5 +41,6 @@ public class VariantBookshelvesModule extends ZetaModule {
 	@LoadEvent
 	public final void configChanged(ZConfigChanged event) {
 		zeta().nameChanger.changeBlock(Blocks.BOOKSHELF, "block.quark.oak_bookshelf", changeNames && isEnabled());
+		staticEnabled = isEnabled();
 	}
 }

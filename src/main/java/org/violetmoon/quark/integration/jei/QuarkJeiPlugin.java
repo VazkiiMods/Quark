@@ -42,6 +42,7 @@ import org.violetmoon.quark.content.building.module.VariantFurnacesModule;
 import org.violetmoon.quark.content.tools.item.AncientTomeItem;
 import org.violetmoon.quark.content.tools.module.AncientTomesModule;
 import org.violetmoon.quark.content.tools.module.PickarangModule;
+import org.violetmoon.quark.content.tools.recipe.SmithingRuneRecipe;
 import org.violetmoon.quark.content.tweaks.module.DiamondRepairModule;
 import org.violetmoon.quark.content.tweaks.recipe.ElytraDuplicationRecipe;
 import org.violetmoon.quark.content.tweaks.recipe.SlabToBlockRecipe;
@@ -85,6 +86,7 @@ public class QuarkJeiPlugin implements IModPlugin {
     public void registerVanillaCategoryExtensions(@NotNull IVanillaCategoryExtensionRegistration registration) {
         registration.getCraftingCategory().addExtension(ElytraDuplicationRecipe.class, new ElytraDuplicationExtension<>());
         registration.getCraftingCategory().addExtension(SlabToBlockRecipe.class, new SlabToBlockExtension<>());
+        registration.getSmithingCategory().addExtension(SmithingRuneRecipe.class, new RunicEtchingExtension());
     }
 
     private boolean matrix() {
@@ -148,7 +150,9 @@ public class QuarkJeiPlugin implements IModPlugin {
             EnchantmentInstance data = new EnchantmentInstance(enchant, enchant.value().getMaxLevel());
             recipes.add(factory.createAnvilRecipe(EnchantedBookItem.createForEnchantment(data),
                     Collections.singletonList(AncientTomeItem.getEnchantedItemStack(enchant)),
-                    Collections.singletonList(EnchantedBookItem.createForEnchantment(new EnchantmentInstance(data.enchantment, data.level + 1)))));
+                    Collections.singletonList(EnchantedBookItem.createForEnchantment(new EnchantmentInstance(data.enchantment, data.level + 1))),
+                    Quark.asResource("ancient_tome_book_overleveling")
+            ));
         }
         registration.addRecipes(RecipeTypes.ANVIL, recipes);
     }
@@ -156,16 +160,16 @@ public class QuarkJeiPlugin implements IModPlugin {
     private void registerPickarangAnvilRepairs(Item pickarang, Item repairMaterial, @NotNull IRecipeRegistration registration, @NotNull IVanillaRecipeFactory factory) {
         //Repair ratios taken from JEI anvil maker
         ItemStack nearlyBroken = new ItemStack(pickarang);
-        nearlyBroken.setDamageValue(nearlyBroken.getMaxDamage());
+        nearlyBroken.setDamageValue(nearlyBroken.getMaxDamage() - 1);
         ItemStack veryDamaged = nearlyBroken.copy();
         veryDamaged.setDamageValue(veryDamaged.getMaxDamage() * 3 / 4);
         ItemStack damaged = nearlyBroken.copy();
         damaged.setDamageValue(damaged.getMaxDamage() * 2 / 4);
 
         IJeiAnvilRecipe materialRepair = factory.createAnvilRecipe(nearlyBroken,
-                Collections.singletonList(new ItemStack(repairMaterial)), Collections.singletonList(veryDamaged));
+                Collections.singletonList(new ItemStack(repairMaterial)), Collections.singletonList(veryDamaged), Quark.asResource("nearly_broken_pickarang_repair"));
         IJeiAnvilRecipe toolRepair = factory.createAnvilRecipe(veryDamaged,
-                Collections.singletonList(veryDamaged), Collections.singletonList(damaged));
+                Collections.singletonList(veryDamaged), Collections.singletonList(damaged), Quark.asResource("very_damaged_pickarang_repair"));
 
         registration.addRecipes(RecipeTypes.ANVIL, Arrays.asList(materialRepair, toolRepair));
     }

@@ -3,10 +3,9 @@ package org.violetmoon.quark.content.world.module;
 import com.google.common.base.Functions;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.data.worldgen.features.TreeFeatures;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.tags.BiomeTags;
-import net.minecraft.world.level.block.ComposterBlock;
+import net.minecraft.world.level.block.FlowerPotBlock;
 import net.minecraft.world.level.block.grower.TreeGrower;
 import net.minecraft.world.level.levelgen.GenerationStep.Decoration;
 import net.minecraft.world.level.levelgen.feature.ConfiguredFeature;
@@ -15,14 +14,15 @@ import net.neoforged.neoforge.common.Tags;
 import org.violetmoon.quark.base.Quark;
 import org.violetmoon.quark.base.handler.WoodSetHandler;
 import org.violetmoon.quark.base.handler.WoodSetHandler.WoodSet;
+import org.violetmoon.quark.base.util.CompostManager;
 import org.violetmoon.quark.base.util.QuarkWorldGenWeights;
+import org.violetmoon.quark.content.building.module.MorePottedPlantsModule;
 import org.violetmoon.quark.content.world.block.BlossomLeavesBlock;
 import org.violetmoon.quark.content.world.config.BlossomTreeConfig;
 import org.violetmoon.quark.content.world.gen.BlossomTreeGenerator;
 import org.violetmoon.zeta.block.ZetaSaplingBlock;
 import org.violetmoon.zeta.config.Config;
 import org.violetmoon.zeta.event.bus.LoadEvent;
-import org.violetmoon.zeta.event.bus.PlayEvent;
 import org.violetmoon.zeta.event.load.ZCommonSetup;
 import org.violetmoon.zeta.event.load.ZGatherHints;
 import org.violetmoon.zeta.event.load.ZRegister;
@@ -99,7 +99,8 @@ public class BlossomTreesModule extends ZetaModule {
 		);
 		tree.sapling = new ZetaSaplingBlock(regname, this, tree.grower);
 
-		event.getVariantRegistry().addFlowerPot(tree.sapling, this.zeta().registry.getRegistryName(tree.sapling, BuiltInRegistries.BLOCK).getPath(), Functions.identity()); //sure
+		FlowerPotBlock saplingPot = event.getVariantRegistry().addFlowerPot(tree.sapling, this.zeta().registry.getRegistryName(tree.sapling, BuiltInRegistries.BLOCK).getPath(), Functions.identity()); //sure
+		MorePottedPlantsModule.addJustForDatagen(saplingPot, tree.sapling);
 
 		return tree;
 	}
@@ -110,12 +111,17 @@ public class BlossomTreesModule extends ZetaModule {
 			for(BlossomTree tree : blossomTrees) {
 				WorldGenHandler.addGenerator(this, new BlossomTreeGenerator(tree.quarkConfig, tree.configuredFeatureKey), Decoration.TOP_LAYER_MODIFICATION, QuarkWorldGenWeights.BLOSSOM_TREES);
 
-				ComposterBlock.COMPOSTABLES.put(tree.leaves.asItem(), 0.3F);
-				ComposterBlock.COMPOSTABLES.put(tree.sapling.asItem(), 0.3F);
 
-				this.zeta().fuel.addFuel(tree.sapling, 100);
+
+				Quark.ZETA.fuel.addFuel(tree.sapling, 100);
 			}
 		});
+		if(this.isEnabled()) {
+			for (BlossomTree tree : blossomTrees) {
+				CompostManager.addChance(tree.leaves.asItem(), 0.3F);
+				CompostManager.addChance(tree.sapling.asItem(), 0.3F);
+			}
+		}
 	}
 
 	@LoadEvent

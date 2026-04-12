@@ -208,15 +208,31 @@
   },
   "entity.crab.idle": {
     "subtitle": "quark.subtitles.crab_scuttle",
-    "sounds": []
+    "sounds": [
+      "mob/turtle/walk1",
+      "mob/turtle/walk2",
+      "mob/turtle/walk3",
+      "mob/turtle/walk4",
+      "mob/turtle/walk5"
+    ]
   },
   "entity.crab.hurt": {
     "subtitle": "quark.subtitles.crab_hurt",
-    "sounds": []
+    "sounds": [
+      "mob/turtle/egg/egg_crack1",
+      "mob/turtle/egg/egg_crack2",
+      "mob/turtle/egg/egg_crack3",
+      "mob/turtle/egg/egg_crack4",
+      "mob/turtle/egg/egg_crack5"
+    ]
   },
   "entity.crab.die": {
     "subtitle": "quark.subtitles.crab_die",
-    "sounds": []
+    "sounds": [
+      "mob/turtle/death1",
+      "mob/turtle/death2",
+      "mob/turtle/death3"
+    ]
   },
   "entity.toretoise.die": {
     "subtitle": "quark.subtitles.toretoise_die",

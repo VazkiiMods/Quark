@@ -1,0 +1,40 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:and",
+      "values": [
+        {
+          "type": "zeta:flag",
+          "flag": "variant_chests"
+        },
+        {
+          "type": "zeta:flag",
+          "flag": "wood_to_chest_recipes"
+        }
+      ]
+    }
+  ],
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "quark:building/chests/bamboo_chest_wood"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    },
+    "test": {
+      "trigger": "minecraft:tick"
+    }
+  },
+  "requirements": [
+    [
+      "has_the_recipe",
+      "test"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "quark:building/chests/bamboo_chest_wood"
+    ]
+  }
+}

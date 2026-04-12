@@ -10,6 +10,9 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.animal.*;
+import net.minecraft.world.entity.animal.allay.Allay;
+import net.minecraft.world.entity.animal.armadillo.Armadillo;
+import net.minecraft.world.entity.animal.frog.Frog;
 import net.minecraft.world.entity.animal.horse.Llama;
 import net.minecraft.world.entity.monster.Slime;
 import net.minecraft.world.level.Level;
@@ -38,9 +41,10 @@ public class VariantAnimalTexturesModule extends ZetaModule {
 	private static final int COW_COUNT = 4;
 	private static final int PIG_COUNT = 3;
 	private static final int CHICKEN_COUNT = 6;
+    private static final int ALLAY_COUNT = 5;
 
-	public enum VariantTextureType {
-		COW, PIG, CHICKEN, LLAMA, RABBIT, DOLPHIN, SLIME
+    public enum VariantTextureType {
+		COW, PIG, CHICKEN, ALLAY, LLAMA, RABBIT, DOLPHIN, SLIME, ARMADILLO, FROG
 	}
 
 	@Config
@@ -49,6 +53,8 @@ public class VariantAnimalTexturesModule extends ZetaModule {
 	public static boolean enablePig = true;
 	@Config
 	public static boolean enableChicken = true;
+    @Config
+    public static boolean enableAllay = true;
 	@Config
 	public static boolean enableShinyRabbit = true;
 	@Config
@@ -57,6 +63,10 @@ public class VariantAnimalTexturesModule extends ZetaModule {
 	public static boolean enableShinyDolphin = true;
 	@Config
 	public static boolean enableShinySlime = true;
+    @Config
+    public static boolean enableShinyArmadillo = true;
+    @Config
+    public static boolean enableShinyFrog = true;
 	@Config
 	public static boolean enableLGBTBees = true;
 
@@ -65,7 +75,7 @@ public class VariantAnimalTexturesModule extends ZetaModule {
 	protected static final List<String> BEE_VARIANTS = List.of(
 			"acebee", "agenbee", "arobee", "beefluid", "beesexual",
 			"beequeer", "enbee", "gaybee", "interbee", "lesbeean",
-			"panbee", "polysexbee", "transbee", "helen", "mlbeem");
+			"panbee", "polysexbee", "transbee", "helen", "mlbeem", "polyamorbee", "salmacibee");
 
 	@Config(description = "The chance for an animal to have a special \"Shiny\" skin, like a shiny pokemon. This is 1 in X. Set to 0 to disable.")
 	public static int shinyAnimalChance = 2048;
@@ -86,10 +96,14 @@ public class VariantAnimalTexturesModule extends ZetaModule {
 			registerTextures(VariantTextureType.COW, COW_COUNT, ResourceLocation.withDefaultNamespace("textures/entity/cow/cow.png"));
 			registerTextures(VariantTextureType.PIG, PIG_COUNT, ResourceLocation.withDefaultNamespace("textures/entity/pig/pig.png"));
 			registerTextures(VariantTextureType.CHICKEN, CHICKEN_COUNT, ResourceLocation.withDefaultNamespace("textures/entity/chicken.png"));
-			registerShiny(VariantTextureType.RABBIT);
+            registerTextures(VariantTextureType.ALLAY, ALLAY_COUNT, ResourceLocation.withDefaultNamespace("textures/entity/allay/allay.png"));
+
+            registerShiny(VariantTextureType.RABBIT);
 			registerShiny(VariantTextureType.LLAMA);
 			registerShiny(VariantTextureType.DOLPHIN);
 			registerShiny(VariantTextureType.SLIME);
+            registerShiny(VariantTextureType.ARMADILLO);
+            registerShiny(VariantTextureType.FROG);
 		}
 
 		@LoadEvent
@@ -136,6 +150,13 @@ public class VariantAnimalTexturesModule extends ZetaModule {
 			return getTextureOrShiny(entity, VariantTextureType.CHICKEN);
 		}
 
+        @Nullable
+        public static ResourceLocation getAllayTexture(Allay entity) {
+            if(!staticEnabled || !enableAllay)
+                return null;
+            return getTextureOrShiny(entity, VariantTextureType.ALLAY);
+        }
+
 		@Nullable
 		public static ResourceLocation getRabbitTexture(Rabbit entity) {
 			if(!staticEnabled || !enableShinyRabbit)
@@ -163,6 +184,20 @@ public class VariantAnimalTexturesModule extends ZetaModule {
 				return null;
 			return getTextureOrShiny(entity, VariantTextureType.SLIME, () -> null);
 		}
+
+        @Nullable
+        public static ResourceLocation getArmadilloTexture(Armadillo entity) {
+            if(!staticEnabled || !enableShinyArmadillo)
+                return null;
+            return getTextureOrShiny(entity, VariantTextureType.ARMADILLO, () -> null);
+        }
+
+        @Nullable
+        public static ResourceLocation getFrogTexture(Frog entity) {
+            if(!staticEnabled || !enableShinyFrog)
+                return null;
+            return getTextureOrShiny(entity, VariantTextureType.FROG, () -> null);
+        }
 
 		@Nullable
 		public static ResourceLocation getBeeTexture(Bee entity) {
@@ -192,6 +227,8 @@ public class VariantAnimalTexturesModule extends ZetaModule {
 					else if(lgbt)
 						name = BEE_VARIANTS.get(Math.abs((int) (most % (BEE_VARIANTS.size() - 1)))); // -1 to not spawn helen bee naturally
 				}
+
+
 
 				if(BEE_VARIANTS.contains(name)) {
 					String type = "normal";
@@ -223,7 +260,10 @@ public class VariantAnimalTexturesModule extends ZetaModule {
 					(type != EntityType.CHICKEN || !enableChicken) &&
 					(type != EntityType.RABBIT || !enableShinyRabbit) &&
 					(type != EntityType.LLAMA || !enableShinyLlama) &&
-					(type != EntityType.DOLPHIN || !enableShinyDolphin))
+                    (type != EntityType.DOLPHIN || !enableShinyDolphin) &&
+                    (type != EntityType.ALLAY || !enableAllay) &&
+                    (type != EntityType.FROG || !enableShinyFrog) &&
+                    (type != EntityType.ARMADILLO || !enableShinyArmadillo))
 				return false;
 
 			return isShiny(e.getUUID());

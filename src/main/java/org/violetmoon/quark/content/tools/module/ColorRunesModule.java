@@ -102,6 +102,7 @@ public class ColorRunesModule extends ZetaModule {
 	@Nullable
 	public static RuneColor getAppliedStackColor(ItemStack target) {
 		if(target == null) return null;
+        if(target.getItem() == Items.ENCHANTED_BOOK) return AncientTomesModule.shiftRuneColor(target);
 		return RuneColor.byName(target.get(QuarkDataComponents.RUNE_COLOR));
 	}
 
@@ -136,13 +137,13 @@ public class ColorRunesModule extends ZetaModule {
 	public void onLootTableLoad(ZLootTableLoad event) {
 		int weight = 0;
 
-		if(event.getName().equals(BuiltInLootTables.SIMPLE_DUNGEON))
+		if(event.getName().equals(BuiltInLootTables.SIMPLE_DUNGEON.location()))
 			weight = dungeonWeight;
-		else if(event.getName().equals(BuiltInLootTables.NETHER_BRIDGE))
+		else if(event.getName().equals(BuiltInLootTables.NETHER_BRIDGE.location()))
 			weight = netherFortressWeight;
-		else if(event.getName().equals(BuiltInLootTables.JUNGLE_TEMPLE))
+		else if(event.getName().equals(BuiltInLootTables.JUNGLE_TEMPLE.location()))
 			weight = jungleTempleWeight;
-		else if(event.getName().equals(BuiltInLootTables.DESERT_PYRAMID))
+		else if(event.getName().equals(BuiltInLootTables.DESERT_PYRAMID.location()))
 			weight = desertTempleWeight;
 
 		if(weight > 0) {
@@ -204,23 +205,30 @@ public class ColorRunesModule extends ZetaModule {
 	}
 
     public static void appendRuneTooltip(ItemStack stack, List<Component> components) {
-        ArmorTrim component = stack.get(DataComponents.TRIM);
+        ArmorTrim trim = stack.get(DataComponents.TRIM);
+		RuneColor color = ColorRunesModule.getAppliedStackColor(stack);
 
-        if (component != null && ((AccessorArmorTrim) component).showInTooltip()) {
-            RuneColor color = ColorRunesModule.getAppliedStackColor(stack);
-            if (color != null) {
-                if (!components.contains(AccessorArmorTrim.getUPGRADE_TITLE())) {
-                    components.add(AccessorArmorTrim.getUPGRADE_TITLE());
-                }
-
-                MutableComponent baseComponent = Component.translatable("rune.quark." + color.getName());
-                if (color == RuneColor.RAINBOW) {
-                    components.add(CommonComponents.space().append(ColorRunesModule.extremeRainbow(baseComponent)));
-                } else {
-                    components.add(CommonComponents.space().append(baseComponent.withStyle((style) -> style.withColor(color.getTextColor()))));
-                }
-            }
+        if (trim != null && !((AccessorArmorTrim) trim).showInTooltip()) {
+			//There IS a trim on this item and showInTooltip is false
+            return;
         }
+		else {
+			//there is NOT a trim on this item, or there is a trim but showInTooltip is true
+            //Also this item is not an overleveled enchanted book
+			if (color != null && stack.getItem() != Items.ENCHANTED_BOOK) {
+				if (!components.contains(AccessorArmorTrim.getUPGRADE_TITLE())) {
+					components.add(AccessorArmorTrim.getUPGRADE_TITLE());
+				}
+				//only add Upgrade: if it's not already there
+
+				MutableComponent baseComponent = Component.translatable("rune.quark." + color.getName());
+				if (color == RuneColor.RAINBOW) {
+					components.add(CommonComponents.space().append(ColorRunesModule.extremeRainbow(baseComponent)));
+				} else {
+					components.add(CommonComponents.space().append(baseComponent.withStyle((style) -> style.withColor(color.getTextColor()))));
+				}
+			}
+		}
     }
 
 	@ZetaLoadModule(clientReplacement = true)

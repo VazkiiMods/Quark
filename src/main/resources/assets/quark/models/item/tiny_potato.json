@@ -1,3 +1,37 @@
 {
-  "parent": "quark:block/tiny_potato"
+  "parent": "builtin/entity",
+  "gui_light": "side",
+  "display": {
+    "thirdperson_righthand": {
+      "rotation": [0, 162, 0],
+      "translation": [0, 3.2, 1],
+      "scale": [0.4, 0.4, 0.4]
+    },
+    "thirdperson_lefthand": {
+      "rotation": [0, 162, 0],
+      "translation": [0, 3.2, 1],
+      "scale": [0.4, 0.4, 0.4]
+    },
+    "firstperson_righthand": {
+      "rotation": [-36, 137, 20],
+      "translation": [1, 3, 0],
+      "scale": [0.4, 0.4, 0.4]
+    },
+    "firstperson_lefthand": {
+      "rotation": [-36, 137, 20],
+      "translation": [1, 3, 0],
+      "scale": [0.4, 0.4, 0.4]
+    },
+    "ground": {
+      "translation": [0, 3, 0],
+      "scale": [0.25, 0.25, 0.25]
+    },
+    "gui": {
+      "rotation": [30, -135, 0],
+      "scale": [0.625, 0.625, 0.625]
+    },
+    "head": {
+      "translation": [0, 14.5, 0]
+    }
+  }
 }

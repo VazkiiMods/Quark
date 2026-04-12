@@ -37,10 +37,15 @@ public class GrabChickensModule extends ZetaModule {
 	@Config(description = "Set to 0 to disable")
 	private static int slownessLevel = 1;
 
+	@Config(description = "Negative numbers moves the chicken down, positive up")
+	@Config.Max(1)
+	@Config.Min(-1)
+	private static double chickenOffset = 0.0;
+
 	private static boolean staticEnabled;
 
 	@LoadEvent
-	public final void configChanged(ZConfigChanged event) {
+	public void configChanged(ZConfigChanged event) {
 		staticEnabled = isEnabled();
 	}
 
@@ -79,12 +84,13 @@ public class GrabChickensModule extends ZetaModule {
 		Player player = event.getPlayer();
 		Level level = player.level();
 
-		if(player.hasPassenger(e -> e.getType() == EntityType.CHICKEN)) {
-			if(!canPlayerHostChicken(player) || player.isCrouching()) {
-				player.ejectPassengers();
 
-				if(level instanceof ServerLevel slevel)
-					slevel.getChunkSource().chunkMap.broadcast(player, new ClientboundSetPassengersPacket(player));
+		if(player.hasPassenger(e -> e.getType() == EntityType.CHICKEN)) {
+			if(!canPlayerHostChicken(player)) {
+                player.ejectPassengers();
+                if(level instanceof ServerLevel slevel) {
+                    slevel.getChunkSource().chunkMap.broadcast(player, new ClientboundSetPassengersPacket(player));
+                }
 			} else {
 				player.addEffect(new MobEffectInstance(MobEffects.SLOW_FALLING, 5, 0, true, false));
 
@@ -97,26 +103,35 @@ public class GrabChickensModule extends ZetaModule {
 	private boolean canPlayerHostChicken(Player player) {
 		//check for known player classes as to avoid fake players (impls)
 		var playerClass = player.getClass();
-		if(player.level().isClientSide){
+		if(player.level().isClientSide()){
 			if(!Client.isClientPlayerClass(playerClass)) return false;
 		}else if (playerClass != ServerPlayer.class) return false;
 
 		return (!needsNoHelmet || player.getItemBySlot(EquipmentSlot.HEAD).isEmpty()) && !player.isUnderWater();
 	}
 
-	public static class Client {
+    public static boolean isModuleEnabled() {
+        return staticEnabled;
+    }
+
+    public static float pushAmountForTesting() {
+        return (float) (0.25f - chickenOffset);
+    }
+
+    public static class Client {
 
 		public static boolean isClientPlayerClass(Class<?> playerClass){
 			return playerClass == RemotePlayer.class || playerClass == LocalPlayer.class;
 		}
 
 		//not client-replacement module since it's just somewhere to stick this method
-		public static void setRenderChickenFeetStatus(Chicken entity, ChickenModel<Chicken> model) {
+		public static void setRenderChickenFeetStatus(Chicken entity, ChickenModel<?> model) {
 			if (!staticEnabled) return;
 
 			boolean should = entity.getVehicle() == null || entity.getVehicle().getType() != EntityType.PLAYER;
 			model.leftLeg.visible = should;
 			model.rightLeg.visible = should;
+
 		}
 	}
 }

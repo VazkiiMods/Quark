@@ -57,7 +57,7 @@ public abstract class ItemRendererMixin {
 
 	@ModifyExpressionValue(method = "getFoilBufferDirect", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/RenderType;glint()Lnet/minecraft/client/renderer/RenderType;"))
 	private static RenderType getGlintDirect(RenderType prev) {
-		return ColorRunesModule.Client.getGlintDirect();
+		return ColorRunesModule.Client.getGlint();
 	}
 
 	@ModifyExpressionValue(method = "getFoilBufferDirect", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/RenderType;entityGlintDirect()Lnet/minecraft/client/renderer/RenderType;"))

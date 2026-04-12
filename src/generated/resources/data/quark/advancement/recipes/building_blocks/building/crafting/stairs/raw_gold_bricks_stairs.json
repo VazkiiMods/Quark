@@ -7,11 +7,11 @@
   ],
   "parent": "minecraft:recipes/root",
   "criteria": {
-    "has_sandstone_bricks": {
+    "has_raw_gold_bricks": {
       "conditions": {
         "items": [
           {
-            "items": "quark:sandstone_bricks"
+            "items": "quark:raw_gold_bricks"
           }
         ]
       },
@@ -27,7 +27,7 @@
   "requirements": [
     [
       "has_the_recipe",
-      "has_sandstone_bricks"
+      "has_raw_gold_bricks"
     ]
   ],
   "rewards": {

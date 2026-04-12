@@ -1,0 +1,46 @@
+{
+  "type": "quark:exclusion",
+  "exclusions": [
+    "quark:tweaks/crafting/glass/clear_glass",
+    "quark:tweaks/crafting/glass/black_glass",
+    "quark:tweaks/crafting/glass/blue_glass",
+    "quark:tweaks/crafting/glass/brown_glass",
+    "quark:tweaks/crafting/glass/cyan_glass",
+    "quark:tweaks/crafting/glass/gray_glass",
+    "quark:tweaks/crafting/glass/green_glass",
+    "quark:tweaks/crafting/glass/light_blue_glass",
+    "quark:tweaks/crafting/glass/light_gray_glass",
+    "quark:tweaks/crafting/glass/lime_glass",
+    "quark:tweaks/crafting/glass/magenta_glass",
+    "quark:tweaks/crafting/glass/orange_glass",
+    "quark:tweaks/crafting/glass/pink_glass",
+    "quark:tweaks/crafting/glass/purple_glass",
+    "quark:tweaks/crafting/glass/red_glass",
+    "quark:tweaks/crafting/glass/white_glass",
+    "quark:tweaks/crafting/glass/yellow_glass",
+    "quark:tweaks/crafting/glass/dirty_glass"
+  ],
+  "parent": {
+    "type": "minecraft:crafting_shaped",
+    "pattern": [
+      "##",
+      "##"
+    ],
+    "key": {
+      "#": {
+        "tag": "quark:shards"
+      }
+    },
+    "result": {
+      "id": "quark:dirty_glass"
+    },
+    "group": "quark:glass_shard"
+  },
+
+  "neoforge:conditions": [
+    {
+      "type": "zeta:flag",
+      "flag": "glass_shard"
+    }
+  ]
+}

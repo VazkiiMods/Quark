@@ -178,8 +178,8 @@
 	"quark.jei.influence": "Influenza del matrix",
 	"quark.jei.boost_influence": "Aumenta le probabilità di:",
 	"quark.jei.dampen_influence": "Diminuisce le probabilità di:",
-	"quark.jei.hint_preamble": "[Quark]\n",
-	
+
+    "quark.jei.hint.preamble": "[Quark]\n",
 	"quark.jei.hint.pickarang": "È un boomerang piccone! Può essere lanciato e estrarrà tutto ciò che colpisce e ti riporterà indietro il bottino. Può anche essere incantato per migliorarne le prestazioni.",
 	"quark.jei.hint.flamerang": "Funziona come un Pickarang, ma tutti gli oggetti che raccoglie diventano immuni ai danni da fuoco e lava durante il tragitto.",
 	"quark.jei.hint.abacus": "Usalo su un blocco e conterà la distanza tra il blocco che stai guardando e quello su cui hai cliccato, fino a 48 blocchi.",

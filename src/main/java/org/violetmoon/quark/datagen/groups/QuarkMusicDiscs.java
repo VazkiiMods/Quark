@@ -4,7 +4,6 @@ import net.minecraft.core.Holder;
 import net.minecraft.data.worldgen.BootstrapContext;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.JukeboxSong;
-import net.minecraft.world.level.levelgen.feature.ConfiguredFeature;
 import org.violetmoon.quark.base.handler.QuarkSounds;
 import org.violetmoon.quark.content.tools.module.AmbientDiscsModule;
 import org.violetmoon.quark.content.tools.module.EndermoshMusicDiscModule;

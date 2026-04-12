@@ -3,7 +3,6 @@ package org.violetmoon.quark.datagen;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.DyeColor;
@@ -113,6 +112,9 @@ public class DataUtil {
         }
         else if(block == Blocks.WARPED_PLANKS){
             return ItemTags.WARPED_STEMS;
+        }
+        else if(block == Blocks.BAMBOO_PLANKS){
+            return ItemTags.BAMBOO_BLOCKS;
         }
 
         else if(block == AncientWoodModule.woodSet.planks){
@@ -266,5 +268,17 @@ public class DataUtil {
         }
 
         return null;
+    }
+
+    //TODO we should never be doing this, there should be a way to reference every reg object as a constant/
+    public static Block regSearch(ResourceLocation rl){
+        Block result = BuiltInRegistries.BLOCK.get(rl);
+        if(result != Blocks.AIR){
+            return result;
+        }
+        else{
+            System.out.println("Invalid block!: " + rl.toString());
+            return Blocks.BARRIER;
+        }
     }
 }

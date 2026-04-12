@@ -1,14 +1,15 @@
 package org.violetmoon.quark.addons.oddities.item;
 
+import net.minecraft.ChatFormatting;
+import net.minecraft.Util;
 import net.minecraft.core.Holder;
 import net.minecraft.core.Holder.Reference;
 import net.minecraft.core.HolderLookup.RegistryLookup;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.util.Unit;
+import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.Containers;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.Entity;
@@ -20,9 +21,11 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.*;
 import net.minecraft.world.item.component.ItemAttributeModifiers;
-import net.minecraft.world.item.enchantment.Enchantment;
-import net.minecraft.world.item.enchantment.Enchantments;
-import net.minecraft.world.item.enchantment.ItemEnchantments;
+import net.minecraft.world.item.component.ItemContainerContents;
+import net.minecraft.world.item.component.ItemLore;
+import net.minecraft.world.item.component.Unbreakable;
+import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.item.enchantment.*;
 import net.minecraft.world.level.Level;
 import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.items.IItemHandler;
@@ -38,6 +41,8 @@ import org.violetmoon.zeta.item.ext.IZetaItemExtensions;
 import org.violetmoon.zeta.module.ZetaModule;
 import org.violetmoon.zeta.registry.CreativeTabManager;
 
+import java.util.EnumMap;
+import java.util.List;
 import java.util.Optional;
 import java.util.function.BooleanSupplier;
 import java.util.function.Consumer;
@@ -47,27 +52,49 @@ public class BackpackItem extends ArmorItem implements IZetaItem, IZetaItemExten
 	private static final ResourceLocation WORN_TEXTURE = Quark.asResource("textures/misc/backpack_worn.png");
 	private static final ResourceLocation WORN_OVERLAY_TEXTURE = Quark.asResource("textures/misc/backpack_worn_overlay.png");
 
+    public static final ArmorMaterial BACKPACK_MATERIAL = new ArmorMaterial(
+            Util.make(new EnumMap<>(ArmorItem.Type.class), points -> {
+                points.put(ArmorItem.Type.BOOTS, 0);
+                points.put(ArmorItem.Type.LEGGINGS, 0);
+                points.put(ArmorItem.Type.CHESTPLATE, 0);
+                points.put(ArmorItem.Type.HELMET, 0);
+                points.put(ArmorItem.Type.BODY, 0);
+            }),
+            0,
+            SoundEvents.ARMOR_EQUIP_LEATHER,
+            () -> Ingredient.of(Items.LEATHER),
+            List.of(
+                    new ArmorMaterial.Layer(Quark.asResource("backpack"), "", true),
+                    new ArmorMaterial.Layer(Quark.asResource("backpack"), "_overlay", false)
+            ),
+            0.0F,
+            0.0F
+    );
+
+
 	@Nullable
 	private final ZetaModule module;
 
 	public BackpackItem(@Nullable ZetaModule module) {
-		super(ArmorMaterials.LEATHER, Type.CHESTPLATE,
+		super(Holder.direct(BACKPACK_MATERIAL), Type.CHESTPLATE,
 				new Item.Properties()
 						.stacksTo(1)
 						.durability(0)
 						.rarity(Rarity.RARE)
-						.attributes(createAttributes()));
+                        .component(DataComponents.UNBREAKABLE, new Unbreakable(false))
+                        .attributes(createAttributes()));
 
 		this.module = module;
 
 		if (module == null)return;
 
-		module.zeta().registry.registerItem(this.getItem(), "backpack");
+        module.zeta().registry.register(BACKPACK_MATERIAL, "backpack", Registries.ARMOR_MATERIAL);
+        module.zeta().registry.registerItem(this.getItem(), "backpack");
 
 		CreativeTabManager.addNextToItem(CreativeModeTabs.TOOLS_AND_UTILITIES, this.getItem(), Items.SADDLE, true);
 	}
 
-	/*@Override
+    /*@Override
 	public int getDefaultTooltipHideFlagsZeta(@NotNull ItemStack stack) {
 		return stack.isEnchanted() & stack.has(DataComponents.HIDE_TOOLTIP) ? 1 : 0;
 	}*/
@@ -88,16 +115,13 @@ public class BackpackItem extends ArmorItem implements IZetaItem, IZetaItemExten
 	}
 
 	public static boolean doesBackpackHaveItems(ItemStack stack) {
-		if (!stack.has(DataComponents.CONTAINER) && stack.is(BackpackModule.backpack)) {
+        if (!stack.is(BackpackModule.backpack) || !stack.has(DataComponents.CONTAINER)) {
 			return false;
 		}
+
 		BackpackContainer backpackInv = new BackpackContainer(stack);
 
-		for(int i = 0; i < backpackInv.getContainerSize(); i++)
-			if(!backpackInv.getItem(i).isEmpty())
-				return true;
-
-		return false;
+		return !backpackInv.isEmpty();
 	}
 
 	@Override
@@ -122,7 +146,7 @@ public class BackpackItem extends ArmorItem implements IZetaItem, IZetaItemExten
 
 	@Override
 	public ResourceLocation getArmorTexture(ItemStack stack, Entity entity, EquipmentSlot slot, ArmorMaterial.Layer layer, boolean innerModel) {
-		return type != null && type.equals("overlay") ? WORN_OVERLAY_TEXTURE : WORN_TEXTURE;
+		return layer != null && layer.texture(innerModel).getPath().contains("overlay") ? WORN_OVERLAY_TEXTURE : WORN_TEXTURE;
 	}
 
 	@Override
@@ -133,40 +157,55 @@ public class BackpackItem extends ArmorItem implements IZetaItem, IZetaItemExten
 
 		Reference<Enchantment> bindingCurse = enchantmentLookup.getOrThrow(Enchantments.BINDING_CURSE);
 
-		boolean hasItems = !BackpackModule.superOpMode && doesBackpackHaveItems(stack);
-		ItemEnchantments.Mutable enchants = new ItemEnchantments.Mutable(stack.getOrDefault(DataComponents.ENCHANTMENTS, ItemEnchantments.EMPTY));
-		boolean isCursed = enchants.getLevel(bindingCurse) == 1;
+        boolean canIgnoreEquip = BackpackModule.superOpMode || (entityIn instanceof Player player && (player.isCreative() || player.isSpectator()));
+
+		ItemEnchantments.Mutable enchants = new ItemEnchantments.Mutable(stack.getOrDefault(DataComponents.ENCHANTMENTS, ItemEnchantments.EMPTY.withTooltip(false)));
+		boolean armorChangePrevented = EnchantmentHelper.has(stack, EnchantmentEffectComponents.PREVENT_ARMOR_CHANGE);
 
 		boolean changedEnchants = false;
 
-		if(hasItems) {
-			if(BackpackModule.isEntityWearingBackpack(entityIn, stack)) {
-				if(!isCursed) {
-					enchants.set(bindingCurse, 1);
-					changedEnchants = true;
-				}
+        if (doesBackpackHaveItems(stack)) {
+            if (BackpackModule.isEntityWearingBackpack(entityIn, stack)) {
+                if(BackpackModule.itemsInBackpackTick) {
+                    BackpackContainer container = new BackpackContainer(stack);
+                    for(int i = 0; i < container.getContainerSize(); i++) {
+                        ItemStack inStack = container.getItem(i);
+                        if(!inStack.isEmpty())
+                            inStack.getItem().inventoryTick(inStack, worldIn, entityIn, i, false);
+                    }
+                }
 
-				if(BackpackModule.itemsInBackpackTick) {
-					Optional<IItemHandler> handlerOpt = Optional.ofNullable(stack.getCapability(Capabilities.ItemHandler.ITEM, null));
-					IItemHandler handler = handlerOpt.orElse(new ItemStackHandler());
-					for(int i = 0; i < handler.getSlots(); i++) {
-						ItemStack inStack = handler.getStackInSlot(i);
-						if(!inStack.isEmpty())
-							inStack.getItem().inventoryTick(inStack, worldIn, entityIn, i, false);
-					}
-				}
-			} else {
-				ItemStack copy = stack.copy();
-				stack.setCount(0);
-				entityIn.spawnAtLocation(copy, 0);
-			}
-		} else if(isCursed) {
-			enchants.removeIf(e -> e.is(bindingCurse.key()));
-			changedEnchants = true;
-		}
+                if(!armorChangePrevented && !canIgnoreEquip) {
+                    enchants.set(bindingCurse, 1);
+                    changedEnchants = true;
+                }
+            } else if (!canIgnoreEquip) {
+                BackpackContainer container = new BackpackContainer(stack);
+                for (ItemStack item : container.getItems()) {
+                    Containers.dropItemStack(worldIn, entityIn.getX(), entityIn.getY(), entityIn.getZ(), item);
+                }
+                stack.set(DataComponents.CONTAINER, ItemContainerContents.EMPTY);
+            } else if (!BackpackModule.superOpMode && entityIn instanceof Player player && (player.isCreative() || player.isSpectator())) {
+                stack.set(DataComponents.LORE, ItemLore.EMPTY.withLineAdded(Component.translatable("item.quark.backpack.warning.line_1").withStyle(ChatFormatting.RED)).withLineAdded(Component.translatable("item.quark.backpack.warning.line_2")));
+            }
+        } else {
+            if (armorChangePrevented) {
+                enchants.removeIf(ench -> ench.value().effects().has(EnchantmentEffectComponents.PREVENT_ARMOR_CHANGE));
+                changedEnchants = true;
+            }
 
-		if(changedEnchants)
-			stack.set(DataComponents.ENCHANTMENTS, enchants.toImmutable());
+
+        }
+
+        if (!doesBackpackHaveItems(stack) || BackpackModule.superOpMode || !canIgnoreEquip || BackpackModule.isEntityWearingBackpack(entityIn, stack)) {
+            if (stack.has(DataComponents.LORE)) {
+                stack.remove(DataComponents.LORE);
+            }
+        }
+
+        if(changedEnchants) {
+            stack.set(DataComponents.ENCHANTMENTS, enchants.toImmutable().withTooltip(false));
+        }
 	}
 
 	@Override
@@ -249,7 +288,4 @@ public class BackpackItem extends ArmorItem implements IZetaItem, IZetaItemExten
 	public Component getDisplayName() {
 		return Component.translatable(getDescriptionId());
 	}
-
-
-
 }

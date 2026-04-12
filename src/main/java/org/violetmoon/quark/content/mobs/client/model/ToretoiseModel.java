@@ -13,7 +13,6 @@ import net.minecraft.client.model.geom.builders.LayerDefinition;
 import net.minecraft.client.model.geom.builders.MeshDefinition;
 import net.minecraft.client.model.geom.builders.PartDefinition;
 import org.jetbrains.annotations.NotNull;
-import org.violetmoon.quark.base.QuarkClient;
 import org.violetmoon.quark.content.mobs.entity.Toretoise;
 
 import java.util.function.BiConsumer;

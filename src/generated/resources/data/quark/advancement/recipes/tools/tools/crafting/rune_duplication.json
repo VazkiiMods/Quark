@@ -3,6 +3,10 @@
     {
       "type": "zeta:flag",
       "flag": "color_runes"
+    },
+    {
+      "type": "zeta:flag",
+      "flag": "corundum"
     }
   ],
   "parent": "minecraft:recipes/root",

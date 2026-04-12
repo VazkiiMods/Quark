@@ -2,14 +2,13 @@ package org.violetmoon.quark.addons.oddities.block.be;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.core.particles.ParticleTypes;
-import net.minecraft.core.particles.SimpleParticleType;
+import net.minecraft.network.protocol.game.ClientboundSetEntityMotionPacket;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.item.FallingBlockEntity;
 import net.minecraft.world.entity.item.ItemEntity;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
@@ -93,6 +92,7 @@ public class MagnetBlockEntity extends BlockEntity {
                     double y = targetPos.getY() + getParticlePos(yOff, level.random, particleOffset);
                     double z = targetPos.getZ() + getParticlePos(zOff, level.random, particleOffset);
                     var p = dir == moveDir ? MagnetsModule.repulsorParticle : MagnetsModule.attractorParticle;
+
                     level.addParticle(p, x, y, z, xOff, yOff, zOff);
                 }
             }
@@ -112,6 +112,7 @@ public class MagnetBlockEntity extends BlockEntity {
             e.push(vec.x(), vec.y(), vec.z());
             if (e instanceof ServerPlayer player) {
                 //reset flying kick time
+                player.connection.send(new ClientboundSetEntityMotionPacket(player));
                 ((AccessorServerGamePacketListener) player.connection).setAboveGroundTickCount(0);
             } else {
                 //hurt mark everybody but the player. its handled by client side code
@@ -126,14 +127,6 @@ public class MagnetBlockEntity extends BlockEntity {
     }
 
     private boolean canPullEntity(Entity e) {
-        if (level.isClientSide) {
-            if (MagnetsModule.affectsArmor && e instanceof Player player) {
-                for (var armor : player.getArmorSlots()) {
-                    if (MagnetSystem.isItemMagnetic(armor.getItem())) return true;
-                }
-            }
-            return false;
-        }
         if (e instanceof IMagneticEntity) return true;
 
         if (e instanceof ItemEntity ie) {
@@ -146,11 +139,12 @@ public class MagnetBlockEntity extends BlockEntity {
             return MagnetSystem.isBlockMagnetic(fb.getBlockState());
         }
 
-        if (MagnetsModule.affectsArmor && e instanceof Player player) {
-            for (var armor : player.getArmorSlots()) {
+        if (MagnetsModule.affectsArmor && e instanceof LivingEntity livingEntity) {
+            for (var armor : livingEntity.getArmorSlots()) {
                 if (MagnetSystem.isItemMagnetic(armor.getItem())) return true;
             }
         }
+
         return false;
     }
 

@@ -12,7 +12,6 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.enchantment.Enchantment;
-import net.minecraft.world.item.enchantment.EnchantmentEffectComponents;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.block.Blocks;
@@ -56,7 +55,7 @@ public class UsesForCursesModule extends ZetaModule {
 	public static boolean shouldHideArmorStandModel(ItemStack stack) {
 		ClientPacketListener listener = Minecraft.getInstance().getConnection();
 		if (listener == null || !staticEnabled || !bindArmorStandsWithPlayerHeads || !stack.is(Items.PLAYER_HEAD)) return false;
-		return EnchantmentHelper.getTagEnchantmentLevel(listener.registryAccess().lookupOrThrow(Registries.ENCHANTMENT).getOrThrow(Enchantments.VANISHING_CURSE), stack) > 0;
+		return EnchantmentHelper.getTagEnchantmentLevel(listener.registryAccess().lookupOrThrow(Registries.ENCHANTMENT).getOrThrow(Enchantments.BINDING_CURSE), stack) > 0;
 	}
 
 	public static boolean shouldHidePumpkinOverlay(ResourceLocation location, Player player) {

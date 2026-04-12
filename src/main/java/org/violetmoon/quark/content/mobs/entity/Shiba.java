@@ -3,6 +3,7 @@ package org.violetmoon.quark.content.mobs.entity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ItemParticleOption;
 import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
@@ -17,6 +18,7 @@ import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.tags.DamageTypeTags;
 import net.minecraft.tags.ItemTags;
+import net.minecraft.tags.TagKey;
 import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -41,6 +43,7 @@ import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.event.EventHooks;
 import org.jetbrains.annotations.NotNull;
+import org.violetmoon.quark.base.Quark;
 import org.violetmoon.quark.base.handler.QuarkSounds;
 import org.violetmoon.quark.content.mobs.ai.BarkAtDarknessGoal;
 import org.violetmoon.quark.content.mobs.ai.DeliverFetchedItemGoal;
@@ -57,6 +60,9 @@ public class Shiba extends TamableAnimal {
 	private static final EntityDataAccessor<Integer> COLLAR_COLOR = SynchedEntityData.defineId(Shiba.class, EntityDataSerializers.INT);
 	private static final EntityDataAccessor<ItemStack> MOUTH_ITEM = SynchedEntityData.defineId(Shiba.class, EntityDataSerializers.ITEM_STACK);
 	private static final EntityDataAccessor<Integer> FETCHING = SynchedEntityData.defineId(Shiba.class, EntityDataSerializers.INT);
+
+	public static final TagKey<Item> SHIBA_HOLDABLES = TagKey.create(Registries.ITEM, Quark.asResource("shiba_holdables"));
+	public static final TagKey<Item> SHIBA_LIGHTS = TagKey.create(Registries.ITEM, Quark.asResource("shiba_lights"));
 
 	public BlockPos currentHyperfocus = null;
 	private int hyperfocusCooldown = 0;
@@ -104,7 +110,7 @@ public class Shiba extends TamableAnimal {
 					boolean hyperfocusClear = level().getBrightness(LightLayer.BLOCK, currentHyperfocus) > 0;
 					boolean ownerAbsent = owner == null
 							|| (owner instanceof Player
-									&& (!owner.getMainHandItem().is(Items.TORCH) && !owner.getOffhandItem().is(Items.TORCH)));
+									&& (!owner.getMainHandItem().is(SHIBA_LIGHTS) && !owner.getOffhandItem().is(SHIBA_LIGHTS)));
 
 					if(hyperfocusClear || ownerAbsent) {
 						currentHyperfocus = null;
@@ -116,7 +122,7 @@ public class Shiba extends TamableAnimal {
 				}
 
 				if(currentHyperfocus == null && owner instanceof Player player && hyperfocusCooldown == 0) {
-					if(player.getMainHandItem().is(Items.TORCH) || player.getOffhandItem().is(Items.TORCH)) {
+					if(player.getMainHandItem().is(SHIBA_LIGHTS) || player.getOffhandItem().is(SHIBA_LIGHTS)) {
 						BlockPos ourPos = blockPosition();
 						final int searchRange = 10;
 						for(int i = 0; i < 20; i++) {
@@ -222,15 +228,15 @@ public class Shiba extends TamableAnimal {
 			return false;
 		} else if(!this.isTame()) {
 			return false;
-		} else if(!(otherAnimal instanceof Shiba wolfentity)) {
+		} else if(!(otherAnimal instanceof Shiba shiba)) {
 			return false;
 		} else {
-			if(!wolfentity.isTame()) {
+			if(!shiba.isTame()) {
 				return false;
-			} else if(wolfentity.isSleeping()) {
+			} else if(shiba.isSleeping()) {
 				return false;
 			} else {
-				return this.isInLove() && wolfentity.isInLove();
+				return this.isInLove() && shiba.isInLove();
 			}
 		}
 	}
@@ -321,7 +327,7 @@ public class Shiba extends TamableAnimal {
                     }
                 }
 
-                if (!heldItemStack.isEmpty() && mouthItem.isEmpty() && heldItemStack.getItem() instanceof SwordItem) {
+                if (!heldItemStack.isEmpty() && mouthItem.isEmpty() && (heldItemStack.is(SHIBA_HOLDABLES))) {
                     ItemStack copy = heldItemStack.copy();
                     copy.setCount(1);
                     heldItemStack.setCount(heldItemStack.getCount() - 1);

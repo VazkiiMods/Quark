@@ -1,5 +1,5 @@
 {
-  "parent": "quark:throw_pickarang",
+  "parent": "quark:content/throw_pickarang",
   "criteria": {
     "retreive_flamerang": {
       "trigger": "quark:use_flamerang"

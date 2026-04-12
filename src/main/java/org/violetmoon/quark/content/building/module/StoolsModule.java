@@ -56,7 +56,7 @@ public class StoolsModule extends ZetaModule {
 		stoolEntity = EntityType.Builder.of(Stool::new, MobCategory.MISC)
 				.sized(6F / 16F, 0.5F)
 				.clientTrackingRange(3)
-				.updateInterval(Integer.MAX_VALUE) // update interval
+				.updateInterval(5) // update interval
 				.setShouldReceiveVelocityUpdates(false)
 				.build("stool");
 		Quark.ZETA.registry.register(stoolEntity, "stool", Registries.ENTITY_TYPE);

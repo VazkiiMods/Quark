@@ -76,6 +76,8 @@ public class TrowelItem extends ZetaItem implements IUsageTickerOverride {
 				MiscUtil.damageStack(context.getItemInHand(), 1, player, hand == InteractionHand.MAIN_HAND ? EquipmentSlot.MAINHAND : EquipmentSlot.OFFHAND);
 		}
 
+        if (toPlaceStack.isEmpty()) trowel.remove(QuarkDataComponents.LAST_STACK);
+
 		return result;
 	}
 

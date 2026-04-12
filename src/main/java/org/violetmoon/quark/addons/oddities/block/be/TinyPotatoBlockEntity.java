@@ -41,6 +41,7 @@ public class TinyPotatoBlockEntity extends SimpleInventoryBlockEntity implements
 	public Component name = Component.literal("");
 	private int soundCd = 0;
 	public boolean angry = false;
+    public boolean isActuallyAnItem = false; // Guys this is not good code Im just tired please dont judge me - Siuol
 
 	private static final Map<String, String> GENDER = new HashMap<>();
 	private static final Map<String, SoundEvent> SOUNDS = new HashMap<>();
@@ -77,6 +78,7 @@ public class TinyPotatoBlockEntity extends SimpleInventoryBlockEntity implements
 
 		// The best gender
 		GENDER.put("tomater", "tomato");
+        // Chat can I add this one please pretty please GENDER.put("dokibird", "tomato");
 
 		SOUNDS.put("shia labeouf", QuarkSounds.BLOCK_POTATO_DO_IT);
 		SOUNDS.put("joe biden", QuarkSounds.BLOCK_POTATO_SODA);

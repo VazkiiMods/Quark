@@ -37,7 +37,6 @@ import org.violetmoon.zeta.config.FlagCondition;
 import org.violetmoon.zeta.util.MiscUtil;
 import org.violetmoon.zeta.util.VanillaWoods;
 
-import javax.xml.crypto.Data;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
@@ -89,7 +88,7 @@ public class QuarkRecipeProvider extends RecipeProvider implements IConditionBui
                 .requires(Tags.Items.INGOTS_GOLD)
                 .unlockedBy("test", PlayerTrigger.TriggerInstance.tick())
                 .save(recipeOutput.withConditions(zCond("gold_metal_button")), "quark:automation/crafting/gold_button");
-        ShapedRecipeBuilder.shaped(RecipeCategory.REDSTONE, GravisandModule.gravisand)
+        ShapedRecipeBuilder.shaped(RecipeCategory.REDSTONE, GravisandModule.gravisand, 8)
                 .pattern("SSS")
                 .pattern("SES")
                 .pattern("SSS")
@@ -120,7 +119,7 @@ public class QuarkRecipeProvider extends RecipeProvider implements IConditionBui
         ShapedRecipeBuilder.shaped(RecipeCategory.REDSTONE, NetherBrickFenceGateModule.netherBrickFenceGate)
                 .pattern("#W#")
                 .pattern("#W#")
-                .define('#', Tags.Items.BRICKS_NETHER) //TODO check if this is block or singular brick item
+                .define('#', Tags.Items.BRICKS_NETHER)
                 .define('W', Blocks.NETHER_BRICKS.asItem())
                 .unlockedBy("test", PlayerTrigger.TriggerInstance.tick())
                 .save(recipeOutput.withConditions(zCond("nether_brick_fence_gate")), "quark:automation/crafting/nether_brick_fence_gate");
@@ -145,7 +144,7 @@ public class QuarkRecipeProvider extends RecipeProvider implements IConditionBui
         for (Map.Entry<Block, Block> chestEntry : VariantChestsModule.regularChests.entrySet()) {
             ICondition cond = zCond("variant_chests");
 
-            String dir = "quark:building/chests/" + BuiltInRegistries.BLOCK.getKey(chestEntry.getValue()).getPath();
+            String dir = "quark:building/crafting/chests/" + BuiltInRegistries.BLOCK.getKey(chestEntry.getValue()).getPath();
             for (WoodSetHandler.WoodSet set : DataUtil.QuarkWorldWoodSets) { //check for world woods
                 if (chestEntry.getKey() == set.planks) {
                     dir = "quark:world/crafting/woodsets/" + set.name + "/" + set.name + "_chest";
@@ -195,12 +194,26 @@ public class QuarkRecipeProvider extends RecipeProvider implements IConditionBui
                 }
             }
 
-            if (chestEntry.getKey() != Blocks.BAMBOO_PLANKS && chestEntry.getKey().getDescriptionId().contains("planks")) {
-                fourChestRecipe(chestEntry.getValue().asItem(), DataUtil.getLogTagFromPlank(chestEntry.getKey())).unlockedBy("test", PlayerTrigger.TriggerInstance.tick())
+            if (chestEntry.getKey().getDescriptionId().contains("planks")) {
+                if (chestEntry.getKey() == Blocks.BAMBOO_PLANKS)
+                    twoChestRecipe(chestEntry.getValue().asItem(), DataUtil.getLogTagFromPlank(chestEntry.getKey())).unlockedBy("test", PlayerTrigger.TriggerInstance.tick())
+                            .save(recipeOutput.withConditions(cond), dir);
+                else
+                    fourChestRecipe(chestEntry.getValue().asItem(), DataUtil.getLogTagFromPlank(chestEntry.getKey())).unlockedBy("test", PlayerTrigger.TriggerInstance.tick())
                         .save(recipeOutput.withConditions(cond), dir);
             }
         }
         //mixed_chest_wood_but_without_exclusions is manual
+
+        //chest_reversion
+        ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, Blocks.CHEST)
+                .requires(TagKey.create(Registries.ITEM, Quark.asResource("revertable_chests")))
+                .unlockedBy("test", PlayerTrigger.TriggerInstance.tick())
+                .save(recipeOutput.withConditions(zCond("chest_reversion")), "quark:building/crafting/chest_revert");
+        ShapelessRecipeBuilder.shapeless(RecipeCategory.REDSTONE, Blocks.TRAPPED_CHEST)
+                .requires(TagKey.create(Registries.ITEM, Quark.asResource("revertable_trapped_chests")))
+                .unlockedBy("test", PlayerTrigger.TriggerInstance.tick())
+                .save(recipeOutput.withConditions(zCond("chest_reversion")), "quark:building/crafting/trapped_chest_revert");
 
         //compressed
         compressUncompress(Items.APPLE, CompressedBlocksModule.apple, recipeOutput, null, "apple_crate");
@@ -230,7 +243,7 @@ public class QuarkRecipeProvider extends RecipeProvider implements IConditionBui
         compressUncompress(Items.SUGAR_CANE, CompressedBlocksModule.sugarCane, recipeOutput, null, "sugar_cane_block");
         //furnaces
         variantFurnace(Blocks.BLACKSTONE, VariantFurnacesModule.blackstoneFurnace, recipeOutput, "blackstone");
-        variantFurnace(Blocks.DEEPSLATE, VariantFurnacesModule.deepslateFurnace, recipeOutput, "deepslate");
+        variantFurnace(Blocks.COBBLED_DEEPSLATE, VariantFurnacesModule.deepslateFurnace, recipeOutput, "deepslate");
         //glass
         ShapedRecipeBuilder.shaped(RecipeCategory.MISC, FramedGlassModule.framed_glass, 8)
                 .pattern("IGI")
@@ -243,7 +256,7 @@ public class QuarkRecipeProvider extends RecipeProvider implements IConditionBui
         for (DyeColor dyeColor : FramedGlassModule.blockMap.keySet()) {
             dyedFramedGlassRecipe(FramedGlassModule.blockMap.get(dyeColor).getBlock(), dyeColor)
                     .unlockedBy("test", PlayerTrigger.TriggerInstance.tick())
-                    .save(recipeOutput.withConditions(zCond("framed_glass")), "quark:building/glass/" + dyeColor.getName() + "_framed_glass");
+                    .save(recipeOutput.withConditions(zCond("framed_glass")), "quark:building/crafting/glass/" + dyeColor.getName() + "_framed_glass");
         }
         //hollowlogs
         for (Block sourceLog : HollowLogsModule.logMap.keySet()) {
@@ -271,8 +284,11 @@ public class QuarkRecipeProvider extends RecipeProvider implements IConditionBui
         for (DyeColor dyeColor : FramedGlassModule.paneMap.keySet()) {
             paneRecipe(FramedGlassModule.paneMap.get(dyeColor).getBlock(), FramedGlassModule.blockMap.get(dyeColor).getBlock())
                     .unlockedBy("test", PlayerTrigger.TriggerInstance.tick())
-                    .save(recipeOutput.withConditions(zCond("framed_glass")), "quark:building/panes/" + dyeColor.getName() + "_framed_glass_pane");
+                    .save(recipeOutput.withConditions(zCond("framed_glass")), "quark:building/crafting/panes/" + dyeColor.getName() + "_framed_glass_pane");
         }
+        paneRecipe(FramedGlassModule.framed_glass_pane, FramedGlassModule.framed_glass)
+                .unlockedBy("test", PlayerTrigger.TriggerInstance.tick())
+                .save(recipeOutput.withConditions(zCond("framed_glass")), "quark:building/crafting/panes/framed_glass_pane");
         ShapedRecipeBuilder.shaped(RecipeCategory.BUILDING_BLOCKS, JapanesePaletteModule.paperWall, 6)
                 .pattern("###")
                 .pattern("PPP")
@@ -317,7 +333,15 @@ public class QuarkRecipeProvider extends RecipeProvider implements IConditionBui
             colorShingles(ShinglesModule.blockMap.get(dyeColor).getBlock(), dyeColor, recipeOutput.withConditions(zCond("shingles")));
         }
         //slabs
-        //TODO the rest of the slabs
+        slabBuilder(RecipeCategory.BUILDING_BLOCKS, Quark.ZETA.variantRegistry.slabs.get(IndustrialPaletteModule.blocks.get(0)), Ingredient.of(IndustrialPaletteModule.blocks.get(0)))
+                .unlockedBy(getHasName(IndustrialPaletteModule.blocks.get(0)), has(IndustrialPaletteModule.blocks.get(0)))
+                .save(recipeOutput.withConditions(zCond("iron_plates")), "quark:building/crafting/slabs/iron_plate_slab");
+        slabBuilder(RecipeCategory.BUILDING_BLOCKS, Quark.ZETA.variantRegistry.slabs.get(IndustrialPaletteModule.blocks.get(1)), Ingredient.of(IndustrialPaletteModule.blocks.get(1)))
+                .unlockedBy(getHasName(IndustrialPaletteModule.blocks.get(1)), has(IndustrialPaletteModule.blocks.get(1)))
+                .save(recipeOutput.withConditions(zCond("iron_plates")), "quark:building/crafting/slabs/rusty_iron_plate_slab");
+        slabBuilder(RecipeCategory.BUILDING_BLOCKS, Quark.ZETA.variantRegistry.slabs.get(ThatchModule.thatch), Ingredient.of(ThatchModule.thatch))
+                .unlockedBy(getHasName(ThatchModule.thatch), has(ThatchModule.thatch))
+                .save(recipeOutput.withConditions(zCond("thatch")), "quark:building/crafting/slabs/thatch_slab");
         slabBuilder(RecipeCategory.BUILDING_BLOCKS, Quark.ZETA.variantRegistry.slabs.get(DuskboundBlocksModule.blocks.get(0)), Ingredient.of(DuskboundBlocksModule.blocks.get(0)))
                 .unlockedBy(getHasName(DuskboundBlocksModule.blocks.get(0)), has(DuskboundBlocksModule.blocks.get(0)))
                 .save(recipeOutput.withConditions(zCond("duskbound_blocks")), "quark:building/crafting/slabs/duskbound_slab");
@@ -390,14 +414,15 @@ public class QuarkRecipeProvider extends RecipeProvider implements IConditionBui
                 .unlockedBy(getHasName(MoreStoneVariantsModule.blocks.get(6)), has(MoreStoneVariantsModule.blocks.get(6)))
                 .save(recipeOutput.withConditions(and(zCond("andesite"), zCond("more_stone_variants"))), "quark:building/crafting/slabs/andesite_bricks_slab");
         //morestonevariants vanilla but new regular, raw slabs
-        /* TODO make these work. raw calcite and dripstone slabs aren't in variantregistry.
-        slabBuilder(RecipeCategory.BUILDING_BLOCKS, Quark.ZETA.variantRegistry.slabs.get(Blocks.CALCITE), Ingredient.of(Blocks.CALCITE))
+        /* TODO make these work without registry searching. raw calcite and dripstone slabs aren't in variantregistry for some reason.*/
+        Block calciteSlab = DataUtil.regSearch(Quark.asResource("calcite_slab"));
+        Block dripstoneSlab = DataUtil.regSearch(Quark.asResource("dripstone_block_slab"));
+        slabBuilder(RecipeCategory.BUILDING_BLOCKS, calciteSlab, Ingredient.of(Blocks.CALCITE))
                 .unlockedBy(getHasName(Blocks.CALCITE), has(Blocks.CALCITE))
                 .save(recipeOutput.withConditions(zCond("calcite")), "quark:building/crafting/slabs/calcite_slab");
-        slabBuilder(RecipeCategory.BUILDING_BLOCKS, Quark.ZETA.variantRegistry.slabs.get(Blocks.DRIPSTONE_BLOCK), Ingredient.of(Blocks.DRIPSTONE_BLOCK))
+        slabBuilder(RecipeCategory.BUILDING_BLOCKS, dripstoneSlab, Ingredient.of(Blocks.DRIPSTONE_BLOCK))
                 .unlockedBy(getHasName(Blocks.DRIPSTONE_BLOCK), has(Blocks.DRIPSTONE_BLOCK))
-                .save(recipeOutput.withConditions(zCond("dripstone")), "quark:building/crafting/slabs/calcite_slab");
-         */
+                .save(recipeOutput.withConditions(zCond("dripstone")), "quark:building/crafting/slabs/dripstone_block_slab");
         //morestonevariants vanilla but new polished slabs
         slabBuilder(RecipeCategory.BUILDING_BLOCKS, Quark.ZETA.variantRegistry.slabs.get(MoreStoneVariantsModule.polishedCalcite), Ingredient.of(MoreStoneVariantsModule.polishedCalcite))
                 .unlockedBy(getHasName(MoreStoneVariantsModule.polishedCalcite), has(MoreStoneVariantsModule.polishedCalcite))
@@ -430,6 +455,15 @@ public class QuarkRecipeProvider extends RecipeProvider implements IConditionBui
                 .save(recipeOutput.withConditions(zCond("midori")), "quark:world/crafting/slabs/midori_block_slab");
 
         //stairs
+        stairBuilder(Quark.ZETA.variantRegistry.stairs.get(IndustrialPaletteModule.blocks.get(0)), Ingredient.of(IndustrialPaletteModule.blocks.get(0)))
+                .unlockedBy(getHasName(IndustrialPaletteModule.blocks.get(0)), has(IndustrialPaletteModule.blocks.get(0)))
+                .save(recipeOutput.withConditions(zCond("iron_plates")), "quark:building/crafting/stairs/iron_plate_stairs");
+        stairBuilder(Quark.ZETA.variantRegistry.stairs.get(IndustrialPaletteModule.blocks.get(1)), Ingredient.of(IndustrialPaletteModule.blocks.get(1)))
+                .unlockedBy(getHasName(IndustrialPaletteModule.blocks.get(1)), has(IndustrialPaletteModule.blocks.get(1)))
+                .save(recipeOutput.withConditions(zCond("iron_plates")), "quark:building/crafting/stairs/rusty_iron_plate_stairs");
+        stairBuilder(Quark.ZETA.variantRegistry.stairs.get(ThatchModule.thatch), Ingredient.of(ThatchModule.thatch))
+                .unlockedBy(getHasName(ThatchModule.thatch), has(ThatchModule.thatch))
+                .save(recipeOutput.withConditions(zCond("thatch")), "quark:building/crafting/stairs/thatch_stairs");
         stairBuilder(Quark.ZETA.variantRegistry.stairs.get(DuskboundBlocksModule.blocks.get(0)), Ingredient.of(DuskboundBlocksModule.blocks.get(0)))
                 .unlockedBy(getHasName(DuskboundBlocksModule.blocks.get(0)), has(DuskboundBlocksModule.blocks.get(0)))
                 .save(recipeOutput.withConditions(zCond("duskbound_blocks")), "quark:building/crafting/stairs/duskbound_stairs");
@@ -480,14 +514,14 @@ public class QuarkRecipeProvider extends RecipeProvider implements IConditionBui
                 .unlockedBy(getHasName(SoulSandstoneModule.blocks.get(3)), has(SoulSandstoneModule.blocks.get(3)))
                 .save(recipeOutput.withConditions(zCond("soul_sandstone")), "quark:building/crafting/stairs/smooth_soul_sandstone_stairs");
         //raw ore bricks stairs
-        stairBuilder(Quark.ZETA.variantRegistry.stairs.get(RawMetalBricksModule.blocks.get(0)), Ingredient.of(MoreBrickTypesModule.blocks.get(0)))
-                .unlockedBy(getHasName(MoreBrickTypesModule.blocks.get(0)), has(MoreBrickTypesModule.blocks.get(0)))
+        stairBuilder(Quark.ZETA.variantRegistry.stairs.get(RawMetalBricksModule.blocks.get(0)), Ingredient.of(RawMetalBricksModule.blocks.get(0)))
+                .unlockedBy(getHasName(RawMetalBricksModule.blocks.get(0)), has(RawMetalBricksModule.blocks.get(0)))
                 .save(recipeOutput.withConditions(zCond("raw_metal_bricks")), "quark:building/crafting/stairs/raw_iron_bricks_stairs");
-        stairBuilder(Quark.ZETA.variantRegistry.stairs.get(RawMetalBricksModule.blocks.get(1)), Ingredient.of(MoreBrickTypesModule.blocks.get(1)))
-                .unlockedBy(getHasName(MoreBrickTypesModule.blocks.get(1)), has(MoreBrickTypesModule.blocks.get(1)))
+        stairBuilder(Quark.ZETA.variantRegistry.stairs.get(RawMetalBricksModule.blocks.get(1)), Ingredient.of(RawMetalBricksModule.blocks.get(1)))
+                .unlockedBy(getHasName(RawMetalBricksModule.blocks.get(1)), has(RawMetalBricksModule.blocks.get(1)))
                 .save(recipeOutput.withConditions(zCond("raw_metal_bricks")), "quark:building/crafting/stairs/raw_gold_bricks_stairs");
-        stairBuilder(Quark.ZETA.variantRegistry.stairs.get(RawMetalBricksModule.blocks.get(2)), Ingredient.of(MoreBrickTypesModule.blocks.get(2)))
-                .unlockedBy(getHasName(MoreBrickTypesModule.blocks.get(2)), has(MoreBrickTypesModule.blocks.get(2)))
+        stairBuilder(Quark.ZETA.variantRegistry.stairs.get(RawMetalBricksModule.blocks.get(2)), Ingredient.of(RawMetalBricksModule.blocks.get(2)))
+                .unlockedBy(getHasName(RawMetalBricksModule.blocks.get(2)), has(RawMetalBricksModule.blocks.get(2)))
                 .save(recipeOutput.withConditions(zCond("raw_metal_bricks")), "quark:building/crafting/stairs/raw_copper_bricks_stairs");
         //morestonevariants vanilla base stairs
         stairBuilder(Quark.ZETA.variantRegistry.stairs.get(MoreStoneVariantsModule.blocks.get(0)), Ingredient.of(MoreStoneVariantsModule.blocks.get(0)))
@@ -499,7 +533,24 @@ public class QuarkRecipeProvider extends RecipeProvider implements IConditionBui
         stairBuilder(Quark.ZETA.variantRegistry.stairs.get(MoreStoneVariantsModule.blocks.get(6)), Ingredient.of(MoreStoneVariantsModule.blocks.get(6)))
                 .unlockedBy(getHasName(MoreStoneVariantsModule.blocks.get(6)), has(MoreStoneVariantsModule.blocks.get(6)))
                 .save(recipeOutput.withConditions(and(zCond("andesite"), zCond("more_stone_variants"))), "quark:building/crafting/stairs/andesite_bricks_stairs");
-        //morestonevariants vanilla but new polished blocks stairs
+        //morestonevariants vanilla but expanded stone base stairs
+        //TODO make these work without regsearching
+        Block calciteStairs = DataUtil.regSearch(Quark.asResource("calcite_stairs"));
+        Block dripstoneStairs = DataUtil.regSearch(Quark.asResource("dripstone_block_stairs"));
+        stairBuilder(calciteStairs, Ingredient.of(Blocks.CALCITE))
+                .unlockedBy(getHasName(Blocks.CALCITE), has(Blocks.CALCITE))
+                .save(recipeOutput.withConditions(zCond("calcite")), "quark:building/crafting/slabs/calcite_stairs");
+        stairBuilder(dripstoneStairs, Ingredient.of(Blocks.DRIPSTONE_BLOCK))
+                .unlockedBy(getHasName(Blocks.DRIPSTONE_BLOCK), has(Blocks.DRIPSTONE_BLOCK))
+                .save(recipeOutput.withConditions(zCond("dripstone")), "quark:building/crafting/slabs/dripstone_block_stairs");
+        //morestonevariants vanilla but expanded polished stairs
+        stairBuilder(Quark.ZETA.variantRegistry.stairs.get(MoreStoneVariantsModule.polishedCalcite), Ingredient.of(MoreStoneVariantsModule.polishedCalcite))
+                .unlockedBy(getHasName(Quark.ZETA.variantRegistry.stairs.get(MoreStoneVariantsModule.polishedCalcite)), has(MoreStoneVariantsModule.polishedCalcite))
+                .save(recipeOutput.withConditions(zCond("calcite")), "quark:building/crafting/slabs/polished_calcite_stairs");
+        stairBuilder(Quark.ZETA.variantRegistry.stairs.get(MoreStoneVariantsModule.polishedDripstone), Ingredient.of(MoreStoneVariantsModule.polishedDripstone))
+                .unlockedBy(getHasName(MoreStoneVariantsModule.polishedDripstone), has(MoreStoneVariantsModule.polishedDripstone))
+                .save(recipeOutput.withConditions(zCond("dripstone")), "quark:building/crafting/slabs/polished_dripstone_stairs");
+        //morestonevariants vanilla but new bricks stairs
         stairBuilder(Quark.ZETA.variantRegistry.stairs.get(MoreStoneVariantsModule.blocks.get(9)), Ingredient.of(MoreStoneVariantsModule.blocks.get(9)))
                 .unlockedBy(getHasName(MoreStoneVariantsModule.blocks.get(9)), has(MoreStoneVariantsModule.blocks.get(9)))
                 .save(recipeOutput.withConditions(and(zCond("calcite"), zCond("more_stone_variants"))), "quark:building/crafting/stairs/calcite_bricks_stairs");
@@ -522,7 +573,6 @@ public class QuarkRecipeProvider extends RecipeProvider implements IConditionBui
         stairBuilder(Quark.ZETA.variantRegistry.stairs.get(MidoriModule.blocks.get(0)), Ingredient.of(MidoriModule.blocks.get(0)))
                 .unlockedBy(getHasName(MidoriModule.blocks.get(0)), has(MidoriModule.blocks.get(0)))
                 .save(recipeOutput.withConditions(zCond("midori")), "quark:world/crafting/stairs/midori_block_slab");
-        //TODO the rest of the stairs
 
         //stonevariants (vanilla subdir removed 1.21, it was inconsistently used)
         //morestonevariants vanilla expanded stones
@@ -661,6 +711,7 @@ public class QuarkRecipeProvider extends RecipeProvider implements IConditionBui
         for (Block slab : VerticalSlabsModule.blocks.keySet()) {
             ICondition condition = zCond("vertical_slabs");
 
+            //we are doing it this way (disgusting) because there is no way to map required config flags to registry objects
             if (slab.getDescriptionId().contains("ancient")) {
                 condition = and(zCond("vertical_slabs"), zCond("ancient_wood"));
             } else if (slab.getDescriptionId().contains("azalea")) {
@@ -668,13 +719,96 @@ public class QuarkRecipeProvider extends RecipeProvider implements IConditionBui
             } else if (slab.getDescriptionId().contains("blossom")) {
                 condition = and(zCond("vertical_slabs"), zCond("blossom_trees"));
             } else if (slab.getDescriptionId().contains("soul_sandstone")) {
-                condition = and(zCond("soul_sandstone"));
+                if(slab.getDescriptionId().contains("bricks")){
+                    condition = and(zCond("vertical_slabs"), zCond("soul_sandstone"), zCond("sandstone_bricks"));
+                }
+                else{
+                    condition = and(zCond("vertical_slabs"), zCond("soul_sandstone"));
+                }
+            } else if (slab.getDescriptionId().contains("plate")){
+                condition = and(zCond("vertical_slabs"), zCond("iron_plates"));
+            } else if (slab.getDescriptionId().contains("thatch")){
+                condition = and(zCond("vertical_slabs"), zCond("thatch"));
+            } else if (slab.getDescriptionId().contains("duskbound")){
+                condition = and(zCond("vertical_slabs"), zCond("duskbound_blocks"));
+            } else if (slab.getDescriptionId().contains("shingle")){
+                condition = and(zCond("vertical_slabs"), zCond("shingles"));
+            } else if (slab.getDescriptionId().contains("blue_nether_brick")){
+                condition = and(zCond("vertical_slabs"), zCond("blue_nether_bricks"));
+            } else if (slab.getDescriptionId().contains("sandstone_brick")){
+                condition = and(zCond("vertical_slabs"), zCond("sandstone_bricks"));
+            } else if (slab.getDescriptionId().contains("cobblestone_brick")){
+                condition = and(zCond("vertical_slabs"), zCond("cobblestone_bricks"));
+            } else if (slab.getDescriptionId().contains("blackstone_brick")){
+                condition = and(zCond("vertical_slabs"), zCond("blackstone_bricks"));
+            } else if (slab.getDescriptionId().contains("dirt_brick")){
+                condition = and(zCond("vertical_slabs"), zCond("dirt_bricks"));
+            } else if (slab.getDescriptionId().contains("netherrack_brick")){
+                condition = and(zCond("vertical_slabs"), zCond("netherrack_bricks"));
+            } else if (slab.getDescriptionId().contains("raw_") && slab.getDescriptionId().contains("_bricks")){
+                condition = and(zCond("vertical_slabs"), zCond("raw_metal_bricks"));
+            } else if (slab.getDescriptionId().contains("permafrost")){
+                condition = and(zCond("vertical_slabs"), zCond("permafrost"));
+            }
+            else if (slab.getDescriptionId().contains("polished_")){
+                //polished world stones
+                if(slab.getDescriptionId().contains("_limestone_")){
+                    condition = and(zCond("vertical_slabs"), zCond("limestone"));
+                }
+                else if(slab.getDescriptionId().contains("_jasper_")){
+                    condition = and(zCond("vertical_slabs"), zCond("jasper"));
+                }
+                else if(slab.getDescriptionId().contains("_shale_")){
+                    condition = and(zCond("vertical_slabs"), zCond("shale"));
+                }
+                else if(slab.getDescriptionId().contains("_myalite_")){
+                    condition = and(zCond("vertical_slabs"), zCond("myalite"));
+                }
+
+                //expanded vanilla stones
+                else if(slab.getDescriptionId().contains("_calcite_")){
+                    condition = and(zCond("vertical_slabs"), zCond("calcite"));
+                }
+                else if(slab.getDescriptionId().contains("_dripstone_")){
+                    condition = and(zCond("vertical_slabs"), zCond("dripstone"));
+                }
+            }
+            else if (slab.getDescriptionId().contains("_bricks")){
+                //polished world stones
+                if(slab.getDescriptionId().contains("limestone_")){
+                    condition = and(zCond("vertical_slabs"), zCond("stone_bricks"), zCond("limestone"));
+                }
+                else if(slab.getDescriptionId().contains("jasper_")){
+                    condition = and(zCond("vertical_slabs"), zCond("stone_bricks"), zCond("jasper"));
+                }
+                else if(slab.getDescriptionId().contains("shale_")){
+                    condition = and(zCond("vertical_slabs"), zCond("stone_bricks"), zCond("shale"));
+                }
+                else if(slab.getDescriptionId().contains("myalite_")){
+                    condition = and(zCond("vertical_slabs"), zCond("stone_bricks"), zCond("myalite"));
+                }
+
+                //expanded vanilla stones
+                else if(slab.getDescriptionId().contains("calcite_")){
+                    condition = and(zCond("vertical_slabs"), zCond("stone_bricks"), zCond("calcite"));
+                }
+                else if(slab.getDescriptionId().contains("dripstone_")){
+                    condition = and(zCond("vertical_slabs"), zCond("stone_bricks"), zCond("dripstone"));
+                }
+
+                //vanilla stones
+                else if(slab.getDescriptionId().contains("granite_")){
+                    condition = and(zCond("vertical_slabs"), zCond("stone_bricks"), zCond("granite"));
+                }
+                else if(slab.getDescriptionId().contains("diorite_")){
+                    condition = and(zCond("vertical_slabs"), zCond("stone_bricks"), zCond("diorite"));
+                }
+                else if(slab.getDescriptionId().contains("andesite_")){
+                    condition = and(zCond("vertical_slabs"), zCond("stone_bricks"), zCond("andesite"));
+                }
             }
 
-            //probably more config-dependent vert slabs
-
             String slabName = BuiltInRegistries.BLOCK.getKey(slab).getPath().replace("_slab", "");
-
             vertslabRecipe(RecipeCategory.BUILDING_BLOCKS, VerticalSlabsModule.blocks.get(slab), Ingredient.of(slab))
                     .unlockedBy("obtained_slab", InventoryChangeTrigger.TriggerInstance.hasItems(slab.asItem()))
                     .save(recipeOutput.withConditions(condition), "quark:building/crafting/vertslabs/" + slabName + "_vertical_slab");
@@ -716,18 +850,20 @@ public class QuarkRecipeProvider extends RecipeProvider implements IConditionBui
                     condition = zCond("blackstone_bricks");
                 } else if (base.getDescriptionId().contains("blue_nether_bricks")) {
                     condition = zCond("blue_nether_bricks");
-                } else if (base.getDescriptionId().contains("calcite_bricks")) {
-                    condition = zCond("more_stone_variants");
-                } else if (base.getDescriptionId().equals("block.minecraft.calcite")) {
-                    condition = zCond("calcite");
                 } else if (base.getDescriptionId().contains("cobblestone_bricks")) {
                     condition = zCond("cobblestone_bricks");
                 } else if (base.getDescriptionId().contains("dirt_bricks")) {
                     condition = zCond("dirt_bricks");
-                } else if (base.getDescriptionId().equals("block.minecraft.dripstone_block")) {
+                } else if (base.getDescriptionId().contains("calcite")) {
+                    condition = zCond("calcite");
+                    if(base.getDescriptionId().contains("bricks")){
+                        condition = and(zCond("calcite"), zCond("stone_bricks"));
+                    }
+                } else if (base.getDescriptionId().contains("dripstone")) {
                     condition = zCond("dripstone");
-                } else if (base.getDescriptionId().contains("dripstone_bricks")) {
-                    condition = zCond("dripstone");
+                    if(base.getDescriptionId().contains("bricks")){
+                        condition = and(zCond("dripstone"), zCond("stone_bricks"));
+                    }
                 } else if (base.getDescriptionId().contains("mossy_cobblestone_bricks")) {
                     condition = zCond("cobblestone_bricks");
                 } else if (base.getDescriptionId().contains("netherrack_bricks")) {
@@ -740,8 +876,12 @@ public class QuarkRecipeProvider extends RecipeProvider implements IConditionBui
                     condition = and(zCond("soul_sandstone"), zCond("sandstone_bricks"));
                 } else if (base.getDescriptionId().contains("tuff")) {
                     condition = zCond("tuff");
-                } else if (base.getDescriptionId().contains("tuff")) {
-                    condition = zCond("tuff");
+                } else if (base.getDescriptionId().contains("granite_bricks")) {
+                    condition = and(zCond("granite"), zCond("stone_bricks"));
+                } else if (base.getDescriptionId().contains("andesite_bricks")) {
+                    condition = and(zCond("andesite"), zCond("stone_bricks"));
+                } else if (base.getDescriptionId().contains("diorite_bricks")) {
+                    condition = and(zCond("diorite"), zCond("stone_bricks"));
                 }
             }
 
@@ -890,7 +1030,7 @@ public class QuarkRecipeProvider extends RecipeProvider implements IConditionBui
                 .define('#', Blocks.AZALEA_LEAVES)
                 .unlockedBy("test", PlayerTrigger.TriggerInstance.tick())
                 .save(recipeOutput.withConditions(zCond("leaf_carpet")), "quark:building/crafting/leafcarpet/azalea_leaf_carpet");
-        ShapedRecipeBuilder.shaped(RecipeCategory.BUILDING_BLOCKS, LeafCarpetModule.carpets.get(8), 3)
+        ShapedRecipeBuilder.shaped(RecipeCategory.BUILDING_BLOCKS, LeafCarpetModule.carpets.get(9), 3)
                 .pattern("##")
                 .define('#', Blocks.FLOWERING_AZALEA_LEAVES)
                 .unlockedBy("test", PlayerTrigger.TriggerInstance.tick())
@@ -1021,6 +1161,25 @@ public class QuarkRecipeProvider extends RecipeProvider implements IConditionBui
             i++;
         }
         //misc building blocks, loose files in building/crafting (midori, raw metal bricks, rope, ironplate, paperwall/lantern, thatch)
+        ShapedRecipeBuilder.shaped(RecipeCategory.BUILDING_BLOCKS, GoldBarsModule.gold_bars, 16)
+                .pattern("###")
+                .pattern("###")
+                .define('#', Tags.Items.INGOTS_GOLD)
+                .unlockedBy("test", PlayerTrigger.TriggerInstance.tick())
+                .save(recipeOutput.withConditions(zCond("gold_bars")), "quark:building/crafting/gold_bars");
+        ShapedRecipeBuilder.shaped(RecipeCategory.BUILDING_BLOCKS, JapanesePaletteModule.bambooMat, 2)
+                .pattern("SBS")
+                .pattern("BBB")
+                .pattern("SBS")
+                .define('B', Items.BAMBOO)
+                .define('S', Items.STICK)
+                .unlockedBy("test", PlayerTrigger.TriggerInstance.tick())
+                .save(recipeOutput.withConditions(zCond("bamboo_mat")), "quark:building/crafting/bamboo_mat");
+        ShapedRecipeBuilder.shaped(RecipeCategory.BUILDING_BLOCKS, JapanesePaletteModule.bambooMatCarpet, 4)
+                .pattern("MM")
+                .define('M', JapanesePaletteModule.bambooMat)
+                .unlockedBy("test", PlayerTrigger.TriggerInstance.tick())
+                .save(recipeOutput.withConditions(zCond("bamboo_mat")), "quark:building/crafting/bamboo_mat_carpet");
         ShapedRecipeBuilder.shaped(RecipeCategory.BUILDING_BLOCKS, IndustrialPaletteModule.blocks.get(3), 3)
                 .pattern("N N")
                 .pattern("NIN")
@@ -1066,7 +1225,16 @@ public class QuarkRecipeProvider extends RecipeProvider implements IConditionBui
                         .define('#', Items.STRING)
                         .unlockedBy("test", PlayerTrigger.TriggerInstance.tick())
                         .save(recipeOutput.withConditions(zCond("rope")), "quark:building/crafting/rope");
-
+        ShapedRecipeBuilder.shaped(RecipeCategory.BUILDING_BLOCKS, ThatchModule.thatch, 4)
+                .pattern("##")
+                .pattern("##")
+                .define('#', Items.WHEAT)
+                .unlockedBy("test", PlayerTrigger.TriggerInstance.tick())
+                .save(recipeOutput.withConditions(zCond("thatch")), "quark:building/crafting/thatch");
+        ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, Items.WHEAT, 1) //hay bale revert is also MISC category
+                .requires(ThatchModule.thatch)
+                .unlockedBy("test", PlayerTrigger.TriggerInstance.tick())
+                .save(recipeOutput.withConditions(zCond("thatch")), "quark:building/crafting/thatch_revert");
         ShapedRecipeBuilder.shaped(RecipeCategory.MISC, GlassItemFrameModule.glassFrame, 2)
                         .pattern("###")
                         .pattern("#F#")
@@ -1203,7 +1371,7 @@ public class QuarkRecipeProvider extends RecipeProvider implements IConditionBui
                 .define('#', SoulSandstoneModule.blocks.get(0))
                 .unlockedBy("test", PlayerTrigger.TriggerInstance.tick())
                 .save(recipeOutput.withConditions(zCond("soul_sandstone")), "quark:building/crafting/chiseled_soul_sandstone");
-        ShapedRecipeBuilder.shaped(RecipeCategory.BUILDING_BLOCKS, SoulSandstoneModule.blocks.get(3))
+        ShapedRecipeBuilder.shaped(RecipeCategory.BUILDING_BLOCKS, SoulSandstoneModule.blocks.get(2))
                 .pattern("##")
                 .pattern("##")
                 .define('#', SoulSandstoneModule.blocks.get(0))
@@ -1243,7 +1411,7 @@ public class QuarkRecipeProvider extends RecipeProvider implements IConditionBui
                 .define('I', Blocks.RAW_IRON_BLOCK)
                 .unlockedBy("test", PlayerTrigger.TriggerInstance.tick())
                 .save(recipeOutput.withConditions(zCond("raw_metal_bricks")), "quark:building/crafting/raw_iron_bricks");
-        ShapelessRecipeBuilder.shapeless(RecipeCategory.BUILDING_BLOCKS, Items.RAW_IRON, 1)
+        ShapelessRecipeBuilder.shapeless(RecipeCategory.BUILDING_BLOCKS, Items.RAW_IRON, 9)
                 .requires(RawMetalBricksModule.blocks.get(0))
                 .unlockedBy("test", PlayerTrigger.TriggerInstance.tick())
                 .save(recipeOutput.withConditions(zCond("raw_metal_bricks")), "quark:building/crafting/raw_iron_bricks_revert");
@@ -1253,7 +1421,7 @@ public class QuarkRecipeProvider extends RecipeProvider implements IConditionBui
                 .define('I', Blocks.RAW_GOLD_BLOCK)
                 .unlockedBy("test", PlayerTrigger.TriggerInstance.tick())
                 .save(recipeOutput.withConditions(zCond("raw_metal_bricks")), "quark:building/crafting/raw_gold_bricks");
-        ShapelessRecipeBuilder.shapeless(RecipeCategory.BUILDING_BLOCKS, Items.RAW_GOLD, 1)
+        ShapelessRecipeBuilder.shapeless(RecipeCategory.BUILDING_BLOCKS, Items.RAW_GOLD, 9)
                 .requires(RawMetalBricksModule.blocks.get(1))
                 .unlockedBy("test", PlayerTrigger.TriggerInstance.tick())
                 .save(recipeOutput.withConditions(zCond("raw_metal_bricks")), "quark:building/crafting/raw_gold_bricks_revert");
@@ -1263,12 +1431,12 @@ public class QuarkRecipeProvider extends RecipeProvider implements IConditionBui
                 .define('I', Blocks.RAW_COPPER_BLOCK)
                 .unlockedBy("test", PlayerTrigger.TriggerInstance.tick())
                 .save(recipeOutput.withConditions(zCond("raw_metal_bricks")), "quark:building/crafting/raw_copper_bricks");
-        ShapelessRecipeBuilder.shapeless(RecipeCategory.BUILDING_BLOCKS, Items.RAW_GOLD, 1)
+        ShapelessRecipeBuilder.shapeless(RecipeCategory.BUILDING_BLOCKS, Items.RAW_COPPER, 9)
                 .requires(RawMetalBricksModule.blocks.get(2))
                 .unlockedBy("test", PlayerTrigger.TriggerInstance.tick())
                 .save(recipeOutput.withConditions(zCond("raw_metal_bricks")), "quark:building/crafting/raw_copper_bricks_revert");
 
-        ShapedRecipeBuilder.shaped(RecipeCategory.BUILDING_BLOCKS, MidoriModule.blocks.get(0))
+        ShapedRecipeBuilder.shaped(RecipeCategory.BUILDING_BLOCKS, MidoriModule.blocks.get(0), 4)
                 .pattern("##")
                 .pattern("##")
                 .define('#', MidoriModule.moss_paste)
@@ -1370,7 +1538,7 @@ public class QuarkRecipeProvider extends RecipeProvider implements IConditionBui
                 .define('R', Tags.Items.DUSTS_REDSTONE)
                 .define('F', Items.CHORUS_FRUIT)
                 .unlockedBy("test", PlayerTrigger.TriggerInstance.tick())
-                .save(recipeOutput.withConditions(and(zCond("magnet"), not(zCond("magnet_pre_end")))), "quark:oddities/crafting/magnet");
+                .save(recipeOutput.withConditions(and(zCond("magnets"), not(zCond("magnet_pre_end")))), "quark:oddities/crafting/magnet");
         ShapedRecipeBuilder.shaped(RecipeCategory.REDSTONE, MagnetsModule.magnet)
                 .pattern("CIC")
                 .pattern("BPR")
@@ -1381,8 +1549,8 @@ public class QuarkRecipeProvider extends RecipeProvider implements IConditionBui
                 .define('R', Tags.Items.DUSTS_REDSTONE)
                 .define('P', Tags.Items.INGOTS_COPPER)
                 .unlockedBy("test", PlayerTrigger.TriggerInstance.tick())
-                .save(recipeOutput.withConditions(and(zCond("magnet"), zCond("magnet_pre_end"))), "quark:oddities/crafting/magnet_pre_end");
-        ShapedRecipeBuilder.shaped(RecipeCategory.REDSTONE, PipesModule.pipe)
+                .save(recipeOutput.withConditions(and(zCond("magnets"), zCond("magnet_pre_end"))), "quark:oddities/crafting/magnet_pre_end");
+        ShapedRecipeBuilder.shaped(RecipeCategory.REDSTONE, PipesModule.pipe, 6)
                 .pattern("I")
                 .pattern("G")
                 .pattern("I")
@@ -1431,7 +1599,7 @@ public class QuarkRecipeProvider extends RecipeProvider implements IConditionBui
                 .define('D', Tags.Items.GEMS_DIAMOND)
                 .unlockedBy("test", PlayerTrigger.TriggerInstance.tick())
                 .save(recipeOutput.withConditions(and(zCond("pickarang"), or(zCond("pickarang_never_uses_heart"), not(zCond("stonelings"))))), "quark:tools/crafting/pickarang_no_heart");
-        ShapedRecipeBuilder.shaped(RecipeCategory.TOOLS, ColorRunesModule.rune)
+        ShapedRecipeBuilder.shaped(RecipeCategory.TOOLS, ColorRunesModule.rune, 2)
                 .pattern("#S#")
                 .pattern("#C#")
                 .pattern("###")
@@ -1439,14 +1607,23 @@ public class QuarkRecipeProvider extends RecipeProvider implements IConditionBui
                 .define('S', Tags.Items.COBBLESTONES)
                 .define('C', ColorRunesModule.rune)
                 .unlockedBy("test", PlayerTrigger.TriggerInstance.tick())
-                .save(recipeOutput.withConditions(zCond("color_runes")), "quark:tools/crafting/rune_duplication");
-        ShapedRecipeBuilder.shaped(RecipeCategory.TOOLS, SeedPouchModule.seed_pouch, 1)
+                .save(recipeOutput.withConditions(zCond("color_runes"), zCond("corundum")), "quark:tools/crafting/rune_duplication");
+        ShapedRecipeBuilder.shaped(RecipeCategory.TOOLS, ColorRunesModule.rune, 2)
+                .pattern("#S#")
+                .pattern("#C#")
+                .pattern("###")
+                .define('#', Blocks.AMETHYST_BLOCK)
+                .define('S', Tags.Items.COBBLESTONES)
+                .define('C', ColorRunesModule.rune)
+                .unlockedBy("test", PlayerTrigger.TriggerInstance.tick())
+                .save(recipeOutput.withConditions(zCond("color_runes"), not(zCond("corundum"))), "quark:tools/crafting/rune_duplication_no_corundum");
+        ShapedRecipeBuilder.shaped(RecipeCategory.TOOLS, SeedPouchModule.seed_pouch)
                 .pattern(" S ")
                 .pattern("HXH")
                 .pattern(" H ")
                 .define('S', Items.STRING) //there does not seem to be a convention string tag
-                .define('H', TagKey.create(Registries.ITEM, ResourceLocation.fromNamespaceAndPath("quark", "seed_pouch_holdable")))
-                .define('X', ColorRunesModule.rune)
+                .define('X', TagKey.create(Registries.ITEM, ResourceLocation.fromNamespaceAndPath("quark", "seed_pouch_holdable")))
+                .define('H', Items.LEATHER) //should be this a tag? it's not in 1.20.
                 .unlockedBy("test", PlayerTrigger.TriggerInstance.tick())
                 .save(recipeOutput.withConditions(zCond("seed_pouch")), "quark:tools/crafting/seed_pouch");
         ShapelessRecipeBuilder.shapeless(RecipeCategory.TOOLS, TorchArrowModule.torch_arrow)
@@ -1581,7 +1758,7 @@ public class QuarkRecipeProvider extends RecipeProvider implements IConditionBui
                 .define('S', Tags.Items.RODS_WOODEN)
                 .unlockedBy("test", PlayerTrigger.TriggerInstance.tick())
                 .save(recipeOutput.withConditions(zCond("better_stone_tools")), "quark:tweaks/crafting/utility/better_stone_tools/axe");
-        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, Items.STONE_AXE)
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, Items.STONE_HOE)
                 .pattern("##")
                 .pattern(" S")
                 .pattern(" S")
@@ -1650,7 +1827,7 @@ public class QuarkRecipeProvider extends RecipeProvider implements IConditionBui
                 .define('X', Items.HOPPER)
                 .unlockedBy("test", PlayerTrigger.TriggerInstance.tick())
                 .save(recipeOutput.withConditions(zCond("minecart_upgrade")), "quark:tweaks/crafting/utility/misc/hopper_minecart");
-        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, Items.HOPPER_MINECART)
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, Items.REPEATER)
                 .pattern("X X")
                 .pattern("#X#")
                 .pattern("III")
@@ -1672,49 +1849,49 @@ public class QuarkRecipeProvider extends RecipeProvider implements IConditionBui
 
             //glass (new 1.21)
         shardGlassRecipe(Items.BLACK_STAINED_GLASS).unlockedBy("test", PlayerTrigger.TriggerInstance.tick())
-                .save(recipeOutput.withConditions(zCond("glass_shard")), "quark:tweaks/crafting/utility/glass/black_glass");
+                .save(recipeOutput.withConditions(zCond("glass_shard")), "quark:tweaks/crafting/glass/black_glass");
         shardGlassRecipe(Items.BLUE_STAINED_GLASS).unlockedBy("test", PlayerTrigger.TriggerInstance.tick())
-                .save(recipeOutput.withConditions(zCond("glass_shard")), "quark:tweaks/crafting/utility/glass/blue_glass");
+                .save(recipeOutput.withConditions(zCond("glass_shard")), "quark:tweaks/crafting/glass/blue_glass");
         shardGlassRecipe(Items.BROWN_STAINED_GLASS).unlockedBy("test", PlayerTrigger.TriggerInstance.tick())
-                .save(recipeOutput.withConditions(zCond("glass_shard")), "quark:tweaks/crafting/utility/glass/brown_glass");
+                .save(recipeOutput.withConditions(zCond("glass_shard")), "quark:tweaks/crafting/glass/brown_glass");
         ShapedRecipeBuilder.shaped(RecipeCategory.MISC, Items.GLASS)
                 .pattern("##")
                 .pattern("##")
                 .define('#', GlassShardModule.clearShard)
                 .unlockedBy("test", PlayerTrigger.TriggerInstance.tick())
-                .save(recipeOutput.withConditions(zCond("glass_shard")), "quark:tweaks/crafting/utility/glass/clear_glass");
+                .save(recipeOutput.withConditions(zCond("glass_shard")), "quark:tweaks/crafting/glass/clear_glass");
         shardGlassRecipe(Items.CYAN_STAINED_GLASS).unlockedBy("test", PlayerTrigger.TriggerInstance.tick())
-                .save(recipeOutput.withConditions(zCond("glass_shard")), "quark:tweaks/crafting/utility/glass/cyan_glass");
+                .save(recipeOutput.withConditions(zCond("glass_shard")), "quark:tweaks/crafting/glass/cyan_glass");
         ShapedRecipeBuilder.shaped(RecipeCategory.MISC, GlassShardModule.dirtyGlass)
                 .pattern("##")
                 .pattern("##")
                 .define('#', GlassShardModule.dirtyShard)
                 .unlockedBy("test", PlayerTrigger.TriggerInstance.tick())
-                .save(recipeOutput.withConditions(zCond("glass_shard")), "quark:tweaks/crafting/utility/glass/dirty_glass");
+                .save(recipeOutput.withConditions(zCond("glass_shard")), "quark:tweaks/crafting/glass/dirty_glass");
         shardGlassRecipe(Items.GRAY_STAINED_GLASS).unlockedBy("test", PlayerTrigger.TriggerInstance.tick())
-                .save(recipeOutput.withConditions(zCond("glass_shard")), "quark:tweaks/crafting/utility/glass/gray_glass");
+                .save(recipeOutput.withConditions(zCond("glass_shard")), "quark:tweaks/crafting/glass/gray_glass");
         shardGlassRecipe(Items.GREEN_STAINED_GLASS).unlockedBy("test", PlayerTrigger.TriggerInstance.tick())
-                .save(recipeOutput.withConditions(zCond("glass_shard")), "quark:tweaks/crafting/utility/glass/green_glass");
+                .save(recipeOutput.withConditions(zCond("glass_shard")), "quark:tweaks/crafting/glass/green_glass");
         shardGlassRecipe(Items.LIGHT_BLUE_STAINED_GLASS).unlockedBy("test", PlayerTrigger.TriggerInstance.tick())
-                .save(recipeOutput.withConditions(zCond("glass_shard")), "quark:tweaks/crafting/utility/glass/light_blue_glass");
+                .save(recipeOutput.withConditions(zCond("glass_shard")), "quark:tweaks/crafting/glass/light_blue_glass");
         shardGlassRecipe(Items.LIGHT_GRAY_STAINED_GLASS).unlockedBy("test", PlayerTrigger.TriggerInstance.tick())
-                .save(recipeOutput.withConditions(zCond("glass_shard")), "quark:tweaks/crafting/utility/glass/light_gray_glass");
+                .save(recipeOutput.withConditions(zCond("glass_shard")), "quark:tweaks/crafting/glass/light_gray_glass");
         shardGlassRecipe(Items.LIME_STAINED_GLASS).unlockedBy("test", PlayerTrigger.TriggerInstance.tick())
-                .save(recipeOutput.withConditions(zCond("glass_shard")), "quark:tweaks/crafting/utility/glass/lime_glass");
+                .save(recipeOutput.withConditions(zCond("glass_shard")), "quark:tweaks/crafting/glass/lime_glass");
         shardGlassRecipe(Items.MAGENTA_STAINED_GLASS).unlockedBy("test", PlayerTrigger.TriggerInstance.tick())
-                .save(recipeOutput.withConditions(zCond("glass_shard")), "quark:tweaks/crafting/utility/glass/magenta_glass");
+                .save(recipeOutput.withConditions(zCond("glass_shard")), "quark:tweaks/crafting/glass/magenta_glass");
         shardGlassRecipe(Items.ORANGE_STAINED_GLASS).unlockedBy("test", PlayerTrigger.TriggerInstance.tick())
-                .save(recipeOutput.withConditions(zCond("glass_shard")), "quark:tweaks/crafting/utility/glass/orange_glass");
+                .save(recipeOutput.withConditions(zCond("glass_shard")), "quark:tweaks/crafting/glass/orange_glass");
         shardGlassRecipe(Items.PINK_STAINED_GLASS).unlockedBy("test", PlayerTrigger.TriggerInstance.tick())
-                .save(recipeOutput.withConditions(zCond("glass_shard")), "quark:tweaks/crafting/utility/glass/pink_glass");
+                .save(recipeOutput.withConditions(zCond("glass_shard")), "quark:tweaks/crafting/glass/pink_glass");
         shardGlassRecipe(Items.PURPLE_STAINED_GLASS).unlockedBy("test", PlayerTrigger.TriggerInstance.tick())
-                .save(recipeOutput.withConditions(zCond("glass_shard")), "quark:tweaks/crafting/utility/glass/purple_glass");
+                .save(recipeOutput.withConditions(zCond("glass_shard")), "quark:tweaks/crafting/glass/purple_glass");
         shardGlassRecipe(Items.RED_STAINED_GLASS).unlockedBy("test", PlayerTrigger.TriggerInstance.tick())
-                .save(recipeOutput.withConditions(zCond("glass_shard")), "quark:tweaks/crafting/utility/glass/red_glass");
+                .save(recipeOutput.withConditions(zCond("glass_shard")), "quark:tweaks/crafting/glass/red_glass");
         shardGlassRecipe(Items.WHITE_STAINED_GLASS).unlockedBy("test", PlayerTrigger.TriggerInstance.tick())
-                .save(recipeOutput.withConditions(zCond("glass_shard")), "quark:tweaks/crafting/utility/glass/white_glass");
+                .save(recipeOutput.withConditions(zCond("glass_shard")), "quark:tweaks/crafting/glass/white_glass");
         shardGlassRecipe(Items.YELLOW_STAINED_GLASS).unlockedBy("test", PlayerTrigger.TriggerInstance.tick())
-                .save(recipeOutput.withConditions(zCond("glass_shard")), "quark:tweaks/crafting/utility/glass/yellow_glass");
+                .save(recipeOutput.withConditions(zCond("glass_shard")), "quark:tweaks/crafting/glass/yellow_glass");
 
 
         //CATEGORY: World
@@ -1816,12 +1993,45 @@ public class QuarkRecipeProvider extends RecipeProvider implements IConditionBui
                 .unlockedBy(getHasName(PermafrostModule.blocks.get(1)), has(PermafrostModule.blocks.get(1)))
                 .save(recipeOutput.withConditions(zCond("permafrost")), "quark:world/crafting/stairs/permafrost_bricks_stairs");
 
-        // world wood doors, trapdoors, fences, gates, signs, boats
+        // world wood planks, wood (bark), doors, trapdoors, fences, gates, signs, boats, pressure plates, button
         for(WoodSetHandler.WoodSet set : DataUtil.QuarkWorldWoodSets){
-            ICondition cond = zCond(set.name + "_wood");
+            ICondition cond;
+            TagKey<Item> logTag;
             if (set == BlossomTreesModule.woodSet) {
                 cond = zCond("blossom_trees");
+                logTag = Quark.asTagKey(Registries.ITEM, "blossom_logs");
             }
+            else
+            {
+                cond = zCond(set.name + "_wood");
+                logTag = Quark.asTagKey(Registries.ITEM, set.name + "_logs");
+            }
+
+            ShapelessRecipeBuilder.shapeless(RecipeCategory.BUILDING_BLOCKS, set.planks, 4)
+                    .requires(logTag)
+                    .group("planks")
+                    .unlockedBy("has_log", has(logTag))
+                    .save(recipeOutput.withConditions(cond), "quark:world/crafting/woodsets/" + set.name + "/" + set.name + "_planks");
+            ShapedRecipeBuilder.shaped(RecipeCategory.BUILDING_BLOCKS, set.wood, 3)
+                    .define('#', set.log)
+                    .pattern("##")
+                    .pattern("##")
+                    .group("bark")
+                    .unlockedBy("has_log", has(set.log))
+                    .save(recipeOutput.withConditions(cond), "quark:world/crafting/woodsets/" + set.name + "/" + set.name + "_wood");
+            ShapedRecipeBuilder.shaped(RecipeCategory.BUILDING_BLOCKS, set.strippedWood, 3)
+                    .define('#', set.strippedLog)
+                    .pattern("##")
+                    .pattern("##")
+                    .group("bark")
+                    .unlockedBy("has_log", has(set.strippedLog))
+                    .save(recipeOutput.withConditions(cond), "quark:world/crafting/woodsets/" + set.name + "/stripped_" + set.name + "_wood");
+            stairBuilder(DataUtil.regSearch(Quark.asResource(set.name + "_planks_stairs")), Ingredient.of(set.planks))
+                    .unlockedBy(getHasName(set.planks), has(set.planks))
+                    .save(recipeOutput.withConditions(cond), "quark:world/crafting/woodsets/" + set.name + "/" + set.name + "_stairs");
+            slabBuilder(RecipeCategory.BUILDING_BLOCKS, DataUtil.regSearch(Quark.asResource(set.name + "_planks_slab")), Ingredient.of(set.planks))
+                    .unlockedBy(getHasName(set.planks), has(set.planks))
+                    .save(recipeOutput.withConditions(cond), "quark:world/crafting/woodsets/" + set.name + "/" + set.name + "_slab");
 
             doorBuilder(set.door, Ingredient.of(set.planks.asItem()))
                     .unlockedBy(getHasName(set.planks), has(set.planks))
@@ -1838,6 +2048,13 @@ public class QuarkRecipeProvider extends RecipeProvider implements IConditionBui
             signBuilder(set.sign, Ingredient.of(set.planks.asItem()))
                     .unlockedBy(getHasName(set.planks), has(set.planks))
                     .save(recipeOutput.withConditions(cond), "quark:world/crafting/woodsets/" + set.name + "/" + set.name + "_sign");
+
+            pressurePlateBuilder(RecipeCategory.REDSTONE, set.pressurePlate, Ingredient.of(set.planks))
+                    .unlockedBy(getHasName(set.planks), has(set.planks))
+                    .save(recipeOutput.withConditions(cond), "quark:world/crafting/woodsets/" + set.name + "/" + set.name + "_pressure_plate");
+            buttonBuilder(set.button, Ingredient.of(set.planks))
+                    .unlockedBy(getHasName(set.planks), has(set.planks))
+                    .save(recipeOutput.withConditions(cond), "quark:world/crafting/woodsets/" + set.name + "/" + set.name + "_button");
 
             ShapedRecipeBuilder.shaped(RecipeCategory.DECORATIONS, set.hangingSignItem, 6)
                     .pattern("C C")
@@ -1898,6 +2115,14 @@ public class QuarkRecipeProvider extends RecipeProvider implements IConditionBui
 
     public static ShapedRecipeBuilder fourChestRecipe(ItemLike output, TagKey<Item> log) {
         return ShapedRecipeBuilder.shaped(RecipeCategory.MISC, output, 4)
+                .pattern("###")
+                .pattern("# #")
+                .pattern("###")
+                .define('#', log);
+    }
+
+    public static ShapedRecipeBuilder twoChestRecipe(ItemLike output, TagKey<Item> log) {
+        return ShapedRecipeBuilder.shaped(RecipeCategory.MISC, output, 2)
                 .pattern("###")
                 .pattern("# #")
                 .pattern("###")

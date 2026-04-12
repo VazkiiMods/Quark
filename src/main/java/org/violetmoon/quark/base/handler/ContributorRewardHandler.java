@@ -1,17 +1,12 @@
 package org.violetmoon.quark.base.handler;
 
 import com.google.common.collect.ImmutableSet;
-import com.mojang.authlib.minecraft.MinecraftProfileTexture;
 
+import com.mojang.authlib.GameProfile;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.multiplayer.PlayerInfo;
-import net.minecraft.client.player.AbstractClientPlayer;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
 
-import net.minecraft.world.entity.player.PlayerModelPart;
 import org.violetmoon.quark.base.Quark;
-import org.violetmoon.zeta.client.event.play.ZRenderPlayer;
 import org.violetmoon.zeta.event.bus.LoadEvent;
 import org.violetmoon.zeta.event.bus.PlayEvent;
 import org.violetmoon.zeta.event.load.ZCommonSetup;
@@ -25,7 +20,7 @@ import java.util.*;
 
 public class ContributorRewardHandler {
 
-	private static final ImmutableSet<String> DEV_UUID = ImmutableSet.of(
+	public static final ImmutableSet<String> DEV_UUID = ImmutableSet.of(
 			"8c826f34-113b-4238-a173-44639c53b6e6", // Vazkii
 			"0d054077-a977-4b19-9df9-8a4d5bf20ec3", // wi0iv
 			"458391f5-6303-4649-b416-e4c0d18f837a", // yrsegal
@@ -33,7 +28,8 @@ public class ContributorRewardHandler {
 			"6c175d10-198a-49f9-8e2b-c74f1f0178f3", // MilkBringer / Sully
 //			"873dea16-d058-4343-861c-f62c21da124b", // quaternary     (no thanks -quat)
 			"07cb3dfd-ee1d-4ecf-b5b5-f70d317a82eb", // Siuolplex
-			"e67eb09a-b5af-4822-b756-9065cdc49913"  // IThundxr
+			"e67eb09a-b5af-4822-b756-9065cdc49913",  // IThundxr
+            "23a6dcbe-b222-4ddc-815b-9ebff5076530" // Train
 	);
 
 	private static final Set<String> done = Collections.newSetFromMap(new WeakHashMap<>());
@@ -74,6 +70,8 @@ public class ContributorRewardHandler {
 
 	private static void load(Properties props) {
 		List<String> allPatrons = new ArrayList<>(props.size());
+
+
 
 		props.forEach((k, v) -> {
 			String key = (String) k;

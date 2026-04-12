@@ -1,0 +1,7 @@
+{
+  "replace": false,
+  "values": [
+    "quark:framed_glass_pane",
+    "#quark:stained_framed_glass_panes"
+  ]
+}

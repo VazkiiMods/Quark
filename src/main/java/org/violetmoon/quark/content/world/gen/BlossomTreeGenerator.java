@@ -4,7 +4,6 @@ import java.util.Optional;
 
 import net.minecraft.tags.BlockTags;
 import net.minecraft.world.level.block.FarmBlock;
-import net.minecraft.world.level.block.SaplingBlock;
 import org.violetmoon.quark.content.world.config.BlossomTreeConfig;
 import org.violetmoon.zeta.world.generator.Generator;
 

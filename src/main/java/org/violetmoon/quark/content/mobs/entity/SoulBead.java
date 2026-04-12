@@ -19,10 +19,11 @@ import org.violetmoon.quark.base.handler.QuarkSounds;
 
 public class SoulBead extends Entity {
 
-	private static final EntityDataAccessor<Integer> TARGET_X = SynchedEntityData.defineId(SoulBead.class, EntityDataSerializers.INT);
+    private static final EntityDataAccessor<Integer> LIFE_TICKS = SynchedEntityData.defineId(SoulBead.class, EntityDataSerializers.INT);
+    private static final EntityDataAccessor<Integer> TARGET_X = SynchedEntityData.defineId(SoulBead.class, EntityDataSerializers.INT);
 	private static final EntityDataAccessor<Integer> TARGET_Z = SynchedEntityData.defineId(SoulBead.class, EntityDataSerializers.INT);
 
-	private int liveTicks = 0;
+    private static final String TAG_LIFE_TICKS = "lifeTicks";
 	private static final String TAG_TARGET_X = "targetX";
 	private static final String TAG_TARGET_Z = "targetZ";
 
@@ -31,12 +32,14 @@ public class SoulBead extends Entity {
 	}
 
 	public void setTarget(int x, int z) {
+        entityData.set(LIFE_TICKS, 0);
 		entityData.set(TARGET_X, x);
 		entityData.set(TARGET_Z, z);
 	}
 
 	@Override
 	protected void defineSynchedData(SynchedEntityData.Builder builder) {
+        builder.define(LIFE_TICKS, 0);
 		builder.define(TARGET_X, 0);
 		builder.define(TARGET_Z, 0);
 	}
@@ -45,6 +48,7 @@ public class SoulBead extends Entity {
 	public void tick() {
 		super.tick();
 
+        int liveTicks = entityData.get(LIFE_TICKS);
 		double posSpread = 0.4;
 		double scale = 0.08;
 		double rotateSpread = 1.5;
@@ -78,19 +82,24 @@ public class SoulBead extends Entity {
 			level().playSound(null, bpx, bpy, bpz, QuarkSounds.ENTITY_SOUL_BEAD_IDLE, SoundSource.PLAYERS, 0.2F, 1F);
 
 		liveTicks++;
-		if(liveTicks > maxLiveTime)
-			removeAfterChangingDimensions();
+		if(liveTicks > maxLiveTime) {
+            removeAfterChangingDimensions();
+        } else {
+            entityData.set(LIFE_TICKS, liveTicks);
+        }
 	}
 
 	@Override
 	public void addAdditionalSaveData(@NotNull CompoundTag compound) {
-		entityData.set(TARGET_X, compound.getInt(TAG_TARGET_X));
-		entityData.set(TARGET_Z, compound.getInt(TAG_TARGET_Z));
+        compound.putInt(TAG_TARGET_X, entityData.get(TARGET_X));
+        compound.putInt(TAG_TARGET_Z, entityData.get(TARGET_Z));
+        compound.putInt(TAG_LIFE_TICKS, entityData.get(LIFE_TICKS));
 	}
 
 	@Override
 	protected void readAdditionalSaveData(@NotNull CompoundTag compound) {
-		compound.putInt(TAG_TARGET_X, entityData.get(TARGET_X));
-		compound.putInt(TAG_TARGET_Z, entityData.get(TARGET_Z));
+        entityData.set(TARGET_X, compound.getInt(TAG_TARGET_X));
+        entityData.set(TARGET_Z, compound.getInt(TAG_TARGET_Z));
+        entityData.set(LIFE_TICKS, compound.getInt(TAG_LIFE_TICKS));
 	}
 }

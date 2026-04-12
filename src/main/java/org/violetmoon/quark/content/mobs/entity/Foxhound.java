@@ -16,6 +16,7 @@ import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
@@ -35,11 +36,9 @@ import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.goal.*;
 import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal;
 import net.minecraft.world.entity.ai.goal.target.NonTameRandomTargetGoal;
+import net.minecraft.world.entity.ai.goal.target.OwnerHurtByTargetGoal;
 import net.minecraft.world.entity.ai.goal.target.OwnerHurtTargetGoal;
-import net.minecraft.world.entity.animal.Animal;
-import net.minecraft.world.entity.animal.Rabbit;
-import net.minecraft.world.entity.animal.Sheep;
-import net.minecraft.world.entity.animal.Wolf;
+import net.minecraft.world.entity.animal.*;
 import net.minecraft.world.entity.monster.Enemy;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.DyeColor;
@@ -50,46 +49,47 @@ import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.biome.Biomes;
+import net.minecraft.world.level.block.LeavesBlock;
 import net.minecraft.world.level.block.entity.AbstractFurnaceBlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.pathfinder.PathType;
+import net.minecraft.world.level.pathfinder.WalkNodeEvaluator;
 import net.minecraft.world.level.storage.loot.LootTable;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
-import org.violetmoon.quark.addons.oddities.block.TinyPotatoBlock;
 import org.violetmoon.quark.addons.oddities.module.TinyPotatoModule;
 import org.violetmoon.quark.base.Quark;
 import org.violetmoon.quark.base.components.QuarkDataComponents;
 import org.violetmoon.quark.base.handler.QuarkSounds;
-import org.violetmoon.quark.content.mobs.ai.FindPlaceToSleepGoal;
-import org.violetmoon.quark.content.mobs.ai.SleepGoal;
+import org.violetmoon.quark.content.mobs.ai.FoxhoundPlaceToRestGoal;
 import org.violetmoon.quark.content.mobs.module.FoxhoundModule;
 import org.violetmoon.quark.content.tweaks.ai.WantLoveGoal;
-import org.violetmoon.quark.mixin.mixins.accessor.AccessorWolf;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
-import static org.violetmoon.quark.content.mobs.ai.FindPlaceToSleepGoal.Target.*;
+import static org.violetmoon.quark.content.mobs.ai.FoxhoundPlaceToRestGoal.Target.*;
 
 public class Foxhound extends Wolf implements Enemy {
 
-	public static final ResourceKey<LootTable> FOXHOUND_LOOT_TABLE = Quark.asResourceKey(Registries.LOOT_TABLE, "entities/foxhound");
+
+    public static final ResourceKey<LootTable> FOXHOUND_LOOT_TABLE = Quark.asResourceKey(Registries.LOOT_TABLE, "entities/foxhound");
 	private static final EntityDataAccessor<Boolean> TEMPTATION = SynchedEntityData.defineId(Foxhound.class, EntityDataSerializers.BOOLEAN);
 	private static final EntityDataAccessor<Boolean> IS_BLUE = SynchedEntityData.defineId(Foxhound.class, EntityDataSerializers.BOOLEAN);
 	private static final EntityDataAccessor<Boolean> TATERING = SynchedEntityData.defineId(Foxhound.class, EntityDataSerializers.BOOLEAN);
 	private static final EntityDataAccessor<Integer> COLLAR_COLOR = SynchedEntityData.defineId(Foxhound.class, EntityDataSerializers.INT);
+    private static final EntityDataAccessor<Boolean> IS_RESTING = SynchedEntityData.defineId(Foxhound.class, EntityDataSerializers.BOOLEAN);
 
 	private int timeUntilPotatoEmerges = 0;
+    private int ticksUntilICanSleep = 0;
 
-	public Foxhound(EntityType<? extends Foxhound> type, Level worldIn) {
+    public Foxhound(EntityType<? extends Foxhound> type, Level worldIn) {
 		super(type, worldIn);
 		this.setPathfindingMalus(PathType.WATER, -1.0F);
 		this.setPathfindingMalus(PathType.LAVA, 1.0F);
-		this.setPathfindingMalus(PathType.DANGER_FIRE, 1.0F);
-		this.setPathfindingMalus(PathType.DAMAGE_FIRE, 1.0F); //TODO is there a reason this is here twice?
+		this.setPathfindingMalus(PathType.DANGER_FIRE, 4.0F);
+		this.setPathfindingMalus(PathType.DAMAGE_FIRE, 4.0F); // IT DOESNT SAY DAMAGE TWICE ITS DANGER AND THEN DAMAGE
 	}
 
 	@Override
@@ -102,6 +102,7 @@ public class Foxhound extends Wolf implements Enemy {
 		builder.define(TEMPTATION, false);
 		builder.define(IS_BLUE, false);
 		builder.define(TATERING, false);
+        builder.define(IS_RESTING, false);
 	}
 
 	@Override
@@ -137,19 +138,11 @@ public class Foxhound extends Wolf implements Enemy {
 	public void tick() {
 		super.tick();
 
-		Pose pose = getPose();
-		if(isSleeping()) {
-			if(pose != Pose.SLEEPING)
-				setPose(Pose.SLEEPING);
-		} else if(pose == Pose.SLEEPING)
-			setPose(Pose.STANDING);
-
-
 		Level level = level();
-		if(!level.isClientSide && level.getDifficulty() == Difficulty.PEACEFUL && !isTame()) {
-			discard();
-			return;
-		}
+
+        if (ticksUntilICanSleep > 0) {
+            ticksUntilICanSleep--;
+        }
 
 		if(!level.isClientSide && timeUntilPotatoEmerges > 0) {
 			if(--timeUntilPotatoEmerges == 0) {
@@ -163,18 +156,12 @@ public class Foxhound extends Wolf implements Enemy {
 				setTatering(true);
 		}
 
-		if(isSleeping()) {
-			Optional<BlockPos> sleepPos = getSleepingPos();
-			if(sleepPos.isPresent()) {
-				BlockPos pos = sleepPos.get();
-				if(distanceToSqr(pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5) > 1)
-					stopSleeping();
-			}
-
+		/*if(isResting()) {
 			AABB aabb = getBoundingBox();
 			if(aabb.getYsize() < 0.21)
 				setBoundingBox(new AABB(aabb.minX - 0.2, aabb.minY, aabb.minZ - 0.2, aabb.maxX + 0.2, aabb.maxY + 0.5, aabb.maxZ + 0.2));
 		}
+		 */
 
 		if(WantLoveGoal.needsPets(this)) {
 			Entity owner = getOwner();
@@ -185,7 +172,7 @@ public class Foxhound extends Wolf implements Enemy {
 		Vec3 pos = position();
 		if(level.isClientSide && (!this.isBaby() ^ random.nextBoolean())) {
 			SimpleParticleType particle = ParticleTypes.FLAME;
-			if(isSleeping())
+			if(isResting())
 				particle = ParticleTypes.SMOKE;
 			else if(isBlue())
 				particle = ParticleTypes.SOUL_FIRE_FLAME;
@@ -230,32 +217,31 @@ public class Foxhound extends Wolf implements Enemy {
 		return FOXHOUND_LOOT_TABLE;
 	}
 
-	protected SleepGoal sleepGoal;
 
 	@Override
 	protected void registerGoals() {
-		this.sleepGoal = new SleepGoal(this);
 		this.goalSelector.addGoal(1, new FloatGoal(this));
-		this.goalSelector.addGoal(2, this.sleepGoal);
-		this.goalSelector.addGoal(3, new SitWhenOrderedToGoal(this));
-		this.goalSelector.addGoal(4, new LeapAtTargetGoal(this, 0.4F));
-		this.goalSelector.addGoal(5, new MeleeAttackGoal(this, 1.0D, true));
-		this.goalSelector.addGoal(6, new FollowOwnerGoal(this, 1.0D, 10.0F, 2.0F));
-		this.goalSelector.addGoal(7, new BreedGoal(this, 1.0D));
-		this.goalSelector.addGoal(8, new FindPlaceToSleepGoal(this, 0.8D, LIT_FURNACE));
-		this.goalSelector.addGoal(9, new FindPlaceToSleepGoal(this, 0.8D, FURNACE));
-		this.goalSelector.addGoal(10, new FindPlaceToSleepGoal(this, 0.8D, GLOWING));
-		this.goalSelector.addGoal(11, new WaterAvoidingRandomStrollGoal(this, 1.0D));
+        //this.goalSelector.addGoal(2, new FoxhoundSleepGoal(this));
+		this.goalSelector.addGoal(2, new SitWhenOrderedToGoal(this));
+		this.goalSelector.addGoal(3, new LeapAtTargetGoal(this, 0.4F));
+		this.goalSelector.addGoal(4, new MeleeAttackGoal(this, 1.0D, true));
+		this.goalSelector.addGoal(5, new BreedGoal(this, 1.0D));
+		this.goalSelector.addGoal(6, new FoxhoundPlaceToRestGoal(this, 0.8D, LIT_FURNACE));
+		this.goalSelector.addGoal(7, new FoxhoundPlaceToRestGoal(this, 0.8D, FURNACE));
+		this.goalSelector.addGoal(8, new FoxhoundPlaceToRestGoal(this, 0.8D, GLOWING));
+        this.goalSelector.addGoal(9, new FollowOwnerGoal(this, 1.0D, 10.0F, 2.0F));
+        this.goalSelector.addGoal(11, new WaterAvoidingRandomStrollGoal(this, 1.0D));
 		this.goalSelector.addGoal(12, new BegGoal(this, 8.0F));
 		this.goalSelector.addGoal(13, new LookAtPlayerGoal(this, Player.class, 8.0F));
 		this.goalSelector.addGoal(14, new RandomLookAroundGoal(this));
-		this.targetSelector.addGoal(1, new HurtByTargetGoal(this));
-		this.targetSelector.addGoal(2, new OwnerHurtTargetGoal(this));
-		this.targetSelector.addGoal(3, new HurtByTargetGoal(this).setAlertOthers());
-		this.targetSelector.addGoal(4, new NonTameRandomTargetGoal<>(this, Animal.class, false,
+		this.targetSelector.addGoal(1, new OwnerHurtByTargetGoal(this));
+		this.targetSelector.addGoal(2, new HurtByTargetGoal(this));
+		this.targetSelector.addGoal(3, new OwnerHurtTargetGoal(this));
+		this.targetSelector.addGoal(4, new HurtByTargetGoal(this).setAlertOthers());
+		this.targetSelector.addGoal(5, new NonTameRandomTargetGoal<>(this, Animal.class, false,
 				target -> target instanceof Sheep || target instanceof Rabbit));
-		this.targetSelector.addGoal(4, new NonTameRandomTargetGoal<>(this, Player.class, false,
-				target -> !isTame()));
+		this.targetSelector.addGoal(6, new NonTameRandomTargetGoal<>(this, Player.class, false,
+				target -> !isTame() && target.level().getDifficulty() != Difficulty.PEACEFUL));
 //		this.targetSelector.addGoal(5, new NearestAttackableTargetGoal<>(this, AbstractSkeletonEntity.class, false));
 	}
 
@@ -268,25 +254,32 @@ public class Foxhound extends Wolf implements Enemy {
 
 	@Override
 	public boolean doHurtTarget(Entity entityIn) {
-		if(entityIn.getType().fireImmune()) {
-			if(entityIn instanceof Player)
+        if (level().getDifficulty() == Difficulty.PEACEFUL && (entityIn instanceof Player)) {
+            return false;
+        }
+
+		if(!entityIn.fireImmune()) { //unless the entity overrides fireImmune, this will only check the entitytype
+			if(entityIn instanceof LivingEntity le && (le.hasEffect(MobEffects.FIRE_RESISTANCE) ||
+					(le.getAttribute(Attributes.BURNING_TIME) != null) && le.getAttributeValue(Attributes.BURNING_TIME) <= 0)){
 				return false;
+			}
+			if(entityIn instanceof ServerPlayer player && player.isDamageSourceBlocked(level().damageSources().mobAttack(this))){
+				return super.doHurtTarget(entityIn); //hurt without igniting, causes shield to block
+			}
+			entityIn.igniteForSeconds(5);
 			return super.doHurtTarget(entityIn);
 		}
 
-		boolean flag = entityIn.hurt(level().damageSources().onFire(),
-				((int) this.getAttributeValue(Attributes.ATTACK_DAMAGE)));
-
-		if(flag) {
-			entityIn.igniteForSeconds(5);
-		}
-		return flag;
+		return false;
 	}
 
 	@Override
 	public boolean hurt(@NotNull DamageSource source, float amount) {
-		setWoke();
-		return super.hurt(source, amount);
+		if (super.hurt(source, amount)) {
+            setResting(false);
+            return true;
+        }
+        return false;
 	}
 
 	@NotNull
@@ -294,8 +287,24 @@ public class Foxhound extends Wolf implements Enemy {
 	public InteractionResult mobInteract(Player player, @NotNull InteractionHand hand) {
 		ItemStack itemstack = player.getItemInHand(hand);
 
+		//debugging code
+		if(itemstack.is(Items.DEBUG_STICK) && !player.level().isClientSide()){
+            if(isResting()){
+                // #5327 - isSleeping is always returning false.
+                //vanilla foxes have their own isSleeping method instead of using the LivingEntity method,
+                //but that uses entity data which is synced, ai goals (which we are using for sleep) are not.
+                player.sendSystemMessage(Component.literal("setResting(false)"));
+                setResting(false);
+            }
+            else{
+                player.sendSystemMessage(Component.literal("setSleeping(true)"));
+                setResting(true);
+                return InteractionResult.CONSUME;
+            }
+		}
+
 		if(itemstack.getItem() == Items.BONE && !isTame())
-			return InteractionResult.PASS;
+			return InteractionResult.PASS; //prevent bone being passed to superclass
 
 		Level level = level();
 		if(this.isTame()) {
@@ -314,7 +323,7 @@ public class Foxhound extends Wolf implements Enemy {
 						this.tame(player);
 						this.navigation.stop();
 						this.setTarget(null);
-						this.setOrderedToSit(true);
+						this.setInSittingPose(true);
 						this.setHealth(20.0F);
 						level.broadcastEntityEvent(this, (byte) 7);
 					} else {
@@ -329,8 +338,12 @@ public class Foxhound extends Wolf implements Enemy {
 		}
 
 		InteractionResult res = super.mobInteract(player, hand);
-		if(res.consumesAction() && !level.isClientSide)
-			setWoke();
+		if(res.consumesAction()) {
+            setResting(false);
+            if (isOrderedToSit()) {
+                setInSittingPose(true);
+            }
+        }
 
 		return res;
 	}
@@ -361,8 +374,9 @@ public class Foxhound extends Wolf implements Enemy {
 		super.addAdditionalSaveData(compound);
 
 		compound.putInt("OhLawdHeComin", timeUntilPotatoEmerges);
-		compound.putBoolean("IsSlep", isSleeping());
+		compound.putBoolean("IsSlep", isResting());
 		compound.putBoolean("IsBlue", isBlue());
+        compound.putInt("ticksUntilICanSleep", ticksUntilICanSleep);
 	}
 
 	@Override
@@ -370,13 +384,14 @@ public class Foxhound extends Wolf implements Enemy {
 		super.readAdditionalSaveData(compound);
 
 		timeUntilPotatoEmerges = compound.getInt("OhLawdHeComin");
-		setInSittingPose(compound.getBoolean("IsSlep"));
+		setResting(compound.getBoolean("IsSlep"));
 		setBlue(compound.getBoolean("IsBlue"));
+        ticksUntilICanSleep = compound.getInt("ticksUntilICanSleep");
 	}
 
 	@Override
 	protected SoundEvent getAmbientSound() {
-		if(isSleeping()) {
+		if(isResting()) {
 			return null;
 		}
 		if(this.isAngry()) {
@@ -423,15 +438,73 @@ public class Foxhound extends Wolf implements Enemy {
 		return world.getDifficulty() != Difficulty.PEACEFUL && world.getBlockState(pos.below()).is(FoxhoundModule.foxhoundSpawnableTag);
 	}
 
-	public SleepGoal getSleepGoal() {
-		return sleepGoal;
+	@Override
+	public boolean isSleeping() {
+		return isResting();
 	}
 
-	private void setWoke() {
-		SleepGoal sleep = getSleepGoal();
-		if(sleep != null) {
-			setInSittingPose(false);
-			sleep.setSleeping(false);
-		}
-	}
+    public boolean isStanding() {
+        return getPose() == Pose.STANDING;
+    }
+
+    public void setStanding(boolean standing) {
+        setPose(Pose.STANDING);
+    }
+
+    @Override
+    public void startSleeping(BlockPos pos) {
+        super.startSleeping(pos);
+        setResting(true);
+    }
+
+    @Override
+    public void stopSleeping() {
+        super.stopSleeping();
+        setResting(false);
+    }
+
+    public boolean canTeleportTo(@NotNull BlockPos teleportPos) {
+        if (!super.canTeleportTo(teleportPos)) {
+            PathType pathtype = WalkNodeEvaluator.getPathTypeStatic(this, teleportPos);
+            if (pathtype != PathType.DAMAGE_FIRE && pathtype != PathType.DANGER_FIRE) {
+                return false;
+            } else {
+                if (!this.canFlyToOwner() && this.level().getBlockState(teleportPos.below()).getBlock() instanceof LeavesBlock) {
+                    return false;
+                } else {
+                    BlockPos blockDistance = teleportPos.subtract(this.blockPosition());
+                    return this.level().noCollision(this, this.getBoundingBox().move(blockDistance));
+                }
+            }
+        } else return super.canTeleportTo(teleportPos);
+    }
+
+    @Override
+    public void tryToTeleportToOwner() {
+        if (!isStanding()) {
+            setStanding(true);
+        }
+        super.tryToTeleportToOwner();
+    }
+    
+    public boolean isResting() {
+        return entityData.get(IS_RESTING);
+    }
+
+    public void setResting(boolean resting) {
+        entityData.set(IS_RESTING, resting);
+        if (!resting) {
+            ticksUntilICanSleep = 100;
+        }
+    }
+
+    public boolean canRest() {
+        return ticksUntilICanSleep <= 0;
+    }
+
+    //Notes:
+    // Poses are supposed to be MC's state machine for entities in a sense.
+    // But, poses can be a bit tricky to deal with? Is it really that hard?
+
+    // If a goal is being done, none of the goals of "higher" priority are done. Thus why mobs cant walk when they are sat down for instance.
 }

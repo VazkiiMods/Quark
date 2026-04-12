@@ -79,13 +79,8 @@ public class ReacharoundPlacingModule extends ZetaModule {
 
 		if(target != null && event.getHand() == target.hand) {
 			ItemStack stack = event.getItemStack();
-			if(!player.mayUseItemAt(target.pos, target.dir, stack) || !player.level().mayInteract(player, target.pos))
-				return;
-
-			/* TODO: Fix/remove, dependency not available for 1.21.1
-			if(!Quark.FLAN_INTEGRATION.canPlace(player, target.pos))
-				return;
-			 */
+			if(!player.mayUseItemAt(target.pos, target.dir, stack) || !player.level().mayInteract(player, target.pos)) return;
+			if(!Quark.FLAN_INTEGRATION.canPlace(player, target.pos)) return;
 
 			int count = stack.getCount();
 			InteractionHand hand = event.getHand();
@@ -203,6 +198,9 @@ public class ReacharoundPlacingModule extends ZetaModule {
 				Minecraft mc = Minecraft.getInstance();
 				Player player = mc.player;
 
+				if(player != null && player.isSpectator())
+					return;
+
 				HitResult result = mc.hitResult;
 				if (result instanceof BlockHitResult bhr) {
 					BlockPos hitPos = bhr.getBlockPos();
@@ -219,6 +217,7 @@ public class ReacharoundPlacingModule extends ZetaModule {
 					boolean vertical = (currentTarget.dir.getAxis() == Axis.Y);
 					ResourceLocation texture = (vertical ? OVERLAY_VERTICAL : OVERLAY_HORIZONTAL);
 
+                    RenderSystem.enableBlend();
 					RenderSystem.blendFuncSeparate(GlStateManager.SourceFactor.ONE_MINUS_DST_COLOR, GlStateManager.DestFactor.ONE_MINUS_SRC_COLOR, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
 
 					matrix.pushPose();
@@ -229,7 +228,6 @@ public class ReacharoundPlacingModule extends ZetaModule {
 					matrix.popPose();
 
 					RenderSystem.defaultBlendFunc();
-
 				}
 			}
 		}

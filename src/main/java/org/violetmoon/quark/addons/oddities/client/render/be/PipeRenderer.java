@@ -101,7 +101,7 @@ public class PipeRenderer implements BlockEntityRenderer<PipeBlockEntity> {
 
 		if (taterFlag) {
 			matrix.translate(0, 0.225, 0);
-			scale = 1.5f;
+			scale = 0.5f;
 		}
 		matrix.scale(scale, scale, scale);
 		

@@ -178,8 +178,8 @@
 	"quark.jei.influence": "Influência matriz",
 	"quark.jei.boost_influence": "Aumenta a chance de: ",
 	"quark.jei.dampen_influence": "Reduz a chance de: ",
-	"quark.jei.hint_preamble": "[Quark]\n",
-	
+
+    "quark.jei.hint.preamble": "[Quark]\n",
 	"quark.jei.hint.pickarang": "É um bumerangue de picareta! Pode ser arremessado e minerará qualquer coisa que atingir, trazendo os itens de volta para você. Também pode ser encantado para melhor desempenho.",
 	"quark.jei.hint.flamerang": "Funciona como um picarangue, mas os itens coletados ficam imunes a dano de fogo e lava enquanto viajam.",
 	"quark.jei.hint.abacus": "Use isso em um bloco e ele contará a distância entre o bloco que você está olhando e o que você clicou, até 48 blocos.",

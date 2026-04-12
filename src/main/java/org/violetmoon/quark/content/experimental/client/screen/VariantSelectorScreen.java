@@ -3,10 +3,7 @@ package org.violetmoon.quark.content.experimental.client.screen;
 import com.google.common.collect.ImmutableSet;
 import com.mojang.blaze3d.platform.InputConstants;
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.BufferBuilder;
-import com.mojang.blaze3d.vertex.DefaultVertexFormat;
-import com.mojang.blaze3d.vertex.Tesselator;
-import com.mojang.blaze3d.vertex.VertexFormat;
+import com.mojang.blaze3d.vertex.*;
 
 import com.mojang.datafixers.util.Pair;
 import net.minecraft.client.KeyMapping;
@@ -85,11 +82,12 @@ public class VariantSelectorScreen extends Screen {
         slotSelected = -1;
 
         Tesselator tess = Tesselator.getInstance();
-        BufferBuilder buf = tess.begin(VertexFormat.Mode.TRIANGLE_FAN, DefaultVertexFormat.POSITION_COLOR);
 
         RenderSystem.disableCull();
         RenderSystem.enableBlend();
         RenderSystem.setShader(GameRenderer::getPositionColorShader);
+
+        BufferBuilder buf = tess.begin(VertexFormat.Mode.TRIANGLE_FAN, DefaultVertexFormat.POSITION_COLOR);
 
         drawStacks.clear();
 
@@ -165,11 +163,13 @@ public class VariantSelectorScreen extends Screen {
 
         RenderSystem.enableBlend();
         RenderSystem.blendFuncSeparate(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA, 1, 0);
+        BufferUploader.drawWithShader(buf.buildOrThrow());
 
         for (DrawStack ds : drawStacks) {
             if (!ds.stack().isEmpty())
                 guiGraphics.renderItem(ds.stack(), ds.x(), ds.y());
         }
+
         RenderSystem.disableBlend();
     }
 

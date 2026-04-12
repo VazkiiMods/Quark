@@ -185,9 +185,13 @@ public class MatrixEnchantingTableBlockEntity extends AbstractEnchantingTableBlo
 				}
 			}
 
-			if(book)
-				for(Entry<Holder<Enchantment>, Integer> e : enchantments.entrySet())
-					EnchantedBookItem.createForEnchantment(new EnchantmentInstance(e.getKey(), e.getValue()));
+			if(book) {
+				ItemStack bookStack = new ItemStack(Items.ENCHANTED_BOOK);
+				for (Entry<Holder<Enchantment>, Integer> e : enchantments.entrySet()) {
+					bookStack.enchant(e.getKey(), e.getValue());
+				}
+				out = bookStack;
+			}
 			else {
 				ItemEnchantments.Mutable mutableEnchList = new ItemEnchantments.Mutable(net.minecraft.world.item.enchantment.ItemEnchantments.EMPTY);
 				for (Entry<Holder<Enchantment>, Integer> e : enchantments.entrySet()) {

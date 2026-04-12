@@ -1,0 +1,19 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "zeta:flag",
+      "flag": "thatch"
+    }
+  ],
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    {
+      "item": "quark:thatch"
+    }
+  ],
+  "result": {
+    "count": 1,
+    "id": "minecraft:wheat"
+  }
+}

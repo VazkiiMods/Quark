@@ -31,7 +31,6 @@ import org.violetmoon.zeta.module.ZetaLoadModule;
 import org.violetmoon.zeta.module.ZetaModule;
 import org.violetmoon.zeta.util.Hint;
 
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
 

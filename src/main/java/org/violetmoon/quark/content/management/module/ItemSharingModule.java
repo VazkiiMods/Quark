@@ -182,18 +182,18 @@ public class ItemSharingModule extends ZetaModule {
 				if(stack.isEmpty())
 					stack = new ItemStack(Blocks.BARRIER); // for invalid icon
 
-				float shift = mc.font.width(before) + extraShift;
+				float shift = mc.font.width(before) + extraShift+2.5f ;
 
 				if(a > 0) {
 					alphaValue = a;
 
 					guiGraphics.pose().pushPose();
+                    //guiGraphics.pose().mulPose(pose.last().pose());
 
-					guiGraphics.pose().mulPose(pose.last().pose());
 
 					guiGraphics.pose().translate(shift + x, y, 0);
-					guiGraphics.pose().scale(0.5f, 0.5f, 0.5f);
-					guiGraphics.renderItem(stack, 0, 0);
+                    guiGraphics.pose().scale(0.5f, 0.5f, 0.5f);
+                    guiGraphics.renderItem(stack, 0, 0);
 					guiGraphics.pose().popPose();
 
 					RenderSystem.applyModelViewMatrix();

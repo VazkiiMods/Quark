@@ -8,6 +8,7 @@ import org.jetbrains.annotations.NotNull;
 
 import org.violetmoon.quark.base.Quark;
 import org.violetmoon.quark.base.client.handler.ModelHandler;
+import org.violetmoon.quark.content.mobs.client.layer.shiba.ShibaArmorLayer;
 import org.violetmoon.quark.content.mobs.client.layer.shiba.ShibaCollarLayer;
 import org.violetmoon.quark.content.mobs.client.layer.shiba.ShibaMouthItemLayer;
 import org.violetmoon.quark.content.mobs.client.model.ShibaModel;
@@ -23,11 +24,13 @@ public class ShibaRenderer extends MobRenderer<Shiba, ShibaModel> {
 
 	private static final ResourceLocation SHIBA_RARE = Quark.asResource("textures/model/entity/shiba/shiba_rare.png");
 	private static final ResourceLocation SHIBA_DOGE = Quark.asResource("textures/model/entity/shiba/shiba_doge.png");
+	private static final ResourceLocation SHIBA_RAD = Quark.asResource("textures/model/entity/shiba/shiba_rad.png");
 
 	public ShibaRenderer(EntityRendererProvider.Context context) {
 		super(context, ModelHandler.model(ModelHandler.shiba), 0.5F);
 		addLayer(new ShibaCollarLayer(this));
 		addLayer(new ShibaMouthItemLayer(this, context.getItemInHandRenderer()));
+        addLayer(new ShibaArmorLayer(this, context.getModelSet()));
 	}
 
 	@NotNull
@@ -35,6 +38,8 @@ public class ShibaRenderer extends MobRenderer<Shiba, ShibaModel> {
 	public ResourceLocation getTextureLocation(Shiba entity) {
 		if(entity.hasCustomName() && entity.getCustomName().getString().trim().equalsIgnoreCase("doge"))
 			return SHIBA_DOGE;
+		else if(entity.hasCustomName() && entity.getCustomName().getString().trim().equalsIgnoreCase("rad shiba"))
+			return SHIBA_RAD;
 
 		long least = Math.abs(entity.getUUID().getLeastSignificantBits());
 		if((least % 200) == 0)

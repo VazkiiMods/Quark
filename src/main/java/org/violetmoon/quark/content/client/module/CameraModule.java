@@ -108,7 +108,7 @@ public class CameraModule extends ZetaModule {
 		private static int currRulers = 0;
 		private static int currBorders = 0;
 		private static int currOverlay = 0;
-		private static boolean queuedRefresh = false;
+		private static boolean queuedRefresh = true;
 		private static boolean queueScreenshot = false;
 		private static boolean screenshotting = false;
 
@@ -169,7 +169,10 @@ public class CameraModule extends ZetaModule {
 						if(!queueScreenshot && !screenshotting)
 							mc.getSoundManager().play(SimpleSoundInstance.forUI(QuarkSounds.ITEM_CAMERA_SHUTTER, 1.0F));
 
-						queueScreenshot = true;
+                        if (screenshotting && sneak) {
+                            screenshotting = false;
+                            queueScreenshot = false;
+                        } else queueScreenshot = true;
 					}
 
 					if(affected) {
@@ -286,7 +289,7 @@ public class CameraModule extends ZetaModule {
 			case 2 -> { // Postcard
 				String worldName = "N/A";
 				if(mc.getSingleplayerServer() != null)
-					worldName = mc.getSingleplayerServer().name();
+					worldName = mc.getSingleplayerServer().getWorldData().getLevelName();
 				else if(mc.getCurrentServer() != null)
 					worldName = mc.getCurrentServer().name;
 				overlayText = I18n.get("quark.camera.greetings", worldName);
@@ -353,8 +356,8 @@ public class CameraModule extends ZetaModule {
 				// =============================================== DRAW SETTINGS ===============================================
 				ResourceLocation shader = SHADERS[currShader];
 				String text = "none";
-				if(shader != null)
-					text = shader.getPath().replaceAll(".+/(.+)\\.json", "$1");
+                if(shader != null)
+                    text = shader.getPath().replaceAll(".+/(.+)\\.json", "$1");
 				text = ChatFormatting.BOLD + "[1] " + ChatFormatting.RESET + I18n.get("quark.camera.filter") + ChatFormatting.GOLD + I18n.get("quark.camera.filter." + text);
 				guiGraphics.drawString(mc.font, text, left, top, 0xFFFFFF, true);
 
@@ -430,6 +433,10 @@ public class CameraModule extends ZetaModule {
 
 			return val;
 		}
+
+        public static void queueRefresh() {
+            queuedRefresh = true;
+        }
 
 	}
 

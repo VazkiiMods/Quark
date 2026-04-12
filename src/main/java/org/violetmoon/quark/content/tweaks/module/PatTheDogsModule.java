@@ -86,9 +86,8 @@ public class PatTheDogsModule extends ZetaModule {
 
 					WantLoveGoal.setPetTime(wolf);
 
-					if(wolf instanceof Foxhound && !player.isInWater() && !player.hasEffect(MobEffects.FIRE_RESISTANCE)
-							&& !player.getAbilities().invulnerable)
-						player.setRemainingFireTicks(5);
+					if(wolf instanceof Foxhound && !player.isInWater() && !player.hasEffect(MobEffects.FIRE_RESISTANCE) && !player.getAbilities().invulnerable)
+						player.igniteForSeconds(5);
 				}
 
 				event.setCanceled(true);

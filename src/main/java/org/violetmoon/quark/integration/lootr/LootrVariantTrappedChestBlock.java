@@ -27,7 +27,6 @@ import noobanidus.mods.lootr.common.api.data.ILootrInfoProvider;
 import noobanidus.mods.lootr.common.api.data.blockentity.ILootrBlockEntity;
 import noobanidus.mods.lootr.common.block.entity.LootrChestBlockEntity;
 import noobanidus.mods.lootr.common.block.entity.LootrTrappedChestBlockEntity;
-import noobanidus.mods.lootr.neoforge.config.ConfigManager;
 import org.jetbrains.annotations.Nullable;
 import org.violetmoon.quark.content.building.block.VariantTrappedChestBlock;
 import org.violetmoon.zeta.module.ZetaModule;
@@ -37,7 +36,7 @@ import java.util.function.Supplier;
 
 /**
  * Copy of
- * https://github.com/LootrMinecraft/Lootr/blob/arch-1.21/common/src/main/java/noobanidus/mods/lootr/common/block/LootrTrappedChestBlock.java
+ * https://github.com/LootrMinecraft/Lootr/blob/mdg-1.21.1/common/src/main/java/noobanidus/mods/lootr/common/block/LootrTrappedChestBlock.java
  * All modifications are made purely to integrate with VariantTrappedChestBlock/quark
  */
 public class LootrVariantTrappedChestBlock extends VariantTrappedChestBlock implements IZetaBlockItemProvider {

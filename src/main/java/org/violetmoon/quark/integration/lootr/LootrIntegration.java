@@ -4,15 +4,13 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.entity.ChestBlockEntity;
+import noobanidus.mods.lootr.common.api.replacement.BlockReplacementMap;
 import org.jetbrains.annotations.Nullable;
 import org.violetmoon.quark.base.Quark;
 import org.violetmoon.quark.base.util.BlockPropertyUtil;
 import org.violetmoon.zeta.module.ZetaModule;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.function.BooleanSupplier;
 
 /**
@@ -23,8 +21,6 @@ public class LootrIntegration implements ILootrIntegration {
 
 	public BlockEntityType<LootrVariantChestBlockEntity> chestTEType;
 	public BlockEntityType<LootrVariantTrappedChestBlockEntity> trappedChestTEType;
-
-	public final Map<Block, Block> chestMappings = new HashMap<>();
 
 	public final List<Block> lootrRegularChests = new ArrayList<>();
 	public final List<Block> lootrTrappedChests = new ArrayList<>();
@@ -45,23 +41,22 @@ public class LootrIntegration implements ILootrIntegration {
 				BlockPropertyUtil.copyPropertySafe(base)).setCondition(condition);
 		lootrRegularChests.add(lootrRegularChest);
 
+        QuarkLootrBlockReplacementProvider.addMapping(quarkRegularChest, lootrRegularChest);
+
 		Block lootrTrappedChest = new LootrVariantTrappedChestBlock(name, module, () -> trappedChestTEType,
 				BlockPropertyUtil.copyPropertySafe(base)).setCondition(condition);
-		lootrTrappedChests.add(lootrTrappedChest);
+        lootrTrappedChests.add(lootrTrappedChest);
 
-		chestMappings.put(quarkRegularChest, lootrRegularChest);
-		chestMappings.put(quarkTrappedChest, lootrTrappedChest);
-	}
+        QuarkLootrBlockReplacementProvider.addMapping(quarkTrappedChest, lootrTrappedChest);
+    }
 
 	@Override
 	@Nullable
 	public Block lootrVariant(Block base) {
-		return chestMappings.get(base);
+		return base;
 	}
 
-	@Override
-	public void populate(Map<Block, Block> map) {
-		map.putAll(chestMappings);
+	public void populate(BlockReplacementMap map) {
 	}
 
 	@Override

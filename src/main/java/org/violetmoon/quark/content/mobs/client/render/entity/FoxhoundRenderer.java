@@ -10,6 +10,8 @@
  */
 package org.violetmoon.quark.content.mobs.client.render.entity;
 
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.math.Axis;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.MobRenderer;
 import net.minecraft.resources.ResourceLocation;
@@ -51,13 +53,21 @@ public class FoxhoundRenderer extends MobRenderer<Foxhound, FoxhoundModel> {
 	@Override
 	public ResourceLocation getTextureLocation(@NotNull Foxhound entity) {
 		if(entity.isBlue())
-			return entity.isSleeping() ? SOULHOUND_SLEEPING : (entity.getRemainingPersistentAngerTime() > 0 ? SOULHOUND_HOSTILE : SOULHOUND_IDLE);
+			return entity.isResting() ? SOULHOUND_SLEEPING : (entity.getRemainingPersistentAngerTime() > 0 ? SOULHOUND_HOSTILE : SOULHOUND_IDLE);
 
 		UUID id = entity.getUUID();
 		long most = id.getMostSignificantBits();
 		if(SHINY_CHANCE > 0 && (most % SHINY_CHANCE) == 0)
-			return entity.isSleeping() ? BASALT_FOXHOUND_SLEEPING : (entity.getRemainingPersistentAngerTime() > 0 ? BASALT_FOXHOUND_HOSTILE : BASALT_FOXHOUND_IDLE);
+			return entity.isResting() ? BASALT_FOXHOUND_SLEEPING : (entity.getRemainingPersistentAngerTime() > 0 ? BASALT_FOXHOUND_HOSTILE : BASALT_FOXHOUND_IDLE);
 
-		return entity.isSleeping() ? FOXHOUND_SLEEPING : (entity.getRemainingPersistentAngerTime() > 0 ? FOXHOUND_HOSTILE : FOXHOUND_IDLE);
+		return entity.isResting() ? FOXHOUND_SLEEPING : (entity.getRemainingPersistentAngerTime() > 0 ? FOXHOUND_HOSTILE : FOXHOUND_IDLE);
 	}
+
+    @Override
+    protected void setupRotations(Foxhound foxhound, PoseStack poseStack, float bob, float yBodyRot, float partialTick, float scale) {
+        super.setupRotations(foxhound, poseStack, bob, yBodyRot, partialTick, scale);
+        if (foxhound.isResting()) {
+            poseStack.mulPose(Axis.YP.rotationDegrees(90f + yBodyRot));
+        }
+    }
 }

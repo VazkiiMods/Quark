@@ -1,0 +1,22 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "zeta:flag",
+      "flag": "bamboo_mat"
+    }
+  ],
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "key": {
+    "M": {
+      "item": "quark:bamboo_mat"
+    }
+  },
+  "pattern": [
+    "MM"
+  ],
+  "result": {
+    "count": 4,
+    "id": "quark:bamboo_mat_carpet"
+  }
+}

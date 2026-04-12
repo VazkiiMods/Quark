@@ -31,7 +31,6 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.violetmoon.quark.api.ITrowelable;
 import org.violetmoon.quark.api.IUsageTickerOverride;
-import org.violetmoon.quark.base.Quark;
 import org.violetmoon.quark.base.components.ItemWrapperComponent;
 import org.violetmoon.quark.base.components.QuarkDataComponents;
 import org.violetmoon.quark.content.tools.module.SeedPouchModule;
@@ -236,25 +235,54 @@ public class SeedPouchItem extends ZetaItem implements IUsageTickerOverride, ITr
 				}
 			}
 
-			if(player == null || !player.isShiftKeyDown())
+			if(player == null || !player.isShiftKeyDown()){
 				return placeSeed(contents, context, seed, context.getClickedPos());
+			}
+
+			//hold-shift on non chest logic starts here
 
 			InteractionResult bestRes = InteractionResult.FAIL;
+
 			int range = contents.isSeed() ? SeedPouchModule.shiftRange : SeedPouchModule.fertilizerShiftRange;
 			int blocks = range * range;
 			int shift = -((int) Math.floor(range / 2f));
 
-			for(int i = 0; i < blocks; i++) {
-				int x = shift + i % range;
-				int z = shift + i / range;
+			if(contents.contents.is(SeedPouchModule.seedPouchVerticalPlacementTag)){ //for things like cocoa beans
+				for(int i = 0; i < blocks; i++) {
+					int a = shift + i % range;
+					int b = shift + i / range;
 
-				InteractionResult res = placeSeed(contents, context, seed, context.getClickedPos().offset(x, 0, z));
+					InteractionResult res;
 
-				if(contents.isEmpty())
-					break;
+					BlockPos placePos = context.getClickedPos();
+					switch(context.getClickedFace().getAxis()){
+						case Z -> placePos = context.getClickedPos().offset(a, b, 0); //north/south
+						case X -> placePos = context.getClickedPos().offset(0, a, b); //east/west
+                    }
+					//there's gotta be a better way to do this... BlockPos::relative(Axis axis, int amount) ?
 
-				if(!bestRes.consumesAction())
-					bestRes = res;
+					res = placeSeed(contents, context, seed, placePos);
+
+					if (contents.isEmpty())
+						break;
+
+					if (!bestRes.consumesAction())
+						bestRes = res;
+				}
+			}
+			else {
+				for(int i = 0; i < blocks; i++) {
+					int x = shift + i % range;
+					int z = shift + i / range;
+
+					InteractionResult res = placeSeed(contents, context, seed, context.getClickedPos().offset(x, 0, z));
+
+					if (contents.isEmpty())
+						break;
+
+					if (!bestRes.consumesAction())
+						bestRes = res;
+				}
 			}
 
 			return bestRes;
@@ -285,7 +313,7 @@ public class SeedPouchItem extends ZetaItem implements IUsageTickerOverride, ITr
 	}
 
 	@Override
-	public List<ItemStack> appendItemsToCreativeTab() {
+	public List<ItemStack> appendItemsToCreativeTab(RegistryAccess access) {
 		if(!isEnabled())
 			return List.of();
 
@@ -293,7 +321,6 @@ public class SeedPouchItem extends ZetaItem implements IUsageTickerOverride, ITr
 		list.add(new ItemStack(this));
 
 		if(SeedPouchModule.showAllVariantsInCreative) {
-			RegistryAccess access = Quark.proxy.hackilyGetCurrentClientLevelRegistryAccess();
 			if(access != null) {
 				(SeedPouchModule.allowFertilizer ?
 					Stream.of(SeedPouchModule.seedPouchHoldableTag, SeedPouchModule.seedPouchFertilizersTag) :
