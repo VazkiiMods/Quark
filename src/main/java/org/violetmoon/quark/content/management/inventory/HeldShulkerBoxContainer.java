@@ -47,6 +47,29 @@ public class HeldShulkerBoxContainer implements Container, MenuProvider {
         be = gotBe;
 	}
 
+	public HeldShulkerBoxContainer(Player player, ItemStack stack) {
+		this.player = player;
+		this.stack = stack;
+		slot = -1;
+
+		ShulkerBoxBlockEntity gotBe = null;
+
+		if(SimilarBlockTypeHandler.isShulkerBox(stack)) {
+			BlockEntity tile = ExpandedItemInteractionsModule.getShulkerBoxEntity(stack, player.level().registryAccess());
+			if(tile instanceof ShulkerBoxBlockEntity shulker) {
+				gotBe = shulker;
+			}
+		}
+
+		if (stack.has(DataComponents.CONTAINER) && gotBe != null) {
+			for (int i = 0; i < stack.get(DataComponents.CONTAINER).getSlots(); i++) {
+				gotBe.setItem(i, stack.get(DataComponents.CONTAINER).getStackInSlot(i));
+			}
+		}
+
+		be = gotBe;
+	}
+
 	@Override
 	public AbstractContainerMenu createMenu(int containerID, Inventory playerInv, Player player) {
 		return new HeldShulkerBoxMenu(containerID, playerInv, this, slot);
@@ -106,7 +129,11 @@ public class HeldShulkerBoxContainer implements Container, MenuProvider {
 
 	@Override
 	public boolean stillValid(Player player) {
-		return stack != null && player == this.player && player.getInventory().getItem(slot) == stack;
+		boolean checkSlotInNormalInventory = slot != -1;
+		//if the slot is -1, then the shulker is being opened from a backpack.
+		//we can (hopefully safely) assume the shulker box will not move from its slot in the backpack while the screen is open.
+		boolean isStackStillInSlot = !checkSlotInNormalInventory || player.getInventory().getItem(slot) == stack;
+		return stack != null && player == this.player && isStackStillInSlot;
 	}
 
 }

@@ -38,6 +38,9 @@ import net.neoforged.neoforge.items.IItemHandler;
 import net.neoforged.neoforge.items.ItemHandlerHelper;
 import net.neoforged.neoforge.items.ItemStackHandler;
 import net.neoforged.neoforge.network.PacketDistributor;
+import org.violetmoon.quark.addons.oddities.inventory.BackpackMenu;
+import org.violetmoon.quark.addons.oddities.inventory.slot.BackpackSlot;
+import org.violetmoon.quark.addons.oddities.module.BackpackModule;
 import org.violetmoon.quark.base.Quark;
 import org.violetmoon.quark.base.config.QuarkGeneralConfig;
 import org.violetmoon.quark.base.handler.SimilarBlockTypeHandler;
@@ -248,10 +251,15 @@ public class ExpandedItemInteractionsModule extends ZetaModule {
 	}
 
 	public static boolean canOpenShulkerBox(ItemStack stack, ItemStack incoming, Slot slot, Player player) {
-		return incoming.isEmpty() &&
-				allowOpeningShulkerBoxes &&
-				(!player.hasContainerOpen() || player.containerMenu instanceof InventoryMenu) &&
-				slot.container == player.getInventory() &&
+		boolean isAllowedMenu = (!player.hasContainerOpen() || player.containerMenu instanceof InventoryMenu);
+
+		boolean isAllowedContainer = slot.container == player.getInventory();
+		if(player.containerMenu instanceof BackpackMenu backpackMenu){
+			isAllowedContainer = isAllowedContainer || slot.container == backpackMenu.getContainer();
+		}
+
+		return incoming.isEmpty() && allowOpeningShulkerBoxes && isAllowedMenu &&
+				isAllowedContainer &&
 				SimilarBlockTypeHandler.isShulkerBox(stack) &&
 				slot.mayPickup(player);
 	}
@@ -262,12 +270,25 @@ public class ExpandedItemInteractionsModule extends ZetaModule {
 			return false;
 
 		if(isStackedOnMe && canOpenShulkerBox(shulkerStack, incoming, slot, player)) {
-			int lockedSlot = slot.getSlotIndex();
-			if(player instanceof ServerPlayer splayer) {
-				HeldShulkerBoxContainer container = new HeldShulkerBoxContainer(splayer, lockedSlot);
-				player.openMenu(container, packet -> packet.writeInt(lockedSlot));
-			} else
+			if(slot instanceof BackpackSlot bpSlot){
+				//open a HeldShulkerBoxContainer with no locked slot;
+				//since the player won't be able to access the shulker from the backpack slot from the resulting menu
+				if(player instanceof ServerPlayer splayer) {
+					HeldShulkerBoxContainer container = new HeldShulkerBoxContainer(splayer, shulkerStack);
+					player.openMenu(container, packet -> packet.writeInt(-1));
+				}
+			}
+			else{
+				int lockedSlot = slot.getSlotIndex();
+				if(player instanceof ServerPlayer splayer) {
+					HeldShulkerBoxContainer container = new HeldShulkerBoxContainer(splayer, lockedSlot);
+					player.openMenu(container, packet -> packet.writeInt(lockedSlot));
+				}
+			}
+
+			if(!(player instanceof ServerPlayer)){
 				player.playSound(SoundEvents.SHULKER_BOX_OPEN, 1F, 1F);
+			}
 
 			return true;
 		}

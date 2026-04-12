@@ -14,6 +14,8 @@ import org.violetmoon.quark.addons.oddities.module.BackpackModule;
 
 public class BackpackMenu extends InventoryMenu {
 
+	private BackpackContainer backpackInv;
+
 	public BackpackMenu(int windowId, Player player) {
 		super(player.getInventory(), !player.level().isClientSide, player);
 		this.containerId = windowId;
@@ -29,7 +31,7 @@ public class BackpackMenu extends InventoryMenu {
 
 		ItemStack backpack = inventory.armor.get(2);
 		if(backpack.getItem() == BackpackModule.backpack) {
-			BackpackContainer backpackInv = new BackpackContainer(backpack);
+			backpackInv = new BackpackContainer(backpack);
 
 			for(int i = 0; i < 3; ++i)
 				for(int j = 0; j < 9; ++j) {
@@ -202,5 +204,9 @@ public class BackpackMenu extends InventoryMenu {
 	@Override
 	public @NotNull MenuType<?> getType() {
 		return BackpackModule.menuType;
+	}
+
+	public BackpackContainer getContainer(){
+		return backpackInv;
 	}
 }
