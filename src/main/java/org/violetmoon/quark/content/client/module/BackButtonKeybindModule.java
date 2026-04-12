@@ -58,7 +58,7 @@ public class BackButtonKeybindModule extends ZetaModule {
         @PlayEvent
         public void onKeyInput(ZScreen.KeyPressed.Post event) {
             if (backKey != null) {
-                if (backKey.getKey().getType() == Type.KEYSYM && event.getKeyCode() == backKey.getKey().getValue())
+                if (backKey.getKey().getType() == Type.KEYSYM && event.getKeyCode() == backKey.getKey().getValue() && backKey.getKey().getValue() != GLFW.GLFW_KEY_UNKNOWN)
                     clicc();
             }
         }
@@ -70,7 +70,7 @@ public class BackButtonKeybindModule extends ZetaModule {
                     return;
 
                 int btn = event.getButton();
-                if (backKey.getKey().getType() == Type.MOUSE && btn != GLFW.GLFW_MOUSE_BUTTON_LEFT && btn == backKey.getKey().getValue())
+                if (backKey.getKey().getType() == Type.MOUSE && btn != GLFW.GLFW_MOUSE_BUTTON_LEFT && btn == backKey.getKey().getValue() && backKey.getKey().getValue() != GLFW.GLFW_KEY_UNKNOWN)
                     clicc();
             }
         }
