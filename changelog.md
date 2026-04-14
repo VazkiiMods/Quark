@@ -11,7 +11,7 @@ Fixes and a couple of changes to improve the out-of-the-box experience.
 
 ## Changes
 - Variant Chests, Variant Bookshelves, and Variant Ladders modules now have anti-overlap with Carved Wood and will disable themselves if that mod is installed
-- Updated Traditional Chinese translation (qznfbnj)
+- Updated Simplified Chinese translation (qznfbnj)
 - Updated Japanese translation (Abbage230)
 - Updated Russian translation (AstardGrimoire)
 - Updated German translation (GulutGames)
