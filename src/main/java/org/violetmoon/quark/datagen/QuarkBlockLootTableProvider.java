@@ -209,7 +209,7 @@ public class QuarkBlockLootTableProvider extends BlockLootSubProvider {
         //Oddities
         dropSelf(PipesModule.pipe);
         dropSelf(PipesModule.encasedPipe);
-        dropSelf(TinyPotatoModule.tiny_potato);
+        add(TinyPotatoModule.tiny_potato, createNameableBlockEntityTable(TinyPotatoModule.tiny_potato));
         dropSelf(CrateModule.crate);
         dropSelf(MagnetsModule.magnet);
         dropSelf(BackpackModule.bonded_ravager_hide);
