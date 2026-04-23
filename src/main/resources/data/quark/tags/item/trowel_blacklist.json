@@ -1,4 +1,9 @@
 {
   "values": [
+    "minecraft:air",
+    {
+      "id": "someassemblyrequired:sandwich",
+      "required": false
+    }
   ]
 }

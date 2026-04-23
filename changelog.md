@@ -1,6 +1,9 @@
 # Quark 4.1-477 For Neoforge 1.21.1
 
 Fixes and a couple of changes to improve the out-of-the-box experience.
+I am aware of many other issues but haven't had any luck fixing them. For now, I recommend:
+  - Make backups of your world before using the Trowel
+  - Don't leave items in the Matrix Enchanting Table
 
 ## Fixes
 - Fix #5215: Leaving "Back" key unbound causes all unknown keys to trigger it.
@@ -9,8 +12,8 @@ Fixes and a couple of changes to improve the out-of-the-box experience.
 - Fix #5503: Attribute Icons
 - Fix #5504: Disabling Utility Recipes deletes recipes for stone tools
 - Fix #5507: Potential incorrect tagging on framed glass blocks
-- Fix #5516: 1.21.1 tater loses name when broken 
 - Fix #5515: [Bug] Opened shulker box disappears after Quark inventory sort
+- Fix #5516: 1.21.1 tater loses name when broken
 
 ## Changes
 - Variant Chests, Variant Bookshelves, and Variant Ladders modules now have anti-overlap with Carved Wood and will disable themselves if that mod is installed
