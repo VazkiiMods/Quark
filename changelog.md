@@ -3,11 +3,14 @@
 Fixes and a couple of changes to improve the out-of-the-box experience.
 
 ## Fixes
-- Fix #5504: Disabling Utility Recipes deletes recipes for stone tools
-- Fix #5496: Blocks & items are not compostable
-- Fix #5507: Potential incorrect tagging on framed glass blocks
 - Fix #5215: Leaving "Back" key unbound causes all unknown keys to trigger it.
+- Fix #5496: Blocks & items are not compostable
 - Fix #5500: Variant chests still visible in recipes even when turned off.
+- Fix #5503: Attribute Icons
+- Fix #5504: Disabling Utility Recipes deletes recipes for stone tools
+- Fix #5507: Potential incorrect tagging on framed glass blocks
+- Fix #5516: 1.21.1 tater loses name when broken 
+- Fix #5515: [Bug] Opened shulker box disappears after Quark inventory sort
 
 ## Changes
 - Variant Chests, Variant Bookshelves, and Variant Ladders modules now have anti-overlap with Carved Wood and will disable themselves if that mod is installed
