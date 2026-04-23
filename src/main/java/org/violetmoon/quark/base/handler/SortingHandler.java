@@ -18,6 +18,7 @@ import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.ItemEnchantments;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
+import org.apache.commons.lang3.ArrayUtils;
 import org.violetmoon.quark.addons.oddities.inventory.BackpackMenu;
 import org.violetmoon.quark.addons.oddities.inventory.slot.CachedItemHandlerSlot;
 import org.violetmoon.quark.api.ICustomSorting;
@@ -149,7 +150,13 @@ public final class SortingHandler {
 			containerCopy.put(containSlot, container.getItem(containSlot));
 		}
 
-		container.clearContent(); // Clear container. Perhaps its possible to only remove what is necessary? I'm a little unsure of this though.
+		//#5515 - do not clear container without checking for locked slots!
+		for (int slot = 0; slot < container.getContainerSize(); slot++)
+		{
+            if (!ArrayUtils.contains(lockedSlots, slot)) {
+				container.setItem(slot, ItemStack.EMPTY);
+            }
+        }
 
 		// Restore any items that shouldn't of been cleared.
 		for (int slot = 0; slot < container.getContainerSize(); slot++) {
