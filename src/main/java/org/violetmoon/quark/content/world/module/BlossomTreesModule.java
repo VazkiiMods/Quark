@@ -5,7 +5,6 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.tags.BiomeTags;
-import net.minecraft.world.level.block.ComposterBlock;
 import net.minecraft.world.level.block.FlowerPotBlock;
 import net.minecraft.world.level.block.grower.TreeGrower;
 import net.minecraft.world.level.levelgen.GenerationStep.Decoration;
@@ -15,6 +14,7 @@ import net.neoforged.neoforge.common.Tags;
 import org.violetmoon.quark.base.Quark;
 import org.violetmoon.quark.base.handler.WoodSetHandler;
 import org.violetmoon.quark.base.handler.WoodSetHandler.WoodSet;
+import org.violetmoon.quark.base.util.CompostManager;
 import org.violetmoon.quark.base.util.QuarkWorldGenWeights;
 import org.violetmoon.quark.content.building.module.MorePottedPlantsModule;
 import org.violetmoon.quark.content.world.block.BlossomLeavesBlock;
@@ -111,12 +111,17 @@ public class BlossomTreesModule extends ZetaModule {
 			for(BlossomTree tree : blossomTrees) {
 				WorldGenHandler.addGenerator(this, new BlossomTreeGenerator(tree.quarkConfig, tree.configuredFeatureKey), Decoration.TOP_LAYER_MODIFICATION, QuarkWorldGenWeights.BLOSSOM_TREES);
 
-				ComposterBlock.COMPOSTABLES.put(tree.leaves.asItem(), 0.3F);
-				ComposterBlock.COMPOSTABLES.put(tree.sapling.asItem(), 0.3F);
+
 
 				Quark.ZETA.fuel.addFuel(tree.sapling, 100);
 			}
 		});
+		if(this.isEnabled()) {
+			for (BlossomTree tree : blossomTrees) {
+				CompostManager.addChance(tree.leaves.asItem(), 0.3F);
+				CompostManager.addChance(tree.sapling.asItem(), 0.3F);
+			}
+		}
 	}
 
 	@LoadEvent

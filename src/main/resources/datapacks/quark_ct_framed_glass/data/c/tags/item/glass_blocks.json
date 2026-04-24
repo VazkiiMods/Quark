@@ -1,7 +1,6 @@
 {
   "replace": false,
   "values": [
-    "quark:dirty_glass",
     "quark:framed_glass",
 	"quark:black_framed_glass",
 	"quark:blue_framed_glass",

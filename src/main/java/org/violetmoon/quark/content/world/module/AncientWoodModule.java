@@ -6,7 +6,6 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.ComposterBlock;
 import net.minecraft.world.level.block.FlowerPotBlock;
 import net.minecraft.world.level.block.grower.TreeGrower;
 import net.minecraft.world.level.levelgen.feature.ConfiguredFeature;
@@ -18,6 +17,7 @@ import net.minecraft.world.level.storage.loot.entries.LootPoolEntryContainer;
 import org.violetmoon.quark.base.Quark;
 import org.violetmoon.quark.base.handler.WoodSetHandler;
 import org.violetmoon.quark.base.handler.WoodSetHandler.WoodSet;
+import org.violetmoon.quark.base.util.CompostManager;
 import org.violetmoon.quark.content.building.module.MorePottedPlantsModule;
 import org.violetmoon.quark.content.world.feature.AncientTreeTopperDecorator;
 import org.violetmoon.quark.content.world.feature.MultiFoliageStraightTrunkPlacer;
@@ -81,12 +81,15 @@ public class AncientWoodModule extends ZetaModule {
 	@LoadEvent
 	public void setup(ZCommonSetup e) {
 		e.enqueueWork(() -> {
-			ComposterBlock.COMPOSTABLES.put(ancient_sapling.asItem(), 0.3F);
-			ComposterBlock.COMPOSTABLES.put(ancient_leaves.asItem(), 0.3F);
-			ComposterBlock.COMPOSTABLES.put(ancient_fruit.asItem(), 0.65F);
-			
 			Quark.ZETA.fuel.addFuel(ancient_sapling, 100);
 		});
+
+		if(this.isEnabled()){
+			CompostManager.addChance(ancient_sapling.asItem(), 0.3F);
+			CompostManager.addChance(ancient_leaves.asItem(), 0.3F);
+			CompostManager.addChance(ancient_fruit.asItem(), 0.65F);
+		}
+
 	}
 
 	@LoadEvent

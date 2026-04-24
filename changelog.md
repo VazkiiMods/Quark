@@ -1,13 +1,34 @@
 # Quark 4.1-477 For Neoforge 1.21.1
 
+Lots of fixes and a couple of other changes to improve the out-of-the-box experience.
+I am aware of many other issues but haven't had any luck fixing them. For now, I recommend:
+  - Be especially careful (make world backups) when using the Trowel, putting nontypical blocks in your hotbar with it can cause player data loss
+  - Don't leave items in the Matrix Enchanting Table
+  - Don't use NeoContinuity with Quark as it seems to cause inexplicable startup crashes
+
 ## Fixes
-- [WIP not working] Fix #5500: Variant chests still visible in recipes even when turned off.
+- Fix #5215: Leaving "Back" key unbound causes all unknown keys to trigger it.
+- Fix #5495: Golden Pickaxe is broken 
+- Fix #5496: Blocks & items are not compostable
+- Fix #5500: Variant chests still visible in recipes even when turned off.
+- Fix #5503: Attribute Icons
 - Fix #5504: Disabling Utility Recipes deletes recipes for stone tools
-- [WIP, not all modules fixed yet] Fix 5496: Blocks & items are not compostable
+- Fix #5507: Potential incorrect tagging on framed glass blocks
+- Fix #5515: [Bug] Opened shulker box disappears after Quark inventory sort
+- Fix #5516: 1.21.1 tater loses name when broken
+- Fix #5517: Seed pouches are irretrievable from Create's Stock Keeper
 
 ## Changes
-- [WIP not working] Variant Chests are now no longer loaded into the `c:chests` item tag if the module is disabled ([since Neoforge changes the trapped chest recipe](https://github.com/neoforged/NeoForge/blob/1.21.11/src/generated/resources/data/minecraft/recipe/trapped_chest.json)) 
-    - Similarly,  `lootr:chests` and `lootr:trapped_chests`
-- [WIP] `quark:glow_shroom_feedables` item tag no longer loads if Glimmering Weald is disabled
 - Variant Chests, Variant Bookshelves, and Variant Ladders modules now have anti-overlap with Carved Wood and will disable themselves if that mod is installed
+- Updated Simplified Chinese translation (qznfbnj)
+- Updated Japanese translation (Abbage230)
+- Updated Russian translation (AstardGrimoire)
+- Updated German translation (GulutGames)
+- Updated various translation files using unused Twitter and Reddit translation keys, replaced with Forum and Bluesky keys. 
+- 
 ## Additions
+- Added a system to add tags to items/blocks depending on config via *additional* datapacks. Unfortunately this is a kind of band-aid fix that doesn't solve the root issue of there being no way to conditionally add items to tags. 
+    - Added Conditional Tag datapacks for: Variant Chests, Variant Bookshelves, and Framed Glass
+    - This system does not account for multi-condition items, for example, Ashen Chests will still be in the `c:chests` tag if Variant Chests is enabled but Ancient Wood is not
+    - More tag contents may be moved to additional conditional datapacks as needed for future updates. We recommend that modpack makers check if disabled content being in present tags creates issues (and removing said items from the tag with CraftTweaker or similar) instead of relying on the config.
+    - This will end up bloating the `/datapack list` command, but that's a small price to pay to fix certain essential tags containing disabled content.

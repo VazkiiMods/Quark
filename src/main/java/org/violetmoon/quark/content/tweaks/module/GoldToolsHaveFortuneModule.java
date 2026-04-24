@@ -67,7 +67,7 @@ public class GoldToolsHaveFortuneModule extends ZetaModule {
 	@Hint(key = "gold_tool_harvest_level", content = "harvestLevel")
 	List<Item> gold_tools_2 = gold_tools;
 
-	private static boolean staticEnabled;
+	public static boolean staticEnabled;
 
 	/**
 	 * Full module refactor. Config setting needs testing with other enchantments, including modded ones.
@@ -81,8 +81,8 @@ public class GoldToolsHaveFortuneModule extends ZetaModule {
 
 	@PlayEvent
 	public final void onServerReload(ZTagsUpdated eventLmfao) {
-		//TODO this doesn't work on first opening a world after launching a game. It runs but the results are incorrect,
-		//the IGNORED_BY_GTHF and COUNTS_AS_WEAPON_FOR_GTHF tags do not seem to be loaded upon first opening a world
+		//there was a comment here about how this wasn't working on first world load but it seems to work fine now?
+		//did I copy the comment when I moved it from configChanged lol - Train
 		staticEnabled = isEnabled();
 		BUILTIN_ENCHANTMENTS.clear();
 
@@ -114,7 +114,7 @@ public class GoldToolsHaveFortuneModule extends ZetaModule {
 	}
 
 	public static boolean shouldOverrideCorrectTool(ItemStack stack, BlockState state) {
-		if (!staticEnabled || !(stack.getItem() instanceof TieredItem tiered && tiered.getTier() == Tiers.GOLD)) return false;
+		//module enabled check and gold tiered item check is now performed in the ItemMixin @WrapOperation, where this method is called.
 
 		Tool tool = stack.get(DataComponents.TOOL);
 		if (tool == null || state.is(TIERS[harvestLevel].getIncorrectBlocksForDrops())) return false;

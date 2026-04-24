@@ -116,7 +116,7 @@
     "texture": "quark:attribute/luck",
     "compare": "higher_better"
   },
-  "forge:swim_speed": {
+  "neoforge:swim_speed": {
     "display": {
       "mainhand": "multiplier",
       "offhand": "multiplier",
@@ -129,7 +129,7 @@
     "texture": "quark:attribute/swim_speed",
     "compare": "higher_better"
   },
-  "forge:entity_gravity": {
+  "minecraft:generic.gravity": {
     "display": {
       "mainhand": "multiplier",
       "offhand": "multiplier",
@@ -141,41 +141,41 @@
     },
     "texture": "quark:attribute/gravity"
   },
-  "forge:block_reach": {
+  "minecraft:player.block_interaction_range": {
     "display": {
-      "mainhand": "difference",
-      "offhand": "difference",
-      "feet": "difference",
-      "legs": "difference",
-      "chest": "difference",
-      "head": "difference",
-      "potion": "difference"
+      "mainhand": "flat",
+      "offhand": "flat",
+      "feet": "flat",
+      "legs": "flat",
+      "chest": "flat",
+      "head": "flat",
+      "potion": "flat"
     },
     "texture": "quark:attribute/reach_distance",
     "compare": "higher_better"
   },
-  "forge:entity_reach": {
+  "minecraft:player.entity_interaction_range": {
     "display": {
-      "mainhand": "difference",
-      "offhand": "difference",
-      "feet": "difference",
-      "legs": "difference",
-      "chest": "difference",
-      "head": "difference",
-      "potion": "difference"
+      "mainhand": "flat",
+      "offhand": "flat",
+      "feet": "flat",
+      "legs": "flat",
+      "chest": "flat",
+      "head": "flat",
+      "potion": "flat"
     },
     "texture": "quark:attribute/attack_range",
     "compare": "higher_better"
   },
-  "forge:step_height_addition": {
+  "minecraft:generic.step_height": {
     "display": {
-      "mainhand": "difference",
-      "offhand": "difference",
-      "feet": "difference",
-      "legs": "difference",
-      "chest": "difference",
-      "head": "difference",
-      "potion": "difference"
+      "mainhand": "flat",
+      "offhand": "flat",
+      "feet": "flat",
+      "legs": "flat",
+      "chest": "flat",
+      "head": "flat",
+      "potion": "flat"
     },
     "texture": "quark:attribute/step_height",
     "compare": "higher_better"

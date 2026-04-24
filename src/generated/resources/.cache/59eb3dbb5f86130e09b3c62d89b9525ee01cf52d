@@ -1,4 +1,4 @@
-// 1.21.1	2026-02-20T19:12:38.0685236	Loot Tables
+// 1.21.1	2026-04-22T08:46:11.3573597	Loot Tables
 321167e5d1e420c3799ebd55550623276a62d02f data/quark/loot_table/blocks/acacia_bookshelf.json
 78cf85302095b576b7eda6e9c83fd9141e777c3b data/quark/loot_table/blocks/acacia_chest.json
 2d740f286cb6b31376a3bb00878726966b38c064 data/quark/loot_table/blocks/acacia_hedge.json
@@ -670,7 +670,7 @@ fbcdb6b6b40619e71e7e4cad7be5fcf5dce0b454 data/quark/loot_table/blocks/sturdy_sto
 e1af8218ae869cb17386880f0ff827f94042c45b data/quark/loot_table/blocks/thatch_slab.json
 25404fae06e35e1733de798e5a01253aa7db1a4b data/quark/loot_table/blocks/thatch_stairs.json
 9f86d4dc84326b2ee082f4441dd65850e3c84d97 data/quark/loot_table/blocks/thatch_vertical_slab.json
-b7ef53b906a06e0beaf8a34820139a206764f0fd data/quark/loot_table/blocks/tiny_potato.json
+6f8d1d37a1834435b19863a2ec11671607ed6914 data/quark/loot_table/blocks/tiny_potato.json
 8eede1cd85313f23ccdc9ef0df29f59c4c1acf79 data/quark/loot_table/blocks/trapped_acacia_chest.json
 b3edcf8aeef23aabe72a4dea0cbbae9ffa07d6e3 data/quark/loot_table/blocks/trapped_ancient_chest.json
 287c4e1e9dd86c42c6383b99100e6a3b1a44cddd data/quark/loot_table/blocks/trapped_azalea_chest.json

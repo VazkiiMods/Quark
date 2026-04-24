@@ -1,4 +1,13 @@
 {
   "values": [
+    "minecraft:air",
+    {
+      "id": "create:clipboard",
+      "required": false
+    },
+    {
+      "id": "someassemblyrequired:sandwich",
+      "required": false
+    }
   ]
 }

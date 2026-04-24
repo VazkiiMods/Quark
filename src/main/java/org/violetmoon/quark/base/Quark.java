@@ -80,8 +80,10 @@ public class Quark {
 		proxy = Env.unsafeRunForDist(() -> ClientProxy::new, () -> CommonProxy::new);
 		proxy.start();
 
-		if (Boolean.parseBoolean(System.getProperty("quark.auditMixins", "false"))) // force all mixins to load in dev
-			MixinEnvironment.getCurrentEnvironment().audit();
+		if (Boolean.parseBoolean(System.getProperty("quark.auditMixins", "false"))) { // force all mixins to load in dev
+			//MixinEnvironment.getCurrentEnvironment().audit();
+			//game won't launch in devenv with the above line and create installed for some reason
+		}
 
 		bus.addListener(Quark::addPackFinders);
 		bus.addListener(Quark::registerCapabilities);
@@ -108,13 +110,26 @@ public class Quark {
 	}
 
 	private static void addPackFinders(AddPackFindersEvent event){
+		final Map<String, Boolean> CONDITIONAL_TAG_PACKS = new HashMap<>();
+		CONDITIONAL_TAG_PACKS.put("quark_ct_variant_chests", VariantChestsModule.staticEnabled);
+		CONDITIONAL_TAG_PACKS.put("quark_ct_variant_bookshelves", VariantBookshelvesModule.staticEnabled);
+		CONDITIONAL_TAG_PACKS.put("quark_ct_framed_glass", FramedGlassModule.staticEnabled);
+
+		if (event.getPackType() == PackType.SERVER_DATA) {
+			for(String ctPack : CONDITIONAL_TAG_PACKS.keySet()){
+				if(CONDITIONAL_TAG_PACKS.get(ctPack)){
+					addSubDataPack(ctPack, event);
+				}
+			}
+		}
+
 		if(QuarkGeneralConfig.quarkVDO) {
 			final Map<String, Boolean> VDO_PACKS = new HashMap<>();
-			VDO_PACKS.put("variant_bookshelves", VariantBookshelvesModule.staticEnabled);
-			VDO_PACKS.put("variant_chests", VariantChestsModule.staticEnabled);
-			VDO_PACKS.put("variant_ladders", VariantLaddersModule.staticEnabled);
-			VDO_PACKS.put("nether_wart_sack", (CompressedBlocksModule.staticEnabled && CompressedBlocksModule.enableNetherWartSack));
-			VDO_PACKS.put("better_stone_tools", (UtilityRecipesModule.staticEnabled && UtilityRecipesModule.betterStoneToolCrafting));
+			VDO_PACKS.put("quark_vdo_variant_bookshelves", VariantBookshelvesModule.staticEnabled);
+			VDO_PACKS.put("quark_vdo_variant_chests", VariantChestsModule.staticEnabled);
+			VDO_PACKS.put("quark_vdo_variant_ladders", VariantLaddersModule.staticEnabled);
+			VDO_PACKS.put("quark_vdo_nether_wart_sack", (CompressedBlocksModule.staticEnabled && CompressedBlocksModule.enableNetherWartSack));
+			VDO_PACKS.put("quark_vdo_better_stone_tools", (UtilityRecipesModule.staticEnabled && UtilityRecipesModule.betterStoneToolCrafting));
 
 			if (event.getPackType() == PackType.SERVER_DATA) {
 				for(String vdoPack : VDO_PACKS.keySet()){
@@ -146,11 +161,10 @@ public class Quark {
 
 	private static void addSubDataPack(String subPackName, AddPackFindersEvent event){
 		IModFile quarkJar = ModList.get().getModFileById(MOD_ID).getFile();
-		String packName = "quark_vdo_" + subPackName;
-		Path path = quarkJar.findResource("datapacks", packName);
+		Path path = quarkJar.findResource("datapacks", subPackName);
 
 		PackSelectionConfig packSelectionConfig = new PackSelectionConfig(false, Pack.Position.TOP, false);
-		PackLocationInfo packLocationInfo = new PackLocationInfo(packName, Component.literal("quark_vdo_" + subPackName), PackSource.BUILT_IN,
+		PackLocationInfo packLocationInfo = new PackLocationInfo(subPackName, Component.literal(subPackName), PackSource.BUILT_IN,
 				Optional.empty()
 		);
 

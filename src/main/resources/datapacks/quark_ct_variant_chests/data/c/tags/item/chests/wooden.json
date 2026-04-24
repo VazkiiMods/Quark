@@ -1,12 +1,20 @@
 {
-    "neoforge:conditions": [
-        {
-            "type": "zeta:flag",
-            "flag": "variant_chests"
-        }
-    ],
     "replace": false,
     "values": [
+        "quark:oak_chest",
+        "quark:spruce_chest",
+        "quark:birch_chest",
+        "quark:jungle_chest",
+        "quark:acacia_chest",
+        "quark:dark_oak_chest",
+        "quark:warped_chest",
+        "quark:crimson_chest",
+        "quark:azalea_chest",
+        "quark:blossom_chest",
+        "quark:mangrove_chest",
+        "quark:ancient_chest",
+        "quark:cherry_chest",
+        "quark:bamboo_chest",
         "quark:trapped_oak_chest",
         "quark:trapped_spruce_chest",
         "quark:trapped_birch_chest",
@@ -20,10 +28,6 @@
         "quark:trapped_mangrove_chest",
         "quark:trapped_ancient_chest",
         "quark:trapped_cherry_chest",
-        "quark:trapped_bamboo_chest",
-
-        "quark:trapped_nether_brick_chest",
-        "quark:trapped_purpur_chest",
-        "quark:trapped_prismarine_chest"
+        "quark:trapped_bamboo_chest"
     ]
 }
