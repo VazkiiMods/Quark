@@ -2,11 +2,13 @@
 
 Lots of fixes and a couple of other changes to improve the out-of-the-box experience.
 I am aware of many other issues but haven't had any luck fixing them. For now, I recommend:
-  - Be especially careful when using the Trowel, putting unusual blocks in your hotbar with it can cause player data loss
+  - Be especially careful (make world backups) when using the Trowel, putting nontypical blocks in your hotbar with it can cause player data loss
   - Don't leave items in the Matrix Enchanting Table
+  - Don't use NeoContinuity with Quark as it seems to cause inexplicable startup crashes
 
 ## Fixes
 - Fix #5215: Leaving "Back" key unbound causes all unknown keys to trigger it.
+- Fix #5495: Golden Pickaxe is broken 
 - Fix #5496: Blocks & items are not compostable
 - Fix #5500: Variant chests still visible in recipes even when turned off.
 - Fix #5503: Attribute Icons
@@ -14,6 +16,7 @@ I am aware of many other issues but haven't had any luck fixing them. For now, I
 - Fix #5507: Potential incorrect tagging on framed glass blocks
 - Fix #5515: [Bug] Opened shulker box disappears after Quark inventory sort
 - Fix #5516: 1.21.1 tater loses name when broken
+- Fix #5517: Seed pouches are irretrievable from Create's Stock Keeper
 
 ## Changes
 - Variant Chests, Variant Bookshelves, and Variant Ladders modules now have anti-overlap with Carved Wood and will disable themselves if that mod is installed

@@ -34,6 +34,9 @@ public class ItemMixin {
 
 	@WrapOperation(method = "isCorrectToolForDrops", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/item/component/Tool;isCorrectForDrops(Lnet/minecraft/world/level/block/state/BlockState;)Z"))
 	public boolean overrideCorrectTool(Tool tool, BlockState state, Operation<Boolean> original, @Local(ordinal = 0, argsOnly = true) ItemStack stack) {
-		return stack.getItem() instanceof TieredItem tiered && tiered.getTier() == Tiers.GOLD ? GoldToolsHaveFortuneModule.shouldOverrideCorrectTool(stack, state) : original.call(tool, state);
+		if(GoldToolsHaveFortuneModule.staticEnabled && stack.getItem() instanceof TieredItem tiered && tiered.getTier() == Tiers.GOLD)
+			return GoldToolsHaveFortuneModule.shouldOverrideCorrectTool(stack, state);
+		else
+			return original.call(tool, state);
 	}
 }
