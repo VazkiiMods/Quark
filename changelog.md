@@ -8,7 +8,7 @@ I am aware of many other issues but haven't had any luck fixing them. For now, I
 
 ## Fixes
 - Fix #5215: Leaving "Back" key unbound causes all unknown keys to trigger it.
-- Fix #5495: Golden Pickaxe is broken 
+- Fix #5495: Golden Pickaxe is broken
 - Fix #5496: Blocks & items are not compostable
 - Fix #5500: Variant chests still visible in recipes even when turned off.
 - Fix #5503: Attribute Icons
@@ -17,6 +17,7 @@ I am aware of many other issues but haven't had any luck fixing them. For now, I
 - Fix #5515: [Bug] Opened shulker box disappears after Quark inventory sort
 - Fix #5516: 1.21.1 tater loses name when broken
 - Fix #5517: Seed pouches are irretrievable from Create's Stock Keeper
+- Fix #5520: [1.21.1] Matrix enchanting table fails to load data
 
 ## Changes
 - Variant Chests, Variant Bookshelves, and Variant Ladders modules now have anti-overlap with Carved Wood and will disable themselves if that mod is installed
@@ -24,8 +25,8 @@ I am aware of many other issues but haven't had any luck fixing them. For now, I
 - Updated Japanese translation (Abbage230)
 - Updated Russian translation (AstardGrimoire)
 - Updated German translation (GulutGames)
-- Updated various translation files using unused Twitter and Reddit translation keys, replaced with Forum and Bluesky keys. 
-- 
+- Updated various translation files using unused Twitter and Reddit translation keys, replaced with Forum and Bluesky keys.
+
 ## Additions
 - Added a system to add tags to items/blocks depending on config via *additional* datapacks. Unfortunately this is a kind of band-aid fix that doesn't solve the root issue of there being no way to conditionally add items to tags. 
     - Added Conditional Tag datapacks for: Variant Chests, Variant Bookshelves, and Framed Glass
