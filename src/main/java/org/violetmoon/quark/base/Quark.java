@@ -80,8 +80,10 @@ public class Quark {
 		proxy = Env.unsafeRunForDist(() -> ClientProxy::new, () -> CommonProxy::new);
 		proxy.start();
 
-		if (Boolean.parseBoolean(System.getProperty("quark.auditMixins", "false"))) // force all mixins to load in dev
-			MixinEnvironment.getCurrentEnvironment().audit();
+		if (Boolean.parseBoolean(System.getProperty("quark.auditMixins", "false"))) { // force all mixins to load in dev
+			//MixinEnvironment.getCurrentEnvironment().audit();
+			//game won't launch in devenv with the above line and create installed for some reason
+		}
 
 		bus.addListener(Quark::addPackFinders);
 		bus.addListener(Quark::registerCapabilities);

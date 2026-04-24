@@ -7,6 +7,8 @@ import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Objects;
+
 public record ItemWrapperComponent(ItemStack stack) {
     public static final Codec<ItemWrapperComponent> CODEC = RecordCodecBuilder.create(
             itemWrapperComponentInstance -> itemWrapperComponentInstance.group(
@@ -26,4 +28,17 @@ public record ItemWrapperComponent(ItemStack stack) {
             ItemStack.OPTIONAL_STREAM_CODEC.encode(buf, component.stack);
         }
     };
+
+    @Override
+    public boolean equals(Object obj) {
+        if(obj instanceof ItemWrapperComponent otherIWC){
+            return ItemStack.matches(this.stack, otherIWC.stack());
+        }
+        return false;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(stack);
+    }
 }

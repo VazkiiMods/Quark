@@ -1,8 +1,8 @@
 # Quark 4.1-477 For Neoforge 1.21.1
 
-Fixes and a couple of changes to improve the out-of-the-box experience.
+Lots of fixes and a couple of other changes to improve the out-of-the-box experience.
 I am aware of many other issues but haven't had any luck fixing them. For now, I recommend:
-  - Make backups of your world before using the Trowel
+  - Be especially careful when using the Trowel, putting unusual blocks in your hotbar with it can cause player data loss
   - Don't leave items in the Matrix Enchanting Table
 
 ## Fixes
