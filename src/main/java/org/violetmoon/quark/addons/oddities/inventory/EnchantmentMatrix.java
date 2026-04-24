@@ -23,6 +23,8 @@ import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 
 import org.violetmoon.quark.addons.oddities.module.MatrixEnchantingModule;
+import org.violetmoon.quark.base.Quark;
+import org.violetmoon.quark.base.proxy.CommonProxy;
 
 import java.awt.*;
 import java.util.*;
@@ -56,12 +58,10 @@ public class EnchantmentMatrix {
 	public final boolean book;
 	public final ItemStack target;
 	public final RandomSource rng;
-	public final Level levelAsInWorld;
 
-	public EnchantmentMatrix(ItemStack target, Level level) {
+	public EnchantmentMatrix(ItemStack target) {
 		this.target = target;
-		this.levelAsInWorld = level;
-		this.rng = level.random;
+		this.rng = RandomSource.create();
 		book = target.getItem() == Items.BOOK;
 		computeMatrix();
 	}
@@ -152,7 +152,7 @@ public class EnchantmentMatrix {
 		List<Piece> marked = pieces.values().stream().filter(p -> p.marked).collect(Collectors.toList());
 
 		List<EnchantmentDataWrapper> validEnchants = new ArrayList<>();
-		HolderLookup.RegistryLookup<Enchantment> enchantmentRegistryLookup = levelAsInWorld.registryAccess().lookupOrThrow(Registries.ENCHANTMENT);
+		HolderLookup.RegistryLookup<Enchantment> enchantmentRegistryLookup = Quark.proxy.hackilyGetCurrentClientLevelRegistryAccess().lookupOrThrow(Registries.ENCHANTMENT);
 		enchantmentRegistryLookup.listElements().forEach(enchantment -> {
 
 			String id = enchantment.getKey().location().toString();
@@ -301,7 +301,7 @@ public class EnchantmentMatrix {
 		cmp.putBoolean(TAG_INFLUENCED, influenced);
 	}
 
-	public void readFromNBT(CompoundTag cmp) {
+	public void readFromNBT(CompoundTag cmp, HolderLookup.Provider provider) {
 		pieces.clear();
 		totalValue.clear();
 		ListTag plist = cmp.getList(TAG_PIECES, cmp.getId());
@@ -310,7 +310,7 @@ public class EnchantmentMatrix {
 
 			int id = pieceTag.getInt(TAG_PIECE_ID);
 			Piece piece = new Piece();
-			piece.readFromNBT(pieceTag, levelAsInWorld);
+			piece.readFromNBT(pieceTag, provider);
 			pieces.put(id, piece);
 			totalValue.put(piece.enchant, totalValue.getOrDefault(piece.enchant, 0) + piece.getValue());
 		}
@@ -482,10 +482,10 @@ public class EnchantmentMatrix {
 				cmp.putIntArray(TAG_BLOCK + i, blocks[i]);
 		}
 
-		public void readFromNBT(CompoundTag cmp, Level levelAsInWorld) {
+		public void readFromNBT(CompoundTag cmp, HolderLookup.Provider provider) {
 			color = cmp.getInt(TAG_COLOR);
 			type = cmp.getInt(TAG_TYPE);
-			enchant = levelAsInWorld.registryAccess().lookupOrThrow(Registries.ENCHANTMENT).get(ResourceKey.create(Registries.ENCHANTMENT, ResourceLocation.parse(cmp.getString(TAG_ENCHANTMENT)))).get();
+			enchant = provider.lookupOrThrow(Registries.ENCHANTMENT).get(ResourceKey.create(Registries.ENCHANTMENT, ResourceLocation.parse(cmp.getString(TAG_ENCHANTMENT)))).get();
 			level = cmp.getInt(TAG_LEVEL);
 			x = cmp.getInt(TAG_X);
 			y = cmp.getInt(TAG_Y);

@@ -54,7 +54,7 @@ public class BigStoneClustersModule extends ZetaModule {
 	@Config
 	public static BigStoneClusterConfig jasper = bob(BiomeTags.IS_BADLANDS, Tags.Biomes.IS_SANDY).build();
 	@Config
-	public static BigStoneClusterConfig shale = bob(Tags.Biomes.IS_SNOWY).build();
+	public static BigStoneClusterConfig shale = bob(Tags.Biomes.IS_SNOWY, Tags.Biomes.IS_COLD).build();
 
 	@Config
 	public static AirStoneClusterConfig myalite = AirStoneClusterConfig.airStoneBuilder()
@@ -77,7 +77,8 @@ public class BigStoneClustersModule extends ZetaModule {
 	public static List<String> blocksToReplace = Lists.newArrayList(
 			"minecraft:stone", "minecraft:andesite", "minecraft:diorite", "minecraft:granite",
 			"minecraft:netherrack|minecraft:the_nether", "minecraft:end_stone|minecraft:the_end",
-			"quark:marble", "quark:limestone", "quark:jasper", "quark:slate");
+
+			"quark:limestone", "quark:jasper", "quark:slate");
 
 	public static BiPredicate<Level, Block> blockReplacePredicate = (w, b) -> false;
 

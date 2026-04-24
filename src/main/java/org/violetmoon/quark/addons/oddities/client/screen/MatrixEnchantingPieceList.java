@@ -58,10 +58,6 @@ public class MatrixEnchantingPieceList extends ObjectSelectionList<MatrixEnchant
 		renderScroll(guiGraphics, scrollbarStartX, scrollbarEndX);
 	}
 
-	protected int getMaxScroll2() {
-		return Math.max(0, this.getMaxPosition() - (this.getHeight() - this.getY() - 4));
-	}
-
 	/**
 	 * The method that renders the scrollbar. Note that you do NOT send in the y-pos or the height of the scrollbar. Thats all calculated here.
 	 * @param guiGraphics GuiGraphics object, needed to actually render stuff.

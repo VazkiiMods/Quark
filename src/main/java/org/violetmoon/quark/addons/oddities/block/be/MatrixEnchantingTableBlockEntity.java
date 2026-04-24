@@ -26,6 +26,7 @@ import net.minecraft.world.item.enchantment.EnchantmentInstance;
 import net.minecraft.world.item.enchantment.ItemEnchantments;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.CandleBlock;
@@ -212,13 +213,14 @@ public class MatrixEnchantingTableBlockEntity extends AbstractEnchantingTableBlo
 			matrix = null;
 
 			if(stack.isEnchantable()) {
-				matrix = new EnchantmentMatrix(stack, level);
+
+				matrix = new EnchantmentMatrix(stack);
 				matrixDirty = true;
 				makeUUID();
 
 			if (stack.has(QuarkDataComponents.STACK_MATRIX)) {
 					CompoundTag cmp = stack.get(QuarkDataComponents.STACK_MATRIX).copyTag();
-                	matrix.readFromNBT(cmp);
+                	matrix.readFromNBT(cmp, level.registryAccess());
 				}
 			}
 		}
@@ -355,8 +357,8 @@ public class MatrixEnchantingTableBlockEntity extends AbstractEnchantingTableBlo
 			if(!newId.equals(matrixId)) {
 				CompoundTag matrixCmp = cmp.getCompound(TAG_MATRIX);
 				matrixId = newId;
-				matrix = new EnchantmentMatrix(getItem(0), level);
-				matrix.readFromNBT(matrixCmp);
+				matrix = new EnchantmentMatrix(getItem(0));
+				matrix.readFromNBT(matrixCmp, provider);
 			}
 			clientMatrixDirty = true;
 		} else

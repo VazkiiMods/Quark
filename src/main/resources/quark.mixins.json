@@ -52,7 +52,6 @@
     "PlayerAdvancementsMixin",
     "ProjectileUtilMixin",
     "ProjectileWeaponItemMixin",
-    "RegistrySetBuilderHackMixin",
     "ServerAdvancementManagerMixin",
     "ServerEntityMixin",
     "ServerLevelMixin",
