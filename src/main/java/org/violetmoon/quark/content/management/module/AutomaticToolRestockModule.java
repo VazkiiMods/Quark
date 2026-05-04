@@ -84,7 +84,7 @@ public class AutomaticToolRestockModule extends ZetaModule {
 	private boolean unstackablesOnly = false;
 
 	@Config(description = "Any items you place in this list will be ignored by the restock feature")
-	private List<String> ignoredItems = Lists.newArrayList("botania:exchange_rod", "botania:dirt_rod", "botania:skydirt_rod", "botania:cobble_rod");
+	private List<String> ignoredItems = Lists.newArrayList("quark:trowel", "botania:exchange_rod", "botania:dirt_rod", "botania:skydirt_rod", "botania:cobble_rod");
 
 	private final Object MUTEX = new Object();
 
