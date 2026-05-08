@@ -23,6 +23,6 @@ public class RedstoneRandomizerModule extends ZetaModule {
 
 	@LoadEvent
 	public final void register(ZRegister event) {
-		redstone_randomizer = new RedstoneRandomizerBlock("redstone_randomizer", this, Block.Properties.of().pushReaction(PushReaction.DESTROY).strength(0).sound(SoundType.WOOD));
+		redstone_randomizer = new RedstoneRandomizerBlock("redstone_randomizer", this, Block.Properties.of().pushReaction(PushReaction.DESTROY).strength(0).sound(SoundType.STONE));
 	}
 }

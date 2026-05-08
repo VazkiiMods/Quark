@@ -41,6 +41,7 @@ import org.violetmoon.quark.base.proxy.ClientProxy;
 import org.violetmoon.quark.base.proxy.CommonProxy;
 import org.violetmoon.quark.base.util.CompostManager;
 import org.violetmoon.quark.content.building.module.*;
+import org.violetmoon.quark.content.experimental.module.VanillaStoneClustersModule;
 import org.violetmoon.quark.content.mobs.module.CrabsModule;
 import org.violetmoon.quark.content.tweaks.module.UtilityRecipesModule;
 import org.violetmoon.quark.integration.claim.FlanIntegration;
@@ -114,6 +115,7 @@ public class Quark {
 		CONDITIONAL_TAG_PACKS.put("quark_ct_variant_chests", VariantChestsModule.staticEnabled);
 		CONDITIONAL_TAG_PACKS.put("quark_ct_variant_bookshelves", VariantBookshelvesModule.staticEnabled);
 		CONDITIONAL_TAG_PACKS.put("quark_ct_framed_glass", FramedGlassModule.staticEnabled);
+		CONDITIONAL_TAG_PACKS.put("quark_ct_variant_ladders", VariantLaddersModule.staticEnabled);
 
 		if (event.getPackType() == PackType.SERVER_DATA) {
 			for(String ctPack : CONDITIONAL_TAG_PACKS.keySet()){
@@ -130,6 +132,8 @@ public class Quark {
 			VDO_PACKS.put("quark_vdo_variant_ladders", VariantLaddersModule.staticEnabled);
 			VDO_PACKS.put("quark_vdo_nether_wart_sack", (CompressedBlocksModule.staticEnabled && CompressedBlocksModule.enableNetherWartSack));
 			VDO_PACKS.put("quark_vdo_better_stone_tools", (UtilityRecipesModule.staticEnabled && UtilityRecipesModule.betterStoneToolCrafting));
+
+			VDO_PACKS.put("quark_vdo_vanilla_stone_clusters", VanillaStoneClustersModule.staticEnabled);
 
 			if (event.getPackType() == PackType.SERVER_DATA) {
 				for(String vdoPack : VDO_PACKS.keySet()){

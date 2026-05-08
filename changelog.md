@@ -1,12 +1,22 @@
-# Quark 4.1-478 For Neoforge 1.21.1
+# Quark 4.1-479 For Neoforge 1.21.1
 
-Hotfix for matrix enchanting (thanks Siuolplex). The Trowel is still buggy, so we still recommend making backups before using it.
+Fixed the trowel thanks to LeoBeliik, and also snuck in an experimental module.
 
 # Fixes
-- #5537: Stripped wood blocks (Azalea, Ashen, and Trumpet) have wrong tag
-- #5522: 4.1-477 enchanting matrix is unusable 
-- Fixed Torch Arrow entity not having a language key set for it (only in en_us)
-- Fixed placed Angry Tiny Potatoes not preserving their anger when broken
+- Fixed #5513 (and all related issues): Trowel Crash: Item must not be minecraft:air
+- Fixed #5540: Redstone Randomizer Makes Incorrect Place and Break sounds
+- Fixed #5541: Automatic Tool Restock can swap the trowel when it shouldn't
+- Fixed #5545: Ladders missing #c:ladders item and block tag
+- Fixed #5547: Jasper, Limestone, Shale, Myalite, Permafrost, and their polished varients, along with polished calcite, have incorrect stone tag
 
 # Changes
-- Glow shrooms can now be placed on any block with the tag `quark:glow_shroom_may_place_on`, although by default this tag only includes Deepslate.
+- Added a Conditional Tags datapack for Variant Ladders
+- Polished stone blocks are no longer under the #c:stones item/block tags
+
+# Additions
+- Added Vanilla Stone Clusters module, disabled by default, under the Experimental category. This is an attempt to restore part of the pre-1.18 version of Quark's Big Stone Clusters, where Granite, Diorite, and Andesite only spawn in biome-dependent clusters.
+  - If this module is enabled, a datapack (quark_vdo_vanilla_stone_clusters) will be loaded that sets the `ore_granite` etc. ConfiguredFeatures to size 0. 
+  - This module uses the BigStoneClusters module's blocksToReplace config.
+  - This is under Experimental because I don't know if the datapack will cause issues, and the default biomes probably need to be changed, and if enabled, triggers the "Experimental Settings" screen when loading a world and I don't know why!
+  - Despite this module's name, Calcite is still generated from the BigStoneClusters module.
+  - Please try it out and let me (Partonetrain) know what you think of this on the Forum or on Discord!
