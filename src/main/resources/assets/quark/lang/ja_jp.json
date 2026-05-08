@@ -79,7 +79,7 @@
 	"quark.gui.celebration.edballs": "エド・ボールズ",
 	"quark.gui.celebration.doyouremember": "覚えていましたか？",
 
-	"quark.category.general": "一般的な設定",
+	"quark.category.general": "全般設定",
 	"quark.category.friends": "フレンドの設定",
 	"quark.category.automation": "自動化",
 	"quark.category.building": "建築",
@@ -1578,7 +1578,7 @@
 
 
 
-	"_comment_general": "General Settings／一般的な設定",
+	"_comment_general": "General Settings／全般設定",
 	"zeta.config.general.enable_'q'_button.name": "「q」ボタンの有効化",
 	"zeta.config.general.'q'_button_on_the_right.name": "「q」ボタンを右側に配置",
 	"zeta.config.general.disable_q_menu_effects.name": "「q」メニュー効果の無効化",
