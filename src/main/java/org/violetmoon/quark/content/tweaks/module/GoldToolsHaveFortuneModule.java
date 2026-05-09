@@ -140,7 +140,7 @@ public class GoldToolsHaveFortuneModule extends ZetaModule {
 	}
 
 	public static void modifySilkTouch(ItemStack stack, HolderLookup.Provider provider) {
-		if (!staticEnabled) return;
+		if (!staticEnabled || provider == null) return;
 
 		Optional<Object2IntMap<ResourceKey<Enchantment>>> builtinEnchantments = Optional.ofNullable(BUILTIN_ENCHANTMENTS.get(stack.getItem()));
 		int builtinSilkTouchLevel = builtinEnchantments.map(map -> map.getOrDefault(Enchantments.SILK_TOUCH, 0)).orElse(0);
@@ -157,7 +157,7 @@ public class GoldToolsHaveFortuneModule extends ZetaModule {
 	}
 
 	public static ItemEnchantments modifyComponentEnchantLevel(ItemStack stack, HolderLookup.RegistryLookup<Enchantment> registryLookup, ItemEnchantments enchantments) {
-		if (!staticEnabled || !BUILTIN_ENCHANTMENTS.containsKey(stack.getItem())) return enchantments;
+		if (!staticEnabled || registryLookup == null || !BUILTIN_ENCHANTMENTS.containsKey(stack.getItem())) return enchantments;
 
 		Object2IntMap<ResourceKey<Enchantment>> builtInEnchantments = BUILTIN_ENCHANTMENTS.get(stack.getItem());
 		ItemEnchantments.Mutable newEnchantments = new ItemEnchantments.Mutable(enchantments);
@@ -170,7 +170,7 @@ public class GoldToolsHaveFortuneModule extends ZetaModule {
 	}
 
 	public static ItemStack createTooltipStack(ItemStack stack, DataComponentType<?> componentType, HolderLookup.Provider provider) {
-		if (!staticEnabled || !displayBakedEnchantmentsInTooltip || componentType != DataComponents.ENCHANTMENTS) return stack;
+		if (!staticEnabled || provider == null || !displayBakedEnchantmentsInTooltip || componentType != DataComponents.ENCHANTMENTS) return stack;
 
 		if (BUILTIN_ENCHANTMENTS.containsKey(stack.getItem())) {
 			ItemStack copy = stack.copy();
@@ -190,7 +190,7 @@ public class GoldToolsHaveFortuneModule extends ZetaModule {
 	}
 
 	public static void modifyTooltip(ItemStack stack, List<Component> list, HolderLookup.Provider provider) {
-		if (!displayBakedEnchantmentsInTooltip || !italicTooltip) return;
+		if (provider == null || !displayBakedEnchantmentsInTooltip || !italicTooltip) return;
 
 		if (BUILTIN_ENCHANTMENTS.containsKey(stack.getItem())) {
 			Object2IntMap<ResourceKey<Enchantment>> builtInEnchantments = BUILTIN_ENCHANTMENTS.get(stack.getItem());
