@@ -5,7 +5,7 @@
       "flag": "trowel"
     }
   ],
-  "type": "minecraft:smelting",
+  "type": "minecraft:blasting",
   "ingredient": [
     {
       "item": "quark:trowel"
