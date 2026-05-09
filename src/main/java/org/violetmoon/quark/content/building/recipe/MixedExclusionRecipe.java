@@ -20,6 +20,8 @@ import net.minecraft.world.item.crafting.*;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.List;
+
 public class MixedExclusionRecipe implements CraftingRecipe {
     public static final MixedExclusionRecipe.Serializer SERIALIZER = new MixedExclusionRecipe.Serializer();
 
@@ -29,6 +31,7 @@ public class MixedExclusionRecipe implements CraftingRecipe {
     private final ItemStack output;
     private final TagKey<Item> tag;
     private final ItemStack placeholder;
+    private boolean ignoreMe = false; // Hacky evil boolean of death
 
     public MixedExclusionRecipe(String group, ItemStack output, TagKey<Item> tag, ItemStack placeholder) {
         this.group = group;
@@ -72,21 +75,34 @@ public class MixedExclusionRecipe implements CraftingRecipe {
 
     @Override
     public boolean matches(CraftingInput input, @NotNull Level level) {
-        if(input.size() == 9 && input.getItem(4).isEmpty()) {
+        if(!ignoreMe && input.size() == 9 && input.getItem(4).isEmpty()) {
             ItemStack first = null;
             boolean foundDifference = false;
 
-            for(int i = 0; i < 9; i++)
-                if(i != 4) { // ignore center
+            for(int i = 0; i < 9; i++) {
+                if (i != 4) { // ignore center
                     ItemStack stack = input.getItem(i);
-                    if(!stack.isEmpty() && stack.is(tag)) {
-                        if(first == null)
+                    if (!stack.isEmpty() && stack.is(tag)) {
+                        if (first == null)
                             first = stack;
-                        else if(!ItemStack.isSameItem(first, stack))
+                        else if (!ItemStack.isSameItem(first, stack)) {
                             foundDifference = true;
-                    } else
+                            break;
+                        }
+                    } else {
                         return false;
+                    }
+                } if (i == 8) {
+                    ignoreMe = true;
+                    boolean fallbackToOurOutput = false;
+                    List<RecipeHolder<CraftingRecipe>> recipes = level.getRecipeManager().getRecipesFor(RecipeType.CRAFTING, input, level);
+                    if (recipes.isEmpty()) {
+                        fallbackToOurOutput = true;
+                    }
+                    ignoreMe = false;
+                    return fallbackToOurOutput;
                 }
+            }
             return foundDifference;
         }
         return false;
