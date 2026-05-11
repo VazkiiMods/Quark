@@ -491,7 +491,7 @@ public class Stoneling extends PathfinderMob {
 		SHALE("shale", shaleBlock, polishedBlocks.get(shaleBlock)),
 		JASPER("jasper", jasperBlock, polishedBlocks.get(jasperBlock)),
 		DEEPSLATE("deepslate", Blocks.DEEPSLATE, Blocks.POLISHED_DEEPSLATE),
-		TUFF("tuff", Blocks.TUFF, polishedBlocks.get(Blocks.TUFF)),
+		TUFF("tuff", Blocks.TUFF, Blocks.POLISHED_TUFF),
 		DRIPSTONE("dripstone", Blocks.DRIPSTONE_BLOCK, polishedBlocks.get(Blocks.DRIPSTONE_BLOCK));
 
 		private final ResourceLocation texture;
