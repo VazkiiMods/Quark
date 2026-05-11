@@ -2,6 +2,7 @@
 
 # Fixes
 - Fixed #5544: Can only craft chests using vanilla oak planks
+- Fixed the flamarang smithing recipe being enabled if the pickarang module or Enable Flamerang config is disabled
    
 # Changes
 - You can now craft vanilla chests with modded woods if they have no variant chest. 
