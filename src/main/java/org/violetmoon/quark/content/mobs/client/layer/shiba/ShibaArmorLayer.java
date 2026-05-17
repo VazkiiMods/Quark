@@ -17,9 +17,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.component.DyedItemColor;
 import org.violetmoon.quark.base.Quark;
 import org.violetmoon.quark.base.client.handler.ModelHandler;
-import org.violetmoon.quark.content.mobs.client.model.FoxhoundModel;
 import org.violetmoon.quark.content.mobs.client.model.ShibaModel;
-import org.violetmoon.quark.content.mobs.entity.Foxhound;
 import org.violetmoon.quark.content.mobs.entity.Shiba;
 
 import java.util.Map;

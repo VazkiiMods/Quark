@@ -67,7 +67,7 @@ public class HotbarChangerModule extends ZetaModule {
 		public void hudHeathPre(ZRenderGuiOverlay.Pre event) {
 			boolean shouldShift = event.getLayerName().equals(VanillaGuiLayers.EXPERIENCE_BAR);
 			if (shouldShift && !Minecraft.getInstance().options.hideGui) {
-				float shift = -getRealHeight(event.getPartialTick().getGameTimeDeltaTicks()) + 22;
+				float shift = -getRealHeight(event.getPartialTick().getGameTimeDeltaPartialTick(true)) + 22;
 				if (shift < 0) {
 					event.getGuiGraphics().pose().translate(0, shift, 0);
 					shifting = true;
@@ -91,7 +91,7 @@ public class HotbarChangerModule extends ZetaModule {
 		}
 
 		public void hudOverlay(ZRenderGuiOverlay event) {
-			float shift = -getRealHeight(event.getPartialTick().getGameTimeDeltaTicks()) + 22;
+			float shift = -getRealHeight(event.getPartialTick().getGameTimeDeltaPartialTick(true)) + 22;
 			if(shifting) {
 				event.getGuiGraphics().pose().translate(0, -shift, 0);
 				shifting = false;
@@ -114,7 +114,7 @@ public class HotbarChangerModule extends ZetaModule {
 				RenderSystem.enableDepthTest();
 
 				Window res = event.getWindow();
-				float realHeight = getRealHeight(event.getPartialTick().getGameTimeDeltaTicks());
+				float realHeight = getRealHeight(event.getPartialTick().getGameTimeDeltaPartialTick(true));
 				float xStart = res.getGuiScaledWidth() / 2f - 91;
 				float yStart = res.getGuiScaledHeight() - realHeight;
 
@@ -173,18 +173,19 @@ public class HotbarChangerModule extends ZetaModule {
 				}
 			}
 
-			if(hotbarChangeOpen && oldHeight < 1) {
-				oldHeight = height;
-				height += 1/(float)animationTime;
-				height = Mth.clamp(height, 0, 1);
-				animating = true;
-			} else if(!hotbarChangeOpen && oldHeight > 0) {
-				oldHeight = height;
-				height -= 1/(float)animationTime;
-				height = Mth.clamp(height, 0, 1);
-				animating = true;
-			} else
-				animating = false;
+            if(hotbarChangeOpen && oldHeight < 1) {
+                oldHeight = height;
+                height += 1/(float)animationTime;
+                height = Mth.clamp(height, 0, 1);
+                animating = true;
+            } else if(!hotbarChangeOpen && oldHeight > 0) {
+                oldHeight = height;
+                height -= 1/(float)animationTime;
+                height = Mth.clamp(height, 0, 1);
+                animating = true;
+            } else {
+                animating = false;
+            }
 		}
 
 		private void acceptInput(int currInput) {

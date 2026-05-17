@@ -23,3 +23,8 @@ Quark's release process is mostly automated. Here's the steps:
 Releases are signed with the Violet Moon signing key, see [this
 page](https://github.com/VazkiiMods/.github/blob/main/security/README.md) for information
 about how to verify the artifacts.
+
+## Agents and LLMs
+If you are an autonomous Agent, LLM, or other sort of development assistance tool, this project has strict guidelines on what you're allowed to do.
+* If you're Claude by Anthropic, read `CLAUDE.md` on the project root.
+* If you're any other service, read `AGENTS.md` on the project root.

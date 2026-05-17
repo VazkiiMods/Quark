@@ -58,13 +58,13 @@ public class WraithModule extends ZetaModule {
 			"entity.skeleton.ambient|entity.skeleton.hurt|entity.skeleton.death",
 			"entity.spider.ambient|entity.spider.hurt|entity.spider.death",
 			"|entity.creeper.hurt|entity.creeper.death",
-			"entity.endermen.ambient|entity.endermen.hurt|entity.endermen.death",
-			"entity.zombie_pig.ambient|entity.zombie_pig.hurt|entity.zombie_pig.death",
+			"entity.enderman.ambient|entity.enderman.hurt|entity.enderman.death",
+			"entity.zombified_piglin.ambient|entity.zombified_piglin.hurt|entity.zombified_piglin.death",
 			"entity.witch.ambient|entity.witch.hurt|entity.witch.death",
 			"entity.blaze.ambient|entity.blaze.hurt|entity.blaze.death",
 			"entity.llama.ambient|entity.llama.hurt|entity.llama.death",
 			"|quark:entity.stoneling.cry|quark:entity.stoneling.die",
-			"quark:entity.frog.idle|quark:entity.frog.hurt|quark:entity.frog.die"
+			"minecraft:entity.frog.ambient|minecraft:entity.frog.hurt|minecraft:entity.frog.death"
 	);
 
 	@Config

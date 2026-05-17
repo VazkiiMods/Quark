@@ -1,0 +1,37 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "zeta:flag",
+      "flag": "color_runes"
+    },
+    {
+      "type": "neoforge:not",
+      "value": {
+        "type": "zeta:flag",
+        "flag": "corundum"
+      }
+    }
+  ],
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "key": {
+    "#": {
+      "item": "minecraft:amethyst_block"
+    },
+    "C": {
+      "item": "quark:smithing_template_rune"
+    },
+    "S": {
+      "tag": "c:cobblestones"
+    }
+  },
+  "pattern": [
+    "#S#",
+    "#C#",
+    "###"
+  ],
+  "result": {
+    "count": 2,
+    "id": "quark:smithing_template_rune"
+  }
+}

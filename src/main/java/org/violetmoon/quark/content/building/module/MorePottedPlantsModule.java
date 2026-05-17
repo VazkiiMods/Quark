@@ -48,15 +48,17 @@ public class MorePottedPlantsModule extends ZetaModule {
 		add(event, Blocks.POTATOES, "potato");
 		add(event, Blocks.PUMPKIN_STEM, "pumpkin");
 		add(event, Blocks.ROSE_BUSH, "rose");
-		event.getVariantRegistry().addFlowerPot(Blocks.SEA_PICKLE, "sea_pickle", p -> p.lightLevel(b -> 3));
+		FlowerPotBlock seaPickle = event.getVariantRegistry().addFlowerPot(Blocks.SEA_PICKLE, "sea_pickle", p -> p.lightLevel(b -> 3));
+		addJustForDatagen(seaPickle, Blocks.SEA_PICKLE);
 		Block sugarCane = add(event, Blocks.SUGAR_CANE, "sugar_cane");
 		add(event, Blocks.SUNFLOWER, "sunflower");
 		Block tallGrass = add(event, Blocks.TALL_GRASS, "tall_grass");
 		add(event, Blocks.TWISTING_VINES, "twisting_vines");
-		Block vine = add(event, Blocks.VINE, "vine");
+		FlowerPotBlock vine = add(event, Blocks.VINE, "vine");
 		add(event, Blocks.WEEPING_VINES, "weeping_vines");
 		add(event, Blocks.WHEAT, "wheat");
-		event.getVariantRegistry().addFlowerPot(Blocks.CAVE_VINES, "cave_vines", p -> p.lightLevel(b -> 14));
+		FlowerPotBlock caveVines = event.getVariantRegistry().addFlowerPot(Blocks.CAVE_VINES, "cave_vines", p -> p.lightLevel(b -> 14));
+		addJustForDatagen(caveVines, Blocks.CAVE_VINES);
 		add(event, Blocks.PITCHER_PLANT, "pitcher_plant");
 
 		tintedBlocks.put(grass, Blocks.SHORT_GRASS);
@@ -76,6 +78,11 @@ public class MorePottedPlantsModule extends ZetaModule {
 		pottedPlants.add(pot);
 		blockMapForDatagen.put(pot, block);
 		return pot;
+	}
+
+	public static void addJustForDatagen(FlowerPotBlock block, Block plant){
+		pottedPlants.add(block);
+		blockMapForDatagen.put(block, plant);
 	}
 
 	@ZetaLoadModule(clientReplacement = true)

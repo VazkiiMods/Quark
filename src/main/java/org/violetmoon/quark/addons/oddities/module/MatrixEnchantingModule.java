@@ -2,10 +2,7 @@ package org.violetmoon.quark.addons.oddities.module;
 
 import com.google.common.collect.Lists;
 import net.minecraft.ChatFormatting;
-import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderers;
-import net.minecraft.core.Holder;
-import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
@@ -14,7 +11,6 @@ import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -27,7 +23,6 @@ import org.violetmoon.quark.addons.oddities.client.render.be.MatrixEnchantingTab
 import org.violetmoon.quark.addons.oddities.client.screen.MatrixEnchantingScreen;
 import org.violetmoon.quark.addons.oddities.inventory.MatrixEnchantingMenu;
 import org.violetmoon.quark.addons.oddities.util.CustomInfluence;
-import org.violetmoon.quark.addons.oddities.util.Influence;
 import org.violetmoon.quark.addons.oddities.util.InfluenceLocations;
 import org.violetmoon.quark.base.Quark;
 import org.violetmoon.quark.base.components.QuarkDataComponents;

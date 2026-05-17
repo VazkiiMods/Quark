@@ -33,7 +33,7 @@
 	"quark.gui.config.social.discord": "Discord",
 	"quark.gui.config.social.patreon": "Patreon",
 	"quark.gui.config.social.forum": "Violet Moon 的論壇",
-	"quark.gui.config.social.twitter": "Twitter",
+	"quark.gui.config.social.bluesky": "@violetmoon.org Bluesky",
 	"quark.gui.config.header": "%s設定",
 	"quark.gui.config.subheader1": "感謝 %s%s%s 等人的支持才有夸克模組。",
 	"quark.gui.config.subheader2": "請在 Patreon 上支持我們， 可獲得很酷的獎勵喔 ！",

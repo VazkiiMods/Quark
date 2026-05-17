@@ -1,4 +1,19 @@
 {
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:and",
+      "values": [
+        {
+          "type": "zeta:flag",
+          "flag": "pickarang"
+        },
+        {
+          "type": "zeta:flag",
+          "flag": "flamerang"
+        }
+      ]
+    }
+  ],
   "type": "minecraft:smithing_transform",
   "template": {
     "item": "minecraft:netherite_upgrade_smithing_template"

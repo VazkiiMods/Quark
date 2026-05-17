@@ -12,7 +12,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.dimension.LevelStem;
-import org.violetmoon.quark.base.Quark;
 import org.violetmoon.quark.base.components.QuarkDataComponents;
 import org.violetmoon.quark.content.tweaks.client.item.ClockTimePropertyFunction;
 import org.violetmoon.quark.content.tweaks.client.item.CompassAnglePropertyFunction;
@@ -82,14 +81,8 @@ public class CompassesWorkEverywhereModule extends ZetaModule {
 	}
 
 	public static boolean isClockCalculated(ItemStack stack) {
-		return Boolean.TRUE.equals(stack.get(QuarkDataComponents.IS_COMPASS_CALCULATED));
+		return Boolean.TRUE.equals(stack.get(QuarkDataComponents.IS_CLOCK_CALCULATED));
 	}
-
-	public static final String TAG_COMPASS_CALCULATED = "quark:compass_calculated";
-	public static final String TAG_WAS_IN_NETHER = "quark:compass_in_nether";
-	public static final String TAG_POSITION_SET = "quark:compass_position_set";
-	public static final String TAG_NETHER_TARGET_X = "quark:nether_x";
-	public static final String TAG_NETHER_TARGET_Z = "quark:nether_z";
 
 	public static void tickCompass(Player player, ItemStack stack) {
 		boolean calculated = isCompassCalculated(stack);

@@ -228,15 +228,15 @@ public class Shiba extends TamableAnimal {
 			return false;
 		} else if(!this.isTame()) {
 			return false;
-		} else if(!(otherAnimal instanceof Shiba wolfentity)) {
+		} else if(!(otherAnimal instanceof Shiba shiba)) {
 			return false;
 		} else {
-			if(!wolfentity.isTame()) {
+			if(!shiba.isTame()) {
 				return false;
-			} else if(wolfentity.isSleeping()) {
+			} else if(shiba.isSleeping()) {
 				return false;
 			} else {
-				return this.isInLove() && wolfentity.isInLove();
+				return this.isInLove() && shiba.isInLove();
 			}
 		}
 	}

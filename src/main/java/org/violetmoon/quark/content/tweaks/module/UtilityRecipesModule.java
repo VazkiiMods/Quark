@@ -2,11 +2,12 @@ package org.violetmoon.quark.content.tweaks.module;
 
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
-import net.minecraft.world.level.block.ComposterBlock;
 
+import org.violetmoon.quark.base.util.CompostManager;
 import org.violetmoon.zeta.config.Config;
 import org.violetmoon.zeta.event.bus.LoadEvent;
 import org.violetmoon.zeta.event.bus.PlayEvent;
+import org.violetmoon.zeta.event.load.ZCommonSetup;
 import org.violetmoon.zeta.event.load.ZConfigChanged;
 import org.violetmoon.zeta.event.play.ZFurnaceFuelBurnTime;
 import org.violetmoon.zeta.event.play.ZLevelTick;
@@ -51,7 +52,7 @@ public class UtilityRecipesModule extends ZetaModule {
 	@Config(description = "Does Dragon Breath return a bottle when used as a reagent or material?")
 	public static boolean effectiveDragonBreath = true;
 
-	@Config(description = "Can torches can be used as fuel in furnaces?")
+	@Config(description = "Can torches be used as fuel in furnaces?")
 	public static boolean torchesBurn = true;
 
 	@Config(description = "Can bones be smelted down to bone meal?", flag = "bone_meal_utility")
@@ -71,10 +72,21 @@ public class UtilityRecipesModule extends ZetaModule {
 
 	private boolean needsChange = false;
 
+	public static boolean staticEnabled;
+
 	@LoadEvent
 	public final void configChanged(ZConfigChanged event) {
 		// This has to be defered to a safer thread, making these changes in this thread can result in concurrency errors
 		needsChange = true;
+		staticEnabled = isEnabled();
+	}
+
+	@LoadEvent
+	public final void setup(ZCommonSetup zCommonSetup){
+		if(compostableToxins) {
+			CompostManager.addChance(Items.POISONOUS_POTATO, 0.85F);
+			CompostManager.addChance(Items.ROTTEN_FLESH, 0.3F);
+		}
 	}
 
 	@PlayEvent
@@ -84,14 +96,6 @@ public class UtilityRecipesModule extends ZetaModule {
 				Items.DRAGON_BREATH.craftingRemainingItem = null;
 			else
 				Items.DRAGON_BREATH.craftingRemainingItem = Items.GLASS_BOTTLE;
-
-			if(compostableToxins) {
-				ComposterBlock.COMPOSTABLES.put(Items.POISONOUS_POTATO, 0.85F);
-				ComposterBlock.COMPOSTABLES.put(Items.ROTTEN_FLESH, 0.3F);
-			} else {
-				ComposterBlock.COMPOSTABLES.removeFloat(Items.POISONOUS_POTATO);
-				ComposterBlock.COMPOSTABLES.removeFloat(Items.ROTTEN_FLESH);
-			}
 
 			needsChange = false;
 		}

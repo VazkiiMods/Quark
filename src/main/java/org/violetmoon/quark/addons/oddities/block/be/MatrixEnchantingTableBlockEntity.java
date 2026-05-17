@@ -26,6 +26,7 @@ import net.minecraft.world.item.enchantment.EnchantmentInstance;
 import net.minecraft.world.item.enchantment.ItemEnchantments;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.CandleBlock;
@@ -141,11 +142,11 @@ public class MatrixEnchantingTableBlockEntity extends AbstractEnchantingTableBlo
 	}
 
 	private boolean generateAndPay(EnchantmentMatrix matrix, Player player) {
-		if(matrix.canGeneratePiece(influences, bookshelfPower, enchantability) && matrix.validateXp(player, bookshelfPower)) {
+		if(matrix.canGeneratePiece(this) && matrix.validateXp(player, bookshelfPower)) {
 			boolean creative = player.getAbilities().instabuild;
 			int cost = matrix.getNewPiecePrice();
 			if(charge > 0 || creative) {
-				if(matrix.generatePiece(influences, bookshelfPower, getItem(0).is(Items.BOOK), false)) {
+				if(matrix.generatePiece(this, getItem(0).is(Items.BOOK), false)) {
 					if(!creative) {
 						player.giveExperienceLevels(-cost);
 						charge = Math.max(charge - 1, 0);
@@ -185,9 +186,13 @@ public class MatrixEnchantingTableBlockEntity extends AbstractEnchantingTableBlo
 				}
 			}
 
-			if(book)
-				for(Entry<Holder<Enchantment>, Integer> e : enchantments.entrySet())
-					EnchantedBookItem.createForEnchantment(new EnchantmentInstance(e.getKey(), e.getValue()));
+			if(book) {
+				ItemStack bookStack = new ItemStack(Items.ENCHANTED_BOOK);
+				for (Entry<Holder<Enchantment>, Integer> e : enchantments.entrySet()) {
+					bookStack.enchant(e.getKey(), e.getValue());
+				}
+				out = bookStack;
+			}
 			else {
 				ItemEnchantments.Mutable mutableEnchList = new ItemEnchantments.Mutable(net.minecraft.world.item.enchantment.ItemEnchantments.EMPTY);
 				for (Entry<Holder<Enchantment>, Integer> e : enchantments.entrySet()) {
@@ -208,13 +213,14 @@ public class MatrixEnchantingTableBlockEntity extends AbstractEnchantingTableBlo
 			matrix = null;
 
 			if(stack.isEnchantable()) {
-				matrix = new EnchantmentMatrix(stack, level);
+
+				matrix = new EnchantmentMatrix(stack);
 				matrixDirty = true;
 				makeUUID();
 
 			if (stack.has(QuarkDataComponents.STACK_MATRIX)) {
 					CompoundTag cmp = stack.get(QuarkDataComponents.STACK_MATRIX).copyTag();
-                	matrix.readFromNBT(cmp);
+                	matrix.readFromNBT(cmp, level.registryAccess());
 				}
 			}
 		}
@@ -351,8 +357,8 @@ public class MatrixEnchantingTableBlockEntity extends AbstractEnchantingTableBlo
 			if(!newId.equals(matrixId)) {
 				CompoundTag matrixCmp = cmp.getCompound(TAG_MATRIX);
 				matrixId = newId;
-				matrix = new EnchantmentMatrix(getItem(0), level);
-				matrix.readFromNBT(matrixCmp);
+				matrix = new EnchantmentMatrix(getItem(0));
+				matrix.readFromNBT(matrixCmp, provider);
 			}
 			clientMatrixDirty = true;
 		} else

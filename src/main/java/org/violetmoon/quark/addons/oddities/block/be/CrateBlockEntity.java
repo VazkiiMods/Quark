@@ -6,6 +6,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
@@ -214,6 +215,10 @@ public class CrateBlockEntity extends BaseContainerBlockEntity implements Worldl
         cachedTotal = -1;
     }
 
+    @Override
+    public AbstractContainerMenu createMenu(int id, Inventory inv, @NotNull Player player) {
+        return new CrateMenu(id, inv, this, crateData);
+    }
 
     @Override
     protected AbstractContainerMenu createMenu(int id, Inventory inv) {
@@ -337,5 +342,9 @@ public class CrateBlockEntity extends BaseContainerBlockEntity implements Worldl
         double y = (double) this.worldPosition.getY() + 0.5D;
         double z = (double) this.worldPosition.getZ() + 0.5D;
         this.level.playSound(null, x, y, z, sound, SoundSource.BLOCKS, 0.5F, this.level.random.nextFloat() * 0.1F + 0.9F);
+    }
+
+    public void writeClientSideData(AbstractContainerMenu menu, RegistryFriendlyByteBuf buffer) {
+        buffer.writeBlockPos(this.getBlockPos());
     }
 }

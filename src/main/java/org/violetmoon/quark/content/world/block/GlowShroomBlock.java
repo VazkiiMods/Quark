@@ -2,7 +2,9 @@ package org.violetmoon.quark.content.world.block;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.tags.TagKey;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
@@ -17,12 +19,15 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import org.violetmoon.quark.base.Quark;
 import org.violetmoon.zeta.block.ZetaBushBlock;
 import org.violetmoon.zeta.module.ZetaModule;
 
 public class GlowShroomBlock extends ZetaBushBlock implements BonemealableBlock {
 
 	protected static final VoxelShape SHAPE = Block.box(5.0D, 0.0D, 5.0D, 11.0D, 6.0D, 11.0D);
+
+	protected static final TagKey<Block> PLACE_ON_TAG = Quark.asTagKey(Registries.BLOCK, "glow_shroom_may_place_on");
 
 	public GlowShroomBlock(@Nullable ZetaModule module) {
 		super("glow_shroom", module, null,
@@ -53,7 +58,7 @@ public class GlowShroomBlock extends ZetaBushBlock implements BonemealableBlock 
 
 	@Override
 	protected boolean mayPlaceOn(BlockState state, @NotNull BlockGetter world, @NotNull BlockPos pos) {
-		return state.getBlock() == Blocks.DEEPSLATE;
+		return state.is(PLACE_ON_TAG);
 	}
 
 	@Override

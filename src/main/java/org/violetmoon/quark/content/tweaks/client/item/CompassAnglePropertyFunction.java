@@ -4,15 +4,12 @@ import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.renderer.item.ItemPropertyFunction;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.component.DataComponents;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.NbtUtils;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.decoration.ItemFrame;
-import net.minecraft.world.item.CompassItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.component.LodestoneTracker;
 import net.minecraft.world.level.Level;
@@ -24,8 +21,6 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.violetmoon.quark.base.components.QuarkDataComponents;
 import org.violetmoon.quark.content.tweaks.module.CompassesWorkEverywhereModule;
-
-import java.util.Optional;
 
 @OnlyIn(Dist.CLIENT)
 public class CompassAnglePropertyFunction implements ItemPropertyFunction {

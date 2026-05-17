@@ -32,7 +32,7 @@
 	"quark.gui.config.social.discord": "Quark/Violet Moon Discord",
 	"quark.gui.config.social.patreon": "Vazkii's Patreon",
 	"quark.gui.config.social.forum": "Violet Moon Forums",
-	"quark.gui.config.social.twitter": "@VazkiiMods Twitter",
+	"quark.gui.config.social.bluesky": "@violetmoon.org on Bluesky",
 	"quark.gui.config.subheader1": "Quark is possible thanks to the support of %s%s%s and others.",
 	"quark.gui.config.subheader2": "Consider supporting us on Patreon for cool ingame rewards like this!",
 
@@ -454,7 +454,7 @@
 	"quark.misc.variant_tooltip_hold_shift": "(SHIFT for Variants)",
 	"quark.misc.variant_tooltip_header": "Variants:",
 	"quark.misc.disable_slot": "Click to Disable Slot",
-	"quark.misc.totem_darksouls": "As you die a second time, your previous Totem of Holding shatters",
+	"quark.misc.totem_darksouls": "You feel a sense of dread as a previous Totem of Holding shatters",
 
 	"quark.misc.you_came_to_the_wrong_neighborhood.0": "Six letter word just to get me along",
 	"quark.misc.you_came_to_the_wrong_neighborhood.1": "It's a intricacy and I'm coding on my mod and I,",
@@ -1395,6 +1395,7 @@
 	"effect.quark.resilience": "Resilience",
 
 	"entity.quark.pickarang": "Pickarang",
+	"entity.quark.torch_arrow": "Torch Arrow",
 	"entity.quark.glass_frame": "Glass Item Frame",
 	"entity.quark.dyed_item_frame": "Dyed Item Frame",
 	"entity.quark.totem": "Totem of Holding",

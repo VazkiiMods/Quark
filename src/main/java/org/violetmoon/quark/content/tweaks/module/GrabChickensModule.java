@@ -1,8 +1,6 @@
 package org.violetmoon.quark.content.tweaks.module;
 
 import net.minecraft.client.model.ChickenModel;
-import net.minecraft.client.multiplayer.ClientLevel;
-import net.minecraft.client.player.AbstractClientPlayer;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.player.RemotePlayer;
 import net.minecraft.network.protocol.game.ClientboundSetPassengersPacket;
@@ -38,6 +36,11 @@ public class GrabChickensModule extends ZetaModule {
 
 	@Config(description = "Set to 0 to disable")
 	private static int slownessLevel = 1;
+
+	@Config(description = "Negative numbers moves the chicken down, positive up")
+	@Config.Max(1)
+	@Config.Min(-1)
+	private static double chickenOffset = 0.0;
 
 	private static boolean staticEnabled;
 
@@ -112,7 +115,7 @@ public class GrabChickensModule extends ZetaModule {
     }
 
     public static float pushAmountForTesting() {
-        return 0.25f;
+        return (float) (0.25f - chickenOffset);
     }
 
     public static class Client {

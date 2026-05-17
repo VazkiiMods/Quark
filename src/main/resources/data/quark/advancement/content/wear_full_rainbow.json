@@ -1,5 +1,5 @@
 {
-  "parent": "quark:apply_color_rune",
+  "parent": "quark:content/apply_color_rune",
   "criteria": {
     "wear_full_rainbow": {
       "trigger": "quark:full_rainbow"

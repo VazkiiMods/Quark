@@ -191,7 +191,7 @@ public class CrateMenu extends AbstractContainerMenu {
 		boolean did = false;
 
 		if(down) {
-			int maxScroll = (getStackCount() / numCols) * numCols;
+			int maxScroll = fullyOccupiedRows() * numCols;
 
 			int target = scroll + numCols;
 			if(target <= maxScroll) {
@@ -220,7 +220,11 @@ public class CrateMenu extends AbstractContainerMenu {
 			if(packet)
 				PacketDistributor.sendToServer(new ScrollCrateMessage(down));
 		}
-	}
+    }
+
+    int fullyOccupiedRows() {
+        return (this.getStackCount() - 1)/numCols;
+    }
 
 	private class CrateSlot extends Slot {
 		public CrateSlot(Container container, int index, int xPosition, int yPosition) {

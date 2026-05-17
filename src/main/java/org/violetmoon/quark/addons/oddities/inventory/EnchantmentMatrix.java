@@ -13,6 +13,7 @@ import net.minecraft.util.RandomSource;
 import net.minecraft.util.random.Weight;
 import net.minecraft.util.random.WeightedRandom;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.EnchantedBookItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.enchantment.Enchantment;
@@ -21,7 +22,10 @@ import net.minecraft.world.item.enchantment.EnchantmentInstance;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 
+import org.violetmoon.quark.addons.oddities.block.be.MatrixEnchantingTableBlockEntity;
 import org.violetmoon.quark.addons.oddities.module.MatrixEnchantingModule;
+import org.violetmoon.quark.base.Quark;
+import org.violetmoon.quark.base.proxy.CommonProxy;
 
 import java.awt.*;
 import java.util.*;
@@ -55,12 +59,10 @@ public class EnchantmentMatrix {
 	public final boolean book;
 	public final ItemStack target;
 	public final RandomSource rng;
-	public final Level levelAsInWorld;
 
-	public EnchantmentMatrix(ItemStack target, Level level) {
+	public EnchantmentMatrix(ItemStack target) {
 		this.target = target;
-		this.levelAsInWorld = level;
-		this.rng = level.random;
+		this.rng = RandomSource.create();
 		book = target.getItem() == Items.BOOK;
 		computeMatrix();
 	}
@@ -69,11 +71,14 @@ public class EnchantmentMatrix {
 		return influenced;
 	}
 
-	public boolean canGeneratePiece(Map<Enchantment, Integer> influences, int bookshelfPower, int enchantability) {
+	public boolean canGeneratePiece(MatrixEnchantingTableBlockEntity matrixEnchanter) {
+		int bookshelfPower = matrixEnchanter.bookshelfPower;
+		int enchantability = matrixEnchanter.enchantability;
+
 		if(enchantability == 0)
 			return false;
 
-		if(!generatePiece(influences, bookshelfPower, book, true))
+		if(!generatePiece(matrixEnchanter, book, true))
 			return false;
 
 		if(book) {
@@ -110,8 +115,8 @@ public class EnchantmentMatrix {
 		return 1 + (MatrixEnchantingModule.piecePriceScale == 0 ? 0 : count / MatrixEnchantingModule.piecePriceScale);
 	}
 
-	public boolean generatePiece(Map<Enchantment, Integer> influences, int bookshelfPower, boolean isBook, boolean simulate) {
-		EnchantmentDataWrapper data = generateRandomEnchantment(influences, bookshelfPower, isBook, simulate);
+	public boolean generatePiece(MatrixEnchantingTableBlockEntity matrixEnchanter, boolean isBook, boolean simulate) {
+		EnchantmentDataWrapper data = generateRandomEnchantment(matrixEnchanter, isBook, simulate);
 		if(data == null)
 			return false;
 
@@ -145,13 +150,16 @@ public class EnchantmentMatrix {
 		return true;
 	}
 
-	private EnchantmentDataWrapper generateRandomEnchantment(Map<Enchantment, Integer> influences, int bookshelfPower, boolean isBook, boolean simulate) {
-		int level = book ? (MatrixEnchantingModule.bookEnchantability + rng.nextInt(Math.max(1, bookshelfPower) * 2)) : 0;
+	private EnchantmentDataWrapper generateRandomEnchantment(MatrixEnchantingTableBlockEntity matrixEnchanter, boolean isBook, boolean simulate) {
+		Map<Enchantment, Integer> influences = matrixEnchanter.influences;
+
+		int level = book ? (MatrixEnchantingModule.bookEnchantability + rng.nextInt(Math.max(1, matrixEnchanter.bookshelfPower) * 2)) : 0;
 
 		List<Piece> marked = pieces.values().stream().filter(p -> p.marked).collect(Collectors.toList());
 
 		List<EnchantmentDataWrapper> validEnchants = new ArrayList<>();
-		HolderLookup.RegistryLookup<Enchantment> enchantmentRegistryLookup = levelAsInWorld.registryAccess().lookupOrThrow(Registries.ENCHANTMENT);
+		// Hey so dont put the Quark proxy here thats bad you have to do complicated maneuvers to get level from the BE for the registry access so you dont have https://github.com/VazkiiMods/Quark/issues/5522 happen again
+		HolderLookup.RegistryLookup<Enchantment> enchantmentRegistryLookup = matrixEnchanter.getLevel().registryAccess().lookupOrThrow(Registries.ENCHANTMENT);
 		enchantmentRegistryLookup.listElements().forEach(enchantment -> {
 
 			String id = enchantment.getKey().location().toString();
@@ -169,8 +177,7 @@ public class EnchantmentMatrix {
 
 			if(isValid
 					&& !MatrixEnchantingModule.disallowedEnchantments.contains(id)
-					//todo: An additional check exists to see if an enchantment was allowed on books, will need to be replaced. "|| (book && enchantment.isAllowedOnBooks())"
-					&& ((enchantment.value().canEnchant(target) && enchantment.value().isPrimaryItem(target)))) {
+					&& ((enchantment.value().canEnchant(target) && enchantment.value().isPrimaryItem(target)) || (book))) {
 				int enchantLevel = 1;
 				if(book) {
 					for(int i = enchantment.value().getMaxLevel(); i > enchantment.value().getMinLevel() - 1; --i) {
@@ -301,7 +308,7 @@ public class EnchantmentMatrix {
 		cmp.putBoolean(TAG_INFLUENCED, influenced);
 	}
 
-	public void readFromNBT(CompoundTag cmp) {
+	public void readFromNBT(CompoundTag cmp, HolderLookup.Provider provider) {
 		pieces.clear();
 		totalValue.clear();
 		ListTag plist = cmp.getList(TAG_PIECES, cmp.getId());
@@ -310,7 +317,7 @@ public class EnchantmentMatrix {
 
 			int id = pieceTag.getInt(TAG_PIECE_ID);
 			Piece piece = new Piece();
-			piece.readFromNBT(pieceTag, levelAsInWorld);
+			piece.readFromNBT(pieceTag, provider);
 			pieces.put(id, piece);
 			totalValue.put(piece.enchant, totalValue.getOrDefault(piece.enchant, 0) + piece.getValue());
 		}
@@ -482,10 +489,10 @@ public class EnchantmentMatrix {
 				cmp.putIntArray(TAG_BLOCK + i, blocks[i]);
 		}
 
-		public void readFromNBT(CompoundTag cmp, Level levelAsInWorld) {
+		public void readFromNBT(CompoundTag cmp, HolderLookup.Provider provider) {
 			color = cmp.getInt(TAG_COLOR);
 			type = cmp.getInt(TAG_TYPE);
-			enchant = levelAsInWorld.registryAccess().lookupOrThrow(Registries.ENCHANTMENT).get(ResourceKey.create(Registries.ENCHANTMENT, ResourceLocation.parse(cmp.getString(TAG_ENCHANTMENT)))).get();
+			enchant = provider.lookupOrThrow(Registries.ENCHANTMENT).get(ResourceKey.create(Registries.ENCHANTMENT, ResourceLocation.parse(cmp.getString(TAG_ENCHANTMENT)))).get();
 			level = cmp.getInt(TAG_LEVEL);
 			x = cmp.getInt(TAG_X);
 			y = cmp.getInt(TAG_Y);

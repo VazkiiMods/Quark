@@ -3,7 +3,6 @@ package org.violetmoon.quark.addons.oddities.module;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.color.item.ItemColor;
 import net.minecraft.client.gui.screens.Screen;
-import net.minecraft.client.gui.screens.inventory.CreativeModeInventoryScreen;
 import net.minecraft.client.gui.screens.inventory.InventoryScreen;
 import net.minecraft.client.renderer.item.ItemProperties;
 import net.minecraft.core.Holder;
@@ -229,6 +228,9 @@ public class BackpackModule extends ZetaModule {
 		@PlayEvent
 		public void clientTick(ZClientTick.Start event) {
 			Minecraft mc = Minecraft.getInstance();
+			if(mc.level == null || mc.player == null){
+				return;
+			}
             if (isInventoryGUI(mc.screen) && !backpackRequested && isEntityWearingBackpack(mc.player) && (mc.player.portalProcess == null || !mc.player.portalProcess.isInsidePortalThisTick())) {
                 requestBackpack();
                 mc.player.inventoryMenu.setCarried(mc.player.getItemBySlot(EquipmentSlot.CHEST));

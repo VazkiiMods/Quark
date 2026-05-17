@@ -28,11 +28,11 @@ import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.level.gameevent.GameEvent.Context;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
+ import net.neoforged.neoforge.capabilities.Capabilities;
 import org.jetbrains.annotations.NotNull;
 import org.joml.Vector3f;
 import org.violetmoon.quark.addons.oddities.block.pipe.BasePipeBlock;
 import org.violetmoon.quark.addons.oddities.module.PipesModule;
-import org.violetmoon.quark.base.Quark;
 import org.violetmoon.quark.base.handler.QuarkSounds;
 import org.violetmoon.zeta.util.MiscUtil;
 import org.violetmoon.zeta.util.SimpleInventoryBlockEntity;
@@ -151,10 +151,10 @@ public class PipeBlockEntity extends SimpleInventoryBlockEntity {
 			iterating = false;
 
 			if(!queuedItems.isEmpty()) {
-				sync();
 				pipeItems.addAll(queuedItems);
 				queuedItems.clear();
-			}
+                sync();
+            }
 		}
 
 
@@ -228,8 +228,9 @@ public class PipeBlockEntity extends SimpleInventoryBlockEntity {
 	}
 
 	private void bounceBack(PipeItem item, ItemStack stack) {
-		if(!level.isClientSide)
-			passIn(stack == null ? item.stack : stack, item.outgoingFace, item.incomingFace, item.rngSeed, item.timeInWorld);
+		if(!level.isClientSide) {
+            passIn(stack == null ? item.stack : stack, item.outgoingFace, item.incomingFace, item.rngSeed, item.timeInWorld);
+        }
 	}
 
 	public void dropItem(ItemStack stack) {
@@ -363,12 +364,12 @@ public class PipeBlockEntity extends SimpleInventoryBlockEntity {
 	}
 
 	@Override
-	public void setItem(int i, @NotNull ItemStack itemstack) {
-		if(!itemstack.isEmpty()) {
-			Direction side = Direction.values()[i];
+	public void setItem(int index, @NotNull ItemStack itemstack) {
+			if(!itemstack.isEmpty()) {
+			Direction side = Direction.values()[index];
 			passIn(itemstack, side);
 
-			if(!level.isClientSide && !skipSync)
+			if(!getLevel().isClientSide && !skipSync)
 				sync();
 		}
 	}
@@ -439,7 +440,7 @@ public class PipeBlockEntity extends SimpleInventoryBlockEntity {
 		if(tile != null) {
 			if (tile instanceof PipeBlockEntity)
 				return ConnectionType.PIPE;
-			else if (tile instanceof Container)
+			else if (tile instanceof Container || tile.getLevel().getCapability(Capabilities.ItemHandler.BLOCK, tile.getBlockPos(), face.getOpposite()) != null)
 				return canHaveOffset(state, pos, world, face) ? ConnectionType.TERMINAL_OFFSET : ConnectionType.TERMINAL;
 		}
 

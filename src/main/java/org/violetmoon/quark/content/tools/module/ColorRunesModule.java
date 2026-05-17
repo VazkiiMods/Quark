@@ -102,6 +102,7 @@ public class ColorRunesModule extends ZetaModule {
 	@Nullable
 	public static RuneColor getAppliedStackColor(ItemStack target) {
 		if(target == null) return null;
+        if(target.getItem() == Items.ENCHANTED_BOOK) return AncientTomesModule.shiftRuneColor(target);
 		return RuneColor.byName(target.get(QuarkDataComponents.RUNE_COLOR));
 	}
 
@@ -136,13 +137,13 @@ public class ColorRunesModule extends ZetaModule {
 	public void onLootTableLoad(ZLootTableLoad event) {
 		int weight = 0;
 
-		if(event.getName().equals(BuiltInLootTables.SIMPLE_DUNGEON))
+		if(event.getName().equals(BuiltInLootTables.SIMPLE_DUNGEON.location()))
 			weight = dungeonWeight;
-		else if(event.getName().equals(BuiltInLootTables.NETHER_BRIDGE))
+		else if(event.getName().equals(BuiltInLootTables.NETHER_BRIDGE.location()))
 			weight = netherFortressWeight;
-		else if(event.getName().equals(BuiltInLootTables.JUNGLE_TEMPLE))
+		else if(event.getName().equals(BuiltInLootTables.JUNGLE_TEMPLE.location()))
 			weight = jungleTempleWeight;
-		else if(event.getName().equals(BuiltInLootTables.DESERT_PYRAMID))
+		else if(event.getName().equals(BuiltInLootTables.DESERT_PYRAMID.location()))
 			weight = desertTempleWeight;
 
 		if(weight > 0) {
@@ -213,7 +214,8 @@ public class ColorRunesModule extends ZetaModule {
         }
 		else {
 			//there is NOT a trim on this item, or there is a trim but showInTooltip is true
-			if (color != null) {
+            //Also this item is not an overleveled enchanted book
+			if (color != null && stack.getItem() != Items.ENCHANTED_BOOK) {
 				if (!components.contains(AccessorArmorTrim.getUPGRADE_TITLE())) {
 					components.add(AccessorArmorTrim.getUPGRADE_TITLE());
 				}

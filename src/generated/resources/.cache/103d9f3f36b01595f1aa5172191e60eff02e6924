@@ -1,4 +1,4 @@
-// 1.21.1	2025-12-16T22:32:42.0021874	Registries
+// 1.21.1	2026-02-17T12:57:16.9037374	Registries
 0003eb555659ed1965a76997a0f42bbe8761b14c data/quark/jukebox_song/ambient/chatter.json
 b585a6bf1ffca987b28e2ef0caf14f0880741937 data/quark/jukebox_song/ambient/clock.json
 ceb27b700f23cff484ccf22937bc4375d7ed7f0e data/quark/jukebox_song/ambient/crickets.json
@@ -8,4 +8,4 @@ d89c9588235435f2b2e69968cc5c6a51dd0d9ab6 data/quark/jukebox_song/ambient/fire.js
 1438ed1fdcc8dde07d70c6ff8bd294f155126976 data/quark/jukebox_song/ambient/rain.json
 bd3777685d5d0258a604db52c227f322e63bf9a7 data/quark/jukebox_song/ambient/wind.json
 476082817957c91cdc9805012b163be98c047cca data/quark/jukebox_song/endermosh.json
-17914350e9bdf13ffd8781267c4330793230af92 data/quark/worldgen/biome/glimmering_weald.json
+a3eff7af1e449fb98671a331202ab66644e5ba80 data/quark/worldgen/biome/glimmering_weald.json

@@ -5,10 +5,7 @@ import net.minecraft.client.renderer.blockentity.BlockEntityRenderers;
 import net.minecraft.world.level.block.Block;
 
 import org.violetmoon.quark.base.Quark;
-import org.violetmoon.quark.base.QuarkClient;
-import org.violetmoon.quark.base.client.handler.ModelHandler;
 import org.violetmoon.quark.integration.lootr.LootrIntegration;
-import org.violetmoon.zeta.client.HumanoidArmorModelGetter;
 import org.violetmoon.zeta.client.SimpleWithoutLevelRenderer;
 import org.violetmoon.zeta.client.event.load.ZClientSetup;
 import org.violetmoon.zeta.client.event.load.ZRegisterClientExtension;

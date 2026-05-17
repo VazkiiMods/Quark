@@ -1,6 +1,5 @@
 package org.violetmoon.quark.content.tweaks.module;
 
-import net.minecraft.world.level.block.Block;
 import org.violetmoon.zeta.event.bus.LoadEvent;
 import org.violetmoon.zeta.event.load.ZConfigChanged;
 import org.violetmoon.zeta.module.ZetaLoadModule;

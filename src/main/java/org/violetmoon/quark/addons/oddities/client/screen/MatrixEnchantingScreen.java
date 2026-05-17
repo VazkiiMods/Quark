@@ -105,7 +105,7 @@ public class MatrixEnchantingScreen extends AbstractContainerScreen<MatrixEnchan
 		pieceList.render(guiGraphics, mouseX, mouseY, partialTicks);
 
 		boolean showCost = enchanter.matrix != null
-				&& enchanter.matrix.canGeneratePiece(enchanter.influences, enchanter.bookshelfPower, enchanter.enchantability)
+				&& enchanter.matrix.canGeneratePiece(enchanter)
 				&& !mc.player.getAbilities().instabuild;
 
 		String text = ""+enchanter.bookshelfPower;
@@ -372,7 +372,7 @@ public class MatrixEnchantingScreen extends AbstractContainerScreen<MatrixEnchan
 		plusButton.active = (enchanter.matrix != null
 				&& (getMinecraft().player.getAbilities().instabuild || enchanter.charge > 0)
 				&& enchanter.matrix.validateXp(getMinecraft().player, enchanter.bookshelfPower)
-				&& enchanter.matrix.canGeneratePiece(enchanter.influences, enchanter.bookshelfPower, enchanter.enchantability));
+				&& enchanter.matrix.canGeneratePiece(enchanter));
 	}
 
 	protected Piece getPiece(int id) {

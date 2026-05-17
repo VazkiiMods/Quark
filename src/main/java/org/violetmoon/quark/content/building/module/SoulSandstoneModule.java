@@ -28,10 +28,10 @@ public class SoulSandstoneModule extends ZetaModule {
 				.strength(0.8F);
 
         CreativeTabManager.startChain(CreativeModeTabs.BUILDING_BLOCKS, false,true,Blocks.SEA_LANTERN);
-        Block soulSandstone = new ZetaBlock("soul_sandstone", this, props).setCreativeTab(CreativeModeTabs.BUILDING_BLOCKS);
-		Block chiseledSoulSandstone = new ZetaBlock("chiseled_soul_sandstone", this, props).setCreativeTab(CreativeModeTabs.BUILDING_BLOCKS);
-		Block cutSoulSandstone = new ZetaBlock("cut_soul_sandstone", this, props).setCreativeTab(CreativeModeTabs.BUILDING_BLOCKS);
-        Block smoothSoulSandstone = new ZetaBlock("smooth_soul_sandstone", this, props).setCreativeTab(CreativeModeTabs.BUILDING_BLOCKS);
+        Block soulSandstone = new ZetaBlock("soul_sandstone", this, props).setCreativeTab(CreativeModeTabs.BUILDING_BLOCKS); //0
+		Block chiseledSoulSandstone = new ZetaBlock("chiseled_soul_sandstone", this, props).setCreativeTab(CreativeModeTabs.BUILDING_BLOCKS); //1
+		Block cutSoulSandstone = new ZetaBlock("cut_soul_sandstone", this, props).setCreativeTab(CreativeModeTabs.BUILDING_BLOCKS); //2
+        Block smoothSoulSandstone = new ZetaBlock("smooth_soul_sandstone", this, props).setCreativeTab(CreativeModeTabs.BUILDING_BLOCKS); //3
 		CreativeTabManager.endChain();
 
         event.getVariantRegistry().addSlabStairsWall((IZetaBlock) soulSandstone, CreativeModeTabs.BUILDING_BLOCKS);

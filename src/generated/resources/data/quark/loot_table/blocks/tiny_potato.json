@@ -11,6 +11,22 @@
       "entries": [
         {
           "type": "minecraft:item",
+          "functions": [
+            {
+              "function": "minecraft:copy_components",
+              "include": [
+                "minecraft:custom_name"
+              ],
+              "source": "block_entity"
+            },
+            {
+              "function": "minecraft:copy_components",
+              "include": [
+                "quark:is_angry"
+              ],
+              "source": "block_entity"
+            }
+          ],
           "name": "quark:tiny_potato"
         }
       ],

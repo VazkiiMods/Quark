@@ -16,7 +16,6 @@ import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.MobRenderer;
 import net.minecraft.resources.ResourceLocation;
 
-import net.minecraft.world.entity.Pose;
 import org.jetbrains.annotations.NotNull;
 
 import org.violetmoon.quark.base.Quark;
@@ -54,25 +53,21 @@ public class FoxhoundRenderer extends MobRenderer<Foxhound, FoxhoundModel> {
 	@Override
 	public ResourceLocation getTextureLocation(@NotNull Foxhound entity) {
 		if(entity.isBlue())
-			return entity.isSleeping() ? SOULHOUND_SLEEPING : (entity.getRemainingPersistentAngerTime() > 0 ? SOULHOUND_HOSTILE : SOULHOUND_IDLE);
+			return entity.isResting() ? SOULHOUND_SLEEPING : (entity.getRemainingPersistentAngerTime() > 0 ? SOULHOUND_HOSTILE : SOULHOUND_IDLE);
 
 		UUID id = entity.getUUID();
 		long most = id.getMostSignificantBits();
 		if(SHINY_CHANCE > 0 && (most % SHINY_CHANCE) == 0)
-			return entity.isSleeping() ? BASALT_FOXHOUND_SLEEPING : (entity.getRemainingPersistentAngerTime() > 0 ? BASALT_FOXHOUND_HOSTILE : BASALT_FOXHOUND_IDLE);
+			return entity.isResting() ? BASALT_FOXHOUND_SLEEPING : (entity.getRemainingPersistentAngerTime() > 0 ? BASALT_FOXHOUND_HOSTILE : BASALT_FOXHOUND_IDLE);
 
-		return entity.isSleeping() ? FOXHOUND_SLEEPING : (entity.getRemainingPersistentAngerTime() > 0 ? FOXHOUND_HOSTILE : FOXHOUND_IDLE);
+		return entity.isResting() ? FOXHOUND_SLEEPING : (entity.getRemainingPersistentAngerTime() > 0 ? FOXHOUND_HOSTILE : FOXHOUND_IDLE);
 	}
 
     @Override
-    protected void setupRotations(Foxhound entity, PoseStack poseStack, float bob, float yBodyRot, float partialTick, float scale) {
-        super.setupRotations(entity, poseStack, bob, yBodyRot, partialTick, scale);
-        if (entity.getPose().equals(Pose.SLEEPING)) {
+    protected void setupRotations(Foxhound foxhound, PoseStack poseStack, float bob, float yBodyRot, float partialTick, float scale) {
+        super.setupRotations(foxhound, poseStack, bob, yBodyRot, partialTick, scale);
+        if (foxhound.isResting()) {
             poseStack.mulPose(Axis.YP.rotationDegrees(90f + yBodyRot));
         }
-    }
-
-    protected float getFlipDegrees(@NotNull Foxhound foxhound) {
-        return 0F;
     }
 }

@@ -37,7 +37,6 @@ import org.violetmoon.zeta.config.FlagCondition;
 import org.violetmoon.zeta.util.MiscUtil;
 import org.violetmoon.zeta.util.VanillaWoods;
 
-import javax.xml.crypto.Data;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
@@ -244,7 +243,7 @@ public class QuarkRecipeProvider extends RecipeProvider implements IConditionBui
         compressUncompress(Items.SUGAR_CANE, CompressedBlocksModule.sugarCane, recipeOutput, null, "sugar_cane_block");
         //furnaces
         variantFurnace(Blocks.BLACKSTONE, VariantFurnacesModule.blackstoneFurnace, recipeOutput, "blackstone");
-        variantFurnace(Blocks.DEEPSLATE, VariantFurnacesModule.deepslateFurnace, recipeOutput, "deepslate");
+        variantFurnace(Blocks.COBBLED_DEEPSLATE, VariantFurnacesModule.deepslateFurnace, recipeOutput, "deepslate");
         //glass
         ShapedRecipeBuilder.shaped(RecipeCategory.MISC, FramedGlassModule.framed_glass, 8)
                 .pattern("IGI")
@@ -287,6 +286,9 @@ public class QuarkRecipeProvider extends RecipeProvider implements IConditionBui
                     .unlockedBy("test", PlayerTrigger.TriggerInstance.tick())
                     .save(recipeOutput.withConditions(zCond("framed_glass")), "quark:building/crafting/panes/" + dyeColor.getName() + "_framed_glass_pane");
         }
+        paneRecipe(FramedGlassModule.framed_glass_pane, FramedGlassModule.framed_glass)
+                .unlockedBy("test", PlayerTrigger.TriggerInstance.tick())
+                .save(recipeOutput.withConditions(zCond("framed_glass")), "quark:building/crafting/panes/framed_glass_pane");
         ShapedRecipeBuilder.shaped(RecipeCategory.BUILDING_BLOCKS, JapanesePaletteModule.paperWall, 6)
                 .pattern("###")
                 .pattern("PPP")
@@ -1028,7 +1030,7 @@ public class QuarkRecipeProvider extends RecipeProvider implements IConditionBui
                 .define('#', Blocks.AZALEA_LEAVES)
                 .unlockedBy("test", PlayerTrigger.TriggerInstance.tick())
                 .save(recipeOutput.withConditions(zCond("leaf_carpet")), "quark:building/crafting/leafcarpet/azalea_leaf_carpet");
-        ShapedRecipeBuilder.shaped(RecipeCategory.BUILDING_BLOCKS, LeafCarpetModule.carpets.get(8), 3)
+        ShapedRecipeBuilder.shaped(RecipeCategory.BUILDING_BLOCKS, LeafCarpetModule.carpets.get(9), 3)
                 .pattern("##")
                 .define('#', Blocks.FLOWERING_AZALEA_LEAVES)
                 .unlockedBy("test", PlayerTrigger.TriggerInstance.tick())
@@ -1369,7 +1371,7 @@ public class QuarkRecipeProvider extends RecipeProvider implements IConditionBui
                 .define('#', SoulSandstoneModule.blocks.get(0))
                 .unlockedBy("test", PlayerTrigger.TriggerInstance.tick())
                 .save(recipeOutput.withConditions(zCond("soul_sandstone")), "quark:building/crafting/chiseled_soul_sandstone");
-        ShapedRecipeBuilder.shaped(RecipeCategory.BUILDING_BLOCKS, SoulSandstoneModule.blocks.get(3))
+        ShapedRecipeBuilder.shaped(RecipeCategory.BUILDING_BLOCKS, SoulSandstoneModule.blocks.get(2))
                 .pattern("##")
                 .pattern("##")
                 .define('#', SoulSandstoneModule.blocks.get(0))
@@ -1409,7 +1411,7 @@ public class QuarkRecipeProvider extends RecipeProvider implements IConditionBui
                 .define('I', Blocks.RAW_IRON_BLOCK)
                 .unlockedBy("test", PlayerTrigger.TriggerInstance.tick())
                 .save(recipeOutput.withConditions(zCond("raw_metal_bricks")), "quark:building/crafting/raw_iron_bricks");
-        ShapelessRecipeBuilder.shapeless(RecipeCategory.BUILDING_BLOCKS, Items.RAW_IRON, 1)
+        ShapelessRecipeBuilder.shapeless(RecipeCategory.BUILDING_BLOCKS, Items.RAW_IRON, 9)
                 .requires(RawMetalBricksModule.blocks.get(0))
                 .unlockedBy("test", PlayerTrigger.TriggerInstance.tick())
                 .save(recipeOutput.withConditions(zCond("raw_metal_bricks")), "quark:building/crafting/raw_iron_bricks_revert");
@@ -1419,7 +1421,7 @@ public class QuarkRecipeProvider extends RecipeProvider implements IConditionBui
                 .define('I', Blocks.RAW_GOLD_BLOCK)
                 .unlockedBy("test", PlayerTrigger.TriggerInstance.tick())
                 .save(recipeOutput.withConditions(zCond("raw_metal_bricks")), "quark:building/crafting/raw_gold_bricks");
-        ShapelessRecipeBuilder.shapeless(RecipeCategory.BUILDING_BLOCKS, Items.RAW_GOLD, 1)
+        ShapelessRecipeBuilder.shapeless(RecipeCategory.BUILDING_BLOCKS, Items.RAW_GOLD, 9)
                 .requires(RawMetalBricksModule.blocks.get(1))
                 .unlockedBy("test", PlayerTrigger.TriggerInstance.tick())
                 .save(recipeOutput.withConditions(zCond("raw_metal_bricks")), "quark:building/crafting/raw_gold_bricks_revert");
@@ -1429,12 +1431,12 @@ public class QuarkRecipeProvider extends RecipeProvider implements IConditionBui
                 .define('I', Blocks.RAW_COPPER_BLOCK)
                 .unlockedBy("test", PlayerTrigger.TriggerInstance.tick())
                 .save(recipeOutput.withConditions(zCond("raw_metal_bricks")), "quark:building/crafting/raw_copper_bricks");
-        ShapelessRecipeBuilder.shapeless(RecipeCategory.BUILDING_BLOCKS, Items.RAW_GOLD, 1)
+        ShapelessRecipeBuilder.shapeless(RecipeCategory.BUILDING_BLOCKS, Items.RAW_COPPER, 9)
                 .requires(RawMetalBricksModule.blocks.get(2))
                 .unlockedBy("test", PlayerTrigger.TriggerInstance.tick())
                 .save(recipeOutput.withConditions(zCond("raw_metal_bricks")), "quark:building/crafting/raw_copper_bricks_revert");
 
-        ShapedRecipeBuilder.shaped(RecipeCategory.BUILDING_BLOCKS, MidoriModule.blocks.get(0))
+        ShapedRecipeBuilder.shaped(RecipeCategory.BUILDING_BLOCKS, MidoriModule.blocks.get(0), 4)
                 .pattern("##")
                 .pattern("##")
                 .define('#', MidoriModule.moss_paste)
@@ -1605,7 +1607,16 @@ public class QuarkRecipeProvider extends RecipeProvider implements IConditionBui
                 .define('S', Tags.Items.COBBLESTONES)
                 .define('C', ColorRunesModule.rune)
                 .unlockedBy("test", PlayerTrigger.TriggerInstance.tick())
-                .save(recipeOutput.withConditions(zCond("color_runes")), "quark:tools/crafting/rune_duplication");
+                .save(recipeOutput.withConditions(zCond("color_runes"), zCond("corundum")), "quark:tools/crafting/rune_duplication");
+        ShapedRecipeBuilder.shaped(RecipeCategory.TOOLS, ColorRunesModule.rune, 2)
+                .pattern("#S#")
+                .pattern("#C#")
+                .pattern("###")
+                .define('#', Blocks.AMETHYST_BLOCK)
+                .define('S', Tags.Items.COBBLESTONES)
+                .define('C', ColorRunesModule.rune)
+                .unlockedBy("test", PlayerTrigger.TriggerInstance.tick())
+                .save(recipeOutput.withConditions(zCond("color_runes"), not(zCond("corundum"))), "quark:tools/crafting/rune_duplication_no_corundum");
         ShapedRecipeBuilder.shaped(RecipeCategory.TOOLS, SeedPouchModule.seed_pouch)
                 .pattern(" S ")
                 .pattern("HXH")
@@ -1816,7 +1827,7 @@ public class QuarkRecipeProvider extends RecipeProvider implements IConditionBui
                 .define('X', Items.HOPPER)
                 .unlockedBy("test", PlayerTrigger.TriggerInstance.tick())
                 .save(recipeOutput.withConditions(zCond("minecart_upgrade")), "quark:tweaks/crafting/utility/misc/hopper_minecart");
-        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, Items.HOPPER_MINECART)
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, Items.REPEATER)
                 .pattern("X X")
                 .pattern("#X#")
                 .pattern("III")

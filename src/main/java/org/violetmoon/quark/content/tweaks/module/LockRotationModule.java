@@ -235,32 +235,33 @@ public class LockRotationModule extends ZetaModule {
 
 		@PlayEvent
 		public void onHUDRender(ZRenderGuiOverlay.Post event) {
-			if (event.getLayerName().equals(VanillaGuiLayers.CROSSHAIR) && !Minecraft.getInstance().options.hideGui && !Minecraft.getInstance().player.isSpectator()) {
+            if (!Minecraft.getInstance().player.isSpectator() && !Minecraft.getInstance().options.hideGui)
+                if (event.getLayerName().equals(VanillaGuiLayers.CROSSHAIR)) {
 
-				if(clientProfile != null) {
-					GuiGraphics guiGraphics = event.getGuiGraphics();
+                    if (clientProfile != null) {
+                        GuiGraphics guiGraphics = event.getGuiGraphics();
 
-					RenderSystem.enableBlend();
-					if(renderLikeCrossHair) {
-						RenderSystem.blendFuncSeparate(GlStateManager.SourceFactor.ONE_MINUS_DST_COLOR, GlStateManager.DestFactor.ONE_MINUS_SRC_COLOR, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
-						RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1);
-					} else{
-						RenderSystem.defaultBlendFunc();
-						RenderSystem.setShaderColor(1, 1, 1, 0.5f);
-					}
+                        RenderSystem.enableBlend();
+                        if (renderLikeCrossHair) {
+                            RenderSystem.blendFuncSeparate(GlStateManager.SourceFactor.ONE_MINUS_DST_COLOR, GlStateManager.DestFactor.ONE_MINUS_SRC_COLOR, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
+                            RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1);
+                        } else {
+                            RenderSystem.defaultBlendFunc();
+                            RenderSystem.setShaderColor(1, 1, 1, 0.5f);
+                        }
 
-					Window window = event.getWindow();
-					int x = window.getGuiScaledWidth() / 2 + 20;
-					int y = window.getGuiScaledHeight() / 2 - 8;
-					guiGraphics.blit(ClientUtil.GENERAL_ICONS, x, y, clientProfile.facing.ordinal() * 16, 65, 16, 16, 256, 256);
+                        Window window = event.getWindow();
+                        int x = window.getGuiScaledWidth() / 2 + 20;
+                        int y = window.getGuiScaledHeight() / 2 - 8;
+                        guiGraphics.blit(ClientUtil.GENERAL_ICONS, x, y, clientProfile.facing.ordinal() * 16, 65, 16, 16, 256, 256);
 
-					if(clientProfile.half > -1)
-						guiGraphics.blit(ClientUtil.GENERAL_ICONS, x + 16, y, clientProfile.half * 16, 79, 16, 16, 256, 256);
-				}
+                        if (clientProfile.half > -1)
+                            guiGraphics.blit(ClientUtil.GENERAL_ICONS, x + 16, y, clientProfile.half * 16, 79, 16, 16, 256, 256);
+                    }
 
-                RenderSystem.defaultBlendFunc();
-                RenderSystem.setShaderColor(1, 1, 1, 1f);
-			}
+                    RenderSystem.defaultBlendFunc();
+                    RenderSystem.setShaderColor(1, 1, 1, 1f);
+                }
 		}
 	}
 }

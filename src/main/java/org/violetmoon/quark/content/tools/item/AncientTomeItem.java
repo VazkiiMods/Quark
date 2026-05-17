@@ -2,7 +2,6 @@ package org.violetmoon.quark.content.tools.item;
 
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.Holder;
-import net.minecraft.core.HolderLookup;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
@@ -10,8 +9,6 @@ import net.minecraft.world.item.*;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.ItemEnchantments;
 import org.jetbrains.annotations.NotNull;
-import org.violetmoon.quark.base.Quark;
-import org.violetmoon.quark.base.QuarkClient;
 import org.violetmoon.quark.base.components.QuarkDataComponents;
 import org.violetmoon.quark.content.tools.module.AncientTomesModule;
 import org.violetmoon.zeta.item.ZetaItem;
@@ -47,7 +44,7 @@ public class AncientTomeItem extends ZetaItem implements CreativeTabManager.Appe
 	}
 
 	public static Component getFullTooltipText(Holder<Enchantment> ench) {
-		return Component.translatable("quark.misc.ancient_tome_tooltip", Component.translatable(ench.value().description().getString()), Component.translatable("enchantment.level." + (ench.value().getMaxLevel() + 1))).withStyle(ChatFormatting.GRAY);
+		return Component.translatable("quark.misc.ancient_tome_tooltip", Component.translatable(ench.value().description().getString()), Component.translatable("enchantment.level." + (ench.value().getMaxLevel() + AncientTomesModule.maxLimitBreakLevels))).withStyle(ChatFormatting.GRAY);
 	}
 
 	@Override

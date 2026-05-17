@@ -1,7 +1,5 @@
 package org.violetmoon.quark.content.mobs.client.layer;
 
-import java.util.Locale;
-
 import com.mojang.blaze3d.vertex.PoseStack;
 
 import net.minecraft.client.renderer.MultiBufferSource;

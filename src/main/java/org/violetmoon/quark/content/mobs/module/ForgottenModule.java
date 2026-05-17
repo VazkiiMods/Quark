@@ -11,7 +11,6 @@ import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.event.entity.living.FinalizeSpawnEvent;
 import org.violetmoon.quark.base.Quark;
-import org.violetmoon.quark.base.QuarkClient;
 import org.violetmoon.quark.base.client.handler.ModelHandler;
 import org.violetmoon.quark.content.mobs.client.render.entity.ForgottenRenderer;
 import org.violetmoon.quark.content.mobs.entity.Forgotten;
@@ -70,12 +69,13 @@ public class ForgottenModule extends ZetaModule {
 	@PlayEvent
 	public void onSkeletonSpawn(ZMobSpawnEvent.CheckSpawn.Lowest event) {
 		if (event.getSpawnType() == MobSpawnType.SPAWNER) return;
+		if (event.getEntity().isPassenger()) return; //#5404 - do not replace spider jockeys (spiders always spawn first)
 
 		LivingEntity entity = event.getEntity();
 		ZResult result = event.getResult() ? ZResult.ALLOW : ZResult.DENY;
 		ServerLevelAccessor world = event.getLevel();
 
-		if(entity.getType() == EntityType.SKELETON && entity instanceof Mob mob && result != ZResult.DENY && entity.getY() < maxHeightForSpawn && world.getRandom().nextDouble() < forgottenSpawnRate) {
+		if(entity.getType() == EntityType.SKELETON && entity instanceof Mob mob && result != ZResult.DENY && entity.getY() < maxHeightForSpawn && world.getRandom().nextDouble() <  forgottenSpawnRate) {
 			if(result == ZResult.ALLOW || (mob.checkSpawnRules(world, event.getSpawnType()) && mob.checkSpawnObstruction(world))) {
 				Forgotten forgotten = new Forgotten(forgottenType, entity.level());
 				Vec3 epos = entity.position();

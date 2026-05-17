@@ -1,4 +1,10 @@
 {
+  "neoforge:conditions": [
+    {
+      "type": "zeta:flag",
+      "flag": "trowel"
+    }
+  ],
   "type": "minecraft:smelting",
   "ingredient": [
     {
@@ -6,8 +12,8 @@
     }
   ],
   "result": {
-		"id": "minecraft:iron_nugget"
-},
+    "id": "minecraft:iron_nugget"
+  },
   "experience": 0.1,
   "cookingtime": 200
 }

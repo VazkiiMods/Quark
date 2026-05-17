@@ -77,7 +77,7 @@ public class AttributeTooltips {
 			}
 			case ADD_MULTIPLIED_TOTAL -> {
 				AttributeSupplier supplier = DefaultAttributes.getSupplier(EntityType.PLAYER);
-				double scaledValue = value / supplier.getBaseValue(entry.attribute());
+				double scaledValue = value;
 				return Component.literal(ItemAttributeModifiers.ATTRIBUTE_MODIFIER_FORMAT.format(scaledValue) + "x")
 						.withStyle(scaledValue < 1 ? ChatFormatting.RED : ChatFormatting.WHITE);
 			}
@@ -91,10 +91,12 @@ public class AttributeTooltips {
 	public static void makeTooltip(ZGatherTooltipComponents event) {
 		ItemStack stack = event.getItemStack();
 
-		if (!Screen.hasShiftDown() && stack.has(DataComponents.ATTRIBUTE_MODIFIERS) && !stack.get(DataComponents.ATTRIBUTE_MODIFIERS).modifiers().isEmpty()) {
+		if (!Screen.hasShiftDown() && stack.getAttributeModifiers() != null && !stack.getAttributeModifiers().modifiers().isEmpty()) {
 			if (Minecraft.getInstance().player == null) return;
-			List<Either<FormattedText, TooltipComponent>> tooltipRaw = event.getTooltipElements();
-			tooltipRaw.add(1, Either.right(new AttributeComponent(stack)));
+            if (!event.getTooltipElements().isEmpty()) {
+                List<Either<FormattedText, TooltipComponent>> tooltipRaw = event.getTooltipElements();
+                tooltipRaw.add(1, Either.right(new AttributeComponent(stack)));
+            }
 		}
 	}
 
@@ -106,12 +108,12 @@ public class AttributeTooltips {
 		AttributeIconEntry iconEntry = getIconForAttribute(entry.attribute());
 
 		if (iconEntry != null) {
-			guiGraphics.blit(iconEntry.texture(), x, y, 0, 0, 9, 9, 9, 9);
 			double baseVal = mc.player.getAttributeBaseValue(entry.attribute());
 
 			// Comparison code.
 			if (ImprovedTooltipsModule.showUpgradeStatus && differenceInAttribute != null) {
-				MutableComponent valueStr = format(entry, baseVal).withStyle((differenceInAttribute.modifier().amount() > 0) ? ChatFormatting.GREEN : (differenceInAttribute.modifier().amount() < 0) ? ChatFormatting.RED : ChatFormatting.WHITE);
+                guiGraphics.blit(iconEntry.texture(), x, y, 0, 0, 9, 9, 9, 9);
+                MutableComponent valueStr = format(entry, baseVal).withStyle((differenceInAttribute.modifier().amount() > 0) ? ChatFormatting.GREEN : (differenceInAttribute.modifier().amount() < 0) ? ChatFormatting.RED : ChatFormatting.WHITE);
 				guiGraphics.drawString(mc.font, valueStr, x + 12, y + 1, -1);
 				if(differenceInAttribute.modifier().amount() != 0) {
 					int xp = x - 2;
@@ -123,9 +125,12 @@ public class AttributeTooltips {
 				}
 				x += mc.font.width(valueStr) + 20;
 			} else {
-				MutableComponent valueStr = format(entry, baseVal);
-				guiGraphics.drawString(mc.font, valueStr, x + 12, y + 1, -1);
-				x += mc.font.width(valueStr) + 20;
+                if (baseVal != 0 || baseVal != entry.modifier().amount()) {
+                    guiGraphics.blit(iconEntry.texture(), x, y, 0, 0, 9, 9, 9, 9);
+                    MutableComponent valueStr = format(entry, baseVal);
+                    guiGraphics.drawString(mc.font, valueStr, x + 12, y + 1, -1);
+                    x += mc.font.width(valueStr) + 20;
+                }
 			}
 		}
 
@@ -138,7 +143,7 @@ public class AttributeTooltips {
 	 * @return A simplified set of attribute modifiers. Don't wanna return the actual stack (It would probably cause some issues if it actually combined em)
 	 */
 	public static ItemAttributeModifiers simplifyStackAttributes(ItemStack stack) {
-		ItemAttributeModifiers modifiers = stack.get(DataComponents.ATTRIBUTE_MODIFIERS);
+		ItemAttributeModifiers modifiers = stack.getAttributeModifiers();
 		List<ItemAttributeModifiers.Entry> simplifiedList = new ArrayList<>();
 
 		for (ItemAttributeModifiers.Entry entry : modifiers.modifiers()) {
@@ -222,9 +227,9 @@ public class AttributeTooltips {
 				RenderSystem.setShader(GameRenderer::getPositionTexShader);
 				RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
 
-				Minecraft mc = Minecraft.getInstance();
+				Minecraft mc = net.minecraft.client.Minecraft.getInstance();
 				Player player = mc.player; // Player will always be available, if it isnt then uhhhh
-				ItemAttributeModifiers modifiers = stack.get(DataComponents.ATTRIBUTE_MODIFIERS); // The attributes of the item.
+				ItemAttributeModifiers modifiers = stack.getAttributeModifiers(); // The attributes of the item.
 
 				// Sorting has some errors, huh.
 				/*modifiers.modifiers().sort((entry, entry2) -> {
@@ -256,7 +261,7 @@ public class AttributeTooltips {
 
 					if (!comparedItem.isEmpty() && !comparedItem.equals(stack) &&
 							comparedItem.has(DataComponents.ATTRIBUTE_MODIFIERS) &&
-							!comparedItem.get(DataComponents.ATTRIBUTE_MODIFIERS).modifiers().isEmpty()) {
+							!comparedItem.getAttributeModifiers().modifiers().isEmpty()) {
 						ItemAttributeModifiers differenceInModifiers = compareAttributesOfStacks(comparedItem, stack);
 
 						for (ItemAttributeModifiers.Entry entry : simplifyStackAttributes(stack).modifiers()) {
@@ -297,7 +302,7 @@ public class AttributeTooltips {
 		@Override
 		public int getHeight() {
 			int y = 0;
-			ItemAttributeModifiers modifiers = stack.get(DataComponents.ATTRIBUTE_MODIFIERS);
+			ItemAttributeModifiers modifiers = stack.getAttributeModifiers();
 			if (modifiers.showInTooltip()) {
 				List<EquipmentSlotGroup> groups = new ArrayList<>();
 				for (ItemAttributeModifiers.Entry entry : modifiers.modifiers()) {
@@ -311,7 +316,7 @@ public class AttributeTooltips {
 		@Override
 		public int getWidth(@NotNull Font font) {
 			int width = 8;
-			ItemAttributeModifiers modifiers = stack.get(DataComponents.ATTRIBUTE_MODIFIERS);
+			ItemAttributeModifiers modifiers = stack.getAttributeModifiers();
 			Minecraft mc = Minecraft.getInstance();
 
 			if (modifiers.showInTooltip()) {
@@ -330,7 +335,12 @@ public class AttributeTooltips {
 
 					for (ItemAttributeModifiers.Entry entry : modifiers.modifiers()) {
 						if (entry.slot() != slotGroup) continue;
-						double baseVal = mc.player.getAttributeBaseValue(entry.attribute());
+						double baseVal;
+                        try {
+                            baseVal = mc.player.getAttributeBaseValue(entry.attribute());
+                        } catch (Exception exception) { // The game expects a base value, but its not guaranteed! So to avoid an exception we catch it here.
+                            baseVal = 0;
+                        }
 						groupX += mc.font.width(format(entry, baseVal)) + 20;
 					}
 					x = Math.max(x, groupX);

@@ -1,6 +1,5 @@
 package org.violetmoon.quark.addons.oddities.module;
 
-import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.level.block.Block;

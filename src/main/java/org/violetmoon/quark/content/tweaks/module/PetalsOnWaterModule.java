@@ -34,7 +34,7 @@ import net.minecraft.world.phys.Vec3;
 @ZetaLoadModule(category = "tweaks")
 public class PetalsOnWaterModule extends ZetaModule {
 
-	Block water_pink_petals;
+	public static Block water_pink_petals;
 
 	@LoadEvent
 	public final void register(ZRegister event) {

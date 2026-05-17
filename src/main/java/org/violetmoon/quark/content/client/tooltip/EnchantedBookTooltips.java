@@ -28,7 +28,6 @@ import net.minecraft.world.item.enchantment.ItemEnchantments;
 import org.jetbrains.annotations.NotNull;
 
 import org.violetmoon.quark.base.Quark;
-import org.violetmoon.quark.base.QuarkClient;
 import org.violetmoon.quark.base.components.QuarkDataComponents;
 import org.violetmoon.quark.content.client.module.ImprovedTooltipsModule;
 import org.violetmoon.quark.content.tools.item.AncientTomeItem;

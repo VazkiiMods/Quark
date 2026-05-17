@@ -8,12 +8,9 @@ import org.violetmoon.zeta.event.load.ZRegister;
 import org.violetmoon.zeta.module.ZetaLoadModule;
 import org.violetmoon.zeta.module.ZetaModule;
 
-import com.google.common.collect.ImmutableSet;
-
 import net.minecraft.world.item.CreativeModeTabs;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockBehaviour.Properties;
-import org.violetmoon.zeta.registry.CreativeTabManager;
 
 import java.util.ArrayList;
 import java.util.List;

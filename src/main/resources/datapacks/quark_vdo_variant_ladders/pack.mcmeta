@@ -1,0 +1,14 @@
+{
+  "pack": {
+    "description": "Quark Vanilla Data Overrides - Variant Ladders",
+    "pack_format": 48
+  },
+  "filter": {
+    "block": [
+      {
+        "namespace": "minecraft",
+        "path": "recipe/ladder"
+      }
+    ]
+  }
+}

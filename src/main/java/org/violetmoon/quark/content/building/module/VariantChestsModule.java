@@ -34,7 +34,6 @@ import org.violetmoon.quark.content.building.block.VariantTrappedChestBlock;
 import org.violetmoon.quark.content.building.block.be.VariantChestBlockEntity;
 import org.violetmoon.quark.content.building.block.be.VariantTrappedChestBlockEntity;
 import org.violetmoon.quark.content.building.client.render.be.VariantChestRenderer;
-import org.violetmoon.quark.content.building.recipe.MixedExclusionRecipe;
 import org.violetmoon.quark.mixin.mixins.accessor.AccessorAbstractChestedHorse;
 import org.violetmoon.zeta.client.SimpleWithoutLevelRenderer;
 import org.violetmoon.zeta.client.event.load.ZClientSetup;
@@ -60,7 +59,7 @@ import org.violetmoon.zeta.util.handler.StructureBlockReplacementHandler.Structu
 import java.util.*;
 import java.util.function.BooleanSupplier;
 
-@ZetaLoadModule(category = "building", antiOverlap = { "woodworks" })
+@ZetaLoadModule(category = "building", antiOverlap = { "woodworks", "carved_wood" })
 public class VariantChestsModule extends ZetaModule {
 
 	@Config(flag = "chest_reversion")
@@ -88,6 +87,8 @@ public class VariantChestsModule extends ZetaModule {
 
 	// donk chest!
 	private static final String DONK_CHEST = "Quark:DonkChest";
+
+	public static boolean staticEnabled;
 
 	public interface IVariantChest {
 		String getTexturePath();
@@ -167,6 +168,8 @@ public class VariantChestsModule extends ZetaModule {
 
 	@LoadEvent
 	public final void configChanged(ZConfigChanged event) {
+		staticEnabled = isEnabled();
+
 		manualChestMappings.clear();
 		manualTrappedChestMappings.clear();
 		List<String> chestsClone = new ArrayList<>(structureChests);
@@ -181,7 +184,15 @@ public class VariantChestsModule extends ZetaModule {
 				if(block != Blocks.AIR) {
 					manualChestMappings.put(ResourceLocation.parse(left), block);
 					if(regularChests.containsValue(block)) {
-						var trapped = trappedChests.get(regularChests.entrySet());
+                        Block theKey = null;
+                        for (Map.Entry<Block, Block> entry : regularChests.entrySet()) {
+                            Block key = entry.getKey();
+                            Block value = entry.getValue();
+                            if (value.equals(block)) {
+                                theKey = key;
+                            }
+                        }
+                        var trapped = trappedChests.get(theKey);
 						manualTrappedChestMappings.put(ResourceLocation.parse(left), trapped);
 					}
 				}
@@ -211,6 +222,7 @@ public class VariantChestsModule extends ZetaModule {
 					return block.withPropertiesOf(current);
 				}
 			}
+
 
 			Optional<Block> manualMapping = structureHolder.unwrapKey().map(ResourceKey::location).map(manualMappings::get);
 			if(manualMapping.isPresent())
@@ -269,7 +281,7 @@ public class VariantChestsModule extends ZetaModule {
 		if(target instanceof ItemEntity item && item.getItem().getItem() == Items.CHEST) {
 			ItemStack local = WAIT_TO_REPLACE_CHEST.get();
 			if(local != null && !local.isEmpty())
-				((ItemEntity) target).setItem(local);
+				item.setItem(local);
 			WAIT_TO_REPLACE_CHEST.remove();
 		}
 	}

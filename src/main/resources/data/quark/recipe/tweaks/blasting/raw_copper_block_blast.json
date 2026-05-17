@@ -4,9 +4,9 @@
     "item": "minecraft:raw_copper_block"
   },
   "result": {
-		"id": "minecraft:copper_block"
-},
- "experience": 6.3,
+    "id": "minecraft:copper_block"
+  },
+  "experience": 6.3,
   "cookingtime": 900,
   "neoforge:conditions": [
     {

@@ -78,6 +78,7 @@ public class TinyPotatoBlockEntity extends SimpleInventoryBlockEntity implements
 
 		// The best gender
 		GENDER.put("tomater", "tomato");
+        // Chat can I add this one please pretty please GENDER.put("dokibird", "tomato");
 
 		SOUNDS.put("shia labeouf", QuarkSounds.BLOCK_POTATO_DO_IT);
 		SOUNDS.put("joe biden", QuarkSounds.BLOCK_POTATO_SODA);

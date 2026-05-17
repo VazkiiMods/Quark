@@ -9,7 +9,7 @@
         },
         {
           "type": "zeta:flag",
-          "flag": "dripstone_bricks"
+          "flag": "stone_bricks"
         }
       ]
     }

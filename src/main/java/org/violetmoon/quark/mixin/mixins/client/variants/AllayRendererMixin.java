@@ -1,9 +1,7 @@
 package org.violetmoon.quark.mixin.mixins.client.variants;
 
 import net.minecraft.client.renderer.entity.AllayRenderer;
-import net.minecraft.client.renderer.entity.CowRenderer;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.entity.animal.Cow;
 import net.minecraft.world.entity.animal.allay.Allay;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;

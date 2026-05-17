@@ -2,7 +2,6 @@ package org.violetmoon.quark.mixin.mixins.client.variants;
 
 import net.minecraft.client.renderer.entity.FrogRenderer;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.entity.animal.armadillo.Armadillo;
 import net.minecraft.world.entity.animal.frog.Frog;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;

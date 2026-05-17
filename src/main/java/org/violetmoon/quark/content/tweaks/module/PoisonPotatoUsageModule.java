@@ -1,7 +1,6 @@
 package org.violetmoon.quark.content.tweaks.module;
 
 import net.minecraft.core.particles.ColorParticleOption;
-import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;

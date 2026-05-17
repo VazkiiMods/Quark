@@ -1,5 +1,5 @@
 {
-  "parent": "quark:mine_toretoise",
+  "parent": "quark:content/mine_toretoise",
   "criteria": {
     "mine_fed_toretoise": {
       "trigger": "quark:mine_fed_toretoise"

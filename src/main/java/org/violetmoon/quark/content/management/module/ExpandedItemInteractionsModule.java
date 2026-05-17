@@ -64,6 +64,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import static net.minecraft.world.entity.EquipmentSlot.Type.HUMANOID_ARMOR;
+
 @ZetaLoadModule(category = "management")
 public class ExpandedItemInteractionsModule extends ZetaModule {
 
@@ -185,7 +187,7 @@ public class ExpandedItemInteractionsModule extends ZetaModule {
 	}
 
 	private static boolean armorOverride(ItemStack stack, ItemStack incoming, Slot slot, ClickAction action, Player player, boolean simulate) {
-		if(incoming.isEmpty()) {
+		if(incoming.isEmpty() && !player.isSpectator()) {
 			//disallow stacks with more than one since it would prevent from de stacking
 			if(stack.getCount() > 1)
 				return false;
@@ -196,7 +198,8 @@ public class ExpandedItemInteractionsModule extends ZetaModule {
 			} else if(stack.getItem() instanceof ElytraItem)
 				equipSlot = EquipmentSlot.CHEST;
 
-			if(equipSlot != null) {
+            //Todo: Possibly do animal armor?
+			if(equipSlot != null && equipSlot.getType() == HUMANOID_ARMOR) {
 				ItemStack currArmor = player.getItemBySlot(equipSlot);
 
                 if (slot.mayPickup(player)) {

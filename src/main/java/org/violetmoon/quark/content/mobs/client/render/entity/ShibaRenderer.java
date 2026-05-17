@@ -24,6 +24,7 @@ public class ShibaRenderer extends MobRenderer<Shiba, ShibaModel> {
 
 	private static final ResourceLocation SHIBA_RARE = Quark.asResource("textures/model/entity/shiba/shiba_rare.png");
 	private static final ResourceLocation SHIBA_DOGE = Quark.asResource("textures/model/entity/shiba/shiba_doge.png");
+	private static final ResourceLocation SHIBA_RAD = Quark.asResource("textures/model/entity/shiba/shiba_rad.png");
 
 	public ShibaRenderer(EntityRendererProvider.Context context) {
 		super(context, ModelHandler.model(ModelHandler.shiba), 0.5F);
@@ -37,6 +38,8 @@ public class ShibaRenderer extends MobRenderer<Shiba, ShibaModel> {
 	public ResourceLocation getTextureLocation(Shiba entity) {
 		if(entity.hasCustomName() && entity.getCustomName().getString().trim().equalsIgnoreCase("doge"))
 			return SHIBA_DOGE;
+		else if(entity.hasCustomName() && entity.getCustomName().getString().trim().equalsIgnoreCase("rad shiba"))
+			return SHIBA_RAD;
 
 		long least = Math.abs(entity.getUUID().getLeastSignificantBits());
 		if((least % 200) == 0)

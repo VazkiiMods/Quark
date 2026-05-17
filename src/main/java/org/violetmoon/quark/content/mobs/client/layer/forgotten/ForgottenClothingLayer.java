@@ -29,6 +29,6 @@ public class ForgottenClothingLayer<T extends Mob & RangedAttackMob, M extends E
 
 	@Override
 	public void render(@NotNull PoseStack matrixStackIn, @NotNull MultiBufferSource bufferIn, int packedLightIn, @NotNull T entitylivingbaseIn, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch) {
-		coloredCutoutModelCopyLayerRender(getParentModel(), layerModel, TEXTURE, matrixStackIn, bufferIn, packedLightIn, entitylivingbaseIn, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch, partialTicks, 1);
+		coloredCutoutModelCopyLayerRender(getParentModel(), layerModel, TEXTURE, matrixStackIn, bufferIn, packedLightIn, entitylivingbaseIn, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch, partialTicks, 0xFFFFFF);
 	}
 }

@@ -1,14 +1,8 @@
 package org.violetmoon.quark.base.capability;
 
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.item.Item;
 
-import org.violetmoon.quark.api.ICustomSorting;
-import org.violetmoon.quark.api.IRuneColorProvider;
-import org.violetmoon.quark.api.ITransferManager;
-import org.violetmoon.quark.api.QuarkCapabilities;
 import org.violetmoon.quark.base.Quark;
-import org.violetmoon.zeta.event.bus.PlayEvent;
 
 // TODO: push these event handlers into their respective modules
 public class CapabilityHandler {

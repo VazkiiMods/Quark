@@ -1,4 +1,4 @@
-// 1.21.1	2025-12-16T22:32:42.0041987	Recipes
+// 1.21.1	2026-03-30T16:50:50.9840375	Recipes
 bb24f1bac2cb3ef401eb56f32a5b7364bcee7552 data/quark/advancement/recipes/building_blocks/building/crafting/bamboo_mat.json
 31f4957990f1d18f202f816de898f77458b18140 data/quark/advancement/recipes/building_blocks/building/crafting/bamboo_mat_carpet.json
 8df9c4ad585c2226233ee6e8f7bc96f33806df86 data/quark/advancement/recipes/building_blocks/building/crafting/blackstone_bricks.json
@@ -529,7 +529,7 @@ c747c0735743f58e6c113aaa42a313b7c3566864 data/quark/advancement/recipes/building
 c76c6cc96a5dc85b692ad7aabd2b3de64f9433db data/quark/advancement/recipes/building_blocks/building/crafting/walls/diorite_bricks_wall.json
 b56076a2d4a379e9e83c32ec233482a2ac3beb2e data/quark/advancement/recipes/building_blocks/building/crafting/walls/dirt_bricks_wall.json
 f3794b60030bfdbf454ea0c85dbf8e18ef974b82 data/quark/advancement/recipes/building_blocks/building/crafting/walls/dripstone_block_wall.json
-7bb7cd439afddd2cd464f3b4999e91d07d6e8aa8 data/quark/advancement/recipes/building_blocks/building/crafting/walls/dripstone_bricks_wall.json
+366f44eda30e98a718287b806bcb08616d52bd14 data/quark/advancement/recipes/building_blocks/building/crafting/walls/dripstone_bricks_wall.json
 a4d506b24bb9bb6bd7848f8a81b16bca606b1770 data/quark/advancement/recipes/building_blocks/building/crafting/walls/granite_bricks_wall.json
 d76f27c36b98efc89c0cc83b606f851018508bc3 data/quark/advancement/recipes/building_blocks/building/crafting/walls/mossy_cobblestone_bricks_wall.json
 15c2c07b62b19ac9c4b4138849b72e629bfa10f5 data/quark/advancement/recipes/building_blocks/building/crafting/walls/netherrack_bricks_wall.json
@@ -773,6 +773,7 @@ c144d02d5b52e23364a9692fbff17f6d9bc60ae2 data/quark/advancement/recipes/misc/bui
 668108682ec5491053bed312eade64f67ba57ce9 data/quark/advancement/recipes/misc/building/crafting/panes/blue_framed_glass_pane.json
 3a9db840c177b224597c1f7f61e16aac700e785b data/quark/advancement/recipes/misc/building/crafting/panes/brown_framed_glass_pane.json
 d251d0203990fb736d0f1441d51cbf1fa82a65b8 data/quark/advancement/recipes/misc/building/crafting/panes/cyan_framed_glass_pane.json
+feef94310bbb1b068989f75006e1743229a13d88 data/quark/advancement/recipes/misc/building/crafting/panes/framed_glass_pane.json
 a009bc8d70866ceb130ef980844ae01c628012b5 data/quark/advancement/recipes/misc/building/crafting/panes/gray_framed_glass_pane.json
 e9aaddf8a75a43f12c21a4d41a2c85530e6f7ef1 data/quark/advancement/recipes/misc/building/crafting/panes/green_framed_glass_pane.json
 e7f61e5e6aee054e5cc05d1e4f8aec2dd7544b67 data/quark/advancement/recipes/misc/building/crafting/panes/light_blue_framed_glass_pane.json
@@ -939,7 +940,8 @@ fe5a56b81c59236a9a893cf4421266cbf6181d80 data/quark/advancement/recipes/tools/ex
 ef4fa9997bf81b6082a575840788cd03079df120 data/quark/advancement/recipes/tools/tools/crafting/abacus.json
 8987284ff53171a0924289d6fa63c823d63aff63 data/quark/advancement/recipes/tools/tools/crafting/pickarang_heart.json
 2bb191a5824488b5362aabed22005ce5bd8ff3ff data/quark/advancement/recipes/tools/tools/crafting/pickarang_no_heart.json
-48ad79576ee5f0a24c326b781eb12bbb166d7d49 data/quark/advancement/recipes/tools/tools/crafting/rune_duplication.json
+2e79f764f3ac8ff09ee72ca6aae7bbc1002924c8 data/quark/advancement/recipes/tools/tools/crafting/rune_duplication.json
+4d33ce9c246e4528f7130c0ceb00161905af374b data/quark/advancement/recipes/tools/tools/crafting/rune_duplication_no_corundum.json
 7c63e3321af6b1f17b9fdc13f6b6477c2824ff52 data/quark/advancement/recipes/tools/tools/crafting/seed_pouch.json
 307716f1c0df511870bd110f45f5155f2d743764 data/quark/advancement/recipes/tools/tools/crafting/torch_arrow.json
 36e3222d382af2f9f411628cf982446d0bc0ac43 data/quark/advancement/recipes/tools/tools/crafting/trowel.json
@@ -1064,7 +1066,7 @@ efb9450143cb26d002601d1b24e8b5fecdd35d10 data/quark/recipe/building/crafting/com
 2c55cdefb6518d896b1e3260daae932be6ce9094 data/quark/recipe/building/crafting/compressed/sugar_cane_block.json
 3e320e8e66ec1bd1afd41d7b932be756d3afdfb1 data/quark/recipe/building/crafting/compressed/sugar_cane_blockuncompress.json
 b930539d190df73a35c089002bfe0056efb0eb44 data/quark/recipe/building/crafting/compressed/vanilla_nether_wart_block_4x4.json
-f0f28785f06294bd98362a6a36be1e5a66715700 data/quark/recipe/building/crafting/cut_soul_sandstone.json
+b5976190927fce97846499a60198874dcfb317df data/quark/recipe/building/crafting/cut_soul_sandstone.json
 6e0bd346ff17e5aee97d0c87b1d85205d336a301 data/quark/recipe/building/crafting/dirt_bricks.json
 39e5f49c395f95fd75772e0dbd51dd59e6c0e6b6 data/quark/recipe/building/crafting/duskbound_block.json
 96ed210de15d09fd549081a1f991e168fb9c3bd7 data/quark/recipe/building/crafting/duskbound_block_without_myalite.json
@@ -1075,7 +1077,7 @@ d3fe18de87c8faead8f334d60226c9cd1ee01e27 data/quark/recipe/building/crafting/fur
 ad990080e4736659a33cb8e0609bb9cb06e5f969 data/quark/recipe/building/crafting/furnaces/blackstone_minecart.json
 824e0d32762e5214db81792f6efe63a98f362c33 data/quark/recipe/building/crafting/furnaces/blackstone_smoker.json
 25d9a6445bd665c0ce3676d03bd72adfc1a333b9 data/quark/recipe/building/crafting/furnaces/deepslate_blast_furnace.json
-fed1f2540cce52116f63fdb3fe8a232cce80eded data/quark/recipe/building/crafting/furnaces/deepslate_furnace.json
+7ff06de7486a3ae54a006f04d81e9ae092c3cd4c data/quark/recipe/building/crafting/furnaces/deepslate_furnace.json
 8ccd94b1679dd4dc0d5a2cff739a730e77377fa0 data/quark/recipe/building/crafting/furnaces/deepslate_minecarft_tweaked.json
 dca41f566cdfabad70884af6563720a1f7c216f5 data/quark/recipe/building/crafting/furnaces/deepslate_minecart.json
 8394de9572b2e21a2f61afd7051dfe82a5418e6b data/quark/recipe/building/crafting/furnaces/deepslate_smoker.json
@@ -1160,12 +1162,12 @@ bb018e475da7cb813776a2e9bea8b7c95fe967c3 data/quark/recipe/building/crafting/lam
 78e630e9f9050b2bfdb827697df0088c3f6b72d3 data/quark/recipe/building/crafting/leafcarpet/birch_leaf_carpet.json
 388144bd47f3aede9e83d4d6890b152fd91e9331 data/quark/recipe/building/crafting/leafcarpet/cherry_leaf_carpet.json
 4cec2ccd8fcfac8524615644100135e8f515e1c8 data/quark/recipe/building/crafting/leafcarpet/dark_oak_leaf_carpet.json
-547133136ff3fa2d7320b68032a0cb7e3e81496b data/quark/recipe/building/crafting/leafcarpet/flowering_azalea_leaf_carpet.json
+edaf67135947ea097f3583d8bdd65cd47b814a12 data/quark/recipe/building/crafting/leafcarpet/flowering_azalea_leaf_carpet.json
 f610fbb6e50fb314c8370a15f478c817328c295c data/quark/recipe/building/crafting/leafcarpet/jungle_leaf_carpet.json
 cbf4160a95866f7c5aeda32ebf387c4cd173d33e data/quark/recipe/building/crafting/leafcarpet/mangrove_leaf_carpet.json
 ad70a52d47426fc0ba7ea984a8beade68202e61a data/quark/recipe/building/crafting/leafcarpet/oak_leaf_carpet.json
 84188682c45ecfbd6f15356466a01b292934e570 data/quark/recipe/building/crafting/leafcarpet/spruce_leaf_carpet.json
-a3de025a93f3bcf376db58fa8030294ad094ba35 data/quark/recipe/building/crafting/midori_block.json
+bdf3615b9d227f6a24cdf0b7825013446b23ffca data/quark/recipe/building/crafting/midori_block.json
 d175dbbc27b568eec8c7b36ea469c006113f7c11 data/quark/recipe/building/crafting/midori_pillar.json
 84cc0c8a4fe35b1847d445f62867866ac0e53947 data/quark/recipe/building/crafting/mossy_cobblestone_bricks.json
 09a7161c5310c866217f5fba2363a0e0e44e90aa data/quark/recipe/building/crafting/mud_brick_lattice.json
@@ -1175,6 +1177,7 @@ c1dd0ab736be6e641837a04e1933cda83149a239 data/quark/recipe/building/crafting/mud
 aa380aedd651e14411e2a809d0255faea322dc9c data/quark/recipe/building/crafting/panes/blue_framed_glass_pane.json
 4af52ec3710f26c728a03d7bb190c0219a6f6995 data/quark/recipe/building/crafting/panes/brown_framed_glass_pane.json
 140e6cdf3b04ecb4068cf6b0385753788c891502 data/quark/recipe/building/crafting/panes/cyan_framed_glass_pane.json
+cd06f2365c0b24f2c714a1aab760d9b3f39ed72a data/quark/recipe/building/crafting/panes/framed_glass_pane.json
 e221ebd99350b6f7af7181458ffa13c8aba11ec8 data/quark/recipe/building/crafting/panes/gray_framed_glass_pane.json
 e71ce2fb556d15bc39507e42ee22f4f8110fe7ce data/quark/recipe/building/crafting/panes/green_framed_glass_pane.json
 d1c9035b994f41343405b9c7e8079fd7a065186f data/quark/recipe/building/crafting/panes/light_blue_framed_glass_pane.json
@@ -1215,11 +1218,11 @@ e22050261e9c097fa7c69d4cdb88a05d8f09c8f2 data/quark/recipe/building/crafting/pos
 aa0d4eeecd5b4e72d2d29234a02e3deb0b6d5f9c data/quark/recipe/building/crafting/posts/stripped_warped_post.json
 a75cf51c57f16ac5ed9d0455171ac57d45a3f23c data/quark/recipe/building/crafting/posts/warped_post.json
 40b3cee2189ea3ea5c2316a1f9d8c37e68883309 data/quark/recipe/building/crafting/raw_copper_bricks.json
-af59da6f1fec2b62c0783520ca27f16831434402 data/quark/recipe/building/crafting/raw_copper_bricks_revert.json
+d029e4fe9cac0b223509037588d1ab674aef6558 data/quark/recipe/building/crafting/raw_copper_bricks_revert.json
 d57eb737f08650d2f068e656a0619debf378ff9b data/quark/recipe/building/crafting/raw_gold_bricks.json
-e43ec95d449686636590c71311285f841343e131 data/quark/recipe/building/crafting/raw_gold_bricks_revert.json
+e0378dd9869095ae2c3fe09909badc0b2490fc9d data/quark/recipe/building/crafting/raw_gold_bricks_revert.json
 ea4f124a85ed920bc8447f85940463d7dc119cb3 data/quark/recipe/building/crafting/raw_iron_bricks.json
-4e597a83c0043522333e9cb28fced79722abc9ec data/quark/recipe/building/crafting/raw_iron_bricks_revert.json
+454be5c4ac8924186c3d98ed371f80eae2711162 data/quark/recipe/building/crafting/raw_iron_bricks_revert.json
 0ed7b7cf5e8c3613af7cf58cd3789230882c1bd8 data/quark/recipe/building/crafting/red_sandstone_bricks.json
 f9c7326e512a29889ac4fc3c3b55b3afbfb80a11 data/quark/recipe/building/crafting/rope.json
 3459e31467736e32f7d01fcb253afa7c5d678b18 data/quark/recipe/building/crafting/rusty_iron_plate.json
@@ -1677,7 +1680,7 @@ cea37cd833adc6e82d18cd21e5b740b72e05296d data/quark/recipe/building/crafting/wal
 86c14f6de5ebe24954ea5eb5179d5d7edecd5f82 data/quark/recipe/building/crafting/walls/diorite_bricks_wall.json
 401864acce98806f573d31d27293527c340e7680 data/quark/recipe/building/crafting/walls/dirt_bricks_wall.json
 f74544ca0a5fd10e0ecafbaa0d1540c9c80b94b2 data/quark/recipe/building/crafting/walls/dripstone_block_wall.json
-8c3bc669a53e9bb3892593dacbeb19683604cfd5 data/quark/recipe/building/crafting/walls/dripstone_bricks_wall.json
+d6e482631386feba5a00815dbe30ff76fae445af data/quark/recipe/building/crafting/walls/dripstone_bricks_wall.json
 ed268b5a47546cf8d20b7049ce75876a377b13a6 data/quark/recipe/building/crafting/walls/granite_bricks_wall.json
 4bc97885a67fd3151333e8fcd1cccb244f1a63a0 data/quark/recipe/building/crafting/walls/mossy_cobblestone_bricks_wall.json
 d60ff0d033e75c39e834760e2d8fcb18cff1eeaa data/quark/recipe/building/crafting/walls/netherrack_bricks_wall.json
@@ -1704,7 +1707,8 @@ f7fc1f6d3073f5e354f3889b5c1dbc1971283cbd data/quark/recipe/oddities/crafting/mag
 9a3f79f42ab95d8d5387c34d6954ce21aebaa1ae data/quark/recipe/tools/crafting/abacus.json
 2b3ea0b07c7040c2178b1657cf8b7a2c7bdf4f76 data/quark/recipe/tools/crafting/pickarang_heart.json
 4a74b455ce1118d3b897eb10b634fb047e35df87 data/quark/recipe/tools/crafting/pickarang_no_heart.json
-1a953570c25fb199ef5f56ee16454a2ddcb9b6a1 data/quark/recipe/tools/crafting/rune_duplication.json
+4aefa413a2eba96249eb9693436b01da3d67a12f data/quark/recipe/tools/crafting/rune_duplication.json
+4a1746404baab91458c12fd45fb3f26c4755f78d data/quark/recipe/tools/crafting/rune_duplication_no_corundum.json
 6488e25624df8fc58c89e116371b662f09303622 data/quark/recipe/tools/crafting/seed_pouch.json
 04fd8bf83460c9e6797d334aabbc57302c472830 data/quark/recipe/tools/crafting/torch_arrow.json
 5279378758bf9758a849760cbcee12ca588020bc data/quark/recipe/tools/crafting/trowel.json
@@ -1761,7 +1765,7 @@ e05c2930f167e5615a251183a28a7c73b0d2291e data/quark/recipe/tweaks/crafting/utili
 34347a1b8d8e890e66cece06b45562c0dd7f8dcd data/quark/recipe/tweaks/crafting/utility/misc/easy_sticks_bamboo.json
 a34b35e0ec679f994038ee0526aee9009456d444 data/quark/recipe/tweaks/crafting/utility/misc/furnace_minecart.json
 c6774d224e53342516d7c424c0d4ac6ccd7a966d data/quark/recipe/tweaks/crafting/utility/misc/hopper_minecart.json
-9407ac8259431649ed6d9ff3db1ed1402b265bae data/quark/recipe/tweaks/crafting/utility/misc/repeater.json
+6a38163861829fe8d2eb2318e64e3c741f8f3fc4 data/quark/recipe/tweaks/crafting/utility/misc/repeater.json
 de4b2aba687ae41e7038c517bae598c677119e0d data/quark/recipe/tweaks/crafting/utility/misc/tnt_minecart.json
 40e3a6aa472d901f0e9a39ac68ef9b6ad794f84f data/quark/recipe/world/crafting/black_corundum_pane.json
 ea5e615b326e9ccf28fa2b5438cf46aadde69d64 data/quark/recipe/world/crafting/black_waxed_corundum.json

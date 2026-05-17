@@ -13,7 +13,6 @@ package org.violetmoon.quark.content.building.module;
 import net.minecraft.world.item.CreativeModeTabs;
 
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.Blocks;
 import org.violetmoon.quark.content.building.block.BambooMatBlock;
 import org.violetmoon.quark.content.building.block.BambooMatCarpetBlock;
 import org.violetmoon.quark.content.building.block.PaperLanternBlock;

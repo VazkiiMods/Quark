@@ -43,6 +43,14 @@ public class TorchArrow extends AbstractArrow {
 
 	@Override
 	public void tick() {
+
+//		if(level().isClientSide()){
+//			Quark.LOG.info("TorchArrow Client: inGround: " + inGround);
+//		}
+//		else{
+//			Quark.LOG.info("TorchArrow Server: inGround: " + inGround);
+//		}
+
 		super.tick();
 
 		if(!inGround && level().isClientSide && tickCount > 2) {

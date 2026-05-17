@@ -1,0 +1,94 @@
+{
+  "type": "minecraft:gift",
+  "pools": [
+    {
+      "rolls": 1,
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:air",
+          "functions": [
+            {
+              "function": "quark:tome_enchant"
+            },
+            {
+              "function": "minecraft:set_name",
+              "name": "Options Not Specified"
+            },
+            {
+              "function": "minecraft:set_lore",
+              "lore": [
+                "No options were specified, so the function will use the enchantments defined in the Valid Enchantments config option",
+                "The name field does not actually matter as the stack will always be a tome after the function has run"
+              ],
+              "mode": "append"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "rolls": 1,
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:air",
+          "functions": [
+            {
+              "function": "quark:tome_enchant",
+              "options": [
+                "minecraft:feather_falling",
+                "minecraft:protection"
+              ],
+              "only_valid": true
+            },
+            {
+              "function": "minecraft:set_name",
+              "name": "Options Specified, Only Valid True"
+            },
+            {
+              "function": "minecraft:set_lore",
+              "lore": [
+                "Only the enchantments in the options field can be rolled",
+                "Protection is an option here, but will never be selected with the default config since only_valid is true"
+              ],
+              "mode": "append"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "rolls": 1,
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:air",
+          "functions": [
+            {
+              "function": "quark:tome_enchant",
+              "options": [
+                "minecraft:feather_falling",
+                "minecraft:protection"
+              ],
+              "only_valid": false
+            },
+            {
+              "function": "minecraft:set_name",
+              "name": "Options Specified, Only Valid False"
+            },
+            {
+              "function": "minecraft:set_lore",
+              "lore": [
+                "Only the enchantments in the options field can be rolled",
+                "Protection is an option here, and it CAN be selected with the default config because only_valid is false"
+              ],
+              "mode": "append"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "random_sequence": "quark:enchant_tome_function_demo"
+}

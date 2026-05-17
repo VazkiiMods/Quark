@@ -31,8 +31,9 @@
 	"quark.gui.config.social.website": "Сайт Quark",
 	"quark.gui.config.social.discord": "Discord сервер Quark/Violet Moon",
 	"quark.gui.config.social.patreon": "Підтримати Vazkii",
-	"quark.gui.config.social.forum": "Reddit /r/QuarkMod",
-	"quark.gui.config.social.bluesky": "@violetmoon.org на Bluesky",
+	"quark.gui.config.social.forum": "Violet Moon Forums",
+  "quark.gui.config.social.bluesky": "@violetmoon.org на Bluesky",
+	"quark.gui.config.header": "Конфігурація %s",
 	"quark.gui.config.subheader1": "Quark все ще існує завдяки підтримці %s%s%s та інших.",
 	"quark.gui.config.subheader2": "Підтримайте на Patreon, щоб отримати круті внутрішньоігрові винагороди!",
 

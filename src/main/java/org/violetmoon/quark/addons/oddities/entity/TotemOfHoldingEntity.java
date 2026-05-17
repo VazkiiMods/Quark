@@ -217,7 +217,9 @@ public class TotemOfHoldingEntity extends Entity {
 		}
 
 		for (ItemStack equipedCurio : equipedCurios) {
-			curiosList.add(equipedCurio.save(level().registryAccess()));
+            if (!equipedCurio.isEmpty()) {
+                curiosList.add(equipedCurio.save(level().registryAccess()));
+            }
 		}
 
 		compound.put(TAG_ITEMS, list);
