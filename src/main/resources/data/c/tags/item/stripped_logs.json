@@ -1,8 +1,8 @@
 {
     "replace": false,
     "values": [
-        "quark:stripped_blossom_wood",
-        "quark:stripped_azalea_wood",
-        "quark:stripped_ancient_wood"
+        "quark:stripped_blossom_log",
+        "quark:stripped_azalea_log",
+        "quark:stripped_ancient_log"
     ]
 }
