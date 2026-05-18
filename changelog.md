@@ -3,8 +3,12 @@
 # Fixes
 - *Properly* Fixed #5537: Stripped wood blocks (Azalea, Ashen, and Trumpet) have wrong tag (thanks copygirl) 
 - Fixed #5544: Can only craft chests using vanilla oak planks
+- Fixed #5564: [479 and more] A .cache folder is packed into the JAR
+  - this fix decreases jar size by at least 10 KB
 - Fixed the flamarang smithing recipe being enabled if the pickarang module or Enable Flamerang config is disabled
-   
+- Fixed the Bent Recipes cookie recipe cheating you out of 7 cookies
+
+
 # Changes
 - You can now craft vanilla chests with modded woods if they have no variant chest. 
   - This was a longstanding (3+ years) issue siuolplex found a cursed workaround for
