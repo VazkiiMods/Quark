@@ -3,6 +3,7 @@
 # Fixes
 - *Properly* Fixed #5537: Stripped wood blocks (Azalea, Ashen, and Trumpet) have wrong tag (thanks copygirl) 
 - Fixed #5544: Can only craft chests using vanilla oak planks
+- Fixed #5560: "Improved Tooltip" Module's Enchanted Book Tooltips is hardcoded
 - Fixed #5564: [479 and more] A .cache folder is packed into the JAR
   - this fix decreases jar size by at least 10 KB
 - Fixed the flamarang smithing recipe being enabled if the pickarang module or Enable Flamerang config is disabled
@@ -15,6 +16,7 @@
 - Trowel -> Iron Nugget smelting recipe now checks if the Trowel module is enabled
 - Updated Ukrainian translation (StarmanMine142)
 - Updated Japanese translation (Abbage230)
+- Improved Tooltips' Enchanting Tooltips bow checks for the Stored Enchantments item component instead of Enchanted Books/Ancient Tomes
 
 # Additions
 - Added a Trowel -> Iron Nugget blasting recipe
