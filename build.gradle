@@ -323,6 +323,7 @@ jar {
     exclude "**/*.exe"
     exclude "**/unused"
     exclude "**/genscripts"
+    exclude ".cache"
 }
 
 //Omit all jar-in-jar dependencies for slimmer maven publishing

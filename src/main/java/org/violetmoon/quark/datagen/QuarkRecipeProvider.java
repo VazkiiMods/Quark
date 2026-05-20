@@ -1653,7 +1653,7 @@ public class QuarkRecipeProvider extends RecipeProvider implements IConditionBui
                 .define('#', Items.WHEAT)
                 .unlockedBy("test", PlayerTrigger.TriggerInstance.tick())
                 .save(recipeOutput.withConditions(zCond("bent_recipes")), "quark:tweaks/crafting/utility/bent/bread");
-        ShapedRecipeBuilder.shaped(RecipeCategory.FOOD, Items.COOKIE)
+        ShapedRecipeBuilder.shaped(RecipeCategory.FOOD, Items.COOKIE, 8)
                 .pattern("X#")
                 .pattern("# ")
                 .define('#', Items.WHEAT)

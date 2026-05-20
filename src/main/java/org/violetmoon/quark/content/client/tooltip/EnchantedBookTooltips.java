@@ -56,17 +56,17 @@ public class EnchantedBookTooltips {
 			return;
 
 		ItemStack stack = event.getItemStack();
-		if(stack.getItem() == Items.ENCHANTED_BOOK || stack.getItem() == AncientTomesModule.ancient_tome) {
+		if(stack.has(DataComponents.STORED_ENCHANTMENTS)) {
 			List<Either<FormattedText, TooltipComponent>> tooltip = event.getTooltipElements();
 			int tooltipIndex = 0;
 
 			List<EnchantmentInstance> enchants = getEnchantedBookEnchantments(stack);
 			for(EnchantmentInstance ed : enchants) {
 				Component match;
-				if(stack.getItem() == Items.ENCHANTED_BOOK)
-					match = Enchantment.getFullname(ed.enchantment, ed.level);
-				else
+				if(stack.getItem() == AncientTomesModule.ancient_tome)
 					match = AncientTomeItem.getFullTooltipText(ed.enchantment);
+				else
+					match = Enchantment.getFullname(ed.enchantment, ed.level);
 
 				for(; tooltipIndex < tooltip.size(); tooltipIndex++) {
 					Either<FormattedText, TooltipComponent> elmAt = tooltip.get(tooltipIndex);
