@@ -2,6 +2,7 @@ package org.violetmoon.quark.content.world.gen;
 
 import java.util.List;
 
+import org.violetmoon.quark.base.Quark;
 import org.violetmoon.quark.content.world.module.FairyRingsModule;
 import org.violetmoon.zeta.config.type.DimensionConfig;
 import org.violetmoon.zeta.world.generator.Generator;
@@ -53,14 +54,14 @@ public class FairyRingGenerator extends Generator {
 			}
 
 			if(state.is(BlockTags.DIRT))
-				spawnFairyRing(worldIn, generator, pos.below(), biome, rand);
+				spawnFairyRing(worldIn, generator, pos.below(), rand);
 		}
 	}
 
-	public static void spawnFairyRing(WorldGenLevel world, ChunkGenerator generator, BlockPos pos, Holder<Biome> biome, RandomSource rand) {
-		List<ConfiguredFeature<?, ?>> features = biome.value().getGenerationSettings().getFlowerFeatures();
+	public static void spawnFairyRing(WorldGenLevel world, ChunkGenerator generator, BlockPos pos, RandomSource rand) {
+		List<ConfiguredFeature<?, ?>> features = world.getBiome(pos).value().getGenerationSettings().getFlowerFeatures();
 
-		Holder<PlacedFeature> holder = features.isEmpty() ? null : ((RandomPatchConfiguration) features.get(0).config()).feature();
+		Holder<PlacedFeature> holder = features.isEmpty() ? null : ((RandomPatchConfiguration) features.get(rand.nextInt(0, features.size())).config()).feature();
 		BlockState flowerState = holder == null ? Blocks.OXEYE_DAISY.defaultBlockState() : null;
 
 		for(int xOffset = -3; xOffset <= 3; xOffset++)

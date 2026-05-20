@@ -108,8 +108,13 @@ public class AttributeTooltips {
 		AttributeIconEntry iconEntry = getIconForAttribute(entry.attribute());
 
 		if (iconEntry != null) {
-			double baseVal = mc.player.getAttributeBaseValue(entry.attribute());
+			double baseVal;
 
+			try {
+				 baseVal = mc.player.getAttributeBaseValue(entry.attribute());
+			} catch (Exception e) {
+				baseVal = 0;
+			}
 			// Comparison code.
 			if (ImprovedTooltipsModule.showUpgradeStatus && differenceInAttribute != null) {
                 guiGraphics.blit(iconEntry.texture(), x, y, 0, 0, 9, 9, 9, 9);

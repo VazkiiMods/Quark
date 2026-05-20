@@ -40,7 +40,7 @@ public class MagnetSystem {
 	}
 
 	public static IMagnetMoveAction getMoveAction(Block block) {
-		if (block instanceof IMagnetMoveAction ma)return ma;
+		if (block instanceof IMagnetMoveAction ma) return ma;
 		return BLOCK_MOVE_ACTIONS.get(block);
 	}
 

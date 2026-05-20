@@ -33,12 +33,13 @@ import java.util.function.Predicate;
 
 public final class SortingHandler {
 
-	private static final Comparator<ItemStack> FALLBACK_COMPARATOR = jointComparator(Arrays.asList(
+	private static final Comparator<ItemStack> FALLBACK_COMPARATOR = comparatorJoiner(Arrays.asList(
 			Comparator.comparingInt((ItemStack s) -> Item.getId(s.getItem())),
 			SortingHandler::damageCompare,
 			(ItemStack s1, ItemStack s2) -> s2.getCount() - s1.getCount(),
-			(ItemStack s1, ItemStack s2) -> s2.hashCode() - s1.hashCode(),
-			SortingHandler::fallbackComponentCompare));
+			SortingHandler::fallbackComponentCompare,
+			(ItemStack s1, ItemStack s2) -> s2.hashCode() - s1.hashCode()
+	));
 
 	private static final Comparator<ItemStack> FOOD_COMPARATOR = jointComparator(Arrays.asList(
 			SortingHandler::foodHealCompare,
@@ -67,13 +68,13 @@ public final class SortingHandler {
 			SortingHandler::potionComplexityCompare,
 			SortingHandler::potionTypeCompare));
 
-	private static final Comparator<ItemStack> ENCHANTED_BOOK_COMPARATOR = jointComparator(Arrays.asList(
-			SortingHandler::potionComplexityCompare,
-			SortingHandler::potionTypeCompare));
+	private static final Comparator<ItemStack> ENCHANTED_BOOK_COMPARATOR = jointComparator(List.of(
+            SortingHandler::enchantedBookCompare
+    ));
 
-	private static final Comparator<ItemStack> TOME_COMPARATOR = jointComparator(Arrays.asList(
-			SortingHandler::potionComplexityCompare,
-			SortingHandler::potionTypeCompare));
+	private static final Comparator<ItemStack> TOME_COMPARATOR = jointComparator(List.of(
+            SortingHandler::tomeCompare
+    ));
 
 	public static void sortInventory(Player player, boolean forcePlayer) {
 		if(!Quark.ZETA.modules.isEnabled(InventorySortingModule.class))
@@ -176,6 +177,8 @@ public final class SortingHandler {
 
 			container.setItem(slot, stacks.get(slot - iStart - skipped));
 		}
+
+		container.setChanged();
 
 		return InteractionResult.SUCCESS;
 	}
@@ -283,7 +286,12 @@ public final class SortingHandler {
 	}
 
 	public static Comparator<ItemStack> jointComparator(List<Comparator<ItemStack>> comparators) {
-		return jointComparatorFallback((ItemStack s1, ItemStack s2) -> {
+		return jointComparatorFallback(comparatorJoiner(comparators), FALLBACK_COMPARATOR);
+	}
+
+	// Really the reason its been separated from jointComparator is that fallback is technically its own fallback which seems bad.
+	private static Comparator<ItemStack> comparatorJoiner(List<Comparator<ItemStack>> comparators) {
+		return (ItemStack s1, ItemStack s2) -> {
 			for(Comparator<ItemStack> comparator : comparators) {
 				if(comparator == null)
 					continue;
@@ -296,7 +304,7 @@ public final class SortingHandler {
 			}
 
 			return 0;
-		}, FALLBACK_COMPARATOR);
+		};
 	}
 
 	private static Comparator<ItemStack> jointComparatorFallback(Comparator<ItemStack> comparator, Comparator<ItemStack> fallback) {
@@ -531,8 +539,8 @@ public final class SortingHandler {
 		RAIL(list(Blocks.RAIL, Blocks.POWERED_RAIL, Blocks.DETECTOR_RAIL, Blocks.ACTIVATOR_RAIL)),
 		DYE(classPredicate(DyeItem.class)),
 		FOOD(stack -> (stack.has(DataComponents.FOOD)), FOOD_COMPARATOR),
-		ENCHANTED_BOOK(stack -> (stack.has(DataComponents.STORED_ENCHANTMENTS) && !stack.get(DataComponents.STORED_ENCHANTMENTS).isEmpty()), SortingHandler::enchantedBookCompare),
-		ANCIENT_TOME(stack -> (stack.has(QuarkDataComponents.TOME_ENCHANTMENTS) && !stack.get(QuarkDataComponents.TOME_ENCHANTMENTS).isEmpty()), SortingHandler::tomeCompare),
+		ENCHANTED_BOOK(stack -> (stack.has(DataComponents.STORED_ENCHANTMENTS) && !stack.get(DataComponents.STORED_ENCHANTMENTS).isEmpty()), ENCHANTED_BOOK_COMPARATOR),
+		ANCIENT_TOME(stack -> (stack.has(QuarkDataComponents.TOME_ENCHANTMENTS) && !stack.get(QuarkDataComponents.TOME_ENCHANTMENTS).isEmpty()), TOME_COMPARATOR),
 		ANY(inverseClassPredicate(BlockItem.class)),
 		BLOCK(classPredicate(BlockItem.class));
 

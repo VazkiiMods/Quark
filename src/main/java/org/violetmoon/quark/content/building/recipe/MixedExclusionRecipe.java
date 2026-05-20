@@ -95,6 +95,7 @@ public class MixedExclusionRecipe implements CraftingRecipe {
                 } if (i == 8) {
                     ignoreMe = true;
                     boolean fallbackToOurOutput = false;
+                    // We could in theory just copy and paste this but with a filter for this class, however its really bulky, so I thought we might as well.
                     List<RecipeHolder<CraftingRecipe>> recipes = level.getRecipeManager().getRecipesFor(RecipeType.CRAFTING, input, level);
                     if (recipes.isEmpty()) {
                         fallbackToOurOutput = true;
@@ -183,15 +184,6 @@ public class MixedExclusionRecipe implements CraftingRecipe {
         @Override
         public @NotNull StreamCodec<RegistryFriendlyByteBuf, MixedExclusionRecipe> streamCodec() {
             return STREAM_CODEC;
-        }
-
-        private static MixedExclusionRecipe forType(String type) {
-            return switch(type) {
-                case "chest" -> MixedExclusionRecipe.forChest(type, false);
-                case "chest4" -> MixedExclusionRecipe.forChest(type, true);
-                case "furnace" -> MixedExclusionRecipe.forFurnace(type);
-                default -> null;
-            };
         }
     }
 }

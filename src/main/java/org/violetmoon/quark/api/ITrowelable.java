@@ -4,7 +4,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.UseOnContext;
 
 /**
- * Implement this on an Item to allow finer control over wether it can be troweled or not
+ * Implement this on an Item to allow finer control over whether it can be troweled or not
  * Note that the quark:trowel_blacklist and quark:trowel_whitelist tags WILL have priority over this and WILL override its result
  */
 public interface ITrowelable {

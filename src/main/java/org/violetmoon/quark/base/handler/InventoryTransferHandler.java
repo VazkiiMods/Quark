@@ -68,21 +68,13 @@ public class InventoryTransferHandler {
 	//		return null;
 	//	}
 
-	private static boolean hasProvider(Object te) {
-		return false /*te instanceof BlockEntity be && Quark.ZETA.capabilityManager.hasCapability(QuarkCapabilities.TRANSFER, be)*/;
-	}
-
-	private static ITransferManager getProvider(Object te) {
-		return null /*Quark.ZETA.capabilityManager.getCapability(QuarkCapabilities.TRANSFER, (BlockEntity) te)*/;
-	}
-
 	public static boolean accepts(AbstractContainerMenu container, Player player) {
 		//extracting from the crafting table with the button dups items
 		if (container instanceof CraftingMenu || (player.level().isClientSide() && container instanceof CreativeModeInventoryScreen.ItemPickerMenu))
 			return false;
 
-		if(hasProvider(container))
-			return getProvider(container).acceptsTransfer(player);
+		if (container instanceof ITransferManager transferManager)
+			return transferManager.acceptsTransfer(player);
 
 		return container instanceof IQuarkButtonAllowed || (container.slots.size() - player.getInventory().items.size() >= QuarkGeneralConfig.chestButtonSlotTarget);
 	}
@@ -272,8 +264,8 @@ public class InventoryTransferHandler {
 		public static IItemHandler provideWrapper(Slot slot, AbstractContainerMenu container) {
 			if(slot instanceof SlotItemHandler slotItemHandler) {
 				IItemHandler handler = slotItemHandler.getItemHandler();
-				if(hasProvider(handler)) {
-					return getProvider(handler).getTransferItemHandler(() -> handler);
+				if(container instanceof ITransferManager transferManager) {
+					return transferManager.getTransferItemHandler(() -> handler);
 				} else {
 					return handler;
 				}
@@ -283,8 +275,10 @@ public class InventoryTransferHandler {
 		}
 
 		public static IItemHandler provideWrapper(Container inv, AbstractContainerMenu container) {
-			if(hasProvider(inv))
-				return getProvider(inv).getTransferItemHandler(() -> new ContainerWrapper(inv, container));
+			if(container instanceof ITransferManager transferManager) {
+				return transferManager.getTransferItemHandler(() -> new ContainerWrapper(inv, container));
+			}
+
 			return new ContainerWrapper(inv, container);
 		}
 

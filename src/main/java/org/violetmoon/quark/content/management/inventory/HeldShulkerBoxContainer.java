@@ -108,5 +108,4 @@ public class HeldShulkerBoxContainer implements Container, MenuProvider {
 	public boolean stillValid(Player player) {
 		return stack != null && player == this.player && player.getInventory().getItem(slot) == stack;
 	}
-
 }

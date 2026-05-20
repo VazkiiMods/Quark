@@ -4,16 +4,23 @@
 - *Properly* Fixed #5537: Stripped wood blocks (Azalea, Ashen, and Trumpet) have wrong tag (thanks copygirl) 
 - Fixed #5544: Can only craft chests using vanilla oak planks
 - Fixed the flamarang smithing recipe being enabled if the pickarang module or Enable Flamerang config is disabled
-   
+- Fix inconsistent sorting for items with the same
+- Fix a bug relating to sorting not showing on held shulker boxes
+
 # Changes
 - You can now craft vanilla chests with modded woods if they have no variant chest. 
   - This was a longstanding (3+ years) issue siuolplex found a cursed workaround for
 - Trowel -> Iron Nugget smelting recipe now checks if the Trowel module is enabled
 - Updated Ukrainian translation (StarmanMine142)
 - Updated Japanese translation (Abbage230)
+- Add some variance to the fairy rings
 
 # Additions
 - Added a Trowel -> Iron Nugget blasting recipe
+
+# Code Related
+- Add some fallback code for AttributeTooltips.
+- Fixed a bug in our unused api
 
 # Misc
 [wip note, might not include this on release]
