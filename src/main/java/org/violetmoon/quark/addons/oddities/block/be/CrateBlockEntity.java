@@ -6,6 +6,8 @@ import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.ListTag;
+import net.minecraft.nbt.Tag;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundEvent;
@@ -90,14 +92,33 @@ public class CrateBlockEntity extends BaseContainerBlockEntity implements Worldl
     @Override
     protected void saveAdditional(CompoundTag tag, HolderLookup.Provider provider) {
         super.saveAdditional(tag, provider);
-        tag.merge(ContainerHelper.saveAllItems(tag, items, provider));
+
+        ListTag itemsTag = new ListTag();
+        for (int slot = 0; slot < this.items.size(); slot++) {
+            ItemStack stack = this.items.get(slot);
+            if (!stack.isEmpty()) {
+                CompoundTag stackTag = new CompoundTag();
+                stackTag.putShort("Slot", (short) slot);
+                itemsTag.add(stack.save(provider, stackTag));
+            }
+        }
+
+        tag.put("Items", itemsTag);
     }
 
     @Override
     protected void loadAdditional(CompoundTag tag, HolderLookup.Provider provider) {
         super.loadAdditional(tag, provider);
         this.items = NonNullList.withSize(this.getContainerSize(), ItemStack.EMPTY);
-        ContainerHelper.loadAllItems(tag, items, provider);
+
+        ListTag itemsTag = tag.getList("Items", Tag.TAG_COMPOUND);
+        for (int i = 0; i < itemsTag.size(); i++) {
+            CompoundTag stackTag = itemsTag.getCompound(i);
+            int slot = stackTag.getShort("Slot") & 0xFFFF;
+            if (slot < this.items.size()) {
+                this.items.set(slot, ItemStack.parse(provider, stackTag).orElse(ItemStack.EMPTY));
+            }
+        }
     }
 
     @Override
