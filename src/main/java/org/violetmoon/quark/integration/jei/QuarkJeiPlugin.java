@@ -27,7 +27,9 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.enchantment.Enchantment;
+import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.item.enchantment.EnchantmentInstance;
+import net.minecraft.world.item.enchantment.ItemEnchantments;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import org.jetbrains.annotations.NotNull;
@@ -38,6 +40,7 @@ import org.violetmoon.quark.addons.oddities.client.screen.CrateScreen;
 import org.violetmoon.quark.addons.oddities.module.MatrixEnchantingModule;
 import org.violetmoon.quark.addons.oddities.util.Influence;
 import org.violetmoon.quark.base.Quark;
+import org.violetmoon.quark.base.components.QuarkDataComponents;
 import org.violetmoon.quark.content.building.module.VariantFurnacesModule;
 import org.violetmoon.quark.content.tools.item.AncientTomeItem;
 import org.violetmoon.quark.content.tools.module.AncientTomesModule;
@@ -72,7 +75,8 @@ public class QuarkJeiPlugin implements IModPlugin {
         registration.registerSubtypeInterpreter(AncientTomesModule.ancient_tome, new ISubtypeInterpreter<ItemStack>() {
             @Override
             public @Nullable Object getSubtypeData(ItemStack ingredient, UidContext context) {
-                return ingredient;
+                return ingredient.get(QuarkDataComponents.TOME_ENCHANTMENTS);
+                //similar to what EnchantedBookSubtypeInterpreter does
             }
 
             @Override

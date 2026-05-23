@@ -118,7 +118,7 @@ public class CorundumModule extends ZetaModule {
 		MutableComponent comp = Component.translatable("quark.jei.hint.corundum_cluster_grow");
 
 		if(Quark.ZETA.modules.isEnabled(BeaconRedirectionModule.class))
-			comp = comp.append(" ").append(Component.translatable("quark.jei.hint.corundum_cluster_redirect"));
+			comp = comp.append("\n").append(Component.translatable("quark.jei.hint.corundum_cluster_redirect"));
 
 		for(Block block : clusters)
 			event.accept(block.asItem(), comp);

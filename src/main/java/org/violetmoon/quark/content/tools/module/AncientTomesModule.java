@@ -12,6 +12,7 @@ import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
@@ -30,6 +31,7 @@ import net.minecraft.world.item.enchantment.*;
 import net.minecraft.world.item.trading.ItemCost;
 import net.minecraft.world.item.trading.MerchantOffer;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.storage.loot.BuiltInLootTables;
@@ -175,6 +177,18 @@ public class AncientTomesModule extends ZetaModule {
 			}
 		}
 	}
+
+	//idea for #5438. ZGatherHints::accept doesn't take an ItemStack.
+	/*
+	@LoadEvent
+	public void addAdditionalHints(ZGatherHints event) {
+		if(isEnabled()) {
+			for(Holder<Enchantment> enchant : validEnchants){
+				event.accept(AncientTomeItem.getEnchantedItemStack(enchant), Component.translatable("quark.jei.hint.ancient_tome"));
+			}
+		}
+	}
+	 */
 
 	@PlayEvent
 	public void onLootTableLoad(ZLootTableLoad event) {

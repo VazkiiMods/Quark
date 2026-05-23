@@ -9,7 +9,6 @@ import org.violetmoon.quark.content.world.config.AirStoneClusterConfig;
 import org.violetmoon.quark.content.world.config.BigStoneClusterConfig;
 import org.violetmoon.quark.content.world.module.BigStoneClustersModule;
 import org.violetmoon.zeta.world.generator.multichunk.ClusterBasedGenerator;
-import org.violetmoon.zeta.world.generator.multichunk.ClusterBasedGenerator.IGenerationContext;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.BuiltInRegistries;

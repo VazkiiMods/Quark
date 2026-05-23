@@ -12,8 +12,9 @@
 - Fixed the Bent Recipes cookie recipe cheating you out of 7 cookies
 
 # Changes
+- Quark now requires at least NeoForge 21.1.230
 - You can now craft vanilla chests with modded woods if they have no variant chest. 
-  - This was a longstanding (3+ years) issue siuolplex found a cursed workaround for
+  - This was a longstanding (3+ years) issue Siuolplex found a cursed workaround for!
 - Trowel -> Iron Nugget smelting recipe now checks if the Trowel module is enabled
 - Updated Ukrainian translation (StarmanMine142)
 - Updated Japanese translation (Abbage230)

@@ -184,12 +184,14 @@ public class MatrixEnchantingModule extends ZetaModule {
 
 	@LoadEvent
 	public void addAdditionalHints(ZGatherHints event) {
-		MutableComponent comp = Component.translatable("quark.jei.hint.matrix_enchanting");
-		if(allowInfluencing)
-			comp = comp.append(" ").append(Component.translatable("quark.jei.hint.matrix_influencing"));
+		if(isEnabled()){
+			MutableComponent comp = Component.translatable("quark.jei.hint.matrix_enchanting");
+			if(allowInfluencing)
+				comp = comp.append(" ").append(Component.translatable("quark.jei.hint.matrix_influencing"));
 
-		event.accept(Items.ENCHANTING_TABLE, comp);
-		event.accept(matrixEnchanter.asItem(), comp);
+			event.accept(Items.ENCHANTING_TABLE, comp);
+			event.accept(matrixEnchanter.asItem(), comp);
+		}
 	}
 
 	@PlayEvent

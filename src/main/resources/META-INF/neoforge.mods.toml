@@ -19,7 +19,7 @@ file="META-INF/accesstransformer.cfg"
 [[dependencies.quark]]
     modId="neoforge"
     type="required"
-    versionRange="[21.0.10,)"
+    versionRange="[21.1.230,)"
     ordering="NONE"
     side="BOTH"
 
