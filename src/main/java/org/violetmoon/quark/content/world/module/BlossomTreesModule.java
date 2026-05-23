@@ -34,7 +34,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-@ZetaLoadModule(category = "world")
+@ZetaLoadModule(category = "world", description = "(Trumpet Trees)")
 public class BlossomTreesModule extends ZetaModule {
 
 	public static final ResourceKey<ConfiguredFeature<?, ?>> BLUE_BLOSSOM_KEY = registerKey("blue_blossom");
@@ -126,8 +126,10 @@ public class BlossomTreesModule extends ZetaModule {
 
 	@LoadEvent
 	public void addAdditionalHints(ZGatherHints event) {
-		for(BlossomTree tree : blossomTrees)
-			event.hintItem(tree.sapling);
+		if(isEnabled()){
+			for(BlossomTree tree : blossomTrees)
+				event.hintItem(tree.sapling);
+		}
 	}
 
 	private static ResourceKey<ConfiguredFeature<?, ?>> registerKey(String name) {

@@ -64,16 +64,18 @@ public class BeaconRedirectionModule extends ZetaModule {
 
 	@LoadEvent
 	public void addAdditionalHints(ZGatherHints event) {
-		final String redirectHint = "beacon_redirect_item";
-		String type = "amethyst";
+		if(staticEnabled){
+			final String redirectHint = "beacon_redirect_item";
+			String type = "amethyst";
 
-		if(!Quark.ZETA.modules.isEnabled(CorundumModule.class))
-			event.hintItem(Items.AMETHYST_CLUSTER, redirectHint, zeta());
-		else
-			type = "corundum";
+			if(!Quark.ZETA.modules.isEnabled(CorundumModule.class))
+				event.hintItem(Items.AMETHYST_CLUSTER, redirectHint, zeta());
+			else
+				type = "corundum";
 
-		Component comp = Component.translatable("quark.jei.hint.beacon_redirection", Component.translatable("quark.jei.hint.beacon_" + type));
-		event.accept(Items.BEACON, comp);
+			Component comp = Component.translatable("quark.jei.hint.beacon_redirection", Component.translatable("quark.jei.hint.beacon_" + type));
+			event.accept(Items.BEACON, comp);
+		}
 	}
 
 	// The value that comes out of this is fed onto a constant for the FOR loop that

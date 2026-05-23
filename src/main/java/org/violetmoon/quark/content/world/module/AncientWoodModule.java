@@ -42,7 +42,7 @@ import org.violetmoon.zeta.util.Hint;
 import java.util.ArrayList;
 import java.util.Optional;
 
-@ZetaLoadModule(category = "world")
+@ZetaLoadModule(category = "world", description = "(Ashen Trees)")
 public class AncientWoodModule extends ZetaModule {
 
 	@Config(flag = "ancient_fruit_xp")

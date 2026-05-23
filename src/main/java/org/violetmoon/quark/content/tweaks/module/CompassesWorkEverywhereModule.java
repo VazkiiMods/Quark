@@ -43,6 +43,8 @@ public class CompassesWorkEverywhereModule extends ZetaModule {
 
 	@LoadEvent
 	public void addAdditionalHints(ZGatherHints event) {
+		if(!this.isEnabled())
+			return;
 		if(!enableNether && !enableEnd && !enableCompassNerf)
 			return;
 

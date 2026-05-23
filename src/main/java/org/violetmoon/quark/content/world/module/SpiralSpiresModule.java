@@ -94,14 +94,16 @@ public class SpiralSpiresModule extends ZetaModule {
 
 	@LoadEvent
 	public void addAdditionalHints(ZGatherHints event) {
-		MutableComponent comp = Component.translatable("quark.jei.hint.myalite_crystal_get");
+		if(isEnabled()){
+			MutableComponent comp = Component.translatable("quark.jei.hint.myalite_crystal_get");
 
-		if(enableMyaliteViaducts)
-			comp = comp.append(" ").append(Component.translatable("quark.jei.hint.myalite_crystal_viaduct"));
-		if(renewableMyalite && Quark.ZETA.modules.isEnabled(CorundumModule.class))
-			comp = comp.append(" ").append(Component.translatable("quark.jei.hint.myalite_crystal_grow"));
+			if(enableMyaliteViaducts)
+				comp = comp.append(" ").append(Component.translatable("quark.jei.hint.myalite_crystal_viaduct"));
+			if(renewableMyalite && Quark.ZETA.modules.isEnabled(CorundumModule.class))
+				comp = comp.append(" ").append(Component.translatable("quark.jei.hint.myalite_crystal_grow"));
 
-		event.accept(myalite_crystal.asItem(), comp);
+			event.accept(myalite_crystal.asItem(), comp);
+		}
 	}
 
 	@PlayEvent
