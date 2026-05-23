@@ -3,6 +3,7 @@
 # Fixes
 - *Properly* Fixed #5537: Stripped wood blocks (Azalea, Ashen, and Trumpet) have wrong tag (thanks copygirl) 
 - Fixed #5544: Can only craft chests using vanilla oak planks
+- Fixed #5553: Neoforge 1.21.1 Custom Pathfinder Quill Color doesn't seem to work
 - Fixed #5560: "Improved Tooltip" Module's Enchanted Book Tooltips is hardcoded
 - Fixed #5564: [479 and more] A .cache folder is packed into the JAR
   - this fix decreases jar size by at least 10 KB
@@ -24,6 +25,8 @@
 - Improved Tooltips' Enchanting Tooltips bow checks for the Stored Enchantments item component instead of Enchanted Books/Ancient Tomes
 - Add some variance to the fairy rings
 - The Blossom and Ancient Trees modules now contain descriptions with their corresponding in-game names (the items had their names changed previously, but the module and internal names did not)
+- The Pathfinder Maps' custom maps config comment now says to use int colors instead of hex colors
+  - this feature seems to have never worked as the previous comment in the config file described
 
 # Additions
 - Added a Trowel -> Iron Nugget blasting recipe
