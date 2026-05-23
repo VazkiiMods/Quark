@@ -132,13 +132,15 @@ public class PatTheDogsModule extends ZetaModule {
 					case "a2ce9382-2518-4752-87b2-c6a5c97f173e" -> // petra_the_kat
 						QuarkSounds.PET_DEVICE;
 					case "29a10dc6-a201-4993-80d8-c847212bc92b", // MacyMacerator
-							"d30d8e38-6f93-4d96-968d-dd6ec5596941" -> // Falkory220
+							"d30d8e38-6f93-4d96-968d-dd6ec5596941", // Falkory220
+							"23a6dcbe-b222-4ddc-815b-9ebff5076530" -> //Partonetrain
 						QuarkSounds.PET_NEKO;
 					case "d475af59-d73c-42be-90ed-f1a78f10d452" -> // DaniCherryJam
 						QuarkSounds.PET_SLIME;
 					case "458391f5-6303-4649-b416-e4c0d18f837a" -> // yrsegal
 						QuarkSounds.PET_WIRE;
-					default -> null;
+					default -> pettableAllowlist.contains(living.getEncodeId()) ? SoundEvents.PLAYER_BREATH : null;
+					//#5538: if players are explicitly allowed in the config and the player isn't one of the players specified in the switch above, play a default sound
 					};
 				}
 				if(sound != null) {

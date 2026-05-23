@@ -2,6 +2,8 @@
 
 # Fixes
 - *Properly* Fixed #5537: Stripped wood blocks (Azalea, Ashen, and Trumpet) have wrong tag (thanks copygirl) 
+- Fixed #5437: Netherite repair not hidden properly with Diamond Repair enabled in JEI
+- Fixed #5538: can't pet players even when added to the allowlist
 - Fixed #5544: Can only craft chests using vanilla oak planks
 - Fixed #5553: Neoforge 1.21.1 Custom Pathfinder Quill Color doesn't seem to work
 - Fixed #5560: "Improved Tooltip" Module's Enchanted Book Tooltips is hardcoded
@@ -34,7 +36,3 @@
 ## Code Related
 - Add some fallback code for AttributeTooltips.
 - Fixed a bug in our unused api
-
-## Misc
-[wip note, might not include this on release]
-Due to an influx of poor quality Pull Requests, the Quark GitHub repository now contains an AI policy; see CLAUDE.md or AGENTS.md.

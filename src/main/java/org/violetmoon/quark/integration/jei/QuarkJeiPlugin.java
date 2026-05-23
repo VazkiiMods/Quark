@@ -17,6 +17,7 @@ import mezz.jei.api.registration.IRecipeRegistration;
 import mezz.jei.api.registration.IRecipeTransferRegistration;
 import mezz.jei.api.registration.ISubtypeRegistration;
 import mezz.jei.api.registration.IVanillaCategoryExtensionRegistration;
+import mezz.jei.api.runtime.IJeiRuntime;
 import net.minecraft.client.renderer.Rect2i;
 import net.minecraft.core.Holder;
 import net.minecraft.core.component.DataComponents;
@@ -84,6 +85,12 @@ public class QuarkJeiPlugin implements IModPlugin {
                 return "ancient_tome";
             }
         });
+    }
+
+    @Override
+    public void onRuntimeAvailable(@NotNull IJeiRuntime jeiRuntime) {
+        if(Quark.ZETA.modules.isEnabled(DiamondRepairModule.class))
+            hideAnvilRepairRecipes(jeiRuntime.getRecipeManager());
     }
 
     @Override

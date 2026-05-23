@@ -83,7 +83,7 @@ public class DiamondRepairModule extends ZetaModule {
 
 	@LoadEvent
 	public void addAdditionalHints(ZGatherHints event) {
-		if(!enableJeiHints)
+		if(!enableJeiHints || !this.isEnabled())
 			return;
 
 		Component removed = Component.translatable("quark.jei.hint.repair_item_removed");
