@@ -84,10 +84,10 @@ public class PathfinderMapsModule extends ZetaModule {
 			 - <level> being the Cartographer villager level required for the map to be unlockable
 			 - <min_price> being the cheapest (in Emeralds) the map can be
 			 - <max_price> being the most expensive (in Emeralds) the map can be
-			 - <color> being a int color (without the #) for the map to display. You can generate one here - https://argb-int-calculator.netlify.app/
+			 - <color> being an ARGB hex color (without the #) for the map to display. You can generate one here - https://argb-int-calculator.netlify.app/
 
 			Here's an example of a map to locate Ice Mountains:
-			minecraft:ice_mountains,2,8,14,-8395521""")
+			minecraft:snowy_slopes,2,8,14,FF7FE4FF""")
 	private final List<String> customs = new ArrayList<>();
 
     public static LootItemConditionType inBiomeConditionType;
@@ -275,7 +275,7 @@ public class PathfinderMapsModule extends ZetaModule {
 		int level = Integer.parseInt(tokens[1]);
 		int minPrice = Integer.parseInt(tokens[2]);
 		int maxPrice = Integer.parseInt(tokens[3]);
-		int color = Integer.parseInt(tokens[4], 16);
+		int color = (int) Long.parseLong(tokens[4], 16);
 
 		loadCustomTradeInfo(biomeName, true, level, minPrice, maxPrice, color);
 	}
