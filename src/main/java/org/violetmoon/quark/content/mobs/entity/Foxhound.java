@@ -81,6 +81,9 @@ public class Foxhound extends Wolf implements Enemy {
 	private static final EntityDataAccessor<Integer> COLLAR_COLOR = SynchedEntityData.defineId(Foxhound.class, EntityDataSerializers.INT);
     private static final EntityDataAccessor<Boolean> IS_RESTING = SynchedEntityData.defineId(Foxhound.class, EntityDataSerializers.BOOLEAN);
 
+	private static final float START_HEALTH = 8.0F;
+	private static final float TAME_HEALTH = 30.0F;
+
 	private int timeUntilPotatoEmerges = 0;
     private int ticksUntilICanSleep = 0;
 
@@ -248,7 +251,7 @@ public class Foxhound extends Wolf implements Enemy {
 	@Override
 	public int getRemainingPersistentAngerTime() {
 		if(!isTame() && level().getDifficulty() != Difficulty.PEACEFUL)
-			return 0;
+			return 1;
 		return super.getRemainingPersistentAngerTime();
 	}
 
@@ -320,11 +323,10 @@ public class Foxhound extends Wolf implements Enemy {
 			if(!itemstack.isEmpty()) {
 				if(itemstack.getItem() == Items.COAL && (level.getDifficulty() == Difficulty.PEACEFUL || player.getAbilities().invulnerable || player.getEffect(MobEffects.FIRE_RESISTANCE) != null) && !level.isClientSide) {
 					if(random.nextDouble() < FoxhoundModule.tameChance) {
-						this.tame(player);
+						this.tame(player); //this call ends up running ApplyTamingSideEffects
 						this.navigation.stop();
 						this.setTarget(null);
 						this.setInSittingPose(true);
-						this.setHealth(20.0F);
 						level.broadcastEntityEvent(this, (byte) 7);
 					} else {
 						level.broadcastEntityEvent(this, (byte) 6);
@@ -351,6 +353,16 @@ public class Foxhound extends Wolf implements Enemy {
 	@Override
 	public boolean canMate(@NotNull Animal otherAnimal) {
 		return super.canMate(otherAnimal) && otherAnimal instanceof Foxhound;
+	}
+
+	@Override
+	protected void applyTamingSideEffects() {
+		if (this.isTame()) {
+			this.getAttribute(Attributes.MAX_HEALTH).setBaseValue(TAME_HEALTH);
+			this.setHealth(TAME_HEALTH);
+		} else { //idk why this is necessary but it's copied from vanilla wolf so...
+			this.getAttribute(Attributes.MAX_HEALTH).setBaseValue(START_HEALTH);
+		}
 	}
 
 	@Override // createChild

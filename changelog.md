@@ -1,9 +1,10 @@
 # Quark 4.1-481 For Neoforge 1.21.1
 
 # Fixes
-- Fix #5577: Undead Mobs do not have Undead Properties 
-- Fix #5579: Chains should be detected differently
-- Fix #5582: You can place things you shouldn't with scaffolding replacement
+- Fixed #5572: Foxhound Faces are swapped from its tamed variant
+- Fixed #5577: Undead Mobs do not have Undead Properties 
+- Fixed #5579: Chains should be detected differently
+- Fixed #5582: You can place things you shouldn't with scaffolding replacement
 
 # Changes
 - Replace Scaffolding now works with modded scaffold blocks (i.e. Create's Copper Scaffolding). 
@@ -11,6 +12,7 @@
 - Multi-block blocks like doors can no longer replace scaffolding
 - Wood Posts will now connect to Hedges immediately above them
 - Chains Connect Blocks now works with modded chains
+- Tamed Foxhounds now have a maximum health of 30. This is to give them a slight disadvantage to normal wolves
 
 # Additions
 - Rotation Lock now works with Replace Scaffolding; blocks will be replaced according to your rotation lock
