@@ -12,6 +12,7 @@ import org.violetmoon.zeta.event.load.ZCommonSetup;
 import org.violetmoon.zeta.event.play.entity.player.ZRightClickBlock;
 import org.violetmoon.zeta.module.ZetaLoadModule;
 import org.violetmoon.zeta.module.ZetaModule;
+import org.violetmoon.zeta.util.Hint;
 import org.violetmoon.zeta.util.MiscUtil;
 
 import net.minecraft.core.BlockPos;
@@ -37,6 +38,9 @@ public class ReplaceScaffoldingModule extends ZetaModule {
 	public int maxBounces = 1;
 
 	TagKey<Block> cannotReplaceScaffoldingTag;
+
+	@Hint
+	Item scaffold = Items.SCAFFOLDING;
 
 	@PlayEvent
 	public void onInteract(ZRightClickBlock event) {

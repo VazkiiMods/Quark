@@ -204,6 +204,10 @@ public class WoodPostBlock extends ZetaBlock implements SimpleWaterloggedBlock {
 			if(sideState.getBlock() instanceof WoodPostBlock && sideState.getValue(AXIS) == d.getAxis()) {
 				return  PostSideType.OTHER_POST;
 			}
+
+			if (d == Direction.UP && sideState.getBlock() instanceof HedgeBlock) {
+				return WoodPostBlock.PostSideType.OTHER_POST;
+			}
 			return PostSideType.NONE;
 		}
 	}

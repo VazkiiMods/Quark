@@ -42,7 +42,7 @@ public class ChainsConnectBlocksModule extends ZetaModule {
 	public static class ChainConnection implements IIndirectConnector {
 
 		public static ChainConnection INSTANCE = new ChainConnection();
-		public static Predicate<BlockState> PREDICATE = s -> s.getBlock() == Blocks.CHAIN;
+		public static Predicate<BlockState> PREDICATE = s -> s.getBlock() instanceof ChainBlock;
 
 		@Override
 		public boolean isEnabled() {
