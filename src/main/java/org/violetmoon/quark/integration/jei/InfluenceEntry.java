@@ -2,6 +2,7 @@ package org.violetmoon.quark.integration.jei;
 
 import mezz.jei.api.recipe.category.extensions.IRecipeCategoryExtension;
 import net.minecraft.ChatFormatting;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.inventory.AnvilScreen;
 import net.minecraft.core.Holder;
 import net.minecraft.core.NonNullList;
@@ -15,35 +16,42 @@ import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.item.enchantment.EnchantmentInstance;
 import net.minecraft.world.item.enchantment.ItemEnchantments;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.AnvilBlock;
 import net.minecraft.world.level.block.Block;
 import org.violetmoon.quark.addons.oddities.util.Influence;
+import org.violetmoon.quark.addons.oddities.util.InfluenceLocations;
 import org.violetmoon.quark.base.components.QuarkDataComponents;
 import org.violetmoon.quark.content.tools.base.RuneColor;
 import org.violetmoon.quark.content.tools.module.ColorRunesModule;
 
 import java.util.List;
+import java.util.Optional;
 
 public class InfluenceEntry implements IRecipeCategoryExtension {
 
 	private final ItemStack candleStack;
-	private final ItemStack boost;
-	private final ItemStack dampen;
-	private final List<ItemStack> associatedBooks;
+	private final InfluenceLocations influenceLocations;
+	private Optional<ItemStack> boost;
+	private Optional<ItemStack> dampen;
+	private Optional<List<ItemStack>> associatedBooks;
 
-	public InfluenceEntry(Block candle, Influence influence) {
+	public InfluenceEntry(Block candle, InfluenceLocations influenceLocations) {
 		this.candleStack = new ItemStack(candle);
-		this.boost = getEnchantedBook(influence.boost(), RuneColor.GREEN, ChatFormatting.GREEN, "quark.jei.boost_influence");
-		this.dampen = getEnchantedBook(influence.dampen(), RuneColor.RED, ChatFormatting.RED, "quark.jei.dampen_influence");
-		this.associatedBooks = buildAssociatedBooks(influence);
+		this.influenceLocations = influenceLocations;
+		this.boost = Optional.empty();
+		this.dampen = Optional.empty();
+		this.associatedBooks = Optional.empty();
 	}
 
 	public ItemStack getBoostBook() {
-		return this.boost;
+		initializeBooks();
+		return this.boost.get();
 	}
 
 	public ItemStack getDampenBook() {
-		return this.dampen;
+		initializeBooks();
+		return this.dampen.get();
 	}
 
 	public ItemStack getCandleStack() {
@@ -51,7 +59,20 @@ public class InfluenceEntry implements IRecipeCategoryExtension {
 	}
 
 	public List<ItemStack> getAssociatedBooks() {
-		return this.associatedBooks;
+		initializeBooks();
+		return this.associatedBooks.get();
+	}
+
+	private void initializeBooks() {
+		if (this.boost.isEmpty() || this.dampen.isEmpty() || this.associatedBooks.isEmpty()) {
+			Level level = Minecraft.getInstance().level;
+			if (level != null) {
+				Influence influence = this.influenceLocations.toInfluence(level);
+				this.boost = Optional.of(getEnchantedBook(influence.boost(), RuneColor.GREEN, ChatFormatting.GREEN, "quark.jei.boost_influence"));
+				this.dampen = Optional.of(getEnchantedBook(influence.dampen(), RuneColor.RED, ChatFormatting.RED, "quark.jei.dampen_influence"));
+				this.associatedBooks = Optional.of(buildAssociatedBooks(influence));
+			}
+		}
 	}
 
 	private static ItemStack getEnchantedBook(List<Holder<Enchantment>> enchantments, RuneColor runeColor, ChatFormatting chatColor, String locKey) {
@@ -94,6 +115,6 @@ public class InfluenceEntry implements IRecipeCategoryExtension {
 	}
 
 	public boolean hasAny() {
-		return !boost.isEmpty() || !dampen.isEmpty();
+		return !influenceLocations.boost().isEmpty() || !influenceLocations.dampen().isEmpty();
 	}
 }
