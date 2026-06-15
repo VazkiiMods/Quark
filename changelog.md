@@ -5,6 +5,7 @@
 - Fixed #5577: Undead Mobs do not have Undead Properties 
 - Fixed #5579: Chains should be detected differently
 - Fixed #5582: You can place things you shouldn't with scaffolding replacement
+- Fixed #5584: (1.21.1) "Pat the dogs" config options don't work for most modded entities
 
 # Changes
 - Replace Scaffolding now works with modded scaffold blocks (i.e. Create's Copper Scaffolding). 
@@ -17,3 +18,4 @@
 # Additions
 - Rotation Lock now works with Replace Scaffolding; blocks will be replaced according to your rotation lock
 - Added a `quark:cannot_replace_scaffolding` block tag for blocks that shouldn't replace scaffolding
+- Added the `quark:pathfinders_quill` loot function, which sets items to 
