@@ -45,6 +45,9 @@ public class AutomaticRecipeUnlockModule extends ZetaModule {
 	@Config
 	public static boolean disableRecipeBook = false;
 
+	@Config(description = "If true, recipes that have no output will be skipped from unlock")
+	public static boolean skipEmptyRecipes = true;
+
 	@Config(description = "If enabled, advancements granting recipes will be stopped from loading, potentially reducing the lagspike on first world join.")
 	public static boolean filterRecipeAdvancements = true;
 
@@ -62,7 +65,12 @@ public class AutomaticRecipeUnlockModule extends ZetaModule {
 		Level level = player.level();
 		List<RecipeHolder<?>> recipes = new ArrayList<>(server.getRecipeManager().getRecipes());
 
-		recipes.removeIf((recipe) -> recipe == null ||  ignoredRecipes.contains(Objects.toString(recipe.id())) || recipe.value().getResultItem(level.registryAccess()) == null || recipe.value().getResultItem(level.registryAccess()).isEmpty());
+		if(!ignoredRecipes.isEmpty()){
+			recipes.removeIf((recipe) -> ignoredRecipes.contains(Objects.toString(recipe.id())));
+		}
+		if(skipEmptyRecipes){
+			recipes.removeIf((recipe) -> recipe == null || recipe.value().getResultItem(level.registryAccess()) == null || recipe.value().getResultItem(level.registryAccess()).isEmpty());
+		}
 
 		int idx = 0;
 		int maxShift = 1000;
