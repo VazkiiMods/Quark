@@ -28,6 +28,7 @@ import net.minecraft.world.item.trading.MerchantOffer;
 import net.minecraft.world.item.trading.MerchantOffers;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.biome.Biomes;
+import net.minecraft.world.level.storage.loot.functions.LootItemFunctionType;
 import net.minecraft.world.level.storage.loot.predicates.LootItemConditionType;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.client.gui.VanillaGuiLayers;
@@ -36,7 +37,9 @@ import org.violetmoon.quark.base.Quark;
 import org.violetmoon.quark.base.components.QuarkDataComponents;
 import org.violetmoon.quark.catnip.animation.AnimationTickHolder;
 import org.violetmoon.quark.content.tools.item.PathfindersQuillItem;
+import org.violetmoon.quark.content.tools.loot.EnchantTome;
 import org.violetmoon.quark.content.tools.loot.InBiomeCondition;
+import org.violetmoon.quark.content.tools.loot.PathfindersQuillFunction;
 import org.violetmoon.zeta.advancement.ManualTrigger;
 import org.violetmoon.zeta.client.event.load.ZAddItemColorHandlers;
 import org.violetmoon.zeta.client.event.load.ZClientSetup;
@@ -72,6 +75,8 @@ public class PathfinderMapsModule extends ZetaModule {
 	public static List<TradeInfo> builtinTrades = new ArrayList<>();
 	public static List<TradeInfo> customTrades = new ArrayList<>();
 	public static List<TradeInfo> tradeList = new ArrayList<>();
+
+	public static LootItemFunctionType<PathfindersQuillFunction> pathfindersQuillFunction;
 
 	@Config(description = """
 			In this section you can add custom Pathfinder Maps. This works for both vanilla and modded biomes.
@@ -153,6 +158,9 @@ public class PathfinderMapsModule extends ZetaModule {
 		pathfinderMapTrigger = event.getAdvancementModifierRegistry().registerManualTrigger("pathfinder_map_center");
 
 		pathfinders_quill = new PathfindersQuillItem(this);
+
+		pathfindersQuillFunction = new LootItemFunctionType<>(PathfindersQuillFunction.CODEC);
+		Registry.register(BuiltInRegistries.LOOT_FUNCTION_TYPE, Quark.asResource("pathfinders_quill"), pathfindersQuillFunction);
 	}
 
 	@PlayEvent

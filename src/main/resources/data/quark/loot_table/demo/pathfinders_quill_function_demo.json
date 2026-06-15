@@ -1,0 +1,27 @@
+{
+  "type": "minecraft:gift",
+  "pools": [
+    {
+      "rolls": 1,
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:air",
+          "functions": [
+            {
+              "function": "quark:pathfinders_quill"
+            },
+            {
+              "function": "minecraft:set_lore",
+              "lore": [
+                "This function transforms the item into one of the pathfinder's quills that are in the creative menu"
+              ],
+              "mode": "append"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "random_sequence": "quark:enchant_tome_function_demo"
+}
