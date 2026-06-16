@@ -168,8 +168,11 @@ public class ReacharoundPlacingModule extends ZetaModule {
 		if(take2Res.getType() == HitResult.Type.BLOCK) {
 			BlockPos pos = ((BlockHitResult) take2Res).getBlockPos().relative(dir);
 			BlockState state = world.getBlockState(pos);
+			//the -2 is because take2Res.getLocation() is below the player and getLookAngle is at the player's eyes
+			Vec3 behind = player.position().subtract(player.getLookAngle().x(), -2, player.getLookAngle().z());
 
-			if((world.isEmptyBlock(pos) || state.canBeReplaced()))
+			//behind.distanceTo(take2Res.getLocation()) get's up to 0.85 when the block is behind the player and never below 2 when it's in front
+			if((world.isEmptyBlock(pos) || state.canBeReplaced()) && behind.distanceTo(take2Res.getLocation()) > 0.9F)
 				return new ReacharoundTarget(pos, dir.getOpposite(), hand);
 		}
 
