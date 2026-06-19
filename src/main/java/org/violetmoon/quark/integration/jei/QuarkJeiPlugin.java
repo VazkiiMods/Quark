@@ -60,7 +60,8 @@ import java.util.stream.Stream;
 
 @JeiPlugin
 public class QuarkJeiPlugin implements IModPlugin {
-    private static final ResourceLocation UID = Quark.asResource(Quark.MOD_ID);
+    // Zeta will get JEI's event bus if we load the Quark class now
+    private static final ResourceLocation UID = ResourceLocation.fromNamespaceAndPath(Quark.MOD_ID, Quark.MOD_ID);
 
     public static final RecipeType<InfluenceEntry> INFLUENCING =
             RecipeType.create(Quark.MOD_ID, "influence", InfluenceEntry.class);
