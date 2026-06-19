@@ -134,7 +134,7 @@ public class MatrixEnchantingModule extends ZetaModule {
 			"minecraft:bane_of_arthropods", // Gray
 			"minecraft:protection", // Light Gray
 			"minecraft:respiration,minecraft:loyalty,minecraft:infinity", // Cyan
-			"minecraft:sweeping,minecraft:multishot", // Purple
+			"minecraft:sweeping_edge,minecraft:multishot", // Purple
 			"minecraft:efficiency,minecraft:sharpness,minecraft:lure,minecraft:power,minecraft:impaling,minecraft:quick_charge", // Blue
 			"minecraft:aqua_affinity,minecraft:depth_strider,minecraft:riptide", //Brown
 			"minecraft:thorns,minecraft:piercing", // Green
