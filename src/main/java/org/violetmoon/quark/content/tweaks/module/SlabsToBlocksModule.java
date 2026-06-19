@@ -1,5 +1,6 @@
 package org.violetmoon.quark.content.tweaks.module;
 
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
@@ -8,6 +9,7 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.SlabBlock;
 
 import org.violetmoon.quark.content.tweaks.recipe.SlabToBlockRecipe;
+import org.violetmoon.zeta.config.Config;
 import org.violetmoon.zeta.event.bus.LoadEvent;
 import org.violetmoon.zeta.event.bus.PlayEvent;
 import org.violetmoon.zeta.event.load.ZRegister;
@@ -15,13 +17,18 @@ import org.violetmoon.zeta.event.play.ZRecipeCrawl;
 import org.violetmoon.zeta.module.ZetaLoadModule;
 import org.violetmoon.zeta.module.ZetaModule;
 
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @ZetaLoadModule(category = "tweaks")
 public class SlabsToBlocksModule extends ZetaModule {
 
 	public static Map<Item, Item> recipes = new HashMap<>();
+
+	@Config(description = "Slabs that should NOT be convertible back into full-blocks")
+	public static List<String> bannedSlabs = Arrays.asList();
 
 	@LoadEvent
 	public final void register(ZRegister event) {
@@ -49,7 +56,8 @@ public class SlabsToBlocksModule extends ZetaModule {
 				&& visit.output.getCount() == 6
                  */
 				&& visit.output.getItem() instanceof BlockItem bi
-				&& bi.getBlock() instanceof SlabBlock) {
+				&& bi.getBlock() instanceof SlabBlock
+				&& !bannedSlabs.contains(BuiltInRegistries.ITEM.getKey(bi).toString())) {
 
 			Item a = extract(visit.ingredients.get(0).getItems()).getItem();
 			Item b = extract(visit.ingredients.get(1).getItems()).getItem();

@@ -62,7 +62,7 @@ public class PathfindersQuillItem extends ZetaItem implements CreativeTabManager
 	}
 
 	public static int getOverlayColor(ItemStack stack) {
-		return Optional.ofNullable(stack.get(QuarkDataComponents.BIOME_COLOR)).orElse(0xFFFFFF);
+		return Optional.ofNullable(stack.get(QuarkDataComponents.BIOME_COLOR)).orElse(0xFFFFFFFF);
 	}
 
 	public static ItemStack forBiome(String biome, int color) {
@@ -375,7 +375,7 @@ public class PathfindersQuillItem extends ZetaItem implements CreativeTabManager
                 Quark.ZETA.modules.isEnabled(GlimmeringWealdModule.class) &&
                 StonelingsModule.wealdPathfinderMaps) {
 
-			items.add(forBiome(GlimmeringWealdModule.BIOME_NAME.toString(), 0x317546));
+			items.add(forBiome(GlimmeringWealdModule.BIOME_NAME.toString(), 0xFF317546));
 		}
 		return items;
 	}
