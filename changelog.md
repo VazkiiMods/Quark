@@ -15,6 +15,7 @@
 - Wood Posts will now connect to Hedges immediately above them
 - Chains Connect Blocks now works with modded chains
 - Tamed Foxhounds now have a maximum health of 30. This is to give them a slight disadvantage to normal wolves
+- Made some adjustments to implementation that would theoretically improve Quark's usability on Kilt, but this is untested.
 
 # Additions
 - Rotation Lock now works with Replace Scaffolding; blocks will be replaced according to your rotation lock
