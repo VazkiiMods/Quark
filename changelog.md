@@ -23,3 +23,4 @@
 - Added the `quark:pathfinders_quill` loot function, which sets items to one of the Pathfinder's Quills set up in the config
 - Added a banned slabs config option to SlabsToBlock module
 - Added a fully-transparent texture at assets\quark\textures\models\armor\backpack_layer_1.png so mods that assume there is a texture there don't show a missing texture when you are wearing a Backpack
+- Added integration with Optimized Block Entities. In my test of a 10x10x10 cube of Acacia Chests in a void, my FPS went from ~90 to 

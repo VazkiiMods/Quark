@@ -2,6 +2,7 @@ package org.violetmoon.quark.base;
 
 import org.violetmoon.quark.integration.lootr.client.ClientLootrIntegration;
 import org.violetmoon.quark.integration.lootr.client.IClientLootrIntegration;
+import org.violetmoon.quark.integration.obe.QuarkOBEIntegration;
 import org.violetmoon.zeta.client.ZetaClient;
 import org.violetmoon.zeta.util.ZetaSide;
 import org.violetmoon.zetaimplforge.client.ForgeZetaClient;
@@ -9,8 +10,13 @@ import org.violetmoon.zetaimplforge.client.ForgeZetaClient;
 public class QuarkClient {
 
 	static {
-		if (Quark.ZETA.side == ZetaSide.SERVER)
+		if (Quark.ZETA.side == ZetaSide.SERVER) {
 			throw new IllegalAccessError("SOMEONE LOADED QuarkClient ON THE SERVER!!!! DON'T DO THAT!!!!!!");
+		}
+
+		if(Quark.ZETA.isModLoaded("obe")) {
+			QuarkOBEIntegration.init();
+		}
 	}
 
 	public static final ZetaClient ZETA_CLIENT = new ForgeZetaClient(Quark.ZETA);
