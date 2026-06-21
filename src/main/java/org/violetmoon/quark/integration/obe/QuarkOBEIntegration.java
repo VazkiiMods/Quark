@@ -10,13 +10,13 @@ import net.minecraft.world.level.block.ChestBlock;
 import net.minecraft.world.level.block.TrappedChestBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.ChestType;
-import org.apache.commons.lang3.tuple.Pair;
 import org.violetmoon.quark.base.Quark;
 import org.violetmoon.quark.content.building.client.render.be.VariantChestRenderer;
 import org.violetmoon.quark.content.building.module.VariantChestsModule;
 
 public class QuarkOBEIntegration {
 
+    //OBE itself is adding the variant chest textures to the blocks atlas.
     public static void init(){
         RegistryApi.registerBlockEntityType(VariantChestsModule.chestTEType, "chest");
         RegistryApi.registerBlockEntityType(VariantChestsModule.trappedChestTEType, "chest");
@@ -24,11 +24,7 @@ public class QuarkOBEIntegration {
         RegistryApi.registerMaterialProvider(VariantChestsModule.chestTEType, QuarkOBEIntegration::getVariantChestMaterial);
         RegistryApi.registerMaterialProvider(VariantChestsModule.trappedChestTEType, QuarkOBEIntegration::getVariantChestMaterial);
 
-        //TODO lootr
-        if(Quark.ZETA.isModLoaded("lootr")){
-
-        }
-        //LootrIntegration.chestTEType
+        //lootr chest integration does not seem to be possible - client needs to know about the block entity to know which texture to use (opened or unopened)
     }
 
     public static ResourceLocation getVariantChestMaterial(BlockState state) {
@@ -46,7 +42,8 @@ public class QuarkOBEIntegration {
             tex.append(VariantChestRenderer.choose(chestType, "trap", "trap_left", "trap_right"));
         else
             tex.append(VariantChestRenderer.choose(chestType, "normal", "left", "right"));
-        Quark.LOG.info("OBE integration returned " + Quark.asResource(tex.toString()));
         return new Material(Sheets.CHEST_SHEET, Quark.asResource(tex.toString())).texture();
+        //this material constructor is probably not required but it works so eh
     }
+
 }

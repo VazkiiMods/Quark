@@ -113,6 +113,7 @@ public class Quark {
 	}
 
 	private static void addPackFinders(AddPackFindersEvent event){
+		IModFile quarkJar = ModList.get().getModFileById(MOD_ID).getFile();
 		final Map<String, Boolean> CONDITIONAL_TAG_PACKS = new HashMap<>();
 		CONDITIONAL_TAG_PACKS.put("quark_ct_variant_chests", VariantChestsModule.staticEnabled);
 		CONDITIONAL_TAG_PACKS.put("quark_ct_variant_bookshelves", VariantBookshelvesModule.staticEnabled);
@@ -148,7 +149,6 @@ public class Quark {
 
 		if(QuarkGeneralConfig.generateProgrammerArt){
 			if (event.getPackType() == PackType.CLIENT_RESOURCES) {
-				IModFile quarkJar = ModList.get().getModFileById(MOD_ID).getFile();
 				Path path = quarkJar.findResource("resourcepacks", "quark_programmer_art");
 
 				PackSelectionConfig packSelectionConfig = new PackSelectionConfig(false, Pack.Position.TOP, false);
@@ -157,7 +157,7 @@ public class Quark {
 				);
 
 				PathPackResources.PathResourcesSupplier pathResourcesSupplier = new PathPackResources.PathResourcesSupplier(path);
-				Pack pack = Pack.readMetaAndCreate(packLocationInfo, pathResourcesSupplier, PackType.SERVER_DATA, packSelectionConfig);
+				Pack pack = Pack.readMetaAndCreate(packLocationInfo, pathResourcesSupplier, PackType.CLIENT_RESOURCES, packSelectionConfig);
 				event.addRepositorySource(packConsumer -> {
 					packConsumer.accept(pack);
 				});

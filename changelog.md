@@ -1,5 +1,7 @@
 # Quark 4.1-481 For Neoforge 1.21.1
 
+Fixes and Optimized Block Entities support!
+
 # Fixes
 - Fixed #5572: Foxhound Faces are swapped from its tamed variant
 - Fixed #5577: Undead Mobs do not have Undead Properties 
@@ -18,9 +20,10 @@
 - Made some adjustments to implementation that would theoretically improve Quark's usability on Kilt, but this is untested.
 
 # Additions
+- Added integration with Optimized Block Entities. If OBE is installed, Variant Chests will perform better!
+  - Lootr Variant Chests are not integrated; due to using different textures depending on if they are opened are not, they must always use a block entity model
 - Rotation Lock now works with Replace Scaffolding; blocks will be replaced according to your rotation lock
 - Added a `quark:cannot_replace_scaffolding` block tag for blocks that shouldn't replace scaffolding
 - Added the `quark:pathfinders_quill` loot function, which sets items to one of the Pathfinder's Quills set up in the config
 - Added a banned slabs config option to SlabsToBlock module
 - Added a fully-transparent texture at assets\quark\textures\models\armor\backpack_layer_1.png so mods that assume there is a texture there don't show a missing texture when you are wearing a Backpack
-- Added integration with Optimized Block Entities. In my test of a 10x10x10 cube of Acacia Chests in a void, my FPS went from ~90 to 
