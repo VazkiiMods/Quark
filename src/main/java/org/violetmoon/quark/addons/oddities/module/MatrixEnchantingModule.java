@@ -15,6 +15,7 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
+import net.neoforged.neoforge.common.Tags;
 import net.neoforged.neoforge.common.extensions.IMenuTypeExtension;
 import net.neoforged.neoforge.common.util.FakePlayer;
 import org.violetmoon.quark.addons.oddities.block.MatrixEnchantingTableBlock;
@@ -92,7 +93,7 @@ public class MatrixEnchantingModule extends ZetaModule {
 	@Config(description = "Set this to true to allow treasure enchantments to be rolled as pieces")
 	public static boolean allowTreasures = false;
 
-	@Config(description = "Set this to true to allow undiscoverable enchantments to be rolled as pieces")
+	@Config(description = "Set this to true to allow undiscoverable enchantments (that is, enchantments that are not in the #minecraft:in_enchanting_table tag) to be rolled as pieces")
 	public static boolean allowUndiscoverableEnchantments = false;
 
 	@Config(description = "Any treasure enchantment IDs here will be able to appear in books in matrix enchanting")
@@ -112,6 +113,9 @@ public class MatrixEnchantingModule extends ZetaModule {
 
 	@Config(description = "Matrix Enchanting can be done with short (<= 3px blocks) instead of air around the enchanting table. Set this to false to disable this behaviour.")
 	public static boolean allowShortBlockEnchanting = true;
+
+	@Config(description = "If true, items that have 0 enchantability, but are in the #c:enchantables tag, such as Shears and Shields, can be enchanted in the Matrix Enchanter")
+	public static boolean allowZeroEnchantability = false;
 
 	@Config(description = "Candles with soul sand below them or below the bookshelves dampen enchantments instead of influence them.")
 	public static boolean soulCandlesInvert = true;

@@ -18,6 +18,8 @@ Fixes and Optimized Block Entities support!
 - Chains Connect Blocks now works with modded chains
 - Tamed Foxhounds now have a maximum health of 30. This is to give them a slight disadvantage to normal wolves
 - Made some adjustments to implementation that would theoretically improve Quark's usability on Kilt, but this is untested.
+- Matrix Enchanter now uses the item tag #c:enchanting_fuels instead of #c:gems/lapis (there is no functional difference by default)
+- Matrix Enchanter no longer uses deprecated methods for determining if an item can accept an enchantment
 
 # Additions
 - Added integration with Optimized Block Entities. If OBE is installed, Variant Chests will perform better!
@@ -27,3 +29,4 @@ Fixes and Optimized Block Entities support!
 - Added the `quark:pathfinders_quill` loot function, which sets items to one of the Pathfinder's Quills set up in the config
 - Added a banned slabs config option to SlabsToBlock module
 - Added a fully-transparent texture at assets\quark\textures\models\armor\backpack_layer_1.png so mods that assume there is a texture there don't show a missing texture when you are wearing a Backpack
+- Added a config option to Matrix Enchanting that allows Shears, Shields, and other items with 0 enchantability but are still compatible with enchantments to be enchanted on the Matrix Enchanter

@@ -71,7 +71,7 @@ public class MatrixEnchantingMenu extends AbstractContainerMenu {
 	}
 
 	private boolean isLapis(ItemStack stack) {
-		return stack.is(Tags.Items.GEMS_LAPIS);
+		return stack.is(Tags.Items.ENCHANTING_FUELS);
 	}
 
 	private void finish(Player player, ItemStack stack) {

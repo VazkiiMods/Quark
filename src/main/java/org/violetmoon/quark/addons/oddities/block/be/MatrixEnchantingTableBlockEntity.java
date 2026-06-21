@@ -34,6 +34,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
+import net.neoforged.neoforge.common.Tags;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.violetmoon.quark.addons.oddities.inventory.EnchantmentMatrix;
@@ -76,6 +77,7 @@ public class MatrixEnchantingTableBlockEntity extends AbstractEnchantingTableBlo
 
 	public final Map<Enchantment, Integer> influences = new HashMap<>();
 	public int bookshelfPower, enchantability, charge;
+	public boolean zeroEnchantabilityButInTag;
 
 	public MatrixEnchantingTableBlockEntity(BlockPos pos, BlockState state) {
 		super(MatrixEnchantingModule.blockEntityType, pos, state);
@@ -250,6 +252,10 @@ public class MatrixEnchantingTableBlockEntity extends AbstractEnchantingTableBlo
 		influences.clear();
 		if(!item.isEmpty())
 			enchantability = Quark.ZETA.itemExtensions.get(item).getEnchantmentValueZeta(item);
+
+		if(item.getEnchantmentValue() == 0 && item.is(Tags.Items.ENCHANTABLES)){
+			zeroEnchantabilityButInTag = true;
+		}
 
 		boolean allowWater = MatrixEnchantingModule.allowUnderwaterEnchanting;
 		boolean allowShort = MatrixEnchantingModule.allowShortBlockEnchanting;

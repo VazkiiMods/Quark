@@ -76,7 +76,8 @@ public class EnchantmentMatrix {
 		int enchantability = matrixEnchanter.enchantability;
 
 		if(enchantability == 0)
-			return false;
+			if(!MatrixEnchantingModule.allowZeroEnchantability && matrixEnchanter.zeroEnchantabilityButInTag)
+				return false;
 
 		if(!generatePiece(matrixEnchanter, book, true))
 			return false;
@@ -177,7 +178,7 @@ public class EnchantmentMatrix {
 
 			if(isValid
 					&& !MatrixEnchantingModule.disallowedEnchantments.contains(id)
-					&& ((enchantment.value().canEnchant(target) && enchantment.value().isPrimaryItem(target)) || (book))) {
+					&& (target.supportsEnchantment(enchantment) || (book))) {
 				int enchantLevel = 1;
 				if(book) {
 					for(int i = enchantment.value().getMaxLevel(); i > enchantment.value().getMinLevel() - 1; --i) {
