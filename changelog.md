@@ -8,7 +8,8 @@ Fixes and Optimized Block Entities support!
 - Fixed #5579: Chains should be detected differently
 - Fixed #5582: You can place things you shouldn't with scaffolding replacement
 - Fixed #5584: (1.21.1) "Pat the dogs" config options don't work for most modded entities
-- Fixed #5594: Sweeping Edge not influenced by candles due to typo in default config 
+- Fixed #5591: Reacharound activates when you have a wall on your back (thanks LeoBeliik)
+- Fixed #5594: Sweeping Edge not influenced by candles due to typo in default config
 
 # Changes
 - Replace Scaffolding now works with modded scaffold blocks (i.e. Create's Copper Scaffolding). 
