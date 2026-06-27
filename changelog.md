@@ -4,7 +4,7 @@ Fixes and Optimized Block Entities support!
 
 # Fixes
 - Fixed #5572: Foxhound Faces are swapped from its tamed variant
-- Fixed #5577: Undead Mobs do not have Undead Properties 
+- Fixed #5577: Undead Mobs do not have Undead Properties
 - Fixed #5579: Chains should be detected differently
 - Fixed #5582: You can place things you shouldn't with scaffolding replacement
 - Fixed #5584: (1.21.1) "Pat the dogs" config options don't work for most modded entities

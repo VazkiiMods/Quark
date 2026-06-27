@@ -2,6 +2,7 @@ package org.violetmoon.quark.content.world.gen;
 
 import java.util.List;
 
+import net.minecraft.ReportedException;
 import org.violetmoon.quark.base.Quark;
 import org.violetmoon.quark.content.world.module.FairyRingsModule;
 import org.violetmoon.zeta.config.type.DimensionConfig;
@@ -59,56 +60,67 @@ public class FairyRingGenerator extends Generator {
 	}
 
 	public static void spawnFairyRing(WorldGenLevel world, ChunkGenerator generator, BlockPos pos, RandomSource rand) {
-		List<ConfiguredFeature<?, ?>> features = world.getBiome(pos).value().getGenerationSettings().getFlowerFeatures();
+		try {
+			List<ConfiguredFeature<?, ?>> features = world.getBiome(pos).value().getGenerationSettings().getFlowerFeatures();
 
-		Holder<PlacedFeature> holder = features.isEmpty() ? null : ((RandomPatchConfiguration) features.get(rand.nextInt(0, features.size())).config()).feature();
-		BlockState flowerState = holder == null ? Blocks.OXEYE_DAISY.defaultBlockState() : null;
+			Holder<PlacedFeature> holder = features.isEmpty() ? null : ((RandomPatchConfiguration) features.get(rand.nextInt(0, features.size())).config()).feature();
+			BlockState flowerState = holder == null ? Blocks.OXEYE_DAISY.defaultBlockState() : null;
 
-		for(int xOffset = -3; xOffset <= 3; xOffset++)
-			for(int zOffset = -3; zOffset <= 3; zOffset++) {
-				float dist = (xOffset * xOffset) + (zOffset * zOffset);
-				if(dist < 7 || dist > 10)
-					for(int yOffset = 6; yOffset > -3; yOffset--) {
-						BlockPos fpos = pos.offset(xOffset, yOffset, zOffset);
-						BlockState state = world.getBlockState(fpos);
-						if(state.is(BlockTags.SMALL_FLOWERS)) {
-							world.setBlock(fpos, Blocks.AIR.defaultBlockState(), 2);
-							break;
+			for(int xOffset = -3; xOffset <= 3; xOffset++)
+				for(int zOffset = -3; zOffset <= 3; zOffset++) {
+					float dist = (xOffset * xOffset) + (zOffset * zOffset);
+					if(dist < 7 || dist > 10)
+						for(int yOffset = 6; yOffset > -3; yOffset--) {
+							BlockPos fpos = pos.offset(xOffset, yOffset, zOffset);
+							BlockState state = world.getBlockState(fpos);
+							if(state.is(BlockTags.SMALL_FLOWERS)) {
+								world.setBlock(fpos, Blocks.AIR.defaultBlockState(), 2);
+								break;
+							}
 						}
-					}
-				else {
-					for(int yOffset = 5; yOffset > -4; yOffset--) {
-						BlockPos fpos = pos.offset(xOffset, yOffset, zOffset);
-						BlockPos fposUp = fpos.above();
-						BlockState state = world.getBlockState(fpos);
-						if(state.is(BlockTags.DIRT) && world.isEmptyBlock(fposUp)) {
-							if(flowerState == null) {
-								holder.value().place(world, generator, rand, fposUp);
-								flowerState = world.getBlockState(fposUp);
-							} else
-								world.setBlock(fposUp, flowerState, 2);
-							break;
+					else {
+						for(int yOffset = 5; yOffset > -4; yOffset--) {
+							BlockPos fpos = pos.offset(xOffset, yOffset, zOffset);
+							BlockPos fposUp = fpos.above();
+							BlockState state = world.getBlockState(fpos);
+							if(state.is(BlockTags.DIRT) && world.isEmptyBlock(fposUp)) {
+								if(flowerState == null) {
+									holder.value().place(world, generator, rand, fposUp);
+									flowerState = world.getBlockState(fposUp);
+								} else
+									world.setBlock(fposUp, flowerState, 2);
+								break;
+							}
 						}
 					}
 				}
+
+			BlockPos orePos = pos.below(rand.nextInt(10) + 25);
+			BlockState stoneState = world.getBlockState(orePos);
+			int down = 0;
+			while(!stoneState.is(Tags.Blocks.STONES) && down < 10) {
+				orePos = orePos.below();
+				stoneState = world.getBlockState(orePos);
+				down++;
 			}
 
-		BlockPos orePos = pos.below(rand.nextInt(10) + 25);
-		BlockState stoneState = world.getBlockState(orePos);
-		int down = 0;
-		while(!stoneState.is(Tags.Blocks.STONES) && down < 10) {
-			orePos = orePos.below();
-			stoneState = world.getBlockState(orePos);
-			down++;
+			if(stoneState.is(Tags.Blocks.STONES)) {
+				BlockState ore = FairyRingsModule.ores.get(rand.nextInt(FairyRingsModule.ores.size()));
+				world.setBlock(orePos, ore, 2);
+				for (Direction face : Direction.values())
+					if (rand.nextBoolean())
+						world.setBlock(orePos.relative(face), ore, 2);
+			}
 		}
-
-		if(stoneState.is(Tags.Blocks.STONES)) {
-			BlockState ore = FairyRingsModule.ores.get(rand.nextInt(FairyRingsModule.ores.size()));
-			world.setBlock(orePos, ore, 2);
-			for(Direction face : Direction.values())
-				if(rand.nextBoolean())
-					world.setBlock(orePos.relative(face), ore, 2);
-
+		catch (Exception e) {
+			Holder<Biome> biome = world.getBiome(pos);
+			Quark.LOG.error("Exception while attempting to generate fairy ring at " + pos + "in biome " + biome + ":" + e.getMessage());
+			if(!Quark.ZETA.isProduction){
+				for (int i = world.getMinBuildHeight(); i < world.getMaxBuildHeight(); i++) {
+					world.setBlock(new BlockPos(pos.getX(), i, pos.getZ()), Blocks.OXEYE_DAISY.defaultBlockState(), 0);
+				}
+				world.setBlock(pos, Blocks.GLOWSTONE.defaultBlockState(), 0);
+			}
 		}
 	}
 }
