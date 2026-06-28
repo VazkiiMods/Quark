@@ -1,5 +1,6 @@
 package org.violetmoon.quark.content.tweaks.module;
 
+import com.google.common.cache.Cache;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Lists;
 import net.minecraft.advancements.Advancement;
@@ -53,6 +54,9 @@ public class AutomaticRecipeUnlockModule extends ZetaModule {
 
 	private static boolean staticEnabled;
 
+	private static int recipeHashCode = 0;
+	private static List<RecipeHolder<?>> recipeCache;
+
 	@LoadEvent
 	public final void configChanged(ZConfigChanged event) {
 		staticEnabled = isEnabled();
@@ -64,13 +68,20 @@ public class AutomaticRecipeUnlockModule extends ZetaModule {
 
 		Level level = player.level();
 		List<RecipeHolder<?>> recipes = new ArrayList<>(server.getRecipeManager().getRecipes());
+		if (recipes.hashCode() != recipeHashCode) {
+			recipeHashCode = recipes.hashCode();
 
-		if(!ignoredRecipes.isEmpty()){
-			recipes.removeIf((recipe) -> ignoredRecipes.contains(Objects.toString(recipe.id())));
+			if (!ignoredRecipes.isEmpty()) {
+				recipes.removeIf((recipe) -> ignoredRecipes.contains(Objects.toString(recipe.id())));
+			}
+			if (skipEmptyRecipes) {
+				recipes.removeIf((recipe) -> recipe == null || recipe.value().getResultItem(level.registryAccess()) == null || recipe.value().getResultItem(level.registryAccess()).isEmpty());
+			}
+			recipeCache = recipes;
 		}
-		if(skipEmptyRecipes){
-			recipes.removeIf((recipe) -> recipe == null || recipe.value().getResultItem(level.registryAccess()) == null || recipe.value().getResultItem(level.registryAccess()).isEmpty());
-		}
+
+		recipes = recipeCache;
+
 
 		int idx = 0;
 		int maxShift = 1000;
