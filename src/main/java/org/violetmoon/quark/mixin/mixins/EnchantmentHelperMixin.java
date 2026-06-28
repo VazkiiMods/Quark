@@ -27,6 +27,10 @@ public class EnchantmentHelperMixin {
 		return GoldToolsHaveFortuneModule.modifyFortuneLooting(holder, stack, original);
 	}
 
+	/*
+
+	old implementation - moved to Quark::onGetEnchantmentLevelEvent
+
 	@WrapOperation(method = "runIterationOnItem(Lnet/minecraft/world/item/ItemStack;Lnet/minecraft/world/item/enchantment/EnchantmentHelper$EnchantmentVisitor;)V",
 			at = @At(value = "INVOKE",
 					target = "Lnet/minecraft/world/item/ItemStack;getAllEnchantments(Lnet/minecraft/core/HolderLookup$RegistryLookup;)Lnet/minecraft/world/item/enchantment/ItemEnchantments;"))
@@ -40,6 +44,7 @@ public class EnchantmentHelperMixin {
 	private static ItemEnchantments modifyComponentEnchantLevel1(ItemStack stack, HolderLookup.RegistryLookup<Enchantment> registryLookup, Operation<ItemEnchantments> original) {
 		return GoldToolsHaveFortuneModule.modifyComponentEnchantLevel(stack, registryLookup, original.call(stack, registryLookup));
 	}
+	 */
 
 	@Inject(method = "getComponentType", at = @At("HEAD"), cancellable = true)
 	private static void getAncientTomeEnchantments(ItemStack stack, CallbackInfoReturnable<DataComponentType<ItemEnchantments>> callbackInfoReturnable) {

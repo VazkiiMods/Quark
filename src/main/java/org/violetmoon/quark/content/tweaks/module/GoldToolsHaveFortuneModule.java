@@ -104,12 +104,26 @@ public class GoldToolsHaveFortuneModule extends ZetaModule {
 
 		if (fortuneLevel > 0) {
 			for (Item item : BuiltInRegistries.ITEM) {
-				if (item instanceof TieredItem tiered && tiered.getTier() == Tiers.GOLD && !item.getDefaultInstance().is(IGNORED_BY_GTHF)) {
+				if(item == null){
+					Quark.LOG.error("GoldToolsHaveFortuneModule: Item was null. This shouldn't happen.");
+				}
+				else if (item instanceof TieredItem tiered && tiered.getTier() == Tiers.GOLD && !item.getDefaultInstance().is(IGNORED_BY_GTHF)) {
 					Object2IntMap<ResourceKey<Enchantment>> entry = BUILTIN_ENCHANTMENTS.computeIfAbsent(item, it -> new Object2IntArrayMap<>());
 					boolean acceptsLooting = item.getDefaultInstance().is(COUNTS_AS_WEAPON_FOR_GTHF);
 					entry.computeIfAbsent(acceptsLooting ? Enchantments.LOOTING : Enchantments.FORTUNE, ench -> fortuneLevel);
 				}
 			}
+			/*
+			//alternative approach with streams
+			Stream<Item> goldItems = BuiltInRegistries.ITEM.stream().filter(item -> item instanceof TieredItem tiered && tiered.getTier() == Tiers.GOLD);
+			for(Item goldItem : goldItems.toList()){
+				if (!goldItem.getDefaultInstance().is(IGNORED_BY_GTHF)) {
+					Object2IntMap<ResourceKey<Enchantment>> entry = BUILTIN_ENCHANTMENTS.computeIfAbsent(goldItem, it -> new Object2IntArrayMap<>());
+					boolean acceptsLooting = goldItem.getDefaultInstance().is(COUNTS_AS_WEAPON_FOR_GTHF);
+					entry.computeIfAbsent(acceptsLooting ? Enchantments.LOOTING : Enchantments.FORTUNE, ench -> fortuneLevel);
+				}
+			}
+			 */
 		}
 	}
 

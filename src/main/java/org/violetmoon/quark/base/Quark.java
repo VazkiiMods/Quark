@@ -26,6 +26,7 @@ import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;
 import net.neoforged.neoforge.event.AddPackFindersEvent;
 import net.neoforged.neoforge.event.AddReloadListenerEvent;
 import net.neoforged.neoforge.event.brewing.RegisterBrewingRecipesEvent;
+import net.neoforged.neoforge.event.enchanting.GetEnchantmentLevelEvent;
 import net.neoforged.neoforge.items.wrapper.InvWrapper;
 import net.neoforged.neoforge.items.wrapper.SidedInvWrapper;
 import net.neoforged.neoforgespi.locating.IModFile;
@@ -43,6 +44,7 @@ import org.violetmoon.quark.base.util.CompostManager;
 import org.violetmoon.quark.content.building.module.*;
 import org.violetmoon.quark.content.experimental.module.VanillaStoneClustersModule;
 import org.violetmoon.quark.content.mobs.module.CrabsModule;
+import org.violetmoon.quark.content.tweaks.module.GoldToolsHaveFortuneModule;
 import org.violetmoon.quark.content.tweaks.module.UtilityRecipesModule;
 import org.violetmoon.quark.integration.claim.FlanIntegration;
 import org.violetmoon.quark.integration.claim.IClaimIntegration;
@@ -111,6 +113,7 @@ public class Quark {
 	}
 
 	private static void addPackFinders(AddPackFindersEvent event){
+		IModFile quarkJar = ModList.get().getModFileById(MOD_ID).getFile();
 		final Map<String, Boolean> CONDITIONAL_TAG_PACKS = new HashMap<>();
 		CONDITIONAL_TAG_PACKS.put("quark_ct_variant_chests", VariantChestsModule.staticEnabled);
 		CONDITIONAL_TAG_PACKS.put("quark_ct_variant_bookshelves", VariantBookshelvesModule.staticEnabled);
@@ -146,7 +149,6 @@ public class Quark {
 
 		if(QuarkGeneralConfig.generateProgrammerArt){
 			if (event.getPackType() == PackType.CLIENT_RESOURCES) {
-				IModFile quarkJar = ModList.get().getModFileById(MOD_ID).getFile();
 				Path path = quarkJar.findResource("resourcepacks", "quark_programmer_art");
 
 				PackSelectionConfig packSelectionConfig = new PackSelectionConfig(false, Pack.Position.TOP, false);
@@ -155,7 +157,7 @@ public class Quark {
 				);
 
 				PathPackResources.PathResourcesSupplier pathResourcesSupplier = new PathPackResources.PathResourcesSupplier(path);
-				Pack pack = Pack.readMetaAndCreate(packLocationInfo, pathResourcesSupplier, PackType.SERVER_DATA, packSelectionConfig);
+				Pack pack = Pack.readMetaAndCreate(packLocationInfo, pathResourcesSupplier, PackType.CLIENT_RESOURCES, packSelectionConfig);
 				event.addRepositorySource(packConsumer -> {
 					packConsumer.accept(pack);
 				});
@@ -223,6 +225,11 @@ public class Quark {
 		event.registerBlock(Capabilities.ItemHandler.BLOCK, (level, pos, state, blockEntity, side) -> new InvWrapper((CrateBlockEntity)blockEntity), CrateModule.crate);
 		event.registerBlock(Capabilities.ItemHandler.BLOCK, (level, pos, state, blockEntity, side) -> new SidedInvWrapper((AbstractFurnaceBlockEntity)blockEntity, side), VariantFurnacesModule.blackstoneFurnace, VariantFurnacesModule.deepslateFurnace);
 
+	}
+
+	@SubscribeEvent
+	public static void onGetEnchantmentLevelEvent(GetEnchantmentLevelEvent event){
+		GoldToolsHaveFortuneModule.modifyComponentEnchantLevel(event.getStack(), event.getLookup(), event.getEnchantments().toImmutable());
 	}
 
 	public static void crashOnOldConfig(String moduleName, int parseFailedPosition) throws ParseException {

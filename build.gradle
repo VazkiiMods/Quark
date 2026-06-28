@@ -243,6 +243,9 @@ dependencies {
     //Lootr
     implementation("noobanidus.mods.lootr:lootr-neoforge:${deps.lootr_version}")
 
+    //Optimized Block Entities
+    implementation("maven.modrinth:obe:${deps.obe_version}")
+
     // Spark, which while kinda an extra in a sense, I feel is vital enough to development and testing where it should be in.
     runtimeOnly("maven.modrinth:spark:${deps.spark_modrinth_file_id}")
 

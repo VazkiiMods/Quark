@@ -18,7 +18,7 @@ import net.minecraft.world.level.block.state.properties.ChestType;
 
 public class VariantChestRenderer extends ChestRenderer<ChestBlockEntity> {
 
-    private final Map<Pair<Block, ChestType>, Material> materialMap = new HashMap<>();
+    public static final Map<Pair<Block, ChestType>, Material> MATERIAL_MAP = new HashMap<>();
     protected final boolean isTrap;
 
     public VariantChestRenderer(BlockEntityRendererProvider.Context context, boolean isTrap) {
@@ -32,7 +32,7 @@ public class VariantChestRenderer extends ChestRenderer<ChestBlockEntity> {
         Block block = tile.getBlockState().getBlock();
         
         Pair<Block, ChestType> pair = Pair.of(block, type);
-        return materialMap.computeIfAbsent(pair, b -> {
+        return MATERIAL_MAP.computeIfAbsent(pair, b -> {
             if (!(block instanceof VariantChestsModule.IVariantChest v)) return null;
             //apply the texture naming convention
             StringBuilder tex = new StringBuilder(v.getTextureFolder())
@@ -48,7 +48,7 @@ public class VariantChestRenderer extends ChestRenderer<ChestBlockEntity> {
         });
     }
 
-    protected <X> X choose(ChestType type, X single, X left, X right) {
+    public static <X> X choose(ChestType type, X single, X left, X right) {
         return switch (type) {
             case SINGLE -> single;
             case LEFT -> left;
