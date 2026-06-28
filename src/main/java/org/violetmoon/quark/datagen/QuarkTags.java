@@ -68,6 +68,7 @@ public class QuarkTags {
         public static final TagKey<Item> REACHAROUND_ABLE = tag("reacharound_able");
         public static final TagKey<Item> REVERTABLE_CHESTS = tag("revertable_chests");
         public static final TagKey<Item> REVERTABLE_TRAPPED_CHESTS = tag("revertable_trapped_chests");
+        public static final TagKey<Item> REVERTABLE_LADDERS = tag("revertable_ladders");
         public static final TagKey<Item> SEED_POUCH_FERTILIZERS = tag("seed_pouch_fertilizers");
         public static final TagKey<Item> SEED_POUCH_HOLDABLE = tag("seed_pouch_fertilizers");
         public static final TagKey<Item> SHARDS = tag("shards");

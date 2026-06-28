@@ -22,8 +22,11 @@ import java.util.List;
 @ZetaLoadModule(category = "building", antiOverlap = { "woodworks", "woodster", "carved_wood" })
 public class VariantLaddersModule extends ZetaModule {
 
-	@Config
-	public static boolean changeNames = true;
+	@Config(description = "Set this to true to remove the vanilla 7 sticks to 3 ladders recipe")
+	public static boolean removeVanillaRecipe = false;
+
+	@Config(flag = "ladder_reversion")
+	private static boolean enableRevertingLadders = true;
 
 	public static List<Block> variantLadders = new LinkedList<>();
 
@@ -32,7 +35,7 @@ public class VariantLaddersModule extends ZetaModule {
 	@LoadEvent
 	public final void register(ZRegister event) {
 		CreativeTabManager.startChain(CreativeModeTabs.FUNCTIONAL_BLOCKS, false, false, Blocks.LADDER);
-		for(Wood type : VanillaWoods.NON_OAK)
+		for(Wood type : VanillaWoods.ALL)
 			variantLadders.add(new VariantLadderBlock(type.name(), this, Block.Properties.ofFullCopy(Blocks.LADDER).sound(type.soundPlanks()), !type.nether()));
 		CreativeTabManager.endChain();
 	}
@@ -45,7 +48,6 @@ public class VariantLaddersModule extends ZetaModule {
 	@LoadEvent
 	public final void configChanged(ZConfigChanged event) {
 		staticEnabled = isEnabled();
-		zeta().nameChanger.changeBlock(Blocks.LADDER, "block.quark.oak_ladder", changeNames && isEnabled());
 	}
 
 }

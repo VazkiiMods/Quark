@@ -214,6 +214,11 @@ public class QuarkRecipeProvider extends RecipeProvider implements IConditionBui
                 .requires(TagKey.create(Registries.ITEM, Quark.asResource("revertable_trapped_chests")))
                 .unlockedBy("test", PlayerTrigger.TriggerInstance.tick())
                 .save(recipeOutput.withConditions(zCond("chest_reversion")), "quark:building/crafting/trapped_chest_revert");
+        //ladder_reversion
+        ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, Blocks.LADDER)
+                .requires(TagKey.create(Registries.ITEM, Quark.asResource("revertable_ladders")))
+                .unlockedBy("test", PlayerTrigger.TriggerInstance.tick())
+                .save(recipeOutput.withConditions(zCond("ladder_reversion")), "quark:building/crafting/ladder_revert");
 
         //compressed
         compressUncompress(Items.APPLE, CompressedBlocksModule.apple, recipeOutput, null, "apple_crate");
@@ -1119,6 +1124,7 @@ public class QuarkRecipeProvider extends RecipeProvider implements IConditionBui
                     .save(recipeOutput.withConditions(cond), "quark:world/crafting/woodsets/" + set.name + "/stripped_" + set.name + "_post");
         }
         //ladders (new 1.21 folder) (NOTE: has some from World Category)
+        /*
         ShapedRecipeBuilder.shaped(RecipeCategory.MISC, Blocks.LADDER, 4)
                 .pattern("# #")
                 .pattern("#W#")
@@ -1127,8 +1133,9 @@ public class QuarkRecipeProvider extends RecipeProvider implements IConditionBui
                 .define('W', Blocks.OAK_PLANKS)
                 .unlockedBy("test", PlayerTrigger.TriggerInstance.tick())
                 .save(recipeOutput.withConditions(zCond("variant_ladders")), "quark:building/crafting/ladders/oak_ladder");
+         */
         i = 0;
-        for (VanillaWoods.Wood wood : VanillaWoods.NON_OAK) {
+        for (VanillaWoods.Wood wood : VanillaWoods.ALL) {
             ShapedRecipeBuilder.shaped(RecipeCategory.MISC, DataUtil.getLadderFromPlank(wood.planks()), 4)
                     .pattern("# #")
                     .pattern("#W#")

@@ -132,7 +132,7 @@ public class Quark {
 			final Map<String, Boolean> VDO_PACKS = new HashMap<>();
 			VDO_PACKS.put("quark_vdo_variant_bookshelves", VariantBookshelvesModule.staticEnabled);
 			VDO_PACKS.put("quark_vdo_variant_chests", VariantChestsModule.staticEnabled);
-			VDO_PACKS.put("quark_vdo_variant_ladders", VariantLaddersModule.staticEnabled);
+			VDO_PACKS.put("quark_vdo_variant_ladders", VariantLaddersModule.removeVanillaRecipe);
 			VDO_PACKS.put("quark_vdo_nether_wart_sack", (CompressedBlocksModule.staticEnabled && CompressedBlocksModule.enableNetherWartSack));
 			VDO_PACKS.put("quark_vdo_better_stone_tools", (UtilityRecipesModule.staticEnabled && UtilityRecipesModule.betterStoneToolCrafting));
 

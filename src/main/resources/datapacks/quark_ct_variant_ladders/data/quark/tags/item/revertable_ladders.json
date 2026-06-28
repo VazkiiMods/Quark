@@ -1,0 +1,19 @@
+{
+  "replace": false,
+  "values": [
+	"quark:oak_ladder",
+	"quark:spruce_ladder",
+	"quark:birch_ladder",
+	"quark:jungle_ladder",
+	"quark:acacia_ladder",
+	"quark:dark_oak_ladder",
+	"quark:warped_ladder",
+	"quark:crimson_ladder",
+	"quark:azalea_ladder",
+	"quark:blossom_ladder",
+	"quark:bamboo_ladder",
+	"quark:mangrove_ladder",
+	"quark:cherry_ladder",
+	"quark:ancient_ladder"
+  ]
+}

@@ -1,4 +1,4 @@
-// 1.21.1	2026-05-18T12:46:52.5371468	Recipes
+// 1.21.1	2026-06-28T15:28:52.8559518	Recipes
 bb24f1bac2cb3ef401eb56f32a5b7364bcee7552 data/quark/advancement/recipes/building_blocks/building/crafting/bamboo_mat.json
 31f4957990f1d18f202f816de898f77458b18140 data/quark/advancement/recipes/building_blocks/building/crafting/bamboo_mat_carpet.json
 8df9c4ad585c2226233ee6e8f7bc96f33806df86 data/quark/advancement/recipes/building_blocks/building/crafting/blackstone_bricks.json
@@ -769,6 +769,7 @@ d4111f213d8d78e53d339ef6894da4a9dcf44012 data/quark/advancement/recipes/misc/bui
 b8d7d5d10d253ddb12cbddd983c14856e2b406fa data/quark/advancement/recipes/misc/building/crafting/ladders/oak_ladder.json
 f288b3c572199be2ed312f1af379ad5b83da7f6c data/quark/advancement/recipes/misc/building/crafting/ladders/spruce_ladder.json
 c144d02d5b52e23364a9692fbff17f6d9bc60ae2 data/quark/advancement/recipes/misc/building/crafting/ladders/warped_ladder.json
+8c567327abed3425a9f63f499f716cd342ef7501 data/quark/advancement/recipes/misc/building/crafting/ladder_revert.json
 350d1601d8f0a12f8d9b2a8ed3ca6c7b531185cc data/quark/advancement/recipes/misc/building/crafting/panes/black_framed_glass_pane.json
 668108682ec5491053bed312eade64f67ba57ce9 data/quark/advancement/recipes/misc/building/crafting/panes/blue_framed_glass_pane.json
 3a9db840c177b224597c1f7f61e16aac700e785b data/quark/advancement/recipes/misc/building/crafting/panes/brown_framed_glass_pane.json
@@ -1136,9 +1137,10 @@ fb89d0b263fa1cdbea5f43cfdf3a110c64bd1df9 data/quark/recipe/building/crafting/lad
 5edd9d2e564728350c83da6baf388b1cf7337973 data/quark/recipe/building/crafting/ladders/dark_oak_ladder.json
 474e781bfddb570f93ffdb411daf9c73322d60a1 data/quark/recipe/building/crafting/ladders/jungle_ladder.json
 c5f3aafaa802829848bf95e5c0442950f71a7fd4 data/quark/recipe/building/crafting/ladders/mangrove_ladder.json
-ca9dec2691fec39eb05c60b814daf346aafb6503 data/quark/recipe/building/crafting/ladders/oak_ladder.json
+4dda995ef5e4375c4c7ffda1f183f26b7c5b58e2 data/quark/recipe/building/crafting/ladders/oak_ladder.json
 994c12bf7e4908eb1adbfafbcc8b25800f822a11 data/quark/recipe/building/crafting/ladders/spruce_ladder.json
 481337431584d1e4ad6fc220a6a4754af2700804 data/quark/recipe/building/crafting/ladders/warped_ladder.json
+207842672a081dce86e7b7e9cf8982014abc24e1 data/quark/recipe/building/crafting/ladder_revert.json
 f4edb22d01d01e828b02fc2e7f11bffdd61c35a5 data/quark/recipe/building/crafting/lamps/black_corundum_lamp.json
 fd49356cef999454ed484ca4461910d103d16396 data/quark/recipe/building/crafting/lamps/black_crsytal_lamp.json
 c826fec059525467eacff55ef893e3cb2014aed3 data/quark/recipe/building/crafting/lamps/blue_corundum_lamp.json

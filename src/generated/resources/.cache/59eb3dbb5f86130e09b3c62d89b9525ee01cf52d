@@ -1,4 +1,4 @@
-// 1.21.1	2026-05-03T11:52:07.0536188	Loot Tables
+// 1.21.1	2026-06-28T15:28:52.8559518	Loot Tables
 321167e5d1e420c3799ebd55550623276a62d02f data/quark/loot_table/blocks/acacia_bookshelf.json
 78cf85302095b576b7eda6e9c83fd9141e777c3b data/quark/loot_table/blocks/acacia_chest.json
 2d740f286cb6b31376a3bb00878726966b38c064 data/quark/loot_table/blocks/acacia_hedge.json
@@ -427,6 +427,7 @@ c2044a0339373816b419784d4e56cfaa0e83e456 data/quark/loot_table/blocks/nether_bri
 dd971af54573b44162a630c9878780bdc19f69a9 data/quark/loot_table/blocks/nether_wart_sack.json
 fa95dc4f004e809ba9e56b2a3698a19f31b6726e data/quark/loot_table/blocks/oak_chest.json
 578ca2eb0450289356cece13c635e213dd6e84fe data/quark/loot_table/blocks/oak_hedge.json
+f4e034878975cc7ea5da9dd219d505263fd5f7f2 data/quark/loot_table/blocks/oak_ladder.json
 840163cc30619524aa52a74fa764f52bbdc5bde8 data/quark/loot_table/blocks/oak_leaf_carpet.json
 537940a2c704847dd4ce5a732d930e319e01f943 data/quark/loot_table/blocks/oak_post.json
 9b8472939a90d883b18c59aa28cdb1dffd88ed7c data/quark/loot_table/blocks/oak_vertical_slab.json
