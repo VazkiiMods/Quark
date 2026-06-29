@@ -256,7 +256,14 @@ public class QuarkRecipeProvider extends RecipeProvider implements IConditionBui
         for (DyeColor dyeColor : FramedGlassModule.blockMap.keySet()) {
             dyedFramedGlassRecipe(FramedGlassModule.blockMap.get(dyeColor).getBlock(), dyeColor)
                     .unlockedBy("test", PlayerTrigger.TriggerInstance.tick())
+                    .group("stained_glass")
                     .save(recipeOutput.withConditions(zCond("framed_glass")), "quark:building/crafting/glass/" + dyeColor.getName() + "_framed_glass");
+        }
+        for (DyeColor dyeColor : FramedGlassModule.paneMap.keySet()) {
+            dyedFramedGlassPaneRecipe(FramedGlassModule.paneMap.get(dyeColor).getBlock(), dyeColor)
+                    .unlockedBy("test", PlayerTrigger.TriggerInstance.tick())
+                    .group("stained_glass_pane")
+                    .save(recipeOutput.withConditions(zCond("framed_glass")), "quark:building/crafting/panes/dye/" + dyeColor.getName() + "_framed_glass_pane");
         }
         //hollowlogs
         for (Block sourceLog : HollowLogsModule.logMap.keySet()) {
@@ -284,6 +291,7 @@ public class QuarkRecipeProvider extends RecipeProvider implements IConditionBui
         for (DyeColor dyeColor : FramedGlassModule.paneMap.keySet()) {
             paneRecipe(FramedGlassModule.paneMap.get(dyeColor).getBlock(), FramedGlassModule.blockMap.get(dyeColor).getBlock())
                     .unlockedBy("test", PlayerTrigger.TriggerInstance.tick())
+                    .group("stained_glass_pane")
                     .save(recipeOutput.withConditions(zCond("framed_glass")), "quark:building/crafting/panes/" + dyeColor.getName() + "_framed_glass_pane");
         }
         paneRecipe(FramedGlassModule.framed_glass_pane, FramedGlassModule.framed_glass)
@@ -2149,7 +2157,20 @@ public class QuarkRecipeProvider extends RecipeProvider implements IConditionBui
                 .requires(FramedGlassModule.framed_glass)
                 .requires(FramedGlassModule.framed_glass)
                 .requires(FramedGlassModule.framed_glass)
-                .requires(DyeItem.byColor(dye));
+                .requires(DataUtil.getDyeItemTag(dye));
+    }
+
+    public static ShapelessRecipeBuilder dyedFramedGlassPaneRecipe(ItemLike output, DyeColor dye){
+        return ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, output, 8)
+                .requires(FramedGlassModule.framed_glass_pane)
+                .requires(FramedGlassModule.framed_glass_pane)
+                .requires(FramedGlassModule.framed_glass_pane)
+                .requires(FramedGlassModule.framed_glass_pane)
+                .requires(FramedGlassModule.framed_glass_pane)
+                .requires(FramedGlassModule.framed_glass_pane)
+                .requires(FramedGlassModule.framed_glass_pane)
+                .requires(FramedGlassModule.framed_glass_pane)
+                .requires(DataUtil.getDyeItemTag(dye));
     }
 
     public static ShapedRecipeBuilder paneRecipe(ItemLike output, ItemLike glass) {
@@ -2276,7 +2297,7 @@ public class QuarkRecipeProvider extends RecipeProvider implements IConditionBui
                 .pattern("SDS")
                 .pattern("SSS")
                 .define('S', ShinglesModule.blocks.getFirst())
-                .define('D', DyeItem.byColor(color))
+                .define('D', DataUtil.getDyeItemTag(color))
                 .unlockedBy("test", PlayerTrigger.TriggerInstance.tick())
                 .save(recipeOutput, "quark:building/crafting/shingles/" + color.getName() + "_shingles_dye");
     }

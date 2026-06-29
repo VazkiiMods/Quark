@@ -9,7 +9,7 @@
   "category": "building",
   "key": {
     "D": {
-      "item": "minecraft:light_gray_dye"
+      "tag": "c:dyes/light_gray"
     },
     "S": {
       "item": "quark:shingles"

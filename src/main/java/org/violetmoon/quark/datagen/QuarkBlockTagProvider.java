@@ -49,6 +49,12 @@ public class QuarkBlockTagProvider extends BlockTagsProvider {
         for (Block corundumCrystal : CorundumModule.crystals) {
             this.tag(QuarkTags.Blocks.CORUNDUM).add(corundumCrystal);
         }
+        for (Block corundumCrystal : CorundumModule.waxedCrystals) {
+            this.tag(QuarkTags.Blocks.WAXED_CORUNDUM).add(corundumCrystal);
+        }
+        for (Block corundumPane : CorundumModule.panes) {
+            this.tag(QuarkTags.Blocks.CORUNDUM_PANE).add(corundumPane);
+        }
         for (Block lamp : RainbowLampsModule.lamps) {
             this.tag(QuarkTags.Blocks.CRYSTAL_LAMP).add(lamp);
         }
@@ -59,8 +65,8 @@ public class QuarkBlockTagProvider extends BlockTagsProvider {
         for (Block stainedFramedGlass : FramedGlassModule.stainedFramedGlass) {
             this.tag(QuarkTags.Blocks.STAINED_FRAMED_GLASSES).add(stainedFramedGlass);
         }
-        for (Block stainedFramedGlass : FramedGlassModule.stainedFramedGlass) {
-            this.tag(QuarkTags.Blocks.STAINED_FRAMED_GLASSES).add(stainedFramedGlass);
+        for (Block stainedFramedGlass : FramedGlassModule.stainedFramedGlassPanes) {
+            this.tag(QuarkTags.Blocks.FRAMED_GLASS_PANES).add(stainedFramedGlass);
         }
 
         // Spawning
