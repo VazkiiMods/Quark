@@ -1,7 +1,7 @@
 package org.violetmoon.quark.integration.obe;
 
-import fr.madu59.obe.api.registry.RegistryApi;
-import fr.madu59.obe.util.BackportUtil;
+import fr.madu59.obe.client.api.registry.RegistryApi;
+import fr.madu59.obe.client.util.BackportUtil;
 import net.minecraft.client.renderer.Sheets;
 import net.minecraft.client.resources.model.Material;
 import net.minecraft.resources.ResourceLocation;

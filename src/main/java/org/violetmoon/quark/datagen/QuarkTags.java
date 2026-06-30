@@ -16,6 +16,8 @@ public class QuarkTags {
         public static final TagKey<Block> BLOSSOM_LOGS = tag("blossom_logs");
         public static final TagKey<Block> BREAKS_TORETOISE_ORE = tag("breaks_toretoise_ore");
         public static final TagKey<Block> CORUNDUM = tag("corundum");
+        public static final TagKey<Block> WAXED_CORUNDUM = tag("waxed_corundum");
+        public static final TagKey<Block> CORUNDUM_PANE = tag("corundum_pane");
         public static final TagKey<Block> CRAB_SPAWNABLE = tag("crab_spawnable");
         public static final TagKey<Block> CRYSTAL_LAMP = tag("crystal_lamp");
         public static final TagKey<Block> FALLEN_LOG_CAN_SPAWN_ON = tag("fallen_log_can_spawn_on");

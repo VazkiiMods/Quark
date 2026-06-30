@@ -10,6 +10,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
+import net.neoforged.neoforge.common.Tags;
 import org.violetmoon.quark.base.Quark;
 import org.violetmoon.quark.base.handler.WoodSetHandler;
 import org.violetmoon.quark.base.util.CorundumColor;
@@ -268,6 +269,10 @@ public class DataUtil {
         }
 
         return null;
+    }
+
+    public static TagKey<Item> getDyeItemTag(DyeColor dyeColor){
+        return dyeColor.getTag(); //this method is a neoforge patch I think?
     }
 
     //TODO we should never be doing this, there should be a way to reference every reg object as a constant/

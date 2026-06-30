@@ -9,7 +9,7 @@
   "category": "building",
   "key": {
     "D": {
-      "item": "minecraft:red_dye"
+      "tag": "c:dyes/red"
     },
     "S": {
       "item": "quark:shingles"

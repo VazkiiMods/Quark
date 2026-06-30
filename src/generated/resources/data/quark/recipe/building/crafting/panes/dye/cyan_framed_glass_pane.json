@@ -1,0 +1,44 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "zeta:flag",
+      "flag": "framed_glass"
+    }
+  ],
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "group": "stained_glass_pane",
+  "ingredients": [
+    {
+      "item": "quark:framed_glass_pane"
+    },
+    {
+      "item": "quark:framed_glass_pane"
+    },
+    {
+      "item": "quark:framed_glass_pane"
+    },
+    {
+      "item": "quark:framed_glass_pane"
+    },
+    {
+      "item": "quark:framed_glass_pane"
+    },
+    {
+      "item": "quark:framed_glass_pane"
+    },
+    {
+      "item": "quark:framed_glass_pane"
+    },
+    {
+      "item": "quark:framed_glass_pane"
+    },
+    {
+      "tag": "c:dyes/cyan"
+    }
+  ],
+  "result": {
+    "count": 8,
+    "id": "quark:cyan_framed_glass_pane"
+  }
+}

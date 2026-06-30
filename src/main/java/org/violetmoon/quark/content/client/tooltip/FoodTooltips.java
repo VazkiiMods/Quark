@@ -56,7 +56,7 @@ public class FoodTooltips {
 				int len = (int) Math.ceil((double) pips / ImprovedTooltipsModule.foodDivisor);
 
 				int saturationSimplified = 0;
-				float saturation = Math.min(20, food.saturation() * food.nutrition() * 2);
+				float saturation = Math.min(20, food.saturation());
 				if(saturation >= 19)
 					saturationSimplified = 5;
 				else if(saturation < 10) {
