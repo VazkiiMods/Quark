@@ -38,6 +38,7 @@ import org.violetmoon.quark.addons.oddities.client.screen.BackpackInventoryScree
 import org.violetmoon.quark.addons.oddities.client.screen.CrateScreen;
 import org.violetmoon.quark.addons.oddities.module.MatrixEnchantingModule;
 import org.violetmoon.quark.addons.oddities.util.Influence;
+import org.violetmoon.quark.addons.oddities.util.InfluenceLocations;
 import org.violetmoon.quark.base.Quark;
 import org.violetmoon.quark.base.components.QuarkDataComponents;
 import org.violetmoon.quark.content.building.module.VariantFurnacesModule;
@@ -188,17 +189,17 @@ public class QuarkJeiPlugin implements IModPlugin {
         registration.addRecipes(INFLUENCING,
                 Arrays.stream(DyeColor.values()).map(color -> {
                     Block candle = MatrixEnchantingTableBlockEntity.CANDLES.get(color.getId());
-                    Influence influence = MatrixEnchantingModule.candleInfluences.get(color).toInfluence();
+                    InfluenceLocations influenceLocations = MatrixEnchantingModule.candleInfluences.get(color);
 
-                    return new InfluenceEntry(candle, influence);
+                    return new InfluenceEntry(candle, influenceLocations);
                 }).filter(InfluenceEntry::hasAny).collect(Collectors.toList()));
 
         registration.addRecipes(INFLUENCING,
                 MatrixEnchantingModule.customInfluences.entrySet().stream().map(entry -> {
                     Block block = entry.getKey().getBlock();
-                    Influence influence = entry.getValue().influence().toInfluence();
+                    InfluenceLocations influenceLocations = entry.getValue().influence();
 
-                    return new InfluenceEntry(block, influence);
+                    return new InfluenceEntry(block, influenceLocations);
                 }).filter(InfluenceEntry::hasAny).collect(Collectors.toList()));
     }
 
