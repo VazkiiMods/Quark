@@ -33,6 +33,6 @@ public enum ToretoiseComponentProvider implements IEntityComponentProvider, ISer
 
     @Override
     public ResourceLocation getUid() {
-        return Quark.asResource("oretoise");
+        return Quark.asResource("oretoise_eating_cooldown");
     }
 }

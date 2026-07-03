@@ -297,7 +297,7 @@
 	"quark.jei.hint.minecraft.armor_stand": "Now has arms, allowing for an item plus a shield to be held.",
 
     "quark.jade.eating_cooldown": "Eating Cooldown: %ds",
-    "config.jade.plugin_quark.oretoise":  "Oretoise Eating Cooldown",
+    "config.jade.plugin_quark.oretoise_eating_cooldown":  "Oretoise Eating Cooldown",
 
 	"quark.keybind.change_hotbar": "Hotbar Swapper",
 	"quark.keybind.lock_rotation": "Rotation Lock",
