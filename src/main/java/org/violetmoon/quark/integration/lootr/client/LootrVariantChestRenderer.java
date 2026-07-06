@@ -9,8 +9,8 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.block.state.properties.ChestType;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
+import noobanidus.mods.lootr.common.api.LootrAPI;
 import noobanidus.mods.lootr.common.client.ClientHooks;
-import noobanidus.mods.lootr.neoforge.config.ConfigManager;
 import org.violetmoon.quark.base.Quark;
 import org.violetmoon.quark.content.building.module.VariantChestsModule;
 import org.violetmoon.quark.integration.lootr.LootrVariantChestBlockEntity;
@@ -47,14 +47,14 @@ public class LootrVariantChestRenderer<T extends LootrVariantChestBlockEntity> e
 				.append(v.getTexturePath())
 				.append('/');
 		if(isTrap) {
-			if(ConfigManager.isVanillaTextures())
+			if(LootrAPI.isVanillaTextures())
 				tex.append("trap");
 			else if(opened)
 				tex.append("lootr_trap_opened");
 			else
 				tex.append("lootr_trap");
 		} else {
-			if(ConfigManager.isVanillaTextures())
+			if(LootrAPI.isVanillaTextures())
 				tex.append("normal");
 			else if(opened)
 				tex.append("lootr_opened");
