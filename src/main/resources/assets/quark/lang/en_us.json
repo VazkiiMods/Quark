@@ -296,6 +296,9 @@
 	"quark.jei.hint.minecraft.lava_bucket": "Right click an item in your inventory onto the Lava Bucket to destroy it forever! Shulker Boxes and items that are immune to fire such as Netherite can not be destroyed this way.",
 	"quark.jei.hint.minecraft.armor_stand": "Now has arms, allowing for an item plus a shield to be held.",
 
+    "quark.jade.eating_cooldown": "Eating Cooldown: %ds",
+    "config.jade.plugin_quark.oretoise_eating_cooldown":  "Oretoise Eating Cooldown",
+
 	"quark.keybind.change_hotbar": "Hotbar Swapper",
 	"quark.keybind.lock_rotation": "Rotation Lock",
 	"quark.keybind.sort_container": "Sort Target Inventory",

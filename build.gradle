@@ -249,6 +249,9 @@ dependencies {
     // Spark, which while kinda an extra in a sense, I feel is vital enough to development and testing where it should be in.
     runtimeOnly("maven.modrinth:spark:${deps.spark_modrinth_file_id}")
 
+    // Jade
+    implementation "maven.modrinth:jade:${deps.jade_version}+neoforge"
+
     //Extra dev-env toys - only present in ClientBonus and ServerBonus run configs
     bonusRuntimeOnly("curse.maven:just-enough-resources-jer-240630:${deps.just_enough_resources_curse_file_id}")
     bonusRuntimeOnly("curse.maven:nofog-296468:${deps.nofog_curse_file_id}") //PLEASE WORK
