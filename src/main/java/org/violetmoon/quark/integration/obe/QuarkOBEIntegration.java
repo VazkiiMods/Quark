@@ -57,8 +57,7 @@ public class QuarkOBEIntegration {
             tex.append(VariantChestRenderer.choose(chestType, "trap", "trap_left", "trap_right"));
         else
             tex.append(VariantChestRenderer.choose(chestType, "normal", "left", "right"));
-        return new Material(Sheets.CHEST_SHEET, Quark.asResource(tex.toString())).texture();
-        //this material constructor is probably not required but it works so eh
+        return Quark.asResource(tex.toString());
     }
 
     private static ResourceLocation getLootrChestMaterial(BlockState blockState, BlockEntity blockEntity) {
@@ -96,7 +95,7 @@ public class QuarkOBEIntegration {
                 }
             }
 
-            return new Material(Sheets.CHEST_SHEET, Quark.asResource(tex.toString())).texture();
+            return Quark.asResource(tex.toString());
         }
         return getVariantChestMaterial(blockState);
     }

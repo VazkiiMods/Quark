@@ -84,24 +84,29 @@ public class GlassItemFrameRenderer extends EntityRenderer<GlassItemFrame> {
 		matrix.translate((double) direction.getStepX() * 0.46875D, (double) direction.getStepY() * 0.46875D, (double) direction.getStepZ() * 0.46875D);
 		matrix.mulPose(Axis.XP.rotationDegrees(frame.getXRot()));
 		matrix.mulPose(Axis.YP.rotationDegrees(180.0F - frame.getYRot()));
-		BlockRenderDispatcher blockrendererdispatcher = this.mc.getBlockRenderer();
-		ModelManager modelmanager = blockrendererdispatcher.getBlockModelShaper().getModelManager();
+		BlockRenderDispatcher blockRenderer = this.mc.getBlockRenderer();
+		ModelManager modelmanager = blockRenderer.getBlockModelShaper().getModelManager();
 
 		ItemStack itemstack = frame.getItem();
 
 		if(frame.getEntityData().get(GlassItemFrame.IS_SHINY))
-			light = 0xF000F0;
+			light = 15728880; //0xF000F0
 
 		if(itemstack.isEmpty()) {
 			matrix.pushPose();
 			matrix.translate(-0.5D, -0.5D, -0.5D);
-			blockrendererdispatcher.getModelRenderer().renderModel(matrix.last(), buffer.getBuffer(Sheets.cutoutBlockSheet()), null, modelmanager.getModel(LOCATION_MODEL), 1.0F, 1.0F, 1.0F, light, OverlayTexture.NO_OVERLAY);
+			blockRenderer.getModelRenderer().renderModel(matrix.last(), buffer.getBuffer(Sheets.cutoutBlockSheet()), null, modelmanager.getModel(LOCATION_MODEL), 1.0F, 1.0F, 1.0F, light, OverlayTexture.NO_OVERLAY);
 			matrix.popPose();
 		} else {
 			renderItemStack(frame, matrix, buffer, light, itemstack);
 		}
 
 		matrix.popPose();
+	}
+
+	@Override
+	protected int getBlockLightLevel(GlassItemFrame frame, BlockPos pos) {
+		return frame.getEntityData().get(GlassItemFrame.IS_SHINY) ? Math.max(ItemFrameRenderer.GLOW_FRAME_BRIGHTNESS, super.getBlockLightLevel(frame, pos)) : super.getBlockLightLevel(frame, pos);
 	}
 
 	@NotNull
