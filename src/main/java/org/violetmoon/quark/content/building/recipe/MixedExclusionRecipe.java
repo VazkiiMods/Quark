@@ -87,7 +87,7 @@ public class MixedExclusionRecipe implements CraftingRecipe {
                             first = stack;
                         else if (!ItemStack.isSameItem(first, stack)) {
                             foundDifference = true;
-                            break;
+                            //break;
                         }
                     } else {
                         return false;

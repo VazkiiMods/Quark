@@ -409,6 +409,10 @@ public class Toretoise extends Animal {
 		return entityData.get(ORE_TYPE);
 	}
 
+    public int getEatCooldown() {
+        return this.eatCooldown;
+    }
+
 	@Override
 	public void addAdditionalSaveData(@NotNull CompoundTag compound) {
 		super.addAdditionalSaveData(compound);
