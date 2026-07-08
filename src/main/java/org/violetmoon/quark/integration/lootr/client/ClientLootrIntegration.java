@@ -14,30 +14,30 @@ import org.violetmoon.zeta.event.bus.LoadEvent;
 
 public class ClientLootrIntegration implements IClientLootrIntegration {
 
-	private final LootrIntegration real = (LootrIntegration) Quark.LOOTR_INTEGRATION;
+	public static final LootrIntegration LOOTR_INTEGRATION = (LootrIntegration) Quark.LOOTR_INTEGRATION;
 
 	@Override
 	public void clientSetup(ZClientSetup event) {
-		BlockEntityRenderers.register(real.chestTEType, ctx -> new LootrVariantChestRenderer<>(ctx, false));
-		BlockEntityRenderers.register(real.trappedChestTEType, ctx -> new LootrVariantChestRenderer<>(ctx, true));
+		BlockEntityRenderers.register(LOOTR_INTEGRATION.chestTEType, ctx -> new LootrVariantChestRenderer<>(ctx, false));
+		BlockEntityRenderers.register(LOOTR_INTEGRATION.trappedChestTEType, ctx -> new LootrVariantChestRenderer<>(ctx, true));
 	}
 
 	@LoadEvent
 	public void setItemExtensions(ZRegisterClientExtension event) {
-		for (Block b : real.lootrRegularChests) {
+		for (Block b : LOOTR_INTEGRATION.lootrRegularChests) {
 			event.registerItem(new IZetaClientItemExtensions() {
 				@Override
 				public BlockEntityWithoutLevelRenderer getBEWLR() {
-					return new SimpleWithoutLevelRenderer(real.chestTEType, b.defaultBlockState());
+					return new SimpleWithoutLevelRenderer(LOOTR_INTEGRATION.chestTEType, b.defaultBlockState());
 				}
 			}, b.asItem());
 		}
 
-		for (Block b : real.lootrTrappedChests) {
+		for (Block b : LOOTR_INTEGRATION.lootrTrappedChests) {
 			event.registerItem(new IZetaClientItemExtensions() {
 				@Override
 				public BlockEntityWithoutLevelRenderer getBEWLR() {
-					return new SimpleWithoutLevelRenderer(real.trappedChestTEType, b.defaultBlockState());
+					return new SimpleWithoutLevelRenderer(LOOTR_INTEGRATION.trappedChestTEType, b.defaultBlockState());
 				}
 			}, b.asItem());
 		}
