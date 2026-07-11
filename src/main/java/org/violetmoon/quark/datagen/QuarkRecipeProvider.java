@@ -661,7 +661,7 @@ public class QuarkRecipeProvider extends RecipeProvider implements IConditionBui
                 .define('#', NewStoneTypesModule.polishedBlocks.get(NewStoneTypesModule.myaliteBlock))
                 .unlockedBy("test", PlayerTrigger.TriggerInstance.tick())
                 .save(recipeOutput.withConditions(and(zCond("stone_bricks"), zCond("myalite"))), "quark:building/crafting/stonevariants/worldstones/myalite_bricks");
-        stoneVariantsChiseledAndPillar("myalite", zCond("myalite"), MoreStoneVariantsModule.blocks.get(25), MoreStoneVariantsModule.blocks.get(25), Quark.ZETA.variantRegistry.slabs.get(MoreStoneVariantsModule.blocks.get(24)), Quark.ZETA.variantRegistry.slabs.get(NewStoneTypesModule.polishedBlocks.get(NewStoneTypesModule.myaliteBlock)), recipeOutput);
+        stoneVariantsChiseledAndPillar("myalite", zCond("myalite"), MoreStoneVariantsModule.blocks.get(25), MoreStoneVariantsModule.blocks.get(26), Quark.ZETA.variantRegistry.slabs.get(MoreStoneVariantsModule.blocks.get(24)), Quark.ZETA.variantRegistry.slabs.get(NewStoneTypesModule.polishedBlocks.get(NewStoneTypesModule.myaliteBlock)), recipeOutput);
         //no polished tuff/tuff bricks, they are vanilla now
 
         //vertplanks (world category vertplanks next)

@@ -5,6 +5,7 @@ Fixed an issue where you could craft chests and furnaces with anything (yes, rea
 # Fixes
 - Fixed #5556: [1.21.1] Candle Influencing not showing in JEI (thanks Klisz)
 - Fixed #5611: unexpected behaviour with "quark:mixed_exclusion"-type recipes (mixed chest and furnace) 
+- Fixed #5620: Myalite Pillar Crafting recipe broken
 - Fixed Matrix Enchanting Influencing recipes not being pulled up in JEI when pressing the Recipes key on an Enchanted Book with one stored enchantment
 
 # Changes
