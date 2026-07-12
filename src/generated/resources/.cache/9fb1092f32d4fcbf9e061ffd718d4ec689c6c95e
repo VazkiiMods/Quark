@@ -1,4 +1,4 @@
-// 1.21.1	2026-07-11T10:08:21.3422849	Recipes
+// 1.21.1	2026-07-12T14:33:40.3003714	Recipes
 bb24f1bac2cb3ef401eb56f32a5b7364bcee7552 data/quark/advancement/recipes/building_blocks/building/crafting/bamboo_mat.json
 31f4957990f1d18f202f816de898f77458b18140 data/quark/advancement/recipes/building_blocks/building/crafting/bamboo_mat_carpet.json
 8df9c4ad585c2226233ee6e8f7bc96f33806df86 data/quark/advancement/recipes/building_blocks/building/crafting/blackstone_bricks.json
@@ -41,6 +41,8 @@ bb4f03598bb9bb733196c442d9b749a9fd9a9276 data/quark/advancement/recipes/building
 dd9181784ca5bb86e1983492cfebb69564c751f9 data/quark/advancement/recipes/building_blocks/building/crafting/midori_block.json
 c1d54f18ae197cfc950a09decf67c19ba98bb23d data/quark/advancement/recipes/building_blocks/building/crafting/midori_pillar.json
 d4edad31e96ad9c53645625ad99373ccbcc15145 data/quark/advancement/recipes/building_blocks/building/crafting/mossy_cobblestone_bricks.json
+17abd1971a9a8513dd442bc57d41c51f8b8cf716 data/quark/advancement/recipes/building_blocks/building/crafting/mossy_cobblestone_bricks_from_moss_block.json
+0f5b55742bd391e496e7c837dd86b223215fd1fd data/quark/advancement/recipes/building_blocks/building/crafting/mossy_cobblestone_bricks_from_vine.json
 3433180a75354953fd8611d9f6fb4c8924812409 data/quark/advancement/recipes/building_blocks/building/crafting/mud_brick_lattice.json
 45c7883f473d6877517d99c7e79f886123216ad8 data/quark/advancement/recipes/building_blocks/building/crafting/mud_pillar.json
 24fb84e81507497c19f197ba91c59467bceb0384 data/quark/advancement/recipes/building_blocks/building/crafting/netherrack_bricks.json
@@ -1186,6 +1188,8 @@ ad70a52d47426fc0ba7ea984a8beade68202e61a data/quark/recipe/building/crafting/lea
 bdf3615b9d227f6a24cdf0b7825013446b23ffca data/quark/recipe/building/crafting/midori_block.json
 d175dbbc27b568eec8c7b36ea469c006113f7c11 data/quark/recipe/building/crafting/midori_pillar.json
 84cc0c8a4fe35b1847d445f62867866ac0e53947 data/quark/recipe/building/crafting/mossy_cobblestone_bricks.json
+8b5e88eaa8ea72cbb8f71b424f824352e5feed15 data/quark/recipe/building/crafting/mossy_cobblestone_bricks_from_moss_block.json
+dfe6fdb3a95438d8431707c09912f7e19c3f16c6 data/quark/recipe/building/crafting/mossy_cobblestone_bricks_from_vine.json
 09a7161c5310c866217f5fba2363a0e0e44e90aa data/quark/recipe/building/crafting/mud_brick_lattice.json
 c1dd0ab736be6e641837a04e1933cda83149a239 data/quark/recipe/building/crafting/mud_pillar.json
 0675f45091a47c1e61b9b0c827cbe49b795b8195 data/quark/recipe/building/crafting/netherrack_bricks.json

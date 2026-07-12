@@ -119,6 +119,7 @@ public class Quark {
 		CONDITIONAL_TAG_PACKS.put("quark_ct_variant_bookshelves", VariantBookshelvesModule.staticEnabled);
 		CONDITIONAL_TAG_PACKS.put("quark_ct_framed_glass", FramedGlassModule.staticEnabled);
 		CONDITIONAL_TAG_PACKS.put("quark_ct_variant_ladders", VariantLaddersModule.staticEnabled);
+		CONDITIONAL_TAG_PACKS.put("quark_ct_crabs", CrabsModule.staticEnabled);
 
 		if (event.getPackType() == PackType.SERVER_DATA) {
 			for(String ctPack : CONDITIONAL_TAG_PACKS.keySet()){

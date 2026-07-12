@@ -1321,6 +1321,16 @@ public class QuarkRecipeProvider extends RecipeProvider implements IConditionBui
                 .define('#', Blocks.MOSSY_COBBLESTONE)
                 .unlockedBy("test", PlayerTrigger.TriggerInstance.tick())
                 .save(recipeOutput.withConditions(zCond("cobblestone_bricks")), "quark:building/crafting/mossy_cobblestone_bricks");
+        ShapelessRecipeBuilder.shapeless(RecipeCategory.BUILDING_BLOCKS, MoreBrickTypesModule.blocks.get(5), 1)
+                        .requires(MoreBrickTypesModule.blocks.get(4))
+                        .requires(Blocks.MOSS_BLOCK)
+                        .unlockedBy("test", PlayerTrigger.TriggerInstance.tick())
+                        .save(recipeOutput.withConditions(zCond("cobblestone_bricks")), "quark:building/crafting/mossy_cobblestone_bricks_from_moss_block");
+        ShapelessRecipeBuilder.shapeless(RecipeCategory.BUILDING_BLOCKS, MoreBrickTypesModule.blocks.get(5), 1)
+                        .requires(MoreBrickTypesModule.blocks.get(4))
+                        .requires(Blocks.VINE)
+                        .unlockedBy("test", PlayerTrigger.TriggerInstance.tick())
+                        .save(recipeOutput.withConditions(zCond("cobblestone_bricks")), "quark:building/crafting/mossy_cobblestone_bricks_from_vine");
         ShapedRecipeBuilder.shaped(RecipeCategory.BUILDING_BLOCKS, MoreBrickTypesModule.blocks.get(6), 4)
                 .pattern("C#")
                 .pattern("##")

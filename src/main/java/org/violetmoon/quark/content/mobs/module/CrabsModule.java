@@ -40,6 +40,7 @@ import org.violetmoon.zeta.config.type.EntitySpawnConfig;
 import org.violetmoon.zeta.event.bus.LoadEvent;
 import org.violetmoon.zeta.event.bus.PlayEvent;
 import org.violetmoon.zeta.event.load.ZCommonSetup;
+import org.violetmoon.zeta.event.load.ZConfigChanged;
 import org.violetmoon.zeta.event.load.ZEntityAttributeCreation;
 import org.violetmoon.zeta.event.load.ZRegister;
 import org.violetmoon.zeta.event.play.loading.ZVillagerTrades;
@@ -61,6 +62,8 @@ import java.util.Set;
  */
 @ZetaLoadModule(category = "mobs")
 public class CrabsModule extends ZetaModule {
+
+	public static boolean staticEnabled;
 
 	public static EntityType<Crab> crabType;
 
@@ -165,5 +168,10 @@ public class CrabsModule extends ZetaModule {
 		public final void clientSetup(ZClientSetup event) {
 			EntityRenderers.register(crabType, CrabRenderer::new);
 		}
+	}
+
+	@LoadEvent
+	public final void configChanged(ZConfigChanged event) {
+		staticEnabled = isEnabled();
 	}
 }
