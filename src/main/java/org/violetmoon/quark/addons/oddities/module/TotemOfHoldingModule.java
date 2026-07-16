@@ -53,6 +53,10 @@ public class TotemOfHoldingModule extends ZetaModule {
 	@Config(description = "Set this to false to only allow the owner of a totem to collect its items rather than any player")
 	public static boolean allowAnyoneToCollect = true;
 
+	@Config(description = "How many items does the totem of holding drop on each hit? (Set to -1 to drop everything the first hit)")
+	public static int minDropsRecoveredPerHit = 3;
+	public static int maxDropsRecoveredPerHit = 6;
+
 	@LoadEvent
 	public final void register(ZRegister event) {
 		totemType = EntityType.Builder.of(TotemOfHoldingEntity::new, MobCategory.MISC)
