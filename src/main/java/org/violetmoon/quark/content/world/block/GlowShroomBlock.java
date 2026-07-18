@@ -20,6 +20,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import org.violetmoon.quark.base.Quark;
+import org.violetmoon.quark.content.world.feature.GlowShroomsFeature;
 import org.violetmoon.zeta.block.ZetaBushBlock;
 import org.violetmoon.zeta.module.ZetaModule;
 
@@ -73,7 +74,7 @@ public class GlowShroomBlock extends ZetaBushBlock implements BonemealableBlock 
 
 	@Override
 	public void performBonemeal(@NotNull ServerLevel world, @NotNull RandomSource random, @NotNull BlockPos pos, @NotNull BlockState state) {
-		HugeGlowShroomBlock.place(world, random, pos);
+		GlowShroomsFeature.placeHugeGlowShroom(world, random, pos);
 	}
 
 }

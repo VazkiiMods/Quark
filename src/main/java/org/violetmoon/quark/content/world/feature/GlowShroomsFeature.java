@@ -6,7 +6,9 @@ import net.minecraft.core.Direction;
 import net.minecraft.data.worldgen.placement.PlacementUtils;
 import net.minecraft.util.RandomSource;
 import net.minecraft.util.valueproviders.ConstantInt;
+import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.WorldGenLevel;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.blockpredicates.BlockPredicate;
@@ -20,8 +22,10 @@ import net.minecraft.world.level.levelgen.placement.InSquarePlacement;
 import net.minecraft.world.level.levelgen.placement.PlacementModifier;
 import net.minecraft.world.level.levelgen.placement.RandomOffsetPlacement;
 
+import org.violetmoon.quark.content.world.block.GlowShroomRingBlock;
 import org.violetmoon.quark.content.world.block.HugeGlowShroomBlock;
 import org.violetmoon.quark.content.world.module.GlimmeringWealdModule;
+import org.violetmoon.zeta.util.MiscUtil;
 
 import java.util.Arrays;
 import java.util.List;
@@ -64,7 +68,7 @@ public class GlowShroomsFeature extends Feature<NoneFeatureConfiguration> {
 
 					if(worldgenlevel.isStateAtPosition(setPos, s -> s.getBlock() == Blocks.DEEPSLATE) && worldgenlevel.isStateAtPosition(setPos.above(), BlockState::isAir)) {
 						if(rng.nextDouble() < 0.08) {
-							boolean placeSmall = !HugeGlowShroomBlock.place(worldgenlevel, rng, setPos.above());
+							boolean placeSmall = !placeHugeGlowShroom(worldgenlevel, rng, setPos.above());
 
 							if(placeSmall)
 								worldgenlevel.setBlock(setPos.above(), GlimmeringWealdModule.glow_shroom.defaultBlockState(), 2);
@@ -73,6 +77,69 @@ public class GlowShroomsFeature extends Feature<NoneFeatureConfiguration> {
 				}
 
 		return true;
+	}
+
+	public static boolean placeHugeGlowShroom(LevelAccessor worldIn, RandomSource rand, BlockPos pos) {
+		Block block = worldIn.getBlockState(pos.below()).getBlock();
+		if(block != Blocks.DEEPSLATE) {
+			return false;
+		} else {
+			BlockPos placePos = pos;
+
+			BlockState stem = GlimmeringWealdModule.glow_shroom_stem.defaultBlockState();
+			BlockState ring = GlimmeringWealdModule.glow_shroom_ring.defaultBlockState();
+			BlockState cap = GlimmeringWealdModule.glow_shroom_block.defaultBlockState().setValue(HugeGlowShroomBlock.DOWN, false);
+
+			int stemHeight1 = 2;
+			int stemHeight2 = rand.nextInt(4);
+			boolean hasBigCap = rand.nextDouble() < 0.6;
+
+			// Check if it has space
+			int totalHeight = stemHeight1 + stemHeight2 + (hasBigCap ? 2 : 1);
+			int horizCheck = 2;
+
+			for(int i = -horizCheck; i < horizCheck + 1; i++)
+				for(int j = -horizCheck; j < horizCheck + 1; j++)
+					for(int k = 1; k < totalHeight; k++) // start at 1 cuz ground layer doesn't matter
+						if(!worldIn.getBlockState(placePos.offset(i, k, j)).isAir())
+							return false;
+
+			// Stem #1
+			for(int i = 0; i < stemHeight1; i++) {
+				worldIn.setBlock(placePos, stem, 2);
+				placePos = placePos.above();
+			}
+
+			// Offset stem in random direction
+			if(stemHeight2 > 0) {
+				Direction dir = MiscUtil.HORIZONTALS[rand.nextInt(MiscUtil.HORIZONTALS.length)];
+				placePos = placePos.relative(dir);
+			}
+
+			// Stem #2
+			for(int i = 0; i < stemHeight2; i++) {
+				worldIn.setBlock(placePos, stem, 2);
+				placePos = placePos.above();
+			}
+
+			// Place rings on top of stem
+			int ringHeight = Math.min(2, stemHeight2);
+			for(int i = 0; i < ringHeight; i++) {
+				for(Direction ringDir : MiscUtil.HORIZONTALS)
+					worldIn.setBlock(placePos.relative(ringDir).relative(Direction.DOWN, i + 1), ring.setValue(GlowShroomRingBlock.FACING, ringDir), 2);
+			}
+
+			// Cap
+			for(int i = -1; i < 2; i++)
+				for(int j = -1; j < 2; j++)
+					worldIn.setBlock(placePos.offset(i, 0, j), cap, 2);
+
+			// Triangle cap
+			if(hasBigCap)
+				worldIn.setBlock(placePos.above(), cap, 2);
+
+			return true;
+		}
 	}
 
 }
