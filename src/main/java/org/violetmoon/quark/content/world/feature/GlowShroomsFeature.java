@@ -106,7 +106,7 @@ public class GlowShroomsFeature extends Feature<GlowShroomsFeatureConfiguration>
 					BlockPos relativePos = placePos.relative(ringDir).relative(Direction.DOWN, i + 1);
 					BlockState ring = config.ringProvider().getState(rand, relativePos);
 					if(ring.hasProperty(GlowShroomRingBlock.FACING))
-						ring.setValue(GlowShroomRingBlock.FACING, ringDir);
+						ring = ring.setValue(GlowShroomRingBlock.FACING, ringDir);
 					worldIn.setBlock(relativePos, ring, 2);
 				}
 			}
