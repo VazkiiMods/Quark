@@ -3,18 +3,20 @@ package org.violetmoon.quark.content.world.feature;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.BlockPos.MutableBlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.data.worldgen.placement.PlacementUtils;
+import net.minecraft.tags.TagKey;
 import net.minecraft.util.RandomSource;
 import net.minecraft.util.valueproviders.ConstantInt;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.WorldGenLevel;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.blockpredicates.BlockPredicate;
 import net.minecraft.world.level.levelgen.feature.Feature;
 import net.minecraft.world.level.levelgen.feature.FeaturePlaceContext;
 import net.minecraft.world.level.levelgen.placement.*;
+import org.violetmoon.quark.base.Quark;
 import org.violetmoon.quark.content.world.block.GlowShroomRingBlock;
 import org.violetmoon.quark.content.world.module.GlimmeringWealdModule;
 import org.violetmoon.zeta.util.MiscUtil;
@@ -23,6 +25,8 @@ import java.util.Arrays;
 import java.util.List;
 
 public class GlowShroomsFeature extends Feature<GlowShroomsFeatureConfiguration> {
+
+	protected static final TagKey<Block> GLOW_SHROOM_GROW_BLOCK = Quark.asTagKey(Registries.BLOCK, "glow_shroom_grow_block");
 
 	public GlowShroomsFeature() {
 		super(GlowShroomsFeatureConfiguration.CODEC);
@@ -54,8 +58,8 @@ public class GlowShroomsFeature extends Feature<GlowShroomsFeatureConfiguration>
 	}
 
 	public static boolean placeHugeGlowShroom(LevelAccessor worldIn, RandomSource rand, BlockPos pos, GlowShroomsFeatureConfiguration config) {
-		Block block = worldIn.getBlockState(pos.below()).getBlock();
-		if(block != Blocks.DEEPSLATE) {
+		BlockState state = worldIn.getBlockState(pos.below());
+		if(!state.is(GLOW_SHROOM_GROW_BLOCK)) {
 			return false;
 		} else {
 			BlockPos placePos = pos;
