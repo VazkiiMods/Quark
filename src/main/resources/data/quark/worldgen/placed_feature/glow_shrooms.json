@@ -1,8 +1,5 @@
 {
-  "feature":   {
-    "config": {},
-    "type": "quark:glow_shrooms"
-  },
+  "feature": "quark:glow_shrooms",
   "placement": [
     {
       "count": 125,
