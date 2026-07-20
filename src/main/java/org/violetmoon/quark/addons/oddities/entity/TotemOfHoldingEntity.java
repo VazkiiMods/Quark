@@ -36,7 +36,7 @@ import java.util.List;
 
 /**
  * @author WireSegal
- * Created at 1:34 PM on 3/30/20.
+ *         Created at 1:34 PM on 3/30/20.
  */
 public class TotemOfHoldingEntity extends Entity {
     private static final String TAG_ITEMS = "storedItems";
@@ -75,9 +75,9 @@ public class TotemOfHoldingEntity extends Entity {
     }
 
     private Player getOwnerEntity() {
-        for (Player player : level().players()) {
+        for(Player player : level().players()) {
             String uuid = player.getUUID().toString();
-            if (uuid.equals(owner))
+            if(uuid.equals(owner))
                 return player;
         }
         return null;
@@ -145,18 +145,18 @@ public class TotemOfHoldingEntity extends Entity {
     @Override
     public void tick() {
         super.tick();
-        if (!isAlive()) return;
+        if(!isAlive()) return;
 
         if (TotemOfHoldingModule.darkSoulsMode) {
             Player owner = getOwnerEntity();
-            if (owner != null && !level().isClientSide) {
+            if(owner != null && !level().isClientSide) {
                 String ownerTotem = TotemOfHoldingModule.getTotemUUID(owner);
-                if (!getUUID().toString().equals(ownerTotem))
+                if(!getUUID().toString().equals(ownerTotem))
                     dropEverythingAndDie();
             }
         }
 
-        if (storedItems.isEmpty() && !level().isClientSide)
+        if(storedItems.isEmpty() && !level().isClientSide)
             entityData.set(DYING, true);
 
         if (isDying()) {
@@ -169,14 +169,14 @@ public class TotemOfHoldingEntity extends Entity {
     }
 
     private void dropEverythingAndDie() {
-        if (!TotemOfHoldingModule.destroyLostItems)
-            for (ItemStack storedItem : storedItems)
+        if(!TotemOfHoldingModule.destroyLostItems)
+            for(ItemStack storedItem : storedItems)
                 spawnAtLocation(storedItem, 0);
 
         storedItems.clear();
         equipedCurios.clear();
         Player owner = getOwnerEntity();
-        if (owner != null && !level().isClientSide) {
+        if(owner != null && !level().isClientSide) {
             owner.sendSystemMessage(Component.translatable("quark.misc.totem_darksouls").withStyle(ChatFormatting.BOLD));
         }
 
@@ -198,7 +198,7 @@ public class TotemOfHoldingEntity extends Entity {
         storedItems = new LinkedList<>();
         equipedCurios = new LinkedList<>();
 
-        for (int i = 0; i < list.size(); i++) {
+        for(int i = 0; i < list.size(); i++) {
             CompoundTag cmp = list.getCompound(i);
             ItemStack stack = ItemStack.parseOptional(level().registryAccess(), cmp);
             storedItems.add(stack);
@@ -221,7 +221,7 @@ public class TotemOfHoldingEntity extends Entity {
         ListTag list = new ListTag();
         ListTag curiosList = new ListTag();
 
-        for (ItemStack stack : storedItems) {
+        for(ItemStack stack : storedItems) {
             list.add(stack.save(level().registryAccess()));
         }
 
@@ -234,7 +234,7 @@ public class TotemOfHoldingEntity extends Entity {
         compound.put(TAG_ITEMS, list);
         compound.put(TAG_CURIOS, curiosList);
         compound.putBoolean(TAG_DYING, isDying());
-        if (owner != null)
+        if(owner != null)
             compound.putString(TAG_OWNER, owner);
     }
 
