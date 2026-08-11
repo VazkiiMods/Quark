@@ -53,6 +53,9 @@ public class TotemOfHoldingModule extends ZetaModule {
 	@Config(description = "Set this to false to only allow the owner of a totem to collect its items rather than any player")
 	public static boolean allowAnyoneToCollect = true;
 
+	@Config(description = "Set this to true to drop everything when punched")
+	public static boolean dropAllItemsOnHit = false;
+
 	@LoadEvent
 	public final void register(ZRegister event) {
 		totemType = EntityType.Builder.of(TotemOfHoldingEntity::new, MobCategory.MISC)

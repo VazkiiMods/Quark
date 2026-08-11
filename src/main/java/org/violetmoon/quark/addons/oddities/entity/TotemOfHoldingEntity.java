@@ -87,7 +87,9 @@ public class TotemOfHoldingEntity extends Entity {
 		if (level() instanceof ServerLevel serverLevel && entity instanceof Player player) {
 			if (!TotemOfHoldingModule.allowAnyoneToCollect && !player.hasInfiniteMaterials() && entity != getOwnerEntity()) return false;
 
-			int drops = Math.min(storedItems.size(), 3 + level().random.nextInt(4));
+            int drops = storedItems.size();
+			if(!TotemOfHoldingModule.dropAllItemsOnHit)
+				drops = Math.min(storedItems.size(), 3 + level().random.nextInt(4));
 
 			for (int i = 0; i < drops; i++) {
 				ItemStack stack = storedItems.removeFirst();
