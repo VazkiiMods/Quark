@@ -35,6 +35,8 @@ import org.apache.logging.log4j.Logger;
 import org.spongepowered.asm.mixin.MixinEnvironment;
 import org.violetmoon.quark.addons.oddities.block.be.CrateBlockEntity;
 import org.violetmoon.quark.addons.oddities.block.be.PipeBlockEntity;
+import org.violetmoon.quark.addons.oddities.inventory.BackpackItemHandler;
+import org.violetmoon.quark.addons.oddities.module.BackpackModule;
 import org.violetmoon.quark.addons.oddities.module.CrateModule;
 import org.violetmoon.quark.addons.oddities.module.PipesModule;
 import org.violetmoon.quark.base.config.QuarkGeneralConfig;
@@ -226,6 +228,7 @@ public class Quark {
 		event.registerBlock(Capabilities.ItemHandler.BLOCK, (level, pos, state, blockEntity, side) -> new InvWrapper((CrateBlockEntity)blockEntity), CrateModule.crate);
 		event.registerBlock(Capabilities.ItemHandler.BLOCK, (level, pos, state, blockEntity, side) -> new SidedInvWrapper((AbstractFurnaceBlockEntity)blockEntity, side), VariantFurnacesModule.blackstoneFurnace, VariantFurnacesModule.deepslateFurnace);
 
+		event.registerItem(Capabilities.ItemHandler.ITEM, (stack, ctx) -> new BackpackItemHandler(stack), BackpackModule.backpack);
 	}
 
 	@SubscribeEvent

@@ -239,26 +239,6 @@ public class BackpackItem extends ArmorItem implements IZetaItem, IZetaItemExten
 		return false;
 	}
 
-	//TODO: IForgeItem
-	/*@NotNull
-	@Override
-	public IC initCapabilities(ItemStack stack, CompoundTag oldCapNbt) {
-		ProxiedItemStackHandler handler = new ProxiedItemStackHandler(stack, 27);
-
-		if(oldCapNbt != null && oldCapNbt.contains("Parent")) {
-			CompoundTag itemData = oldCapNbt.getCompound("Parent");
-			ItemStackHandler stacks = new ItemStackHandler();
-			stacks.deserializeNBT(itemData);
-
-			for(int i = 0; i < stacks.getSlots(); i++)
-				handler.setStackInSlot(i, stacks.getStackInSlot(i));
-
-			oldCapNbt.remove("Parent");
-		}
-
-		return handler;
-	}*/
-
 	public static ItemAttributeModifiers createAttributes(){
 		return ItemAttributeModifiers.builder().build();
 	}
