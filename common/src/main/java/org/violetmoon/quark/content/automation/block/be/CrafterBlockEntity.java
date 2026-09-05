@@ -127,33 +127,38 @@ public class CrafterBlockEntity extends BaseContainerBlockEntity implements Craf
 		}
 		ContainerHelper.loadAllItems(nbt, stacks);
 	}
-
+	public boolean insert_or_drop(ItemStack outputStack)
+	{
+		if (itemStack.isEmpty()) {
+			return false;
+		}
+	//	BlockSource blockSource = new BlockSource(sw, worldPosition, this.getBlockState(), null);
+		BlockSource blockSource = new BlockSourceImpl(sw, worldPosition);
+		Direction direction = this.getBlockState().getValue(CrafterBlock.FACING);
+		Container inventory = HopperBlockEntity.getContainerAt(level, worldPosition.relative(direction));
+		if (inventory == null) {
+			BEHAVIOR.dispense(blockSource, outputStack);
+		} else {
+			if (!hasSpace(inventory, direction, outputStack)) {
+				return false;
+			}
+			if (inventory instanceof CrafterBlockEntity) {
+				int count = output.getCount();
+				for (int i = 0; i < count; i++) {
+					ItemStack is = outputStack.copy();
+					is.setCount(1);
+					HopperBlockEntity.addItem(result, inventory, is, direction.getOpposite());
+				}
+			} else {
+				HopperBlockEntity.addItem(result, inventory, outputStack, direction.getOpposite());
+			}
+		}
+		return true;
+	}
 	public void craft() {
 		if (level instanceof ServerLevel sw) {
-			//			BlockSource blockSource = new BlockSource(sw, worldPosition, this.getBlockState(), null);
-			update();
-			BlockSource blockSource = new BlockSourceImpl(sw, worldPosition);
-			ItemStack itemStack = result.getItem(0);
-			if (!itemStack.isEmpty()) {
-				Direction direction = this.getBlockState().getValue(CrafterBlock.FACING);
-				Container inventory = HopperBlockEntity.getContainerAt(level, worldPosition.relative(direction));
-				if (inventory == null) {
-					BEHAVIOR.dispense(blockSource, itemStack);
-				} else {
-					if (!hasSpace(inventory, direction, itemStack)) {
-						return;
-					}
-					if (inventory instanceof CrafterBlockEntity) {
-						int count = itemStack.getCount();
-						for (int i = 0; i < count; i++) {
-							ItemStack is = itemStack.copy();
-							is.setCount(1);
-							HopperBlockEntity.addItem(result, inventory, is, direction.getOpposite());
-						}
-					} else {
-						HopperBlockEntity.addItem(result, inventory, itemStack, direction.getOpposite());
-					}
-				}
+			update();;
+			if(insert_or_drop(result.getItem(0)))
 				takeItems();
 				update();
 			}
@@ -193,7 +198,6 @@ public class CrafterBlockEntity extends BaseContainerBlockEntity implements Craf
 		NonNullList<ItemStack> defaultedList = level.getRecipeManager().getRemainingItemsFor(RecipeType.CRAFTING, this, level);
 
 		if(level instanceof ServerLevel serverLevel) {
-			BlockSource blockSource = new BlockSourceImpl(serverLevel, worldPosition);
 			for(int i = 0; i < defaultedList.size(); ++i) {
 				ItemStack itemInCrafter = this.getItem(i);
 				ItemStack remainingItem = defaultedList.get(i);
@@ -201,7 +205,7 @@ public class CrafterBlockEntity extends BaseContainerBlockEntity implements Craf
 				if(remainingItem.isEmpty())
 					itemInCrafter.shrink(1);
 				else {
-					BEHAVIOR.dispense(blockSource, remainingItem);
+					insert_or_drop(remainingItem);
 					itemInCrafter.shrink(itemInCrafter.getCount());
 				}
 			}
