@@ -22,7 +22,6 @@ import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.world.inventory.tooltip.TooltipComponent;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeType;
-import org.violetmoon.zeta.event.play.ZFurnaceFuelBurnTime;
 
 public class FuelTooltips {
 

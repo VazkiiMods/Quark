@@ -1,6 +1,5 @@
 package org.violetmoon.quark.content.tweaks.module;
 
-import com.google.common.cache.Cache;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Lists;
 import net.minecraft.advancements.Advancement;

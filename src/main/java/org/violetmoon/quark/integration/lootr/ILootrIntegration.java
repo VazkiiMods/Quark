@@ -6,7 +6,6 @@ import net.minecraft.world.level.block.entity.ChestBlockEntity;
 import org.jetbrains.annotations.Nullable;
 import org.violetmoon.zeta.module.ZetaModule;
 
-import java.util.Map;
 import java.util.function.BooleanSupplier;
 
 /**

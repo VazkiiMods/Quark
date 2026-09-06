@@ -37,7 +37,6 @@ import org.violetmoon.quark.addons.oddities.block.be.MatrixEnchantingTableBlockE
 import org.violetmoon.quark.addons.oddities.client.screen.BackpackInventoryScreen;
 import org.violetmoon.quark.addons.oddities.client.screen.CrateScreen;
 import org.violetmoon.quark.addons.oddities.module.MatrixEnchantingModule;
-import org.violetmoon.quark.addons.oddities.util.Influence;
 import org.violetmoon.quark.addons.oddities.util.InfluenceLocations;
 import org.violetmoon.quark.base.Quark;
 import org.violetmoon.quark.base.components.QuarkDataComponents;

@@ -7,8 +7,6 @@ import fr.madu59.obe.client.registry.SpecialModelGetter;
 import fr.madu59.obe.client.util.BackportUtil;
 import fr.madu59.obe.client.util.blockentity.ChestUtil;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.Sheets;
-import net.minecraft.client.resources.model.Material;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.ChestBlock;

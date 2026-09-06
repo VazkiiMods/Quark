@@ -37,7 +37,6 @@ import org.violetmoon.quark.base.Quark;
 import org.violetmoon.quark.base.components.QuarkDataComponents;
 import org.violetmoon.quark.catnip.animation.AnimationTickHolder;
 import org.violetmoon.quark.content.tools.item.PathfindersQuillItem;
-import org.violetmoon.quark.content.tools.loot.EnchantTome;
 import org.violetmoon.quark.content.tools.loot.InBiomeCondition;
 import org.violetmoon.quark.content.tools.loot.PathfindersQuillFunction;
 import org.violetmoon.zeta.advancement.ManualTrigger;

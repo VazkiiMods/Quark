@@ -2,7 +2,6 @@ package org.violetmoon.quark.content.world.gen;
 
 import java.util.List;
 
-import net.minecraft.ReportedException;
 import org.violetmoon.quark.base.Quark;
 import org.violetmoon.quark.content.world.module.FairyRingsModule;
 import org.violetmoon.zeta.config.type.DimensionConfig;
