@@ -8,6 +8,8 @@ import net.minecraft.core.Holder;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.component.DataComponentType;
 import net.minecraft.core.component.DataComponents;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
@@ -27,24 +29,24 @@ public class EnchantmentHelperMixin {
 		return GoldToolsHaveFortuneModule.modifyFortuneLooting(holder, stack, original);
 	}
 
-	/*
-
-	old implementation - moved to Quark::onGetEnchantmentLevelEvent
-
 	@WrapOperation(method = "runIterationOnItem(Lnet/minecraft/world/item/ItemStack;Lnet/minecraft/world/item/enchantment/EnchantmentHelper$EnchantmentVisitor;)V",
 			at = @At(value = "INVOKE",
 					target = "Lnet/minecraft/world/item/ItemStack;getAllEnchantments(Lnet/minecraft/core/HolderLookup$RegistryLookup;)Lnet/minecraft/world/item/enchantment/ItemEnchantments;"))
-	private static ItemEnchantments modifyComponentEnchantLevel(ItemStack stack, HolderLookup.RegistryLookup<Enchantment> registryLookup, Operation<ItemEnchantments> original) {
-		return GoldToolsHaveFortuneModule.modifyComponentEnchantLevel(stack, registryLookup, original.call(stack, registryLookup));
+	private static ItemEnchantments modifyEnchantmentLevels(ItemStack stack, HolderLookup.RegistryLookup<Enchantment> registryLookup, Operation<ItemEnchantments> original) {
+		return GoldToolsHaveFortuneModule.modifyEnchantmentLevels(stack, registryLookup, original.call(stack, registryLookup));
 	}
 
 	@WrapOperation(method = "runIterationOnItem(Lnet/minecraft/world/item/ItemStack;Lnet/minecraft/world/entity/EquipmentSlot;Lnet/minecraft/world/entity/LivingEntity;Lnet/minecraft/world/item/enchantment/EnchantmentHelper$EnchantmentInSlotVisitor;)V",
 			at = @At(value = "INVOKE",
 					target = "Lnet/minecraft/world/item/ItemStack;getAllEnchantments(Lnet/minecraft/core/HolderLookup$RegistryLookup;)Lnet/minecraft/world/item/enchantment/ItemEnchantments;"))
-	private static ItemEnchantments modifyComponentEnchantLevel1(ItemStack stack, HolderLookup.RegistryLookup<Enchantment> registryLookup, Operation<ItemEnchantments> original) {
-		return GoldToolsHaveFortuneModule.modifyComponentEnchantLevel(stack, registryLookup, original.call(stack, registryLookup));
+	private static ItemEnchantments modifyEnchantmentLevelsWithSlotVisitor(ItemStack stack, HolderLookup.RegistryLookup<Enchantment> registryLookup, Operation<ItemEnchantments> original) {
+		return GoldToolsHaveFortuneModule.modifyEnchantmentLevels(stack, registryLookup, original.call(stack, registryLookup));
 	}
-	 */
+
+    @WrapOperation(method = "getRandomItemWith", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/item/ItemStack;getOrDefault(Lnet/minecraft/core/component/DataComponentType;Ljava/lang/Object;)Ljava/lang/Object;"))
+    private static Object modifyEnchantmentLevelsDuringRandomSearch(ItemStack stack, DataComponentType<ItemEnchantments> dataComponentType, Object itemEnchantments, Operation<Object> original, @Local(argsOnly = true) LivingEntity entity) {
+        return GoldToolsHaveFortuneModule.modifyEnchantmentLevels(stack, entity.level().registryAccess().lookupOrThrow(Registries.ENCHANTMENT), (ItemEnchantments) itemEnchantments);
+    }
 
 	@Inject(method = "getComponentType", at = @At("HEAD"), cancellable = true)
 	private static void getAncientTomeEnchantments(ItemStack stack, CallbackInfoReturnable<DataComponentType<ItemEnchantments>> callbackInfoReturnable) {

@@ -2,7 +2,6 @@ package org.violetmoon.quark.base.handler;
 
 import com.google.common.collect.ImmutableSet;
 
-import com.mojang.authlib.GameProfile;
 import net.minecraft.client.Minecraft;
 import net.minecraft.world.entity.player.Player;
 

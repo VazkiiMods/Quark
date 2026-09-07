@@ -16,10 +16,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.*;
 import net.minecraft.world.item.component.Tool;
-import net.minecraft.world.item.enchantment.Enchantment;
-import net.minecraft.world.item.enchantment.EnchantmentHelper;
-import net.minecraft.world.item.enchantment.Enchantments;
-import net.minecraft.world.item.enchantment.ItemEnchantments;
+import net.minecraft.world.item.enchantment.*;
 import net.minecraft.world.level.block.state.BlockState;
 import org.violetmoon.quark.base.Quark;
 import org.violetmoon.zeta.config.Config;
@@ -27,7 +24,6 @@ import org.violetmoon.zeta.config.Config.Max;
 import org.violetmoon.zeta.config.Config.Min;
 import org.violetmoon.zeta.event.bus.LoadEvent;
 import org.violetmoon.zeta.event.bus.PlayEvent;
-import org.violetmoon.zeta.event.load.ZAddReloadListener;
 import org.violetmoon.zeta.event.load.ZConfigChanged;
 import org.violetmoon.zeta.event.load.ZTagsUpdated;
 import org.violetmoon.zeta.module.ZetaLoadModule;
@@ -170,17 +166,23 @@ public class GoldToolsHaveFortuneModule extends ZetaModule {
 		stack.set(DataComponents.ENCHANTMENTS, newEnchantments.toImmutable());
 	}
 
-	public static ItemEnchantments modifyComponentEnchantLevel(ItemStack stack, HolderLookup.RegistryLookup<Enchantment> registryLookup, ItemEnchantments enchantments) {
+	public static ItemEnchantments modifyEnchantmentLevels(ItemStack stack, HolderLookup.RegistryLookup<Enchantment> registryLookup, ItemEnchantments enchantments) {
 		if (!staticEnabled || registryLookup == null || !BUILTIN_ENCHANTMENTS.containsKey(stack.getItem())) return enchantments;
 
 		Object2IntMap<ResourceKey<Enchantment>> builtInEnchantments = BUILTIN_ENCHANTMENTS.get(stack.getItem());
-		ItemEnchantments.Mutable newEnchantments = new ItemEnchantments.Mutable(enchantments);
+		ItemEnchantments.Mutable existingEnchants = new ItemEnchantments.Mutable(enchantments);
+        Set<Holder<Enchantment>> existingEnchantsSet = existingEnchants.keySet();
 
 		for (ResourceKey<Enchantment> enchantmentKey : builtInEnchantments.keySet()) {
-			Holder<Enchantment> holder = registryLookup.getOrThrow(enchantmentKey);
-			newEnchantments.set(holder, Math.max(newEnchantments.getLevel(holder), builtInEnchantments.getOrDefault(enchantmentKey, 0)));
+			Holder<Enchantment> builtInEnchant = registryLookup.getOrThrow(enchantmentKey);
+            Set<Holder<Enchantment>> existingEnchantSet1 = new HashSet<>(existingEnchantsSet);
+            existingEnchantSet1.remove(builtInEnchant);
+
+            if (EnchantmentHelper.isEnchantmentCompatible(existingEnchantSet1, builtInEnchant)) {
+                existingEnchants.set(builtInEnchant, Math.max(existingEnchants.getLevel(builtInEnchant), builtInEnchantments.getOrDefault(enchantmentKey, 0)));
+            }
 		}
-		return newEnchantments.toImmutable();
+		return existingEnchants.toImmutable();
 	}
 
 	public static ItemStack createTooltipStack(ItemStack stack, DataComponentType<?> componentType, HolderLookup.Provider provider) {
@@ -189,15 +191,9 @@ public class GoldToolsHaveFortuneModule extends ZetaModule {
 		if (BUILTIN_ENCHANTMENTS.containsKey(stack.getItem())) {
 			ItemStack copy = stack.copy();
 			ItemEnchantments itemEnchantments = Optional.ofNullable(copy.get(DataComponents.ENCHANTMENTS)).orElse(ItemEnchantments.EMPTY);
-			Object2IntMap<ResourceKey<Enchantment>> builtInEnchantments = BUILTIN_ENCHANTMENTS.get(stack.getItem());
-			ItemEnchantments.Mutable newEnchantments = new ItemEnchantments.Mutable(itemEnchantments);
+            ItemEnchantments newEnchantments = modifyEnchantmentLevels(copy, provider.lookupOrThrow(Registries.ENCHANTMENT), itemEnchantments);
 
-			for (ResourceKey<Enchantment> enchantmentKey : builtInEnchantments.keySet()) {
-				Holder<Enchantment> holder = provider.lookupOrThrow(Registries.ENCHANTMENT).getOrThrow(enchantmentKey);
-				newEnchantments.set(holder, Math.max(newEnchantments.getLevel(holder), builtInEnchantments.getOrDefault(enchantmentKey, 0)));
-			}
-
-			copy.set(DataComponents.ENCHANTMENTS, newEnchantments.toImmutable());
+			copy.set(DataComponents.ENCHANTMENTS, newEnchantments);
 			return copy;
 		}
 		return stack;
@@ -208,14 +204,16 @@ public class GoldToolsHaveFortuneModule extends ZetaModule {
 
 		if (BUILTIN_ENCHANTMENTS.containsKey(stack.getItem())) {
 			Object2IntMap<ResourceKey<Enchantment>> builtInEnchantments = BUILTIN_ENCHANTMENTS.get(stack.getItem());
+            ItemEnchantments itemEnchantments = Optional.ofNullable(stack.get(DataComponents.ENCHANTMENTS)).orElse(ItemEnchantments.EMPTY);
 
 			for (ResourceKey<Enchantment> enchantmentKey : builtInEnchantments.keySet()) {
 				Holder<Enchantment> holder = provider.lookupOrThrow(Registries.ENCHANTMENT).getOrThrow(enchantmentKey);
-				int level = builtInEnchantments.getInt(enchantmentKey);
-				Component enchantmentEntry = Enchantment.getFullname(holder, level);
-				if (list.contains(enchantmentEntry)) {
+				int builtInLevel = builtInEnchantments.getInt(enchantmentKey);
+				Component enchantmentEntry = Enchantment.getFullname(holder, builtInLevel);
+
+				if (list.contains(enchantmentEntry) && builtInLevel > itemEnchantments.getLevel(holder)) {
 					int index = list.indexOf(enchantmentEntry);
-					list.set(index, Enchantment.getFullname(holder, level).copy().withStyle(ChatFormatting.ITALIC));
+					list.set(index, Enchantment.getFullname(holder, builtInLevel).copy().withStyle(ChatFormatting.ITALIC));
 				}
 			}
 		}

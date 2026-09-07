@@ -1,6 +1,5 @@
 package org.violetmoon.quark.addons.oddities.util;
 
-import net.minecraft.client.Minecraft;
 import net.minecraft.core.Holder;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
