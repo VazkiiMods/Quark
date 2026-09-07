@@ -38,7 +38,7 @@ import org.violetmoon.quark.addons.oddities.module.CrateModule;
 import org.violetmoon.quark.addons.oddities.module.PipesModule;
 import org.violetmoon.quark.base.config.QuarkGeneralConfig;
 import org.violetmoon.quark.base.proxy.ClientProxy;
-import org.violetmoon.quark.base.proxy.CommonProxy
+import org.violetmoon.quark.base.proxy.CommonProxy;
 import org.violetmoon.quark.content.automation.block.be.FeedingTroughBlockEntity;
 import org.violetmoon.quark.content.automation.module.FeedingTroughModule;
 import org.violetmoon.quark.content.building.module.*;
