@@ -2,7 +2,6 @@ package org.violetmoon.quark.content.world.module;
 
 import net.minecraft.core.registries.Registries;
 import net.minecraft.data.worldgen.features.TreeFeatures;
-import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.levelgen.feature.ConfiguredFeature;
 import net.minecraft.world.level.levelgen.feature.configurations.TreeConfiguration;
 import net.minecraft.world.level.levelgen.feature.stateproviders.BlockStateProvider;
@@ -37,10 +36,9 @@ public class AzaleaWoodModule extends ZetaModule {
 		if(woodSet == null || azaleaFeature == null || !(azaleaFeature.config() instanceof TreeConfiguration treeConfig))
 			return; // Maybe we interacted with the RegistryAccess too early?
 
-		if(isEnabled())
+		boolean overlapped = (disabledByOverlap() && !ignoreAntiOverlap());
+		if(isEnabled() && !overlapped)
 			treeConfig.trunkProvider = BlockStateProvider.simple(woodSet.log);
-		else
-			treeConfig.trunkProvider = BlockStateProvider.simple(Blocks.OAK_LOG);
 	}
 
 }
