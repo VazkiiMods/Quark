@@ -39,6 +39,8 @@ import org.violetmoon.quark.addons.oddities.module.PipesModule;
 import org.violetmoon.quark.base.config.QuarkGeneralConfig;
 import org.violetmoon.quark.base.proxy.ClientProxy;
 import org.violetmoon.quark.base.proxy.CommonProxy;
+import org.violetmoon.quark.content.automation.block.be.FeedingTroughBlockEntity;
+import org.violetmoon.quark.content.automation.module.FeedingTroughModule;
 import org.violetmoon.quark.content.building.module.*;
 import org.violetmoon.quark.content.experimental.module.VanillaStoneClustersModule;
 import org.violetmoon.quark.content.mobs.module.CrabsModule;
@@ -222,6 +224,7 @@ public class Quark {
 		event.registerBlock(Capabilities.ItemHandler.BLOCK, (level, pos, state, blockEntity, side) -> new SidedInvWrapper((PipeBlockEntity)blockEntity, side), PipesModule.pipe, PipesModule.encasedPipe);
 		event.registerBlock(Capabilities.ItemHandler.BLOCK, (level, pos, state, blockEntity, side) -> new InvWrapper((CrateBlockEntity)blockEntity), CrateModule.crate);
 		event.registerBlock(Capabilities.ItemHandler.BLOCK, (level, pos, state, blockEntity, side) -> new SidedInvWrapper((AbstractFurnaceBlockEntity)blockEntity, side), VariantFurnacesModule.blackstoneFurnace, VariantFurnacesModule.deepslateFurnace);
+		event.registerBlock(Capabilities.ItemHandler.BLOCK, (level, pos, state, blockEntity, side) -> new InvWrapper((FeedingTroughBlockEntity)blockEntity), FeedingTroughModule.feeding_trough);
 
 		event.registerItem(Capabilities.ItemHandler.ITEM, (stack, ctx) -> new BackpackItemHandler(stack), BackpackModule.backpack);
 	}
