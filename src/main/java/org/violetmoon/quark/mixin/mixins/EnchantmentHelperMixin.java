@@ -45,7 +45,8 @@ public class EnchantmentHelperMixin {
 
     @WrapOperation(method = "getRandomItemWith", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/item/ItemStack;getOrDefault(Lnet/minecraft/core/component/DataComponentType;Ljava/lang/Object;)Ljava/lang/Object;"))
     private static Object modifyEnchantmentLevelsDuringRandomSearch(ItemStack stack, DataComponentType<ItemEnchantments> dataComponentType, Object itemEnchantments, Operation<Object> original, @Local(argsOnly = true) LivingEntity entity) {
-        return GoldToolsHaveFortuneModule.modifyEnchantmentLevels(stack, entity.level().registryAccess().lookupOrThrow(Registries.ENCHANTMENT), (ItemEnchantments) itemEnchantments);
+        ItemEnchantments appliedEnchantments = (ItemEnchantments) original.call(stack, dataComponentType, itemEnchantments);
+        return GoldToolsHaveFortuneModule.modifyEnchantmentLevels(stack, entity.level().registryAccess().lookupOrThrow(Registries.ENCHANTMENT), appliedEnchantments);
     }
 
 	@Inject(method = "getComponentType", at = @At("HEAD"), cancellable = true)
