@@ -9,6 +9,7 @@ import net.minecraft.world.level.material.MapColor;
 
 import org.violetmoon.quark.base.handler.WoodSetHandler;
 import org.violetmoon.quark.base.handler.WoodSetHandler.WoodSet;
+import org.violetmoon.zeta.config.Config;
 import org.violetmoon.zeta.event.bus.LoadEvent;
 import org.violetmoon.zeta.event.bus.PlayEvent;
 import org.violetmoon.zeta.event.load.ZAddReloadListener;
@@ -20,6 +21,9 @@ import org.violetmoon.zeta.module.ZetaModule;
 public class AzaleaWoodModule extends ZetaModule {
 
 	public static WoodSet woodSet;
+
+	@Config(description = "If true, the oak log in the vanilla azalea tree ConfiguredFeature will be replaced with Quark's azalea log. Disabling this makes Azalea unobtainable")
+	public static boolean replaceAzaleaTreeLog = true;
 
 	@LoadEvent
 	public final void register(ZRegister event) {
@@ -37,7 +41,7 @@ public class AzaleaWoodModule extends ZetaModule {
 			return; // Maybe we interacted with the RegistryAccess too early?
 
 		boolean overlapped = (disabledByOverlap() && !ignoreAntiOverlap());
-		if(isEnabled() && !overlapped)
+		if(isEnabled() && !overlapped && replaceAzaleaTreeLog)
 			treeConfig.trunkProvider = BlockStateProvider.simple(woodSet.log);
 	}
 

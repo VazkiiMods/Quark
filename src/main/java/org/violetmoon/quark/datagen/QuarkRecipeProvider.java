@@ -692,13 +692,6 @@ public class QuarkRecipeProvider extends RecipeProvider implements IConditionBui
 
             ItemLike planks = set.planks;
 
-            //WHY ARE THESE REVERSED AAAAAA
-            if (planks == AzaleaWoodModule.woodSet.planks) {
-                planks = AncientWoodModule.woodSet.planks;
-            } else if (planks == AncientWoodModule.woodSet.planks) {
-                planks = AzaleaWoodModule.woodSet.planks;
-            }
-
             ShapedRecipeBuilder.shaped(RecipeCategory.BUILDING_BLOCKS, VerticalPlanksModule.blocks.get(i), 3)
                     .pattern("#")
                     .pattern("#")

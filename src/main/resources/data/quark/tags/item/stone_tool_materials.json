@@ -6,13 +6,13 @@
     "minecraft:flint",
     "minecraft:sandstone",
     "quark:limestone",
-    "quark:polished_limestone",
-    "quark:polished_calcite",
     "quark:jasper",
-    "quark:polished_jasper",
     "quark:shale",
-    "quark:polished_shale",
     "quark:permafrost",
-    "minecraft:blackstone"
+    "minecraft:blackstone",
+    "minecraft:calcite"
+  ],
+  "remove": [
+    "#c:cobblestones/infested"
   ]
 }

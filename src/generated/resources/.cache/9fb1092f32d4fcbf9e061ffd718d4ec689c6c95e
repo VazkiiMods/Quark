@@ -1,4 +1,4 @@
-// 1.21.1	2026-07-12T14:33:40.3003714	Recipes
+// 1.21.1	2026-09-11T13:31:08.75273	Recipes
 bb24f1bac2cb3ef401eb56f32a5b7364bcee7552 data/quark/advancement/recipes/building_blocks/building/crafting/bamboo_mat.json
 31f4957990f1d18f202f816de898f77458b18140 data/quark/advancement/recipes/building_blocks/building/crafting/bamboo_mat_carpet.json
 8df9c4ad585c2226233ee6e8f7bc96f33806df86 data/quark/advancement/recipes/building_blocks/building/crafting/blackstone_bricks.json
@@ -597,7 +597,7 @@ ee1ac29a5d9092c164457ef972ee0189b6641166 data/quark/advancement/recipes/building
 26450362fb530ad57e3918cd8190ebdaa79033f2 data/quark/advancement/recipes/building_blocks/world/crafting/woodsets/ancient/ancient_wood.json
 b9ade5d4859e90c2d29c141c0866eaa971cf11a2 data/quark/advancement/recipes/building_blocks/world/crafting/woodsets/ancient/stripped_ancient_post.json
 fd95030b84be32192dea3d8be1aaf7ed3b0d54d7 data/quark/advancement/recipes/building_blocks/world/crafting/woodsets/ancient/stripped_ancient_wood.json
-313287ec51c9974cdcd0e25671d214e8bbbf9410 data/quark/advancement/recipes/building_blocks/world/crafting/woodsets/ancient/vertical_ancient_planks.json
+254d5420c9a85d3fe52faaa0b66d01fbb4c599b7 data/quark/advancement/recipes/building_blocks/world/crafting/woodsets/ancient/vertical_ancient_planks.json
 2a579fa51560030302dd7799fa431bd96f4cfd95 data/quark/advancement/recipes/building_blocks/world/crafting/woodsets/ancient/vertical_ancient_planks_revert.json
 b32aad30ffe3241a1a0f297ae444cb6489c8c2a4 data/quark/advancement/recipes/building_blocks/world/crafting/woodsets/azalea/azalea_hedge.json
 90893ba5064e5c332465c07dd1b4f57c91f12580 data/quark/advancement/recipes/building_blocks/world/crafting/woodsets/azalea/azalea_planks.json
@@ -608,7 +608,7 @@ f82302a6fc4ad2f2ab279b5dd7d0fc5d3468a886 data/quark/advancement/recipes/building
 92e8807202052bd3f98cbc94c0c5c13f9dc39fb6 data/quark/advancement/recipes/building_blocks/world/crafting/woodsets/azalea/flowering_azalea_hedge.json
 e7d26221f5f5c09dca75db61844d2ac7c7c59176 data/quark/advancement/recipes/building_blocks/world/crafting/woodsets/azalea/stripped_azalea_post.json
 2a35c71d8bf536801aff02123df2604f8f371ed8 data/quark/advancement/recipes/building_blocks/world/crafting/woodsets/azalea/stripped_azalea_wood.json
-5c42f5dd5a683898a54d0399a1b50b9baaf74bcc data/quark/advancement/recipes/building_blocks/world/crafting/woodsets/azalea/vertical_azalea_planks.json
+03e1a16bcb345d95c23ea20161bd006084b5333b data/quark/advancement/recipes/building_blocks/world/crafting/woodsets/azalea/vertical_azalea_planks.json
 5f723f6815656a14c5f5defb59f69e6aa792ea79 data/quark/advancement/recipes/building_blocks/world/crafting/woodsets/azalea/vertical_azalea_planks_revert.json
 7ff0b2cef777121b0e8d58862abc3e63488e0224 data/quark/advancement/recipes/building_blocks/world/crafting/woodsets/blossom/blossom_planks.json
 57688c0f92ee2c1310fd15d13b05eed28a3ad499 data/quark/advancement/recipes/building_blocks/world/crafting/woodsets/blossom/blossom_post.json
@@ -1889,8 +1889,8 @@ a10e12fb85918fbb4b2c043dc8ff1a669edbb778 data/quark/recipe/world/crafting/woodse
 44f33c3ce1f83227955b96e9fb634f4578ee3c62 data/quark/recipe/world/crafting/woodsets/ancient/azalea_bookshelf.json
 b4da78d777fef6f6d1272f671f70a2ffb6791948 data/quark/recipe/world/crafting/woodsets/ancient/stripped_ancient_post.json
 16720c56af144e34d13ccd2325dd1b1711622dab data/quark/recipe/world/crafting/woodsets/ancient/stripped_ancient_wood.json
-5911879195dfd4a0a3c9a9ad753b73c2489a2a70 data/quark/recipe/world/crafting/woodsets/ancient/vertical_ancient_planks.json
-59c58b7daf69bc58a81e1cbbb11dd63d88e67c7d data/quark/recipe/world/crafting/woodsets/ancient/vertical_ancient_planks_revert.json
+8637467621721662c9edc7211303f7cf43291590 data/quark/recipe/world/crafting/woodsets/ancient/vertical_ancient_planks.json
+4edbf5cbbd618e173c642ce37a6de843c8ff2257 data/quark/recipe/world/crafting/woodsets/ancient/vertical_ancient_planks_revert.json
 a958fc979577b3b7b34ab00f978b1c84a4332be9 data/quark/recipe/world/crafting/woodsets/azalea/azalea_boat.json
 536753c9212088ac740fb53fc94d35af83d96c10 data/quark/recipe/world/crafting/woodsets/azalea/azalea_button.json
 a2f2c43bb3f4e2de37af13fc3c3a2ac0cc033ca2 data/quark/recipe/world/crafting/woodsets/azalea/azalea_chest.json
@@ -1914,8 +1914,8 @@ ad31cb55f37736b2084895f984a6952eecb86738 data/quark/recipe/world/crafting/woodse
 1a67ea67d8959dddb07336cdacec7153a91db169 data/quark/recipe/world/crafting/woodsets/azalea/flowering_azalea_hedge.json
 0ebeeff0ed1a283ba5f743fc8b5b04de9019b30d data/quark/recipe/world/crafting/woodsets/azalea/stripped_azalea_post.json
 7fca2988ddc6b742227f9c61bc8c08e0007ae329 data/quark/recipe/world/crafting/woodsets/azalea/stripped_azalea_wood.json
-a59433a20c9a33ab1023f08da0df36e927772ad4 data/quark/recipe/world/crafting/woodsets/azalea/vertical_azalea_planks.json
-6838da460c6c9356a351be76e2da2a3e0f821ae4 data/quark/recipe/world/crafting/woodsets/azalea/vertical_azalea_planks_revert.json
+da428ac6251a7573499ed1d60ac3e9c87b056bd3 data/quark/recipe/world/crafting/woodsets/azalea/vertical_azalea_planks.json
+b885f513f661a465827f525dcfa3356556bce06e data/quark/recipe/world/crafting/woodsets/azalea/vertical_azalea_planks_revert.json
 85790d3ad2f83711c379632e208602c0002dd1be data/quark/recipe/world/crafting/woodsets/blossom/blossom_boat.json
 4c202da9f12c9a8d47c6aac1124dbdfd690ae159 data/quark/recipe/world/crafting/woodsets/blossom/blossom_button.json
 0a46e92c468c189e63ccc60e6b16dee1bb5b6293 data/quark/recipe/world/crafting/woodsets/blossom/blossom_chest.json
