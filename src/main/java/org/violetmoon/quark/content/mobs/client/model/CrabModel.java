@@ -4,8 +4,7 @@ import com.google.common.collect.ImmutableSet;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
-
-import net.minecraft.client.model.EntityModel;
+import net.minecraft.client.model.HierarchicalModel;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.model.geom.PartPose;
 import net.minecraft.client.model.geom.builders.CubeListBuilder;
@@ -13,19 +12,18 @@ import net.minecraft.client.model.geom.builders.LayerDefinition;
 import net.minecraft.client.model.geom.builders.MeshDefinition;
 import net.minecraft.client.model.geom.builders.PartDefinition;
 import net.minecraft.util.Mth;
-
 import org.jetbrains.annotations.NotNull;
-
 import org.violetmoon.quark.content.mobs.entity.Crab;
 
 import java.util.Set;
 
-public class CrabModel extends EntityModel<Crab> {
+public class CrabModel extends HierarchicalModel<Crab> {
 
 	private float wiggleX = 0;
 	private float wiggleY = 0;
 	private float crabSize = 0;
 
+    private final ModelPart root;
 	public ModelPart group;
 	public ModelPart body;
 	public ModelPart rightClaw;
@@ -45,6 +43,7 @@ public class CrabModel extends EntityModel<Crab> {
 	private final Set<ModelPart> rightLegs;
 
 	public CrabModel(ModelPart root) {
+        this.root = root;
 		group = root.getChild("group");
 		body = group.getChild("body");
 		rightClaw = group.getChild("rightClaw");
@@ -63,6 +62,11 @@ public class CrabModel extends EntityModel<Crab> {
 		leftLegs = ImmutableSet.of(leftLeg1, leftLeg2, leftLeg3, leftLeg4);
 		rightLegs = ImmutableSet.of(rightLeg1, rightLeg2, rightLeg3, rightLeg4);
 	}
+
+    @Override
+    public ModelPart root() {
+        return root;
+    }
 
 	public static LayerDefinition createBodyLayer() {
 		MeshDefinition mesh = new MeshDefinition();

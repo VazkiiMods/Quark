@@ -2,24 +2,18 @@ package org.violetmoon.quark.content.mobs.client.model;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-
-import net.minecraft.client.model.EntityModel;
+import net.minecraft.client.model.HierarchicalModel;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.model.geom.PartPose;
-import net.minecraft.client.model.geom.builders.CubeDeformation;
-import net.minecraft.client.model.geom.builders.CubeListBuilder;
-import net.minecraft.client.model.geom.builders.LayerDefinition;
-import net.minecraft.client.model.geom.builders.MeshDefinition;
-import net.minecraft.client.model.geom.builders.PartDefinition;
+import net.minecraft.client.model.geom.builders.*;
 import net.minecraft.util.Mth;
 import net.minecraft.world.item.ItemStack;
-
 import org.jetbrains.annotations.NotNull;
-
 import org.violetmoon.quark.content.mobs.entity.Stoneling;
 
-public class StonelingModel extends EntityModel<Stoneling> {
+public class StonelingModel extends HierarchicalModel<Stoneling> {
 
+    private final ModelPart root;
 	private final ModelPart body;
 	private final ModelPart arm_right;
 	private final ModelPart arm_left;
@@ -27,12 +21,18 @@ public class StonelingModel extends EntityModel<Stoneling> {
 	private final ModelPart leg_left;
 
 	public StonelingModel(ModelPart root) {
+        this.root = root;
 		body = root.getChild("body");
 		arm_right = root.getChild("arm_right");
 		arm_left = root.getChild("arm_left");
 		leg_right = root.getChild("leg_right");
 		leg_left = root.getChild("leg_left");
 	}
+
+    @Override
+    public ModelPart root() {
+        return root;
+    }
 
 	// Made with Blockbench 4.1.5
 	public static LayerDefinition createBodyLayer() {
