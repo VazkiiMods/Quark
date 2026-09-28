@@ -1,0 +1,9 @@
+{
+  "model_part": "group/body",
+  "offset": [
+    0,
+    1.5,
+    -0.25
+  ],
+  "scale": 0.95
+}

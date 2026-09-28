@@ -4,7 +4,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.model.EntityModel;
+import net.minecraft.client.model.HierarchicalModel;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.model.geom.ModelPart.Cube;
 import net.minecraft.client.model.geom.PartPose;
@@ -17,11 +17,12 @@ import org.violetmoon.quark.content.mobs.entity.Toretoise;
 
 import java.util.function.BiConsumer;
 
-public class ToretoiseModel extends EntityModel<Toretoise> {
+public class ToretoiseModel extends HierarchicalModel<Toretoise> {
 
 	private Toretoise entity;
 	private float animFrames;
 
+    private final ModelPart root;
 	public ModelPart body;
 	public ModelPart head;
 	public ModelPart rightFrontLeg;
@@ -48,6 +49,7 @@ public class ToretoiseModel extends EntityModel<Toretoise> {
 	public ModelPart RedstoneOre5;
 
 	public ToretoiseModel(ModelPart root) {
+        this.root = root;
 		body = root.getChild("body");
 		head = root.getChild("head");
 		rightFrontLeg = root.getChild("rightFrontLeg");
@@ -73,6 +75,11 @@ public class ToretoiseModel extends EntityModel<Toretoise> {
 		RedstoneOre4 = body.getChild("RedstoneOre4");
 		RedstoneOre5 = body.getChild("RedstoneOre5");
 	}
+
+    @Override
+    public ModelPart root() {
+        return root;
+    }
 
 	public static LayerDefinition createBodyLayer() {
 		MeshDefinition mesh = new MeshDefinition();
