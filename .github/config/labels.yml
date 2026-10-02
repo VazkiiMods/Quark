@@ -6,3 +6,5 @@
   - '1\.20(?:\.\d)?'
 'version: 1.21.1':
   - '1\.21(?:\.\d)?'
+'potential slop':
+  - '\s\u2014\s' # em dash surrounded by spaces

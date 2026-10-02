@@ -1,16 +1,10 @@
-# Quark 4.1-485 For Neoforge 1.21.1
+# Quark 4.1-486 For Neoforge 1.21.1
 
-Only minor changes.
+Internal changes only, hopefully these will help us better address and identify some unsolved issues (particularly around worldgen)
 
 # Fixes
-- Fixed #5646: Ashen Vertical Planks recipe is the Azalea Vertical Planks Recipe
-- Fixed #5640: tag "stone tool materials" is not correct
-- Fixed #5647: Make Azalea Tree Change be not hard coded 
+- None
 
 # Changes
-- Polished Quark stones and Infested Cobblestone can no longer be used to craft stone tools
-
-# Additions
-- Azelea Wood Module now has a separate option to disable the replacing of Oak logs with Quark's Azalea logs.
-  - This makes Quark's Azalea Wood unobtainable (but still enabled); it should only be used by modpack developers
-
+- Updated NeoForge requirement to 21.1.252 (the latest as of writing).
+- Updated jar-in-jar'd Biolith to 3.0.14.
