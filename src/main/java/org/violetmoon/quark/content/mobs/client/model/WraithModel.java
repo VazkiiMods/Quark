@@ -2,7 +2,7 @@ package org.violetmoon.quark.content.mobs.client.model;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import net.minecraft.client.model.EntityModel;
+import net.minecraft.client.model.HierarchicalModel;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.model.geom.PartPose;
 import net.minecraft.client.model.geom.builders.*;
@@ -11,8 +11,9 @@ import org.violetmoon.quark.content.mobs.entity.Wraith;
 
 import java.util.Random;
 
-public class WraithModel extends EntityModel<Wraith> {
+public class WraithModel extends HierarchicalModel<Wraith> {
 
+    private final ModelPart root;
 	public final ModelPart main;
 	public final ModelPart body;
 	public final ModelPart arms;
@@ -23,10 +24,16 @@ public class WraithModel extends EntityModel<Wraith> {
 	public WraithModel(ModelPart root) {
 		super(RenderType::entityTranslucent);
 
+        this.root = root;
 		main = root.getChild("main");
 		body = main.getChild("body");
 		arms = main.getChild("arms");
 	}
+
+    @Override
+    public ModelPart root() {
+        return root;
+    }
 
 	public static LayerDefinition createBodyLayer() {
 		MeshDefinition mesh = new MeshDefinition();
