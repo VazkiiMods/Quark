@@ -38,6 +38,9 @@ public record TinyPotatoModel(BakedModel originalModel) implements BakedModel {
 
 	@Override
 	public boolean isCustomRenderer() {
+		if (originalModel == null){
+			return false;
+		}
 		return originalModel.isCustomRenderer();
 	}
 

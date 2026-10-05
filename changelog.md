@@ -1,10 +1,10 @@
-# Quark 4.1-486 For Neoforge 1.21.1
-
-Internal changes only, hopefully these will help us better address and identify some unsolved issues (particularly around worldgen)
+# Quark 4.1-487 For Neoforge 1.21.1
 
 # Fixes
-- None
-
+- Partial fix for #5667: [Bug] NPE in TinyPotatoModel.isCustomRenderer during ModifyBakingResult (Map.compute inserts null entry)
+    - This does not fix the root issue but *should* prevent a crash with Continuity+Connector installed
 # Changes
-- Updated NeoForge requirement to 21.1.252 (the latest as of writing).
-- Updated jar-in-jar'd Biolith to 3.0.14.
+
+# Additions
+- Merged #5673 [1.21] Give Quark mobs the ability to wear hats (thanks hedgehog1029!)
+  - If Create is installed, Quark's mobs can now wear conductor hats
