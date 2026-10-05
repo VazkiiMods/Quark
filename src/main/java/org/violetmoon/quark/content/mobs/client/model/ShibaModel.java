@@ -2,8 +2,7 @@ package org.violetmoon.quark.content.mobs.client.model;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-
-import net.minecraft.client.model.EntityModel;
+import net.minecraft.client.model.HierarchicalModel;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.model.geom.PartPose;
 import net.minecraft.client.model.geom.builders.CubeListBuilder;
@@ -13,13 +12,12 @@ import net.minecraft.client.model.geom.builders.PartDefinition;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.util.Mth;
 import net.minecraft.world.level.block.state.BlockState;
-
 import org.jetbrains.annotations.NotNull;
-
 import org.violetmoon.quark.content.mobs.entity.Shiba;
 
-public class ShibaModel extends EntityModel<Shiba> {
+public class ShibaModel extends HierarchicalModel<Shiba> {
 
+	private final ModelPart root;
 	private final ModelPart main;
 	private final ModelPart head;
 	private final ModelPart rEar;
@@ -34,6 +32,7 @@ public class ShibaModel extends EntityModel<Shiba> {
 	private boolean sleeping = false;
 
 	public ShibaModel(ModelPart root) {
+        this.root = root;
 		main = root.getChild("main");
 		head = main.getChild("head");
 		rEar = head.getChild("rEar");
@@ -221,7 +220,12 @@ public class ShibaModel extends EntityModel<Shiba> {
 		matrixStack.popPose();
 	}
 
-	public void setRotationAngle(ModelPart modelRenderer, float x, float y, float z) {
+    @Override
+    public ModelPart root() {
+        return root;
+    }
+
+    public void setRotationAngle(ModelPart modelRenderer, float x, float y, float z) {
 		modelRenderer.xRot = x;
 		modelRenderer.yRot = y;
 		modelRenderer.zRot = z;

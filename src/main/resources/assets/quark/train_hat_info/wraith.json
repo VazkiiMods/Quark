@@ -1,0 +1,9 @@
+{
+  "model_part": "main/body",
+  "offset": [
+    1.0,
+    10.0,
+    -2.0
+  ],
+  "scale": 0.9
+}
