@@ -79,6 +79,8 @@ public class ExpandedItemInteractionsModule extends ZetaModule {
 	public static boolean allowOpeningShulkerBoxes = true;
 	@Config(flag = "allow_rotating_bundles")
 	public static boolean allowRotatingBundles = true;
+	@Config(description = "Set this to true to use left clicks instead of right clicks for all Expanded Item Interactions. Some JEI hints may be incorrect if this is enabled")
+	public static boolean invertClicks = false;
 
 	@Hint("lava_interaction")
 	Item lava_bucket = Items.LAVA_BUCKET;
@@ -105,7 +107,8 @@ public class ExpandedItemInteractionsModule extends ZetaModule {
 	}
 
 	public static boolean overrideStackedOnOther(ItemStack stack, Slot slot, ClickAction action, Player player) {
-		if(!staticEnabled || action == ClickAction.PRIMARY)
+		ClickAction targetAction = invertClicks ? ClickAction.SECONDARY : ClickAction.PRIMARY;
+		if(!staticEnabled || action == targetAction)
 			return false;
 
 		ItemStack stackAt = slot.getItem();
@@ -119,7 +122,8 @@ public class ExpandedItemInteractionsModule extends ZetaModule {
 	}
 
 	public static boolean overrideOtherStackedOnMe(ItemStack stack, ItemStack incoming, Slot slot, ClickAction action, Player player, SlotAccess accessor) {
-		if(!staticEnabled || action == ClickAction.PRIMARY)
+		ClickAction targetAction = invertClicks ? ClickAction.SECONDARY : ClickAction.PRIMARY;
+		if(!staticEnabled || action == targetAction)
 			return false;
 
 		if(enableLavaInteraction && lavaBucketOverride(stack, incoming, slot, action, player))
@@ -168,6 +172,7 @@ public class ExpandedItemInteractionsModule extends ZetaModule {
 		if(stack.is(Items.BUNDLE)) {
 			BundleContents bundleContents = stack.get(DataComponents.BUNDLE_CONTENTS);
 			if(bundleContents != null) {
+				//Quark.LOG.info(bundleContents);
 				List<ItemStack> items = (List<ItemStack>) bundleContents.items();
 				if(items.size() > 1) {
 					List<ItemStack> rotatedItems = new ArrayList<>();
@@ -181,6 +186,7 @@ public class ExpandedItemInteractionsModule extends ZetaModule {
 						rotatedItems.add(items.get(0));
 					}
 					stack.set(DataComponents.BUNDLE_CONTENTS, new BundleContents(rotatedItems));
+					//Quark.LOG.info(bundleContents);
 				}
 			}
 		}
@@ -399,11 +405,11 @@ public class ExpandedItemInteractionsModule extends ZetaModule {
 				ItemStack underStack = under.getItem();
 
 				if(event.getItemStack() == underStack)
-					if(enableArmorInteraction && armorOverride(underStack, ItemStack.EMPTY, under, ClickAction.SECONDARY, mc.player, true))
-						event.getTooltipElements().add(Either.left(Component.translatable("quark.misc.equip_armor").withStyle(ChatFormatting.YELLOW)));
+					if(enableArmorInteraction && armorOverride(underStack, ItemStack.EMPTY, under, invertClicks ? ClickAction.PRIMARY : ClickAction.SECONDARY, mc.player, true))
+						event.getTooltipElements().add(Either.left(Component.translatable(invertClicks ? "quark.misc.equip_armor.invert": "quark.misc.equip_armor").withStyle(ChatFormatting.YELLOW)));
 
 					else if(enableShulkerBoxInteraction && canOpenShulkerBox(underStack, ItemStack.EMPTY, under, mc.player))
-						event.getTooltipElements().add(Either.left(Component.translatable("quark.misc.open_shulker").withStyle(ChatFormatting.YELLOW)));
+						event.getTooltipElements().add(Either.left(Component.translatable(invertClicks ? "quark.misc.open_shulker.invert" : "quark.misc.open_shulker").withStyle(ChatFormatting.YELLOW)));
 			}
 		}
 
@@ -425,10 +431,15 @@ public class ExpandedItemInteractionsModule extends ZetaModule {
 					int x = event.getMouseX();
 					int y = event.getMouseY();
 					if(enableLavaInteraction && canTrashItem(underStack, held, under, mc.player)) {
-						guiGraphics.renderComponentTooltip(mc.font, List.of(Component.translatable("quark.misc.trash_item").withStyle(ChatFormatting.RED)), x, y);
+						guiGraphics.renderComponentTooltip(mc.font, List.of(Component.translatable(
+								invertClicks ? "quark.misc.trash_item.invert" : "quark.misc.trash_item"
+						).withStyle(ChatFormatting.RED)), x, y);
 					} else if(enableShulkerBoxInteraction && tryAddToShulkerBox(mc.player, underStack, held, under, true, true, true) != null) {
 						guiGraphics.renderComponentTooltip(mc.font, List.of(Component.translatable(
-								SimilarBlockTypeHandler.isShulkerBox(held) ? "quark.misc.merge_shulker_box" : "quark.misc.insert_shulker_box"
+								SimilarBlockTypeHandler.isShulkerBox(held) ?
+										invertClicks ? "quark.misc.merge_shulker_box.invert"  : "quark.misc.merge_shulker_box"
+										:
+										invertClicks ? "quark.misc.insert_shulker_box.invert" : "quark.misc.insert_shulker_box"
 						).withStyle(ChatFormatting.YELLOW)), x, y, underStack);
 					} else if(enableShulkerBoxInteraction && SimilarBlockTypeHandler.isShulkerBox(underStack)) {
 						guiGraphics.renderComponentTooltip(mc.font, Screen.getTooltipFromItem(mc, underStack), x, y, underStack);
