@@ -2,13 +2,14 @@ package org.violetmoon.quark.content.automation.block.be;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.world.Container;
+import net.minecraft.world.WorldlyContainer;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.PipeBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
+import org.jetbrains.annotations.Nullable;
 import org.violetmoon.quark.addons.oddities.block.be.PipeBlockEntity;
 import org.violetmoon.quark.addons.oddities.module.PipesModule;
 import org.violetmoon.quark.content.automation.block.ChuteBlock;
@@ -20,7 +21,7 @@ import org.violetmoon.zeta.block.be.ZetaBlockEntity;
  * @author WireSegal
  *         Created at 10:18 AM on 9/29/19.
  */
-public class ChuteBlockEntity extends ZetaBlockEntity implements Container {
+public class ChuteBlockEntity extends ZetaBlockEntity implements WorldlyContainer {
 	private static final AABB CLEARANCE = new AABB(BlockPos.ZERO).deflate(0.25).move(0, 0.25, 0);
 
 	public ChuteBlockEntity(BlockPos pos, BlockState state) {
@@ -100,7 +101,7 @@ public class ChuteBlockEntity extends ZetaBlockEntity implements Container {
 
     @Override
     public boolean canPlaceItem(int slot, ItemStack stack) {
-        return Container.super.canPlaceItem(slot, stack) && canDropItem();
+        return WorldlyContainer.super.canPlaceItem(slot, stack) && canDropItem();
     }
 
     @Override
@@ -108,13 +109,18 @@ public class ChuteBlockEntity extends ZetaBlockEntity implements Container {
 
 	}
 
-	/* TODO: Need to use ICapabilityProvider in registration (?)
-	@NotNull
 	@Override
-	public <T> LazyOptional<T> getCapability(@NotNull Capability<T> cap, @Nullable Direction side) {
-		if(side != Direction.DOWN && cap == ForgeCapabilities.ITEM_HANDLER)
-			return LazyOptional.of(() -> handler).cast();
-		return super.getCapability(cap, side);
+	public int[] getSlotsForFace(Direction side) {
+		return side == Direction.DOWN ? new int[0] : new int[]{0};
 	}
-	 */
+
+	@Override
+	public boolean canPlaceItemThroughFace(int slot, ItemStack stack, @Nullable Direction side) {
+		return side != Direction.DOWN && canPlaceItem(slot, stack);
+	}
+
+	@Override
+	public boolean canTakeItemThroughFace(int slot, ItemStack stack, Direction side) {
+		return false;
+	}
 }
