@@ -461,13 +461,13 @@ public class AncientTomesModule extends ZetaModule {
 
 	public static boolean matchWildcardEnchantedBook(MerchantOffer offer, ItemStack playerOfferA, ItemStack playerOfferB) {
 		// Doesn't check if enabled, since this should apply to the trades that have already been generated regardless
-		if (isAncientTomeOffer(offer) && playerOfferA.is(Items.ENCHANTED_BOOK) && playerOfferB.is(Items.ENCHANTED_BOOK)) {
-			ItemEnchantments referenceEnchants = playerOfferB.get(DataComponents.ENCHANTMENTS);
-			if (referenceEnchants != null && referenceEnchants.size() == 1) {
-				Holder<Enchantment> enchantment = referenceEnchants.keySet().iterator().next();
-				int level = referenceEnchants.getLevel(enchantment);
+		if (isAncientTomeOffer(offer) && playerOfferA.is(ancient_tome) && playerOfferB.is(Items.ENCHANTED_BOOK)) {
+			ItemEnchantments merchantOfferEnchants = offer.getCostB().get(DataComponents.STORED_ENCHANTMENTS);
+			if (merchantOfferEnchants != null && merchantOfferEnchants.size() == 1) {
+				Holder<Enchantment> enchantment = merchantOfferEnchants.keySet().iterator().next();
+				int level = merchantOfferEnchants.getLevel(enchantment);
 
-				ItemEnchantments comparingEnchants = playerOfferA.get(DataComponents.ENCHANTMENTS);
+				ItemEnchantments comparingEnchants = playerOfferB.get(DataComponents.STORED_ENCHANTMENTS);
                 if (comparingEnchants != null) {
                     for (var entry : comparingEnchants.entrySet()) {
                         if (entry.getKey() == enchantment && entry.getIntValue() >= level) {
