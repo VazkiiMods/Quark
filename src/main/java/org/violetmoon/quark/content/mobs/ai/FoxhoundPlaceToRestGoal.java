@@ -4,7 +4,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.entity.ai.goal.MoveToBlockGoal;
 import net.minecraft.world.level.LevelReader;
-import net.minecraft.world.level.block.entity.FurnaceBlockEntity;
+import net.minecraft.world.level.block.entity.AbstractFurnaceBlockEntity;
 import org.violetmoon.quark.content.mobs.entity.Foxhound;
 
 import java.util.function.BiFunction;
@@ -62,8 +62,8 @@ public class FoxhoundPlaceToRestGoal extends MoveToBlockGoal {
     }
 
     public enum Target {
-        LIT_FURNACE(((level, pos) -> level.getBlockEntity(pos) instanceof FurnaceBlockEntity && level.getLightEmission(pos) > 2)),
-        FURNACE(((level, pos) -> level.getBlockEntity(pos) instanceof FurnaceBlockEntity && level.getLightEmission(pos) <= 2)),
+        LIT_FURNACE(((level, pos) -> level.getBlockEntity(pos) instanceof AbstractFurnaceBlockEntity && level.getLightEmission(pos) > 2)),
+        FURNACE(((level, pos) -> level.getBlockEntity(pos) instanceof AbstractFurnaceBlockEntity && level.getLightEmission(pos) <= 2)),
         GLOWING((level, pos) -> level.getLightEmission(pos) > 2 && level.getBlockState(pos).getFluidState().isEmpty());
 
         private final BiFunction<LevelReader, BlockPos, Boolean> check;

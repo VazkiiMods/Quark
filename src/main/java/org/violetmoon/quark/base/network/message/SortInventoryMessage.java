@@ -14,7 +14,7 @@ public record SortInventoryMessage(boolean forcePlayer) implements ServerboundPa
 
 	@Override
 	public void handle(ServerPlayer player) {
-		SortingHandler.sortInventory(player, forcePlayer);
+		SortingHandler.sortContainer(player, forcePlayer);
 	}
 
 	@Override

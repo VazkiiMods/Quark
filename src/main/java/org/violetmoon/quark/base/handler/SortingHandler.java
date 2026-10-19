@@ -1,8 +1,10 @@
 package org.violetmoon.quark.base.handler;
 
+import net.minecraft.ChatFormatting;
 import net.minecraft.core.Holder;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.network.chat.*;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.Container;
 import net.minecraft.world.InteractionResult;
@@ -18,6 +20,7 @@ import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.ItemEnchantments;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
+import net.neoforged.neoforge.items.SlotItemHandler;
 import org.apache.commons.lang3.ArrayUtils;
 import org.violetmoon.quark.addons.oddities.inventory.BackpackMenu;
 import org.violetmoon.quark.addons.oddities.inventory.slot.CachedItemHandlerSlot;
@@ -76,7 +79,9 @@ public final class SortingHandler {
             SortingHandler::tomeCompare
     ));
 
-	public static void sortInventory(Player player, boolean forcePlayer) {
+	private static boolean warningShown = false;
+
+	public static void sortContainer(Player player, boolean forcePlayer) {
 		if(!Quark.ZETA.modules.isEnabled(InventorySortingModule.class))
 			return;
 
@@ -97,12 +102,27 @@ public final class SortingHandler {
 		}
 
 		for(Slot s : c.slots) {
+
+			if(!warningShown && s instanceof SlotItemHandler){
+				MutableComponent issue = Component.literal("Quark currently cannot sort SlotItemHandler containers correctly :(")
+						.setStyle(Style.EMPTY
+								.withColor(TextColor.fromLegacyFormat(ChatFormatting.BLUE))
+								.withUnderlined(true)
+								.withClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, "https://github.com/VazkiiMods/Quark/issues/5675"
+						)));
+				player.sendSystemMessage(issue);
+				warningShown = true;
+				player.closeContainer();
+			}
+
 			Container inv = s.container;
 			if((inv == player.getInventory()) == playerContainer) {
-				if(playerContainer)
-					sortInventory(inv, 9, 36, lockedSlots);
-				else
-					sortInventory(inv, lockedSlots);
+				if(playerContainer) {
+					sortContainer(inv, 9, 36, lockedSlots);
+				}
+				else {
+					sortContainer(inv, lockedSlots);
+				}
 				break;
 			}
 		}
@@ -110,20 +130,20 @@ public final class SortingHandler {
 		if(backpack)
 			for(Slot s : c.slots)
 				if(s instanceof CachedItemHandlerSlot cachedSlot) {
-					sortInventory(cachedSlot.container, lockedSlots);
+					sortContainer(cachedSlot.container, lockedSlots);
 					break;
 				}
 	}
 
-	public static void sortInventory(Container container, int[] lockedSlots) {
-		sortInventory(container, 0, lockedSlots);
+	public static void sortContainer(Container container, int[] lockedSlots) {
+		sortContainer(container, 0, lockedSlots);
 	}
 
-	public static void sortInventory(Container container, int iStart, int[] lockedSlots) {
-		sortInventory(container, iStart, container.getContainerSize(), lockedSlots);
+	public static void sortContainer(Container container, int iStart, int[] lockedSlots) {
+		sortContainer(container, iStart, container.getContainerSize(), lockedSlots);
 	}
 
-	public static void sortInventory(Container container, int iStart, int iEnd, int[] lockedSlots) {
+	public static void sortContainer(Container container, int iStart, int iEnd, int[] lockedSlots) {
 		List<ItemStack> stacks = new ArrayList<>();
 		List<ItemStack> restore = new ArrayList<>();
 
@@ -138,11 +158,11 @@ public final class SortingHandler {
 		mergeStacks(stacks);
 		sortStackList(stacks);
 
-		if(setInventory(container, stacks, iStart, iEnd, lockedSlots) == InteractionResult.FAIL)
-			setInventory(container, restore, iStart, iEnd, lockedSlots);
+		if(setContainer(container, stacks, iStart, iEnd, lockedSlots) == InteractionResult.FAIL)
+			setContainer(container, restore, iStart, iEnd, lockedSlots);
 	}
 
-	private static InteractionResult setInventory(Container container, List<ItemStack> stacks, int iStart, int iEnd, int[] lockedSlots) {
+	private static InteractionResult setContainer(Container container, List<ItemStack> stacks, int iStart, int iEnd, int[] lockedSlots) {
 		int skipped = 0; // Track how many slots have been skipped
 
 		// Copy container over to a map to make sure when we clear the container we can restore the slots that dont get sorted.
@@ -154,10 +174,10 @@ public final class SortingHandler {
 		//#5515 - do not clear container without checking for locked slots!
 		for (int slot = 0; slot < container.getContainerSize(); slot++)
 		{
-            if (!ArrayUtils.contains(lockedSlots, slot)) {
+			if (!ArrayUtils.contains(lockedSlots, slot)) {
 				container.setItem(slot, ItemStack.EMPTY);
-            }
-        }
+			}
+		}
 
 		// Restore any items that shouldn't of been cleared.
 		for (int slot = 0; slot < container.getContainerSize(); slot++) {
@@ -182,6 +202,35 @@ public final class SortingHandler {
 
 		return InteractionResult.SUCCESS;
 	}
+
+	/*
+	public static void sortSlotItemHandler(SlotItemHandler slotItemHandler, int[] lockedSlots) {
+		sortSlotItemHandler(slotItemHandler, 0, lockedSlots);
+	}
+
+	public static void sortSlotItemHandler(SlotItemHandler slotItemHandler, int iStart, int[] lockedSlots) {
+		sortSlotItemHandler(slotItemHandler, iStart, slotItemHandler.getMaxStackSize(), lockedSlots);
+	}
+
+	public static void sortSlotItemHandler(SlotItemHandler slotItemHandler, int iStart, int iEnd, int[] lockedSlots) {
+		List<ItemStack> stacks = new ArrayList<>();
+		List<ItemStack> restore = new ArrayList<>();
+
+		for(int i = iStart; i < iEnd; i++) {
+			ItemStack stackAt = slotItemHandler.getItemHandler().getStackInSlot(i);
+
+			restore.add(stackAt.copy());
+			if(!isLocked(i, lockedSlots) && !stackAt.isEmpty())
+				stacks.add(stackAt.copy());
+		}
+
+		mergeStacks(stacks);
+		sortStackList(stacks);
+
+		if(setSlotItemHandler(slotItemHandler, stacks, iStart, iEnd, lockedSlots) == InteractionResult.FAIL)
+			setSlotItemHandler(slotItemHandler, restore, iStart, iEnd, lockedSlots);
+	}
+	*/
 
 	private static boolean isLocked(int slot, int[] locked) {
 		if(locked == null)

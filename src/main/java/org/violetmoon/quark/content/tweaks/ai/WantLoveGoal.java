@@ -18,7 +18,9 @@ public class WantLoveGoal extends Goal {
 	private static final String PET_TIME = "quark:PetTime";
 
 	public static void setPetTime(TamableAnimal entity) {
-		entity.getPersistentData().putLong(PET_TIME, entity.level().getGameTime());
+		if(PatTheDogsModule.dogsWantLove > 0){
+			entity.getPersistentData().putLong(PET_TIME, entity.level().getGameTime());
+		}
 	}
 
 	public static boolean canPet(TamableAnimal entity) {
