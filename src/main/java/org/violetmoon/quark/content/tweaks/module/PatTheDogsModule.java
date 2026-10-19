@@ -2,6 +2,7 @@ package org.violetmoon.quark.content.tweaks.module;
 
 import java.util.List;
 
+import net.minecraft.world.entity.ai.attributes.Attributes;
 import org.violetmoon.quark.base.handler.QuarkSounds;
 import org.violetmoon.quark.content.mobs.entity.Foxhound;
 import org.violetmoon.quark.content.tweaks.ai.NuzzleGoal;
@@ -86,8 +87,13 @@ public class PatTheDogsModule extends ZetaModule {
 
 					WantLoveGoal.setPetTime(wolf);
 
-					if(wolf instanceof Foxhound && !player.isInWater() && !player.hasEffect(MobEffects.FIRE_RESISTANCE) && !player.getAbilities().invulnerable)
-						player.igniteForSeconds(5);
+					if(wolf instanceof Foxhound &&
+							!player.isInWater() &&
+							!player.hasEffect(MobEffects.FIRE_RESISTANCE) &&
+							!player.getAbilities().invulnerable && ((player.getAttribute(Attributes.BURNING_TIME) != null) &&
+							player.getAttributeValue(Attributes.BURNING_TIME) > 0)) {
+						player.igniteForSeconds(1);
+					}
 				}
 
 				event.setCanceled(true);

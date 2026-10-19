@@ -2,13 +2,15 @@
 
 # Fixes
 
-- Fixed #5683: [Bug] Librarian villager ancient tome trade is not awarded when using enchanted books created in anvil
-- Partially fixed #5680: [Bug?maybe]foxhounds prefer cobblestone furnace 
+- Fixed #5683: Librarian villager ancient tome trade is not awarded when using enchanted books created in anvil
+- Partially fixed #5680: foxhounds prefer cobblestone furnace 
+- Fixed #5687: quark:PetTime not being set on Foxhound 
 
 # Changes
 - Foxhounds now target smokers and blast furnaces to sleep on. They could already speed them up, but would not select them for a place to sleep.
   - This will also affect modded furnaces (it uses AbstractFurnaceBlockEntity instead of FurnaceBlockEntity) 
-- `quark:PetTime` NBT data is no longer set on wolves and shibas if PatTheDogs' dogsWantLove is disabled (set to -1). It is currently NEVER set on foxhounds which is a bug.
+- `quark:PetTime` NBT data is no longer set on wolves and shibas if PatTheDogs' dogsWantLove is disabled (set to -1).
+- Petting tamed foxhounds sets you on fire for 1 second instead of 5. Tamed foxhounds that need pets (only if dogsWantLove is enabled) will now ignite their owners if they come close for 3 seconds instead of 5.
 
 # Additions
 - Merged #5677: Chute ItemHandler capability (Thanks Klisz)

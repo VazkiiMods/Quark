@@ -68,6 +68,7 @@ import org.violetmoon.quark.content.tweaks.ai.WantLoveGoal;
 
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Stream;
 
 import static org.violetmoon.quark.content.mobs.ai.FoxhoundPlaceToRestGoal.Target.*;
 
@@ -168,8 +169,12 @@ public class Foxhound extends Wolf implements Enemy {
 
 		if(WantLoveGoal.needsPets(this)) {
 			Entity owner = getOwner();
-			if(owner != null && owner.distanceToSqr(this) < 1 && !owner.isInWater() && !owner.fireImmune() && (!(owner instanceof Player player) || !player.getAbilities().invulnerable))
-				owner.igniteForSeconds(5);
+			if(owner != null
+					&& owner.distanceToSqr(this) < 1
+					&& !owner.isInWater() && !owner.fireImmune()
+					&& (!(owner instanceof Player player) || !player.getAbilities().invulnerable || (player.getAttribute(Attributes.BURNING_TIME) != null) && player.getAttributeValue(Attributes.BURNING_TIME) <= 0)) {
+				owner.igniteForSeconds(3);
+			}
 		}
 
 		Vec3 pos = position();
@@ -327,6 +332,7 @@ public class Foxhound extends Wolf implements Enemy {
 						this.navigation.stop();
 						this.setTarget(null);
 						this.setInSittingPose(true);
+						WantLoveGoal.setPetTime(this); //only sets time if dogsWantLove > 0
 						level.broadcastEntityEvent(this, (byte) 7);
 					} else {
 						level.broadcastEntityEvent(this, (byte) 6);
