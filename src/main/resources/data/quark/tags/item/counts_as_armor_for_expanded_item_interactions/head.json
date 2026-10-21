@@ -1,0 +1,7 @@
+{
+  "replace": false,
+  "values": [
+    "minecraft:carved_pumpkin",
+    "#minecraft:skulls"
+  ]
+}

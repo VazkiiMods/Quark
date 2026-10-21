@@ -13,9 +13,11 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.tags.TagKey;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.SlotAccess;
 import net.minecraft.world.entity.player.Player;
@@ -92,6 +94,12 @@ public class ExpandedItemInteractionsModule extends ZetaModule {
 	private static boolean staticEnabled = false;
 
 	public static MenuType<HeldShulkerBoxMenu> heldShulkerBoxMenuType;
+
+	public static TagKey<Item> COUNTS_AS_ARMOR_TAG = TagKey.create(Registries.ITEM, Quark.asResource("counts_as_armor_for_expanded_item_interactions"));
+	public static TagKey<Item> HEAD_TAG = TagKey.create(Registries.ITEM, Quark.asResource("counts_as_armor_for_expanded_item_interactions/head"));
+	public static TagKey<Item> CHEST_TAG = TagKey.create(Registries.ITEM, Quark.asResource("counts_as_armor_for_expanded_item_interactions/chest"));
+	public static TagKey<Item> LEG_TAG = TagKey.create(Registries.ITEM, Quark.asResource("counts_as_armor_for_expanded_item_interactions/leg"));
+	public static TagKey<Item> FEET_TAG = TagKey.create(Registries.ITEM, Quark.asResource("counts_as_armor_for_expanded_item_interactions/feet"));
 
 	@LoadEvent
 	public final void register(ZRegister event) {
@@ -201,8 +209,21 @@ public class ExpandedItemInteractionsModule extends ZetaModule {
 
 			if(stack.getItem() instanceof ArmorItem armor) {
 				equipSlot = armor.getEquipmentSlot();
-			} else if(stack.getItem() instanceof ElytraItem)
-				equipSlot = EquipmentSlot.CHEST;
+			}
+			else if(stack.is(COUNTS_AS_ARMOR_TAG)){
+				if(stack.is(HEAD_TAG)){
+					equipSlot = EquipmentSlot.HEAD;
+				}
+				else if(stack.is(CHEST_TAG)){
+					equipSlot = EquipmentSlot.CHEST;
+				}
+				else if(stack.is(LEG_TAG)){
+					equipSlot = EquipmentSlot.LEGS;
+				}
+				else if(stack.is(FEET_TAG)){
+					equipSlot = EquipmentSlot.FEET;
+				}
+			}
 
             //Todo: Possibly do animal armor?
 			if(equipSlot != null && equipSlot.getType() == HUMANOID_ARMOR) {

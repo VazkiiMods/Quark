@@ -1,0 +1,9 @@
+{
+    "replace": false,
+    "values": [
+        "#quark:counts_as_armor_for_expanded_item_interactions/head",
+        "#quark:counts_as_armor_for_expanded_item_interactions/chest",
+        "#quark:counts_as_armor_for_expanded_item_interactions/legs",
+        "#quark:counts_as_armor_for_expanded_item_interactions/feet"
+    ]
+}

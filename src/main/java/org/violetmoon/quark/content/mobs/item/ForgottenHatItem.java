@@ -73,7 +73,7 @@ public class ForgottenHatItem extends ZetaArmorItem implements IZetaItem {
 
 	public static ItemAttributeModifiers createAttributes() {
 		ItemAttributeModifiers.Builder builder = ItemAttributeModifiers.builder();
-		builder.add(Attributes.ARMOR, new AttributeModifier(Quark.asResource("forgotten_hat_armor"), 1, AttributeModifier.Operation.ADD_VALUE), EquipmentSlotGroup.HEAD);
+		//builder.add(Attributes.ARMOR, new AttributeModifier(Quark.asResource("forgotten_hat_armor"), 1, AttributeModifier.Operation.ADD_VALUE), EquipmentSlotGroup.HEAD);
 		builder.add(Attributes.LUCK, new AttributeModifier(Quark.asResource("forgotten_hat_luck"), 1, AttributeModifier.Operation.ADD_VALUE), EquipmentSlotGroup.HEAD);
 		builder.add(Attributes.ENTITY_INTERACTION_RANGE, new AttributeModifier(Quark.asResource("forgotten_hat_entity_interaction_range"),  2, AttributeModifier.Operation.ADD_VALUE), EquipmentSlotGroup.HEAD);
 		builder.add(Attributes.BLOCK_INTERACTION_RANGE, new AttributeModifier(Quark.asResource("forgotten_hat_block_interaction_range"), 2, AttributeModifier.Operation.ADD_VALUE), EquipmentSlotGroup.HEAD);

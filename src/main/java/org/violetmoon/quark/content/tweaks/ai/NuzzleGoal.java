@@ -13,6 +13,7 @@ package org.violetmoon.quark.content.tweaks.ai;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.TamableAnimal;
+import net.minecraft.world.entity.ai.goal.BegGoal;
 import net.minecraft.world.entity.ai.goal.Goal;
 import net.minecraft.world.entity.ai.navigation.FlyingPathNavigation;
 import net.minecraft.world.entity.ai.navigation.GroundPathNavigation;
@@ -87,6 +88,8 @@ public class NuzzleGoal extends Goal {
 
 	@Override
 	public void tick() {
+		//System.out.println(whineCooldown);
+
 		this.creature.getLookControl().setLookAt(this.owner, 10.0F, this.creature.getMaxHeadXRot());
 
 		if(!this.creature.isOrderedToSit()) {
