@@ -1,7 +1,7 @@
 # Quark 4.1-488 For Neoforge 1.21.1
 
 Fixes, changes, and a nerf to Forgotten Hat.
-There is a known issue with the "Dogs Want Love" config option not working right, I recommend you don't use it.
+There is a [known issue](https://github.com/VazkiiMods/Quark/issues/5688) with the "Dogs Want Love" config option not working right, I recommend you don't use it.
 
 # Fixes
 
@@ -20,6 +20,7 @@ There is a known issue with the "Dogs Want Love" config option not working right
 - Made Expanded Item Interactions' armor interaction exceptions data-driven instead of hardcoded:
   - Added `counts_as_armor_for_expanded_item_interactions` item tag and sub-tags (head, chest, etc) for items that should be equippable to armor slots but aren't ArmorItems.
   - Pumpkins and skulls can now be equipped via Expanded Item Interactions.
+- Rotation Lock module now has an option to display what key to press to disable it alongside its crosshair indicator, enabled by default.
 - Merged #5677: Chute ItemHandler capability (Thanks Klisz)
   - Chutes work with modded item transfers now.
 - Merged #5684: Fixed librarian ancient tome trade rejecting anvil made books (thanks midori-0)

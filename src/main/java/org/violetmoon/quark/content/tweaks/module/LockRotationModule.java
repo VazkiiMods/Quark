@@ -63,6 +63,9 @@ public class LockRotationModule extends ZetaModule {
 	@Config(description = "When true, lock rotation indicator in the same style as crosshair")
 	public static boolean renderLikeCrossHair = true;
 
+	@Config(description = "When true, the keybind for rotation lock will be displayed next to the indicator")
+	public static boolean showKeybind = true;
+
 	@LoadEvent
 	public final void configChanged(ZConfigChanged event) {
 		lockProfiles.clear();
@@ -254,6 +257,11 @@ public class LockRotationModule extends ZetaModule {
                         int x = window.getGuiScaledWidth() / 2 + 20;
                         int y = window.getGuiScaledHeight() / 2 - 8;
                         guiGraphics.blit(ClientUtil.GENERAL_ICONS, x, y, clientProfile.facing.ordinal() * 16, 65, 16, 16, 256, 256);
+						if(showKeybind && !keybind.isUnbound()){
+							int keyX = x + 20;
+							int keyY = y + 3;
+							guiGraphics.drawString(Minecraft.getInstance().font, "[" + keybind.getKey().getDisplayName().getString() + "]", keyX, keyY, -1);
+						}
 
                         if (clientProfile.half > -1)
                             guiGraphics.blit(ClientUtil.GENERAL_ICONS, x + 16, y, clientProfile.half * 16, 79, 16, 16, 256, 256);
