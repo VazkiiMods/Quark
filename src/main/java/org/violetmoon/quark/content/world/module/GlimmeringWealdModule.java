@@ -14,6 +14,7 @@ import net.minecraft.world.level.biome.Climate;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.FlowerPotBlock;
+import net.minecraft.world.level.levelgen.feature.ConfiguredFeature;
 import net.minecraft.world.level.levelgen.placement.PlacedFeature;
 import org.violetmoon.quark.base.Quark;
 import org.violetmoon.quark.base.util.CompostManager;
@@ -38,6 +39,8 @@ public class GlimmeringWealdModule extends ZetaModule {
 
     public static final ResourceLocation BIOME_NAME = Quark.asResource("glimmering_weald");
     public static final ResourceKey<Biome> BIOME_KEY = Quark.asResourceKey(Registries.BIOME, "glimmering_weald");
+
+    public static ResourceKey<ConfiguredFeature<?, ?>> GLOW_SHROOMS_CONFIGURATION = Quark.asResourceKey(Registries.CONFIGURED_FEATURE, "glow_shrooms");
 
 	public static ResourceKey<PlacedFeature> GLOW_SHROOMS_FEATURE = Quark.asResourceKey(Registries.PLACED_FEATURE, "glow_shrooms");
 	public static ResourceKey<PlacedFeature> GLOW_SHROOMS_EXTRAS_FEATURE = Quark.asResourceKey(Registries.PLACED_FEATURE, "glow_shrooms_extras");
@@ -121,8 +124,6 @@ public class GlimmeringWealdModule extends ZetaModule {
 
         Quark.ZETA.advancementModifierRegistry.addModifier(new AdventuringTimeModifier(this, ImmutableSet.of(BIOME_KEY)));
     }
-
-
 
     @LoadEvent
     public void setup(ZCommonSetup e) {
