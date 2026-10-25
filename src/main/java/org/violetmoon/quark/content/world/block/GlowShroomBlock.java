@@ -1,6 +1,7 @@
 package org.violetmoon.quark.content.world.block;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Holder;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.server.level.ServerLevel;
@@ -13,15 +14,17 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.BonemealableBlock;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.levelgen.feature.ConfiguredFeature;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
-
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-
 import org.violetmoon.quark.base.Quark;
+import org.violetmoon.quark.content.world.module.GlimmeringWealdModule;
 import org.violetmoon.zeta.block.ZetaBushBlock;
 import org.violetmoon.zeta.module.ZetaModule;
+
+import java.util.Optional;
 
 public class GlowShroomBlock extends ZetaBushBlock implements BonemealableBlock {
 
@@ -73,7 +76,9 @@ public class GlowShroomBlock extends ZetaBushBlock implements BonemealableBlock 
 
 	@Override
 	public void performBonemeal(@NotNull ServerLevel world, @NotNull RandomSource random, @NotNull BlockPos pos, @NotNull BlockState state) {
-		HugeGlowShroomBlock.place(world, random, pos);
+		Optional<? extends Holder<ConfiguredFeature<?, ?>>> optional = world.registryAccess().registryOrThrow(Registries.CONFIGURED_FEATURE).getHolder(GlimmeringWealdModule.GLOW_SHROOMS_CONFIGURATION);
+        if (optional.isPresent())
+			optional.get().value().place(world, world.getChunkSource().getGenerator(), random, pos);
 	}
 
 }
