@@ -1,11 +1,13 @@
 package org.violetmoon.quark.content.tweaks.ai;
 
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.TamableAnimal;
 import net.minecraft.world.entity.ai.goal.Goal;
 import net.minecraft.world.phys.Vec3;
 
 import org.violetmoon.quark.content.tweaks.module.PatTheDogsModule;
+import org.violetmoon.zeta.util.Utils;
 
 import java.util.EnumSet;
 
@@ -64,8 +66,12 @@ public class WantLoveGoal extends Goal {
 		else {
 			double distanceToTarget = this.creature.distanceToSqr(this.leapTarget);
 
-			return 4 <= distanceToTarget && distanceToTarget <= 16 &&
-					this.creature.onGround() && this.creature.getRandom().nextInt(5) == 0;
+			//between 4 and 16 blocks, on the ground, and a 1 in 5 chance
+			boolean canUse = 4 <= distanceToTarget && distanceToTarget <= 16 && this.creature.onGround() && this.creature.getRandom().nextInt(5) == 0;
+			if(canUse && Utils.isDevEnv()){
+				this.creature.setCustomName(Component.literal("WantLoveGoal canUse"));
+			}
+			return canUse;
 		}
 	}
 
@@ -78,6 +84,10 @@ public class WantLoveGoal extends Goal {
 
 	@Override
 	public void start() {
+		if(Utils.isDevEnv()){
+			this.creature.setCustomName(Component.literal("WantLoveGoal start"));
+			this.creature.setCustomNameVisible(true);
+		}
 		Vec3 leapPos = leapTarget.position();
 		Vec3 creaturePos = creature.position();
 
@@ -97,5 +107,6 @@ public class WantLoveGoal extends Goal {
 		motion = motion.add(0, leapUpMotion, 0);
 
 		this.creature.setDeltaMovement(motion);
+		//seems like this is intended to make wolf/foxhound bounce slightly as it approaches you for a nuzzle?
 	}
 }

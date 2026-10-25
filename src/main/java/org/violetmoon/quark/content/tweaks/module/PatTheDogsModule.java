@@ -65,8 +65,8 @@ public class PatTheDogsModule extends ZetaModule {
 			boolean alreadySetUp = wolf.goalSelector.getAvailableGoals().stream().anyMatch((goal) -> goal.getGoal() instanceof WantLoveGoal);
 
 			if(!alreadySetUp) {
-				MiscUtil.addGoalJustAfterLatestWithPriority(wolf.goalSelector, 4, new NuzzleGoal(wolf, 0.5F, 16, 2, SoundEvents.WOLF_WHINE));
-				MiscUtil.addGoalJustAfterLatestWithPriority(wolf.goalSelector, 5, new WantLoveGoal(wolf, 0.2F));
+				MiscUtil.addGoalJustAfterLatestWithPriority(wolf.goalSelector, 20, new WantLoveGoal(wolf, 0.2F));
+				MiscUtil.addGoalJustAfterLatestWithPriority(wolf.goalSelector, 21, new NuzzleGoal(wolf, 0.5F, 16, 2, SoundEvents.WOLF_WHINE));
 			}
 		}
 	}

@@ -1,7 +1,7 @@
 # Quark 4.1-488 For Neoforge 1.21.1
 
-Fixes, changes, and a nerf to Forgotten Hat.
-There is a [known issue](https://github.com/VazkiiMods/Quark/issues/5688) with the "Dogs Want Love" config option not working right, I recommend you don't use it.
+Fixes, minor changes, and a nerf to Forgotten Hat.
+There is a [known issue](https://github.com/VazkiiMods/Quark/issues/5688) with the "Dogs Want Love" config option not working right, and it seems nobody can remember its intended behavior, so I recommend you don't use it.
 
 # Fixes
 

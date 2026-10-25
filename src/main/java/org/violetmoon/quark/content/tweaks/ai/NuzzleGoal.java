@@ -10,6 +10,7 @@
  */
 package org.violetmoon.quark.content.tweaks.ai;
 
+import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.TamableAnimal;
@@ -19,6 +20,7 @@ import net.minecraft.world.entity.ai.navigation.FlyingPathNavigation;
 import net.minecraft.world.entity.ai.navigation.GroundPathNavigation;
 import net.minecraft.world.entity.ai.navigation.PathNavigation;
 import net.minecraft.world.level.pathfinder.PathType;
+import org.violetmoon.zeta.util.Utils;
 
 import java.util.EnumSet;
 
@@ -77,6 +79,10 @@ public class NuzzleGoal extends Goal {
 		this.whineCooldown = 10;
 		this.oldWaterCost = this.creature.getPathfindingMalus(PathType.WATER);
 		this.creature.setPathfindingMalus(PathType.WATER, 0.0F);
+		if(Utils.isDevEnv()) {
+			this.creature.setCustomName(Component.literal("NuzzleGoal started"));
+			this.creature.setCustomNameVisible(true);
+		}
 	}
 
 	@Override
@@ -84,11 +90,16 @@ public class NuzzleGoal extends Goal {
 		this.owner = null;
 		this.petPathfinder.stop();
 		this.creature.setPathfindingMalus(PathType.WATER, this.oldWaterCost);
+		if(Utils.isDevEnv()) {
+			this.creature.setCustomName(Component.literal("NuzzleGoal stopped"));
+		}
 	}
 
 	@Override
 	public void tick() {
-		//System.out.println(whineCooldown);
+		if(Utils.isDevEnv()) {
+			this.creature.setCustomName(Component.literal("NuzzleGoal whine " + whineCooldown + " rebuild " + timeUntilRebuildPath + " "));
+		}
 
 		this.creature.getLookControl().setLookAt(this.owner, 10.0F, this.creature.getMaxHeadXRot());
 
