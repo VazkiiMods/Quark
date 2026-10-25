@@ -314,10 +314,12 @@ public class Stoneling extends PathfinderMob {
 		return air;
 	}
 
+	/* now using minecraft:fall_damage_immune entity type tag
 	@Override
 	public boolean causeFallDamage(float distance, float damageMultiplier, @NotNull DamageSource source) {
 		return false;
 	}
+	 */
 
 	@Override
 	protected void actuallyHurt(@NotNull DamageSource damageSrc, float damageAmount) {

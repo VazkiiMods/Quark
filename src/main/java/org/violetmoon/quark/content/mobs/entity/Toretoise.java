@@ -93,9 +93,9 @@ public class Toretoise extends Animal {
 
 	@Override
 	protected void registerGoals() {
-		goalSelector.addGoal(0, new BreedGoal(this, 1.0));
-		goalSelector.addGoal(1, new TemptGoal(this, 1.25, getGoodFood(), false));
-		goalSelector.addGoal(2, new FollowParentGoal(this, 1.25));
+		//goalSelector.addGoal(0, new BreedGoal(this, 1.0)); //we don't need this
+		goalSelector.addGoal(1, new TemptGoal(this, 1.25, getGoodFood(), false)); //this is what actually makes it follow
+		//goalSelector.addGoal(2, new FollowParentGoal(this, 1.25)); //why is this here T_T
 		goalSelector.addGoal(3, new RandomStrollGoal(this, 1.0D));
 		goalSelector.addGoal(4, new LookAtPlayerGoal(this, Player.class, 6.0F));
 		goalSelector.addGoal(5, new RandomLookAroundGoal(this));
@@ -369,10 +369,12 @@ public class Toretoise extends Animal {
 		// NO-OP
 	}
 
+	/* now using minecraft:fall_damage_immune entity type tag
 	@Override
 	public boolean causeFallDamage(float distance, float damageMultiplier, @NotNull DamageSource source) {
 		return false;
 	}
+	 */
 
 	@Override
 	protected float getWaterSlowDown() {
@@ -438,10 +440,16 @@ public class Toretoise extends Animal {
 				.add(Attributes.STEP_HEIGHT, 1.0D);
 	}
 
-	@Override // createChild
+	@Override
+	public boolean canMate(Animal otherAnimal) {
+		return false;
+	}
+
+	//above should prevent breeding but just in case
+	@Override
 	public Toretoise getBreedOffspring(@NotNull ServerLevel sworld, @NotNull AgeableMob otherParent) {
 		Toretoise e = new Toretoise(ToretoiseModule.toretoiseType, level());
-		e.kill(); // kill the entity cuz toretoise doesn't make babies
+		e.discard();
 		return e;
 	}
 

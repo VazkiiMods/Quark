@@ -62,6 +62,7 @@ import org.violetmoon.quark.addons.oddities.module.TinyPotatoModule;
 import org.violetmoon.quark.base.Quark;
 import org.violetmoon.quark.base.components.QuarkDataComponents;
 import org.violetmoon.quark.base.handler.QuarkSounds;
+import org.violetmoon.quark.content.mobs.ai.FoxhoundBegGoal;
 import org.violetmoon.quark.content.mobs.ai.FoxhoundPlaceToRestGoal;
 import org.violetmoon.quark.content.mobs.module.FoxhoundModule;
 import org.violetmoon.quark.content.tweaks.ai.WantLoveGoal;
@@ -239,7 +240,7 @@ public class Foxhound extends Wolf implements Enemy {
 		this.goalSelector.addGoal(8, new FoxhoundPlaceToRestGoal(this, 0.8D, GLOWING));
         this.goalSelector.addGoal(9, new FollowOwnerGoal(this, 1.0D, 10.0F, 2.0F));
         this.goalSelector.addGoal(11, new WaterAvoidingRandomStrollGoal(this, 1.0D));
-		this.goalSelector.addGoal(12, new BegGoal(this, 8.0F));
+		this.goalSelector.addGoal(12, new FoxhoundBegGoal(this, 8.0F));
 		this.goalSelector.addGoal(13, new LookAtPlayerGoal(this, Player.class, 8.0F));
 		this.goalSelector.addGoal(14, new RandomLookAroundGoal(this));
 		this.targetSelector.addGoal(1, new OwnerHurtByTargetGoal(this));
@@ -313,6 +314,8 @@ public class Foxhound extends Wolf implements Enemy {
 
 		if(itemstack.getItem() == Items.BONE && !isTame())
 			return InteractionResult.PASS; //prevent bone being passed to superclass
+		else if(super.isFood(itemstack) && !isTame())
+			return InteractionResult.PASS;
 
 		Level level = level();
 		if(this.isTame()) {

@@ -154,10 +154,12 @@ public class Wraith extends Zombie {
 		return super.finalizeSpawn(worldIn, difficultyIn, reason, spawnDataIn);
 	}
 
+	/* now using minecraft:fall_damage_immune entity type tag
 	@Override
 	public boolean causeFallDamage(float distance, float damageMultiplier, @NotNull DamageSource source) {
 		return false;
 	}
+	 */
 
 	@Override
 	public void addAdditionalSaveData(@NotNull CompoundTag compound) {

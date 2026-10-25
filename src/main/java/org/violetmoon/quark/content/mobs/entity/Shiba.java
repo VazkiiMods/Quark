@@ -76,17 +76,21 @@ public class Shiba extends TamableAnimal {
 	protected void registerGoals() {
 		goalSelector.addGoal(1, new FloatGoal(this));
 		goalSelector.addGoal(2, new SitWhenOrderedToGoal(this));
+
 		goalSelector.addGoal(3, new BarkAtDarknessGoal(this));
 		goalSelector.addGoal(4, new FetchArrowGoal(this));
 		goalSelector.addGoal(5, new DeliverFetchedItemGoal(this, 1.1D, -1F, 32.0F));
+
 		goalSelector.addGoal(6, new FollowOwnerGoal(this, 1.0D, 10.0F, 2.0F));
 		goalSelector.addGoal(7, new TemptGoal(this, 1, Ingredient.of(Items.BONE), false));
 		goalSelector.addGoal(8, new BreedGoal(this, 1.0D));
-		goalSelector.addGoal(9, new NuzzleGoal(this, 0.5F, 16, 2, QuarkSounds.ENTITY_SHIBA_WHINE));
-		goalSelector.addGoal(10, new WantLoveGoal(this, 0.2F));
-		goalSelector.addGoal(11, new WaterAvoidingRandomStrollGoal(this, 1.0D));
-		goalSelector.addGoal(12, new LookAtPlayerGoal(this, Player.class, 8.0F));
-		goalSelector.addGoal(13, new RandomLookAroundGoal(this));
+		goalSelector.addGoal(9, new WaterAvoidingRandomStrollGoal(this, 1.0D));
+		//BegGoal would go here
+		goalSelector.addGoal(10, new LookAtPlayerGoal(this, Player.class, 8.0F));
+		goalSelector.addGoal(10, new RandomLookAroundGoal(this));
+
+		goalSelector.addGoal(20, new NuzzleGoal(this, 0.5F, 16, 2, QuarkSounds.ENTITY_SHIBA_WHINE));
+		goalSelector.addGoal(21, new WantLoveGoal(this, 0.2F));
 	}
 
 	@Override
