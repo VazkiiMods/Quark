@@ -89,7 +89,7 @@ public class UsageTickerModule extends ZetaModule {
 			if (event.getLayerName().equals(VanillaGuiLayers.HOTBAR) && !Minecraft.getInstance().options.hideGui) {
 				Window window = event.getWindow();
 				LocalPlayer player = Minecraft.getInstance().player;
-				float partial = event.getPartialTick().getGameTimeDeltaTicks();
+				float partial = event.getPartialTick().getGameTimeDeltaPartialTick(false);
 
 				GuiGraphics guiGraphics = event.getGuiGraphics();
 
@@ -178,8 +178,11 @@ public class UsageTickerModule extends ZetaModule {
 
 					ItemStack stack = getRenderedStack(player);
 
-					guiGraphics.renderItem(stack, (int) x, (int) y);
-					guiGraphics.renderItemDecorations(Minecraft.getInstance().font, stack, (int) x, (int) y);
+					guiGraphics.pose().pushPose();
+					guiGraphics.pose().translate(x, y, 0);
+					guiGraphics.renderItem(stack, 0, 0);
+					guiGraphics.renderItemDecorations(Minecraft.getInstance().font, stack, 0, 0);
+					guiGraphics.pose().popPose();
 				}
 			}
 
