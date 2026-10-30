@@ -7,6 +7,7 @@ import io.netty.buffer.ByteBuf;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -257,14 +258,18 @@ public class LockRotationModule extends ZetaModule {
                         int x = window.getGuiScaledWidth() / 2 + 20;
                         int y = window.getGuiScaledHeight() / 2 - 8;
                         guiGraphics.blit(ClientUtil.GENERAL_ICONS, x, y, clientProfile.facing.ordinal() * 16, 65, 16, 16, 256, 256);
-						if(showKeybind && !keybind.isUnbound()){
-							int keyX = x + 20;
-							int keyY = y + 3;
-							guiGraphics.drawString(Minecraft.getInstance().font, "[" + keybind.getKey().getDisplayName().getString() + "]", keyX, keyY, -1);
-						}
 
                         if (clientProfile.half > -1)
                             guiGraphics.blit(ClientUtil.GENERAL_ICONS, x + 16, y, clientProfile.half * 16, 79, 16, 16, 256, 256);
+
+                        if (showKeybind && !keybind.isUnbound()) {
+                            Font font = Minecraft.getInstance().font;
+                            String keyText = "[" + keybind.getKey().getDisplayName().getString() + "]";
+                            int keyX = x + 8 - font.width(keyText) / 2;
+                            int keyY = y + 18;
+
+                            guiGraphics.drawString(font, keyText, keyX, keyY, -1);
+                        }
                     }
 
                     RenderSystem.defaultBlendFunc();
