@@ -9,6 +9,7 @@ displayName="Quark"
 version="${file.jarVersion}"
 authors="Vazkii, WireSegal, MCVinnyq, Sully"
 description='''Small things, improving Minecraft bit by bit.'''
+logoFile = "logo.png"
 
 [[mixins]]
 config="quark.mixins.json"
