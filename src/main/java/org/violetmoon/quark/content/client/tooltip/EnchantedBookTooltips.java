@@ -5,17 +5,18 @@ import com.google.common.collect.Multimap;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.datafixers.util.Either;
-
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent;
 import net.minecraft.core.Holder;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.FormattedText;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.inventory.tooltip.TooltipComponent;
 import net.minecraft.world.item.Item;
@@ -23,10 +24,13 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.EnchantmentInstance;
-
 import net.minecraft.world.item.enchantment.ItemEnchantments;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.neoforge.client.event.ClientPlayerNetworkEvent;
+import net.neoforged.neoforge.event.TagsUpdatedEvent;
 import org.jetbrains.annotations.NotNull;
-
 import org.violetmoon.quark.base.Quark;
 import org.violetmoon.quark.base.components.QuarkDataComponents;
 import org.violetmoon.quark.content.client.module.ImprovedTooltipsModule;
@@ -41,13 +45,31 @@ import java.util.List;
 public class EnchantedBookTooltips {
 
 	private static List<ItemStack> testItems = null;
-	private static Multimap<Enchantment, ItemStack> additionalStacks = null;
+	//TODO: UNSAFE! this is a static map holding a registry bound object. Should be cleared with level reload. posibly with a module override mehtod. holding resource key is just a workaround makes it less bad
+	private static Multimap<ResourceKey<Enchantment>, ItemStack> additionalStacks = null;
 
 	public static final String TABLE_ONLY_DISPLAY = "quark:only_show_table_enchantments";
 
 	public static void reloaded() {
 		additionalStacks = null;
 		testItems = null;
+	}
+
+	//hack workaround until a better shape is found. will leave like this since rewrite is coming anyways
+	@EventBusSubscriber(value = Dist.CLIENT)
+	public static class LevelLifecycle {
+
+		@SubscribeEvent
+		public static void onLoggingOut(ClientPlayerNetworkEvent.LoggingOut event) {
+			additionalStacks = null;
+		}
+
+		@SubscribeEvent
+		public static void onTagsUpdated(TagsUpdatedEvent event) {
+			//server thread fires this too in singleplayer
+			if(event.getUpdateCause() == TagsUpdatedEvent.UpdateCause.CLIENT_PACKET_RECEIVED)
+				additionalStacks = null;
+		}
 	}
 
 	public static void makeTooltip(ZGatherTooltipComponents event) {
@@ -72,12 +94,12 @@ public class EnchantedBookTooltips {
 					Either<FormattedText, TooltipComponent> elmAt = tooltip.get(tooltipIndex);
 					if(elmAt.left().isPresent() && elmAt.left().get().equals(match)) {
 						boolean tableOnly = stack.has(QuarkDataComponents.TABLE_ONLY_ENCHANTS) && stack.get(QuarkDataComponents.TABLE_ONLY_ENCHANTS);
-						List<ItemStack> items = getItemsForEnchantment(ed.enchantment.value(), tableOnly);
+						List<ItemStack> items = getItemsForEnchantment(ed.enchantment, tableOnly, mc.level.registryAccess());
 						int itemCount = items.size();
 						int lines = (int) Math.ceil((double) itemCount / 10.0);
 
 						int len = 3 + Math.min(10, itemCount) * 9;
-						tooltip.add(tooltipIndex + 1, Either.right(new EnchantedBookComponent(len, lines * 10, ed.enchantment.value(), tableOnly)));
+						tooltip.add(tooltipIndex + 1, Either.right(new EnchantedBookComponent(len, lines * 10, ed.enchantment, tableOnly)));
 
 						break;
 					}
@@ -86,9 +108,7 @@ public class EnchantedBookTooltips {
 		}
 	}
 
-	private static ItemStack BOOK;
-
-	private static List<ItemStack> getItemsForEnchantment(Enchantment e, boolean onlyForTable) {
+	private static List<ItemStack> getItemsForEnchantment(Holder<Enchantment> e, boolean onlyForTable, HolderLookup.Provider ra) {
 		List<ItemStack> list = new ArrayList<>();
 
 		for(ItemStack stack : getTestItems()) {
@@ -96,21 +116,18 @@ public class EnchantedBookTooltips {
 			if(item instanceof IDisableable<?> disableable && !disableable.isEnabled())
 				continue;
 
-			if(!stack.isEmpty() && e.canEnchant(stack)) {
-				if((!e.isPrimaryItem(stack) || !stack.isEnchantable() || Quark.ZETA.itemExtensions.get(stack).getEnchantmentValueZeta(stack) <= 0))
+			if(!stack.isEmpty() && stack.supportsEnchantment(e)) {
+				if((!stack.isPrimaryItemFor(e) || !stack.isEnchantable() || Quark.ZETA.itemExtensions.get(stack).getEnchantmentValueZeta(stack) <= 0))
 					continue;
 				list.add(stack);
 			}
 		}
 
 		if(onlyForTable) {
-			if(BOOK == null)
-				BOOK = new ItemStack(Items.BOOK);
-			list.add(BOOK);
+			list.add(Items.BOOK.getDefaultInstance());
 		}
 
-		if(getAdditionalStacks().containsKey(e))
-			list.addAll(getAdditionalStacks().get(e));
+		e.unwrapKey().ifPresent(key -> list.addAll(getAdditionalStacks(ra).get(key)));
 
 		return list;
 	}
@@ -139,20 +156,22 @@ public class EnchantedBookTooltips {
 		return retList;
 	}
 
-	private static Multimap<Enchantment, ItemStack> getAdditionalStacks() {
-		if(additionalStacks == null)
-			computeAdditionalStacks();
+	private static Multimap<ResourceKey<Enchantment>, ItemStack> getAdditionalStacks(HolderLookup.Provider ra) {
+		if (additionalStacks == null) {
+			additionalStacks = computeAdditionalStacks(ra);
+		}
 		return additionalStacks;
 	}
 
 	public static List<ItemStack> getTestItems() {
-		if(testItems == null)
-			computeTestItems();
+		if (testItems == null) {
+			testItems = computeTestItems();
+		}
 		return testItems;
 	}
 
-	private static void computeTestItems() {
-		testItems = ImprovedTooltipsModule.enchantingStacks.stream()
+	private static List<ItemStack> computeTestItems() {
+		return ImprovedTooltipsModule.enchantingStacks.stream()
 				.map(ResourceLocation::parse)
 				.map(BuiltInRegistries.ITEM::get)
 				.filter(i -> i != Items.AIR)
@@ -160,8 +179,21 @@ public class EnchantedBookTooltips {
 				.toList();
 	}
 
-	private static void computeAdditionalStacks() {
-		additionalStacks = HashMultimap.create();
+	private static Multimap<ResourceKey<Enchantment>, ItemStack> computeAdditionalStacks(HolderLookup.Provider ra) {
+		Multimap<ResourceKey<Enchantment>, ItemStack> additionalStacks = HashMultimap.create();
+		var enchantments = ra.lookupOrThrow(Registries.ENCHANTMENT);
+
+		for(Holder<Item> item : BuiltInRegistries.ITEM.getTagOrEmpty(ImprovedTooltipsModule.ENCHANTING_TOOLTIP_ITEMS)) {
+			if(getTestItems().stream().anyMatch(s -> s.is(item)))
+				continue;
+
+			ItemStack stack = item.value().getDefaultInstance();
+			enchantments.listElements()
+					.filter(e -> stack.supportsEnchantment(e) && stack.isPrimaryItemFor(e))
+					.forEach(
+							ench -> additionalStacks.put(ench.key(), stack));
+
+		}
 
 		for(String s : ImprovedTooltipsModule.enchantingAdditionalStacks) {
 			if(!s.contains("="))
@@ -171,17 +203,19 @@ public class EnchantedBookTooltips {
 			String left = tokens[0];
 			String right = tokens[1];
 
-			Quark.ZETA.hackilyGetCurrentLevelRegistryAccess().registry(Registries.ENCHANTMENT).get().getOptional(ResourceLocation.parse(left))
+			enchantments.get(ResourceKey.create(Registries.ENCHANTMENT, ResourceLocation.parse(left)))
 					.ifPresent(ench -> {
 						for(String itemId : right.split(",")) {
-							BuiltInRegistries.ITEM.getOptional(ResourceLocation.parse(itemId)).ifPresent(item -> additionalStacks.put(ench, new ItemStack(item)));
+							BuiltInRegistries.ITEM.getOptional(ResourceLocation.parse(itemId)).ifPresent(item ->
+									additionalStacks.put(ench.key(), item.getDefaultInstance()));
 						}
 					});
 		}
+		return additionalStacks;
 	}
 
 	public record EnchantedBookComponent(int width, int height,
-			Enchantment enchantment, boolean tableOnly) implements ClientTooltipComponent, TooltipComponent {
+			Holder<Enchantment> enchantment, boolean tableOnly) implements ClientTooltipComponent, TooltipComponent {
 
 		@Override
 		public void renderImage(@NotNull Font font, int tooltipX, int tooltipY, @NotNull GuiGraphics guiGraphics) {
@@ -190,7 +224,7 @@ public class EnchantedBookTooltips {
 			pose.pushPose();
 			pose.translate(tooltipX, tooltipY, 0);
 			pose.scale(0.5f, 0.5f, 1.0f);
-			List<ItemStack> items = getItemsForEnchantment(enchantment, tableOnly);
+			List<ItemStack> items = getItemsForEnchantment(enchantment, tableOnly, Minecraft.getInstance().level.registryAccess());
 			int drawn = 0;
 			for(ItemStack testStack : items) {
 				guiGraphics.renderItem(testStack, 6 + (drawn % 10) * 18, (drawn / 10) * 20);
