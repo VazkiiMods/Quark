@@ -1,6 +1,7 @@
 package org.violetmoon.quark.content.tools.module;
 
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderers;
+import net.minecraft.client.resources.model.ModelResourceLocation;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
@@ -15,6 +16,7 @@ import org.violetmoon.quark.content.tools.block.CloudBlock;
 import org.violetmoon.quark.content.tools.block.be.CloudBlockEntity;
 import org.violetmoon.quark.content.tools.client.render.be.CloudRenderer;
 import org.violetmoon.quark.content.tools.item.BottledCloudItem;
+import org.violetmoon.zeta.client.event.load.ZAddModels;
 import org.violetmoon.zeta.client.event.load.ZClientSetup;
 import org.violetmoon.zeta.config.Config;
 import org.violetmoon.zeta.event.bus.LoadEvent;
@@ -66,9 +68,17 @@ public class BottledCloudModule extends ZetaModule {
 
 	@ZetaLoadModule(clientReplacement = true)
 	public static class Client extends BottledCloudModule {
+
+		public static final ModelResourceLocation MODEL = ModelResourceLocation.standalone(Quark.asResource("extra/cloud"));
+
 		@LoadEvent
 		public final void clientSetup(ZClientSetup event) {
 			BlockEntityRenderers.register(blockEntityType, CloudRenderer::new);
+		}
+
+		@LoadEvent
+		public void registerAdditionalModels(ZAddModels event) {
+			event.register(MODEL);
 		}
 
 	}

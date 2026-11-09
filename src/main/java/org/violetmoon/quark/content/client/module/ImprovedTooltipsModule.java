@@ -2,6 +2,9 @@ package org.violetmoon.quark.content.client.module;
 
 import com.google.common.collect.Lists;
 
+import net.minecraft.core.registries.Registries;
+import net.minecraft.tags.TagKey;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 
 import org.violetmoon.quark.base.Quark;
@@ -80,19 +83,23 @@ public class ImprovedTooltipsModule extends ZetaModule {
 	public static List<String> enchantingStacks = Lists.newArrayList("minecraft:diamond_sword", "minecraft:diamond_pickaxe", "minecraft:diamond_shovel", "minecraft:diamond_axe", "minecraft:diamond_hoe",
 			"minecraft:diamond_helmet", "minecraft:diamond_chestplate", "minecraft:diamond_leggings", "minecraft:diamond_boots", "minecraft:mace",
 			"minecraft:shears", "minecraft:bow", "minecraft:fishing_rod", "minecraft:crossbow", "minecraft:trident", "minecraft:elytra", "minecraft:shield",
-			"quark:pickarang", "supplementaries:slingshot", "supplementaries:bubble_blower", "farmersdelight:diamond_knife", "the_bumblezone:stinger_spear", 
+			"quark:pickarang", "farmersdelight:diamond_knife", "the_bumblezone:stinger_spear", 
 			"the_bumblezone:crystal_cannon", "the_bumblezone:honey_crystal_shield", "the_bumblezone:honey_bee_leggings_2");
 
 	@Config(
-		description = "A list of additional stacks to display on each enchantment\n"
-				+ "The format is as follows:\n"
-				+ "enchant_id=item1,item2,item3...\n"
-				+ "So to display a carrot on a stick on a mending book, for example, you use:\n"
-				+ "minecraft:mending=minecraft:carrot_on_a_stick"
+		description = """
+                A list of additional stacks to display on each enchantment
+                The format is as follows:
+                enchant_id=item1,item2,item3...
+                So to display a carrot on a stick on a mending book, for example, you use:
+                minecraft:mending=minecraft:carrot_on_a_stick"""
 	)
 	public static List<String> enchantingAdditionalStacks = Lists.newArrayList();
 
 	private static final String IGNORE_TAG = "quark:no_tooltip";
+
+	//same as enchantingStacks but fir mods to add stuff to
+	public static final TagKey<Item> ENCHANTING_TOOLTIP_ITEMS = Quark.asTagKey(Registries.ITEM, "enchanting_tooltip_items");
 
 	public static boolean staticEnabled;
 

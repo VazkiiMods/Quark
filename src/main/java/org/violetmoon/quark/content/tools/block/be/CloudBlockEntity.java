@@ -30,7 +30,7 @@ public class CloudBlockEntity extends ZetaBlockEntity {
 			be.liveTime--;
 
 			if(level.isClientSide && be.liveTime % 20 == 0)
-				for(int i = 0; i < (10 - (200 - be.liveTime) / 20); i++)
+				for(int i = 0; i < (7 - (200 - be.liveTime) / 30); i++)
 					level.addParticle(ParticleTypes.CLOUD, be.worldPosition.getX() + Math.random(), be.worldPosition.getY() + Math.random(), be.worldPosition.getZ() + Math.random(), 0, 0, 0);
 		} else {
 			if(!level.isClientSide)
