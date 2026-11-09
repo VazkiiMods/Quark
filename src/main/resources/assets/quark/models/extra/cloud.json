@@ -1,0 +1,20 @@
+{
+    "textures": {
+        "cloud": "quark:block/cloud",
+        "particle": "quark:block/cloud"
+    },
+    "elements": [
+        {
+            "from": [3, 3, 3],
+            "to": [13, 13, 13],
+            "faces": {
+                "north": { "texture": "#cloud" },
+                "south": { "texture": "#cloud" },
+                "east": { "texture": "#cloud" },
+                "west": { "texture": "#cloud" },
+                "up": { "texture": "#cloud" },
+                "down": { "texture": "#cloud" }
+            }
+        }
+    ]
+}
