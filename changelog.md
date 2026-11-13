@@ -1,9 +1,18 @@
-# Pending changes:
+Quark 4.1-489 (... and Zeta 1.1-41)
 
-- cloud in a bottle has smoother animation (fixed interpolation), is ever so slightly bigger, starting at 10 pixels
-- the block also has pixel consistent new unique texture (no more white concrete) & is translucent
-- cloud block has same exact rendering as the game clouds, changing with rain and night
-- the particle it emits are also custom now & have matching colors too. + water rain particles during rain
-- it also emits slightly less particles & has different place and break sounds
-- Enchantment tooltip module has a new tag "enchanting_tooltip_items", meant for mods to use
-- usage ticker module animation is now interpolated correctly
+# Changes
+
+- (Internal only) Moved some worldgen logic around, removed WorldGenRegionMixin 
+
+# Fixes
+
+- Usage ticker module animation is now interpolated correctly
+- Cloud block (the one placed by Cloud in a Bottle) has a smoother animation (fixed interpolation), and is ever so slightly bigger, starting at 10 pixels
+
+# Additions
+
+- Cloud block has a pixel consistent new unique texture (no more white concrete) & is translucent
+- Cloud block emits slightly less particles & has different place and break sounds
+- Improved Tooltips module has a new tag `quark:enchanting_tooltip_items"`, meant for other mods to use
+- Cloud block has same exact rendering as the game clouds, changing with rain and night
+- The particles it emits are also custom now & have matching colors too, plus water rain particles during rain
