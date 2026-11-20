@@ -13,4 +13,8 @@ Quark 4.1-489 (... and Zeta 1.1-41)
 
 - Cloud block has a pixel consistent new unique texture (no more white concrete) & is translucent
 - Cloud block emits slightly less particles & has different place and break sounds
+- Cloud block has same exact rendering as the game clouds, changing with rain and night
+- The particle it emits are also custom now & have matching colors too. + water rain particles during rain
 - Improved Tooltips module has a new tag `quark:enchanting_tooltip_items"`, meant for other mods to use
+- Cloud block has same exact rendering as the game clouds, changing with rain and night
+- The particles it emits are also custom now & have matching colors too, plus water rain particles during rain
