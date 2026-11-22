@@ -151,7 +151,7 @@ public class QButton extends Button {
 		if(showBubble && QuarkGeneralConfig.enableOnboarding) {
 			Font font = Minecraft.getInstance().font;
 			int cy = getY() - 2;
-			if (AnimationTickHolder.getTicks() % 20 > 10)
+			if (AnimationTickHolder.getTicks(true) % 20 > 10)
 				cy++;
 
 			ClientUtil.drawChatBubble(guiGraphics, getX() + 16, cy, font, I18n.get("quark.misc.configure_quark_here"), alpha, true);
