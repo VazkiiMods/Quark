@@ -83,11 +83,10 @@ public class MixedExclusionRecipe implements CraftingRecipe {
                 if (i != 4) { // ignore center
                     ItemStack stack = input.getItem(i);
                     if (!stack.isEmpty() && stack.is(tag)) {
-                        if (first == null)
+                        if (first == null) {
                             first = stack;
-                        else if (!ItemStack.isSameItem(first, stack)) {
+                        } else if (!foundDifference && !ItemStack.isSameItem(first, stack)) {
                             foundDifference = true;
-                            //break;
                         }
                     } else {
                         return false;
