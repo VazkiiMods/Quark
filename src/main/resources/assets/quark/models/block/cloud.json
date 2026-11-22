@@ -1,6 +1,6 @@
 {
     "textures": {
-        "particle": "block/white_concrete"
+        "particle": "quark:block/cloud"
     }
 }
 

@@ -1,6 +1,7 @@
 package org.violetmoon.quark.content.tools.block;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.ItemInteractionResult;
@@ -37,7 +38,7 @@ public class CloudBlock extends ZetaBlock implements EntityBlock {
 		super("cloud", module,
 				Block.Properties.of()
 						.mapColor(MapColor.CLAY)
-						.sound(SoundType.WOOL)
+						.sound(SoundType.POWDER_SNOW)
 						.strength(0)
 						.noOcclusion()
 						.noCollission()

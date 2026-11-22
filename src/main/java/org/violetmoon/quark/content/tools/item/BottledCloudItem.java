@@ -1,6 +1,8 @@
 package org.violetmoon.quark.content.tools.item;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.player.Player;
@@ -44,6 +46,7 @@ public class BottledCloudItem extends ZetaItem {
 					world.gameEvent(player, GameEvent.BLOCK_PLACE, pos);
 					world.setBlockAndUpdate(pos, BottledCloudModule.cloud.defaultBlockState());
 				}
+				world.playSound(player, pos, SoundEvents.WIND_CHARGE_BURST.value(), SoundSource.BLOCKS, 0.3f, 1.4f);
 
 				if(!player.getAbilities().instabuild) {
 					stack.shrink(1);

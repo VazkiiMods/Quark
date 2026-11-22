@@ -1,6 +1,8 @@
 package org.violetmoon.quark.content.tools.module;
 
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderers;
+import net.minecraft.client.resources.model.ModelResourceLocation;
+import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
@@ -10,11 +12,17 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.neoforge.client.event.RegisterParticleProvidersEvent;
 import org.violetmoon.quark.base.Quark;
 import org.violetmoon.quark.content.tools.block.CloudBlock;
 import org.violetmoon.quark.content.tools.block.be.CloudBlockEntity;
+import org.violetmoon.quark.content.tools.client.particle.CloudParticle;
 import org.violetmoon.quark.content.tools.client.render.be.CloudRenderer;
 import org.violetmoon.quark.content.tools.item.BottledCloudItem;
+import org.violetmoon.zeta.client.event.load.ZAddModels;
 import org.violetmoon.zeta.client.event.load.ZClientSetup;
 import org.violetmoon.zeta.config.Config;
 import org.violetmoon.zeta.event.bus.LoadEvent;
@@ -30,6 +38,7 @@ public class BottledCloudModule extends ZetaModule {
 
 	public static BlockEntityType<CloudBlockEntity> blockEntityType;
 	public static Block cloud;
+	public static SimpleParticleType cloudParticle;
 	@Hint
 	public static Item bottled_cloud;
 
@@ -46,6 +55,9 @@ public class BottledCloudModule extends ZetaModule {
 
 		blockEntityType = BlockEntityType.Builder.of(CloudBlockEntity::new, cloud).build(null);
 		Quark.ZETA.registry.register(blockEntityType, "cloud", Registries.BLOCK_ENTITY_TYPE);
+
+		cloudParticle = new SimpleParticleType(false);
+		event.getRegistry().register(cloudParticle, "cloud", Registries.PARTICLE_TYPE);
 	}
 
 	@PlayEvent
@@ -66,9 +78,27 @@ public class BottledCloudModule extends ZetaModule {
 
 	@ZetaLoadModule(clientReplacement = true)
 	public static class Client extends BottledCloudModule {
+
+		public static final ModelResourceLocation MODEL = ModelResourceLocation.standalone(Quark.asResource("extra/cloud"));
+
 		@LoadEvent
 		public final void clientSetup(ZClientSetup event) {
 			BlockEntityRenderers.register(blockEntityType, CloudRenderer::new);
+		}
+
+		@LoadEvent
+		public void registerAdditionalModels(ZAddModels event) {
+			event.register(MODEL);
+		}
+
+		//soo zeta has no events for these
+		@EventBusSubscriber(modid = Quark.MOD_ID, value = Dist.CLIENT)
+		public static class ParticleRegistration {
+
+			@SubscribeEvent
+			public static void registerParticleProviders(RegisterParticleProvidersEvent event) {
+				event.registerSpriteSet(cloudParticle, CloudParticle.Provider::new);
+			}
 		}
 
 	}
