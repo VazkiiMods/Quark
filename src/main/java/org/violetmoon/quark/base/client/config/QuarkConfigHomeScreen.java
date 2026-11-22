@@ -34,13 +34,14 @@ public class QuarkConfigHomeScreen extends ZetaConfigHomeScreen {
 	protected void init() {
 		super.init();
 
-		List<Integer> socialButtonPlacements = centeredRow(width / 2, 20, 5, 5);
+		List<Integer> socialButtonPlacements = centeredRow(width / 2, 20, 5, 6);
 		Iterator<Integer> iter = socialButtonPlacements.iterator();
 		addRenderableWidget(new SocialButton(iter.next(), height - 55, Component.translatable("quark.gui.config.social.website"), 0x48ddbc, 0, "https://quarkmod.net"));
 		addRenderableWidget(new SocialButton(iter.next(), height - 55, Component.translatable("quark.gui.config.social.discord"), 0x7289da, 1, "https://discord.gg/vm"));
 		addRenderableWidget(new SocialButton(iter.next(), height - 55, Component.translatable("quark.gui.config.social.patreon"), 0xf96854, 2, "https://patreon.com/vazkii"));
 		addRenderableWidget(new SocialButton(iter.next(), height - 55, Component.translatable("quark.gui.config.social.forum"), 0xb650d8, 3, "https://forum.violetmoon.org"));
 		addRenderableWidget(new SocialButton(iter.next(), height - 55, Component.translatable("quark.gui.config.social.bluesky"), 0x1da1f2, 4, "https://bsky.app/profile/violetmoon.org"));
+		addRenderableWidget(new SocialButton(iter.next(), height - 55, Component.translatable("quark.gui.config.social.github"), 0x8b949e, 5, "https://github.com/VazkiiMods/Quark"));
 	}
 
 	@Override
