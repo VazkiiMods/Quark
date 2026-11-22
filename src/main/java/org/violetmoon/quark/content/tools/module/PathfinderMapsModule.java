@@ -384,7 +384,7 @@ public class PathfinderMapsModule extends ZetaModule {
 					int quillX = textX;
 					int quillY = textY - 15;
 					float speed = 0.1F;
-					float total = AnimationTickHolder.getTicks() * speed;
+					float total = AnimationTickHolder.getRenderTime() * speed;
 
 					float offsetX = (float) (Math.sin(total) + 1) * 20;
 					float offsetY = (float) (Math.sin(total * 8) - 1);

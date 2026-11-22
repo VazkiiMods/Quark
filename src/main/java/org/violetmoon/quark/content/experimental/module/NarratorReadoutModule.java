@@ -14,6 +14,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.SignBlock;
 import net.minecraft.world.level.block.entity.SignBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
@@ -79,7 +80,7 @@ public class NarratorReadoutModule extends ZetaModule {
 		private void acceptInput(boolean down, boolean full) {
 			Minecraft mc = Minecraft.getInstance();
 
-			float curr = AnimationTickHolder.getTicks() + Minecraft.getInstance().getTimer().getGameTimeDeltaTicks();
+			float curr = AnimationTickHolder.getTicks();
 			if(down && (curr - last) > 10) {
 				Narrator narrator = Narrator.getNarrator();
 				String readout = getReadout(mc, full);
@@ -104,7 +105,7 @@ public class NarratorReadoutModule extends ZetaModule {
 					BlockState state = mc.level.getBlockState(pos);
 
 					Item item = state.getBlock().asItem();
-					if(item != null) {
+					if(item != Items.AIR) {
 						sb.append(I18n.get("quark.readout.looking", item.getName(new ItemStack(item)).getString()));
 
 						if(full)

@@ -36,7 +36,10 @@ import org.violetmoon.quark.content.client.resources.AttributeIconEntry;
 import org.violetmoon.zeta.client.event.play.ZGatherTooltipComponents;
 import org.violetmoon.zeta.event.play.ZSkipAttributeTooltip;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author WireSegal
@@ -123,7 +126,7 @@ public class AttributeTooltips {
 				if(differenceInAttribute.modifier().amount() != 0) {
 					int xp = x - 2;
 					int yp = y - 2;
-					if(ImprovedTooltipsModule.animateUpDownArrows && AnimationTickHolder.getTicks() + Minecraft.getInstance().getTimer().getGameTimeDeltaTicks() % 20 < 10)
+					if (ImprovedTooltipsModule.animateUpDownArrows && AnimationTickHolder.getTicks(true) % 20 < 10)
 						yp++;
 
 					guiGraphics.blit(differenceInAttribute.modifier().amount() < 0 ? TEXTURE_DOWNGRADE : TEXTURE_UPGRADE, xp, yp, 0, 0, 13, 13, 13, 13);

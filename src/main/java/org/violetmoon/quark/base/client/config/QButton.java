@@ -111,7 +111,7 @@ public class QButton extends Button {
 
 	@Override
 	public int getFGColor() {
-		return gay ? Color.HSBtoRGB(((AnimationTickHolder.getTicks() + Minecraft.getInstance().getTimer().getGameTimeDeltaTicks()) / 200F), 1F, 1F) : 0x48DDBC;
+		return gay ? Color.HSBtoRGB(((AnimationTickHolder.getTicks(true) + AnimationTickHolder.getPartialTicks()) / 200F), 1F, 1F) : 0x48DDBC;
 	}
 
 	@Override
