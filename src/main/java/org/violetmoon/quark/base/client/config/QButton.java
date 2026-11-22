@@ -10,12 +10,13 @@ import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
 import org.jetbrains.annotations.NotNull;
+import org.joml.Math;
 import org.violetmoon.quark.base.client.handler.ClientUtil;
 import org.violetmoon.quark.base.config.QuarkGeneralConfig;
 import org.violetmoon.quark.base.handler.ContributorRewardHandler;
 import org.violetmoon.quark.catnip.animation.AnimationTickHolder;
 
-import java.awt.*;
+import java.awt.Color;
 import java.io.File;
 import java.io.IOException;
 import java.time.Month;
@@ -110,7 +111,7 @@ public class QButton extends Button {
 
 	@Override
 	public int getFGColor() {
-		return gay ? Color.HSBtoRGB(((AnimationTickHolder.getTicks() + Minecraft.getInstance().getTimer().getGameTimeDeltaTicks()) / 200F), 1F, 1F) : 0x48DDBC;
+		return gay ? Color.HSBtoRGB(((AnimationTickHolder.getTicks(true) + AnimationTickHolder.getPartialTicks()) / 200F), 1F, 1F) : 0x48DDBC;
 	}
 
 	@Override
@@ -150,7 +151,7 @@ public class QButton extends Button {
 		if(showBubble && QuarkGeneralConfig.enableOnboarding) {
 			Font font = Minecraft.getInstance().font;
 			int cy = getY() - 2;
-			if(AnimationTickHolder.getTicks() + Minecraft.getInstance().getTimer().getGameTimeDeltaTicks() % 20 > 10)
+			if (AnimationTickHolder.getTicks(true) % 20 > 10)
 				cy++;
 
 			ClientUtil.drawChatBubble(guiGraphics, getX() + 16, cy, font, I18n.get("quark.misc.configure_quark_here"), alpha, true);

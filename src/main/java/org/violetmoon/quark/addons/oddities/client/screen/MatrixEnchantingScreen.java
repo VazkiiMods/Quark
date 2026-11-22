@@ -295,8 +295,10 @@ public class MatrixEnchantingScreen extends AbstractContainerScreen<MatrixEnchan
 
 				float a = 0.2F;
 				if(matrix.canPlace(piece, gridHoverX, gridHoverY))
-					a = (float) ((Math.sin(AnimationTickHolder.getTicks() + Minecraft.getInstance().getTimer().getGameTimeDeltaTicks() * 0.2) + 1) * 0.4 + 0.4);
+					a = (float) ((Math.sin(AnimationTickHolder.getRenderTime() * 0.2) + 1) * 0.2 + 0.4);
+				RenderSystem.enableBlend();
 				renderPiece(guiGraphics, piece, a);
+				RenderSystem.disableBlend();
 				stack.popPose();
 			}
 		}
