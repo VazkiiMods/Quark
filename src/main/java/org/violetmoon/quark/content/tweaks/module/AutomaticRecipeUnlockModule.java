@@ -109,7 +109,8 @@ public class AutomaticRecipeUnlockModule extends ZetaModule {
 
 		for (Map.Entry<ResourceLocation, AdvancementHolder> entry : copy.entrySet()) {
 			Advancement advancement = entry.getValue().value();
-			if (entry.getKey().getPath().startsWith("recipes/") && advancement.criteria().containsKey("has_the_recipe")) {
+			String path = entry.getKey().getPath();
+			if ((path.startsWith("recipes/") || path.startsWith("recipe/")) && advancement.criteria().containsKey("has_the_recipe")) {
 				Map<String, Criterion<?>> replacementCriteria = new HashMap<>(advancement.criteria());
 				replacementCriteria.remove("has_the_recipe");
 
