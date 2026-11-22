@@ -107,7 +107,6 @@ public class PistonsMoveTileEntitiesModule extends ZetaModule {
 			BlockPos pos = delay.getLeft();
 			BlockState state = event.getLevel().getBlockState(pos);
 			BlockEntity entity = loadBlockEntitySafe(event.getLevel(), pos, delay.getRight());
-			callCallback(entity, IPistonCallback::onPistonMovementFinished);
 			event.getLevel().updateNeighbourForOutputSignal(pos, state.getBlock());
 		}
 
@@ -164,8 +163,6 @@ public class PistonsMoveTileEntitiesModule extends ZetaModule {
 			if(state.getBlock() instanceof EntityBlock) {
 				BlockEntity tile = world.getBlockEntity(pos);
 				if(tile != null) {
-					callCallback(tile, IPistonCallback::onPistonMovementStarted);
-
 					CompoundTag tag = tile.saveWithFullMetadata(world.registryAccess());
 					setMovingBlockEntityData(world, pos.relative(facing), tag);
 					world.removeBlockEntity(pos);
@@ -195,7 +192,6 @@ public class PistonsMoveTileEntitiesModule extends ZetaModule {
 			if(!state.canSurvive( world, pos)) {
 				world.setBlock(pos, state, flags);
 				BlockEntity entity = loadBlockEntitySafe(world, pos, entityTag);
-				callCallback(entity, IPistonCallback::onPistonMovementFinished);
 				Block.dropResources(state, world, pos, entity);
 				world.removeBlock(pos, false);
 				destroyed = true;
@@ -219,7 +215,6 @@ public class PistonsMoveTileEntitiesModule extends ZetaModule {
 					registerDelayedUpdate(world, pos, entityTag);
 				else {
 					BlockEntity entity = loadBlockEntitySafe(world, pos, entityTag);
-					callCallback(entity, IPistonCallback::onPistonMovementFinished);
 				}
 			}
 			world.updateNeighborsAt(pos, block);
@@ -237,11 +232,6 @@ public class PistonsMoveTileEntitiesModule extends ZetaModule {
 	 */
 	public static void setMovingBlockEntityData(Level world, BlockPos pos, CompoundTag nbt) {
 		movements.computeIfAbsent(world, l -> new HashMap<>()).put(pos, nbt);
-	}
-
-	@Deprecated(forRemoval = true)
-	public static BlockEntity getMovement(Level world, BlockPos pos) {
-		return null;
 	}
 
 	public static CompoundTag getMovingBlockEntityData(Level world, BlockPos pos) {
@@ -265,7 +255,6 @@ public class PistonsMoveTileEntitiesModule extends ZetaModule {
 
 	private static CompoundTag getAndClearMovement(Level world, BlockPos pos) {
 		return getMovingBlockEntityData(world, pos, true);
-		// TODO this function formerly called the callback, make sure it's called from all the right places
 	}
 
 	private static void registerDelayedUpdate(Level world, BlockPos pos, CompoundTag tag) {
@@ -273,14 +262,6 @@ public class PistonsMoveTileEntitiesModule extends ZetaModule {
 			delayedUpdates.put(world, new ArrayList<>());
 
 		delayedUpdates.get(world).add(Pair.of(pos, tag));
-	}
-
-	private static void callCallback(@Nullable BlockEntity entity, Consumer<? super IPistonCallback> caller) {
-		/*if(entity != null) {
-			IPistonCallback cb = Quark.ZETA.capabilityManager.getCapability(QuarkCapabilities.PISTON_CALLBACK, entity);
-			if(cb != null)
-				caller.accept(cb);
-		}*/
 	}
 
 	public static class ChestConnection implements IIndirectConnector {

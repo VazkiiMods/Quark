@@ -74,8 +74,7 @@ public class IronRodBlock extends EndRodBlock implements ICollateralMover, IZeta
 
 	@Override
 	public boolean isCollateralMover(Level world, BlockPos source, Direction moveDirection, BlockPos pos) {
-		return moveDirection == world.getBlockState(pos).getValue(FACING) &&
-				!world.getBlockState(pos.relative(moveDirection)).is(IronRodModule.ironRodImmuneTag);
+		return moveDirection == world.getBlockState(pos).getValue(FACING) && !world.getBlockState(pos.relative(moveDirection)).is(IronRodModule.ironRodImmuneTag);
 	}
 
 	@Override

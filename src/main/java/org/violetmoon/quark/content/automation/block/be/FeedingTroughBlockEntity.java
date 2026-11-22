@@ -61,7 +61,7 @@ public class FeedingTroughBlockEntity extends RandomizableContainerBlockEntity {
 				// This ends up getting expensive quickly if we use the non-lossy version
 				Vec2 angles = MiscUtil.getMinecraftAnglesLossy(direction);
 
-				Vec3 newPos = Vec3.ZERO;
+				Vec3 newPos;
 				// Fake player will always be at most maxDist blocks away from animal.
 				// If animal is closer to target, then we will be on target itself.
 				float maxDist = 5;
@@ -86,7 +86,7 @@ public class FeedingTroughBlockEntity extends RandomizableContainerBlockEntity {
 			ItemStack stack = this.getItem(i);
 			if(animal.isFood(stack)) {
 				SoundEvent soundEvent = animal.getEatingSound(stack);
-				if (soundEvent != null) { // Null check is kinda required, don't remove :) (why tho, intellij says its never null)
+				if (soundEvent != null) { // Null check is kinda required, don't remove :) (why tho, intellij says its never null) (You know full well that it's not reliable)
 					animal.playSound(soundEvent, 0.5F + 0.5F * level.random.nextInt(2), (level.random.nextFloat() - level.random.nextFloat()) * 0.2F + 1.0F);
 				}
 

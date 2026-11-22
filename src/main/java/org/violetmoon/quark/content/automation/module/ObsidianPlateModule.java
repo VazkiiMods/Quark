@@ -1,6 +1,8 @@
 package org.violetmoon.quark.content.automation.module;
 
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockBehaviour;
+import net.minecraft.world.level.block.state.properties.NoteBlockInstrument;
 import net.minecraft.world.level.material.MapColor;
 
 import org.violetmoon.quark.content.automation.block.ObsidianPressurePlateBlock;
@@ -21,7 +23,7 @@ public class ObsidianPlateModule extends ZetaModule {
 	@LoadEvent
 	public final void register(ZRegister event) {
 		obsidian_plate = new ObsidianPressurePlateBlock("obsidian_pressure_plate", this,
-				OldMaterials.stone()
+				BlockBehaviour.Properties.of().mapColor(MapColor.STONE).instrument(NoteBlockInstrument.BASEDRUM)
 						.mapColor(MapColor.COLOR_BLACK)
 						.requiresCorrectToolForDrops()
 						.noCollission()
