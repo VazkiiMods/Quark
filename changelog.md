@@ -3,18 +3,14 @@ Quark 4.1-489 (... and Zeta 1.1-41)
 # Changes
 
 - (Internal only) Moved some worldgen logic around, removed WorldGenRegionMixin 
+- New textures for glass shards, ambience discs, and social icons in q menu, by goesbysully
+- New texture and rendering for Cloud block (the one placed by Cloud in a Bottle) that changes with weather and daylight cycle (thanks MehVahdJukaar)
+- Cloud block has a smoother animation (fixed interpolation), and is ever so slightly bigger, starting at 10 pixels
 
 # Fixes
 
-- Usage ticker module animation is now interpolated correctly
-- Cloud block (the one placed by Cloud in a Bottle) has a smoother animation (fixed interpolation), and is ever so slightly bigger, starting at 10 pixels
+- Multiple GUI Animations had their interpolations fixed (thanks MehVahdJukaar)
 
 # Additions
 
-- Cloud block has a pixel consistent new unique texture (no more white concrete) & is translucent
-- Cloud block emits slightly less particles & has different place and break sounds
-- Cloud block has same exact rendering as the game clouds, changing with rain and night
-- The particle it emits are also custom now & have matching colors too. + water rain particles during rain
 - Improved Tooltips module has a new tag `quark:enchanting_tooltip_items"`, meant for other mods to use
-- Cloud block has same exact rendering as the game clouds, changing with rain and night
-- The particles it emits are also custom now & have matching colors too, plus water rain particles during rain
