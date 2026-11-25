@@ -1,7 +1,13 @@
 package org.violetmoon.quark.content.world.module;
 
 import com.google.common.collect.Lists;
+import net.minecraft.Util;
+import net.minecraft.core.Holder;
+import net.minecraft.core.HolderLookup;
+import net.minecraft.core.Registry;
+import net.minecraft.core.RegistryAccess;
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
@@ -13,6 +19,7 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.levelgen.GenerationStep.Decoration;
 import net.neoforged.neoforge.common.Tags;
+import org.violetmoon.quark.base.Quark;
 import org.violetmoon.quark.base.util.QuarkWorldGenWeights;
 import org.violetmoon.quark.content.world.config.AirStoneClusterConfig;
 import org.violetmoon.quark.content.world.config.BigStoneClusterConfig;
@@ -29,6 +36,7 @@ import org.violetmoon.zeta.module.ZetaModule;
 import org.violetmoon.zeta.util.BooleanSuppliers;
 import org.violetmoon.zeta.world.WorldGenHandler;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -57,7 +65,7 @@ public class BigStoneClustersModule extends ZetaModule {
 	@Config
 	public static BigStoneClusterConfig jasper = bob(BiomeTags.IS_BADLANDS, Tags.Biomes.IS_SANDY).build();
 	@Config
-	public static BigStoneClusterConfig shale = bob(Tags.Biomes.IS_SNOWY, Tags.Biomes.IS_COLD).build();
+	public static BigStoneClusterConfig shale = bob(Tags.Biomes.IS_SNOWY, Tags.Biomes.IS_COLD_OVERWORLD).build();
 
 	@Config
 	public static AirStoneClusterConfig myalite = AirStoneClusterConfig.airStoneBuilder()
@@ -83,7 +91,7 @@ public class BigStoneClustersModule extends ZetaModule {
 
 			"quark:limestone", "quark:jasper", "quark:slate");
 
-	@Config(description = "If true, generate hints for JEI based on the config")
+	@Config(description = "If true, generate hints for JEI based on the config that shows all possible biomes. These may not be 100% accurate if you have unusual configs")
 	public boolean generateHints = true;
 
 	public static BiPredicate<Level, Block> blockReplacePredicate = (w, b) -> false;
@@ -104,7 +112,7 @@ public class BigStoneClustersModule extends ZetaModule {
 	public void addAdditionalHints(ZGatherHints event) {
 		if(generateHints) {
 			for(Block block : hintsToMake.keySet()) {
-				Component generated = generateComponentfromConfig(hintsToMake.get(block));
+				Component generated = generateComponentfromConfig(event.getRegistryAccess(), hintsToMake.get(block));
 				if(generated != null) {
 					event.accept(block.asItem(), generated);
 				}
@@ -153,12 +161,25 @@ public class BigStoneClustersModule extends ZetaModule {
 		}
 	}
 
-	public static Component generateComponentfromConfig(BigStoneClusterConfig config){
+	public static Component generateComponentfromConfig(RegistryAccess ra, BigStoneClusterConfig config){
 		if(config.enabled) {
 			MutableComponent start = Component.translatable("quark.jei.hint.big_stone_clusters", config.minYLevel, config.maxYLevel);
 			//"Generates in large clusters between y-levels %1$s and %2$s in the following biomes:\n"
-			MutableComponent end = Component.translatable(""); //TODO iterate through possible biomes and do something with biome tags
-			return start.append(end);
+			List<String> biomeKeys = new ArrayList<>();
+			HolderLookup.RegistryLookup<Biome> biomeRegistry = ra.lookupOrThrow(Registries.BIOME);
+			//this iterates through ALL BIOMES, perhaps there is a better way to do this.
+			biomeRegistry.listElements().forEach( holder -> {
+				//Quark.LOG.info("key " + holder.getKey());
+				if(config.biomes.canSpawn(holder)){
+					biomeKeys.add("biome" + "." + holder.getKey().location().getNamespace() + "." + holder.getKey().location().getPath());
+				}
+			});
+
+			for(String s : biomeKeys){
+				start.append(Component.translatable(s).append(Component.literal("\n")));
+			}
+
+			return start;
 		}
 		return null;
 	}
