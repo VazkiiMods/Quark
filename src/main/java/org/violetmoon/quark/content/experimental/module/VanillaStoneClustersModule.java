@@ -10,6 +10,7 @@ import net.neoforged.neoforge.common.Tags;
 import org.violetmoon.quark.base.util.QuarkWorldGenWeights;
 import org.violetmoon.quark.content.world.config.BigStoneClusterConfig;
 import org.violetmoon.quark.content.world.gen.BigStoneClusterGenerator;
+import org.violetmoon.quark.content.world.module.BigStoneClustersModule;
 import org.violetmoon.zeta.config.Config;
 import org.violetmoon.zeta.config.type.DimensionConfig;
 import org.violetmoon.zeta.event.bus.LoadEvent;
@@ -66,6 +67,9 @@ public class VanillaStoneClustersModule extends ZetaModule {
 
 	private void add(BigStoneClusterConfig config, Block block) {
 		WorldGenHandler.addGenerator(this, new BigStoneClusterGenerator(config, block.defaultBlockState(), BooleanSuppliers.TRUE), Decoration.UNDERGROUND_DECORATION, QuarkWorldGenWeights.BIG_STONE_CLUSTERS);
+		if(this.isEnabled()){
+			BigStoneClustersModule.hintsToMake.put(block, config);
+		}
 	}
 
 }

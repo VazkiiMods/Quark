@@ -2,10 +2,11 @@ package org.violetmoon.quark.content.world.module;
 
 import com.google.common.collect.Lists;
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.BiomeTags;
 import net.minecraft.tags.TagKey;
-import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.block.Block;
@@ -28,7 +29,9 @@ import org.violetmoon.zeta.module.ZetaModule;
 import org.violetmoon.zeta.util.BooleanSuppliers;
 import org.violetmoon.zeta.world.WorldGenHandler;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.function.BiPredicate;
 import java.util.function.BooleanSupplier;
 
@@ -80,7 +83,12 @@ public class BigStoneClustersModule extends ZetaModule {
 
 			"quark:limestone", "quark:jasper", "quark:slate");
 
+	@Config(description = "If true, generate hints for JEI based on the config")
+	public boolean generateHints = true;
+
 	public static BiPredicate<Level, Block> blockReplacePredicate = (w, b) -> false;
+
+	public static Map<Block, BigStoneClusterConfig> hintsToMake = new HashMap<>();
 
 	@LoadEvent
 	public final void setup(ZCommonSetup event) {
@@ -94,12 +102,21 @@ public class BigStoneClustersModule extends ZetaModule {
 
 	@LoadEvent
 	public void addAdditionalHints(ZGatherHints event) {
-		if(calcite.enabled)
-			event.hintItem(Items.CALCITE);
+		if(generateHints) {
+			for(Block block : hintsToMake.keySet()) {
+				Component generated = generateComponentfromConfig(hintsToMake.get(block));
+				if(generated != null) {
+					event.accept(block.asItem(), generated);
+				}
+			}
+		}
 	}
 
 	private void add(BigStoneClusterConfig config, Block block, BooleanSupplier condition) {
 		WorldGenHandler.addGenerator(this, new BigStoneClusterGenerator(config, block.defaultBlockState(), condition), Decoration.UNDERGROUND_DECORATION, QuarkWorldGenWeights.BIG_STONE_CLUSTERS);
+		if(this.isEnabled()){
+			BigStoneClustersModule.hintsToMake.put(block, config);
+		}
 	}
 
 	@LoadEvent
@@ -134,6 +151,16 @@ public class BigStoneClustersModule extends ZetaModule {
 				}
 			});
 		}
+	}
+
+	public static Component generateComponentfromConfig(BigStoneClusterConfig config){
+		if(config.enabled) {
+			MutableComponent start = Component.translatable("quark.jei.hint.big_stone_clusters", config.minYLevel, config.maxYLevel);
+			//"Generates in large clusters between y-levels %1$s and %2$s in the following biomes:\n"
+			MutableComponent end = Component.translatable(""); //TODO iterate through possible biomes and do something with biome tags
+			return start.append(end);
+		}
+		return null;
 	}
 
 }

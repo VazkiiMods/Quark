@@ -278,11 +278,11 @@
 	"quark.jei.hint.repair_item_changed": "This item's repair material in an Anvil has been changed to %s.",
 	"quark.jei.hint.repair_item_changed_multiple": "This item's repair material in an Anvil has been changed to one of %s.",
 	"quark.jei.hint.shiba_find_low_light": "If you're holding a torch, Shibas will point out dark spots for you to light up.",
+	"quark.jei.hint.big_stone_clusters": "Generates in large clusters between y-levels %1$s and %2$s in the following biomes:\n",
 
 	"quark.jei.hint.minecraft.clock": "Must be crafted before it does anything to prevent funny recipe book cheese.",
 	"quark.jei.hint.minecraft.amethyst_block": "Can be placed under a Note Block to make it emit the iconic Amethyst sound.",
 	"quark.jei.hint.minecraft.shulker_shell": "Chests can be converted to Shulker Boxes without breaking them by using two Shulker Shells on one at once - one in each hand.",
-	"quark.jei.hint.minecraft.calcite": "Additional large calcite clusters are added to mountains.",
 	"quark.jei.hint.minecraft.chain": "When connected to a block, if that block is moved by a piston, so will the Chain and anything else on the other end.",
 	"quark.jei.hint.minecraft.emerald_block": "Can be used to make Villagers follow you much like how animals follow food items.",
 	"quark.jei.hint.minecraft.magma_cream": "A Slime that dies to Magma will split into Magma Cubes instead. Note that tiny Magma Cubes do not drop Magma Cream.",
